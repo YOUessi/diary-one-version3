@@ -1,46 +1,88 @@
 """
-Start Dev Lite stack for Expo Go (no Docker):
+Start Dev Lite stack for Expo Go (no Docker) — REAL cloud by default.
 
-  1) X02 research server on 127.0.0.1:8787
-  2) Dev Lite BFF on 0.0.0.0:8790 (phone uses LAN IP)
+  1) X02 on 127.0.0.1:8787  (adapter qwen → 阿里云百炼 DashScope)
+  2) Dev Lite BFF on 0.0.0.0:8790
 
 Usage:
-  .\scripts\start-dev-lite.ps1                 # fixture adapter (pipeline only)
-  .\scripts\start-dev-lite.ps1 -Adapter qwen  # real V1.75 (needs DASHSCOPE_API_KEY)
+  .\scripts\start-dev-lite.ps1                 # real qwen (needs DASHSCOPE_API_KEY)
+  .\scripts\start-dev-lite.ps1 -Adapter fixture  # ONLY for offline UI debug — not quality
 """
 param(
   [ValidateSet("fixture", "qwen")]
-  [string]$Adapter = "fixture",
+  [string]$Adapter = "qwen",
   [int]$BffPort = 8790,
-  [int]$X02Port = 8787
+  [int]$X02Port = 8787,
+  [switch]$AllowMockPreview
 )
 
 $ErrorActionPreference = "Stop"
 $ServerRoot = Split-Path -Parent $PSScriptRoot
-$AlgoRoot = Resolve-Path (Join-Path $ServerRoot "..\nexleap-diary-one\algorithm")
 
-if (-not (Test-Path $AlgoRoot)) {
-  Write-Error "Algorithm path not found: $AlgoRoot"
+# Monorepo: services/algorithm/algorithm ; legacy: ../nexleap-diary-one/algorithm or E:\AI耳机\nexleap-diary-one
+$candidates = @(
+  (Join-Path $ServerRoot "..\algorithm\algorithm"),
+  (Join-Path $ServerRoot "..\..\nexleap-diary-one\algorithm"),
+  "E:\AI耳机\nexleap-diary-one\algorithm",
+  "E:\AI耳机\diary-one\services\algorithm\algorithm"
+)
+$AlgoRoot = $null
+foreach ($c in $candidates) {
+  $resolved = $null
+  try { $resolved = Resolve-Path $c -ErrorAction Stop } catch { continue }
+  if (Test-Path (Join-Path $resolved "src\diary_one_ci\x01_server.py")) {
+    $AlgoRoot = $resolved.Path
+    break
+  }
+}
+if (-not $AlgoRoot) {
+  Write-Error "Algorithm path not found. Expected diary_one_ci under services/algorithm/algorithm"
 }
 
 $lan = Get-NetIPAddress -AddressFamily IPv4 |
   Where-Object { $_.IPAddress -notmatch '^(127\.|169\.254\.)' } |
   Select-Object -First 1 -ExpandProperty IPAddress
 
-Write-Host "=== Diary One Dev Lite ===" -ForegroundColor Cyan
+# Prefer User-level DASHSCOPE if process env empty
+if (-not $env:DASHSCOPE_API_KEY) {
+  $userKey = [Environment]::GetEnvironmentVariable("DASHSCOPE_API_KEY", "User")
+  if ($userKey) { $env:DASHSCOPE_API_KEY = $userKey }
+}
+
+Write-Host "=== Diary One Dev Lite (REAL cloud default) ===" -ForegroundColor Cyan
 Write-Host "LAN IP for Expo Go: $lan"
 Write-Host "BFF:  http://${lan}:$BffPort   Token: dev-token"
 Write-Host "X02:  http://127.0.0.1:$X02Port (PC only)"
+Write-Host "Algo: $AlgoRoot"
 Write-Host "Adapter: $Adapter"
+
 if ($Adapter -eq "qwen") {
   if (-not $env:DASHSCOPE_API_KEY) {
-    Write-Host "WARNING: DASHSCOPE_API_KEY not set — qwen adapter will report modelReady=false" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "MISSING DASHSCOPE_API_KEY — cannot run real V1.75." -ForegroundColor Red
+    Write-Host "1) Open https://bailian.console.aliyun.com/ (华北2 北京) → API Key → 创建"
+    Write-Host "2) Run:  .\scripts\set-dashscope-key.ps1 -Key 'sk-...'"
+    Write-Host "3) Re-run this script."
+    exit 1
   }
+  Write-Host "DashScope key: present ($($env:DASHSCOPE_API_KEY.Substring(0,[Math]::Min(6,$env:DASHSCOPE_API_KEY.Length)))…)" -ForegroundColor Green
 } else {
-  Write-Host "Fixture mode: App pipeline works; algorithm quality is NOT claimed." -ForegroundColor Yellow
+  Write-Host "Fixture mode: NOT real algorithm — UI/pipeline only." -ForegroundColor Yellow
 }
 
-# Install minimal Python deps for BFF if missing
+$allowMock = if ($AllowMockPreview) { "true" } else { "false" }
+# Load User-level SMTP into this process if present
+foreach ($name in @("SMTP_HOST","SMTP_PORT","SMTP_USER","SMTP_PASSWORD","SMTP_FROM","SMTP_SECURITY","EXPOSE_OTP_IN_RESPONSE")) {
+  if (-not [Environment]::GetEnvironmentVariable($name, "Process")) {
+    $v = [Environment]::GetEnvironmentVariable($name, "User")
+    if ($v) { Set-Item -Path "Env:$name" -Value $v }
+  }
+}
+$exposeOtp = if ($env:SMTP_HOST) { "false" } else { "true" }
+if ($null -ne $env:EXPOSE_OTP_IN_RESPONSE -and $env:EXPOSE_OTP_IN_RESPONSE -ne "") {
+  $exposeOtp = $env:EXPOSE_OTP_IN_RESPONSE
+}
+
 Push-Location $ServerRoot
 python -c "import fastapi,uvicorn,httpx,pydantic_settings" 2>$null
 if ($LASTEXITCODE -ne 0) {
@@ -49,10 +91,13 @@ if ($LASTEXITCODE -ne 0) {
 }
 Pop-Location
 
+$dashEscaped = $env:DASHSCOPE_API_KEY -replace "'", "''"
+
 $x02Cmd = @"
 Set-Location '$AlgoRoot'
 `$env:PYTHONPATH = 'src'
 `$env:PYTHONDONTWRITEBYTECODE = '1'
+`$env:DASHSCOPE_API_KEY = '$dashEscaped'
 Write-Host 'Starting X02 on 127.0.0.1:$X02Port adapter=$Adapter'
 python -m diary_one_ci.x01_server --adapter $Adapter --host 127.0.0.1 --port $X02Port
 "@
@@ -63,7 +108,16 @@ Set-Location '$ServerRoot'
 `$env:API_TOKEN = 'dev-token'
 `$env:X02_BASE_URL = 'http://127.0.0.1:$X02Port'
 `$env:DEV_LITE_PORT = '$BffPort'
-Write-Host 'Starting Dev Lite BFF on 0.0.0.0:$BffPort'
+`$env:ALLOW_MOCK_PREVIEW = '$allowMock'
+`$env:EXPOSE_OTP_IN_RESPONSE = '$exposeOtp'
+`$env:SMTP_HOST = '$($env:SMTP_HOST)'
+`$env:SMTP_PORT = '$($env:SMTP_PORT)'
+`$env:SMTP_USER = '$($env:SMTP_USER)'
+`$env:SMTP_PASSWORD = '$($env:SMTP_PASSWORD -replace "'","''")'
+`$env:SMTP_FROM = '$($env:SMTP_FROM)'
+`$env:SMTP_SECURITY = '$($env:SMTP_SECURITY)'
+if (`$env:SMTP_HOST) { Write-Host "SMTP OTP enabled via `$env:SMTP_HOST" } else { Write-Host "OTP: no SMTP — set via .\scripts\set-smtp.ps1 (see docs/REAL_CLOUD_SETUP.md)" }
+Write-Host 'Starting Dev Lite BFF on 0.0.0.0:$BffPort (allow_mock=$allowMock)'
 python -m uvicorn dev_lite.app:app --host 0.0.0.0 --port $BffPort
 "@
 
@@ -73,9 +127,6 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", $bffCmd
 
 Write-Host ""
 Write-Host "Opened 2 terminals (X02 + BFF)." -ForegroundColor Green
-Write-Host "On phone Expo Go Lab:"
-Write-Host "  Cloud target = Production BFF"
-Write-Host "  URL = http://${lan}:$BffPort"
-Write-Host "  Token = dev-token"
-Write-Host "OTP: request returns JSON field dev_code (no real email yet)."
+Write-Host "Phone Lab: Apply → Ping (x02=up) → Demo photo"
 Write-Host "Health: http://${lan}:$BffPort/health"
+Write-Host "Mock preview: $allowMock (must be false for real quality)"

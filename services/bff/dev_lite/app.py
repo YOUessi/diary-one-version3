@@ -15,8 +15,11 @@ import json
 import os
 import random
 import secrets
+import smtplib
+import ssl
 import time
 import uuid
+from email.message import EmailMessage
 from pathlib import Path
 from typing import Any, Optional
 
@@ -39,14 +42,23 @@ class Settings(BaseSettings):
     api_token: str = "dev-token"
     x02_base_url: str = "http://127.0.0.1:8787"
     x02_token: str = ""
-    # Expo Go 内测：响应里带回验证码，无需真实发信；量产务必 false
+    # 有 SMTP 时必须 false；无 SMTP 时可为 true 仅作应急（商用真测应配 SMTP）
     expose_otp_in_response: bool = True
     otp_ttl_seconds: int = 600
-    # X02 不可达时返回合同形状假结果，仅测 App 管线；非算法质量证据
-    allow_mock_preview: bool = True
+    # 真云默认 false：X02 失败不得用假结果冒充算法质量
+    allow_mock_preview: bool = False
+    smtp_host: str = ""
+    smtp_port: int = 465
+    smtp_user: str = ""
+    smtp_password: str = ""
+    smtp_from: str = ""
+    smtp_security: str = "ssl"  # ssl | starttls | none
 
 
 settings = Settings()
+# 配了 SMTP 则默认不回传验证码（仍可被 EXPOSE_OTP_IN_RESPONSE 覆盖）
+if settings.smtp_host and os.environ.get("EXPOSE_OTP_IN_RESPONSE") is None:
+    settings.expose_otp_in_response = False
 bearer = HTTPBearer(auto_error=False)
 _jobs: dict[str, dict[str, Any]] = {}
 _otp: dict[str, dict[str, Any]] = {}
@@ -119,6 +131,7 @@ async def health() -> dict[str, Any]:
         "api_token_required": bool(settings.api_token),
         "expose_otp_in_response": settings.expose_otp_in_response,
         "allow_mock_preview": settings.allow_mock_preview,
+        "smtp_configured": bool(settings.smtp_host.strip() and settings.smtp_from.strip()),
         "x02": {
             "base_url": settings.x02_base_url,
             "reachable": x02_ok,
@@ -136,9 +149,53 @@ class OtpVerify(BaseModel):
     code: str = Field(min_length=4, max_length=12)
 
 
+def _smtp_configured() -> bool:
+    return bool(settings.smtp_host.strip() and settings.smtp_from.strip())
+
+
+def _send_otp_email(to_email: str, code: str) -> None:
+    """Blocking SMTP send — run via asyncio.to_thread from request handler."""
+    if not _smtp_configured():
+        raise RuntimeError("smtp_not_configured")
+    msg = EmailMessage()
+    msg["Subject"] = "Diary One verification code"
+    msg["From"] = settings.smtp_from.strip()
+    msg["To"] = to_email
+    msg.set_content(
+        f"Your Diary One code is: {code}\n\n"
+        f"It expires in {settings.otp_ttl_seconds // 60} minutes.\n"
+        "If you did not request this, ignore this email.\n"
+    )
+    host = settings.smtp_host.strip()
+    port = int(settings.smtp_port)
+    user = settings.smtp_user.strip()
+    password = settings.smtp_password
+    security = (settings.smtp_security or "ssl").lower()
+    if security == "ssl":
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL(host, port, context=context, timeout=30) as smtp:
+            if user:
+                smtp.login(user, password)
+            smtp.send_message(msg)
+    elif security == "starttls":
+        context = ssl.create_default_context()
+        with smtplib.SMTP(host, port, timeout=30) as smtp:
+            smtp.ehlo()
+            smtp.starttls(context=context)
+            smtp.ehlo()
+            if user:
+                smtp.login(user, password)
+            smtp.send_message(msg)
+    else:
+        with smtplib.SMTP(host, port, timeout=30) as smtp:
+            if user:
+                smtp.login(user, password)
+            smtp.send_message(msg)
+
+
 @app.post("/v1/auth/otp/request")
 async def otp_request(body: OtpRequest) -> dict[str, Any]:
-    """ACC03 内测：生成 6 位码。默认在 JSON 返回，便于 Expo Go 无邮箱通道验收。"""
+    """ACC03：真 SMTP 发信；未配 SMTP 时仅在 expose_otp 下回传码（不推荐商用验收）。"""
     email = body.email.strip().lower()
     code = f"{random.randint(0, 999999):06d}"
     async with _lock:
@@ -152,14 +209,30 @@ async def otp_request(body: OtpRequest) -> dict[str, Any]:
     out: dict[str, Any] = {
         "ok": True,
         "email": email,
-        "message": "OTP issued for internal beta. Use code from response when expose_otp is on.",
         "ttl_seconds": settings.otp_ttl_seconds,
     }
+
+    if _smtp_configured():
+        try:
+            await asyncio.to_thread(_send_otp_email, email, code)
+        except Exception as e:  # noqa: BLE001
+            raise HTTPException(status_code=502, detail=f"smtp_send_failed:{e}") from e
+        out["message"] = "OTP sent by email."
+        out["delivery"] = "smtp"
+        if settings.expose_otp_in_response:
+            out["dev_code"] = code
+        return out
+
+    out["message"] = "OTP issued. Configure SMTP_* for real email delivery."
     if settings.expose_otp_in_response:
         out["dev_code"] = code
         out["delivery"] = "response_only"
     else:
         out["delivery"] = "email_not_configured"
+        raise HTTPException(
+            status_code=503,
+            detail="smtp_required: set SMTP_HOST/SMTP_FROM or temporarily EXPOSE_OTP_IN_RESPONSE=true",
+        )
     return out
 
 
