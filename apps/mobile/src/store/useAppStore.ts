@@ -93,6 +93,9 @@ type AppState = {
 
   productionApiToken: string;
 
+  /** OTP verify 返回的会话令牌（持久化；API 仍可用 Dev Lite Bearer） */
+  sessionToken: string;
+
   cloudProcessingTarget: CloudProcessingTarget;
 
   localProfile: LocalProfile;
@@ -136,6 +139,8 @@ type AppState = {
   setProductionApiBaseUrl: (url: string) => void;
 
   setProductionApiToken: (token: string) => void;
+
+  setSessionToken: (token: string) => void;
 
   setCloudProcessingTarget: (target: CloudProcessingTarget) => void;
 
@@ -213,6 +218,8 @@ export const useAppStore = create<AppState>((set) => ({
 
   productionApiToken: '',
 
+  sessionToken: '',
+
   cloudProcessingTarget: 'research',
 
   localProfile: DEFAULT_LOCAL_PROFILE,
@@ -257,6 +264,8 @@ export const useAppStore = create<AppState>((set) => ({
   setProductionApiBaseUrl: (productionApiBaseUrl) => set({ productionApiBaseUrl }),
 
   setProductionApiToken: (productionApiToken) => set({ productionApiToken }),
+
+  setSessionToken: (sessionToken) => set({ sessionToken }),
 
   setCloudProcessingTarget: (cloudProcessingTarget) => set({ cloudProcessingTarget }),
 
@@ -461,6 +470,8 @@ export function buildPersistedSlice(state: AppState) {
     productionApiBaseUrl: state.productionApiBaseUrl,
 
     productionApiToken: state.productionApiToken,
+
+    sessionToken: state.sessionToken,
 
     cloudProcessingTarget: state.cloudProcessingTarget,
 

@@ -62,9 +62,9 @@ async function runCloudPreview(
       const poll = await pollProductionCloudJob(endpoint, token, jobId);
       if (poll.state === 'succeeded') return poll.result;
       if (poll.state === 'failed') throw new Error(poll.message);
-      await sleep(5000);
+      await sleep(1500);
     }
-    throw new Error('Production job timed out while polling (15 min)');
+    throw new Error('Production job timed out while polling (4.5 min)');
   }
   return submitResearchPreview(endpoint, token, bundleDir, jsonPath);
 }

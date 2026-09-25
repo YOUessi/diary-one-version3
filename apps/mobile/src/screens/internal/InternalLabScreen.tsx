@@ -1,5 +1,14 @@
 import React, { useCallback, useState } from 'react';
-import { Alert, ScrollView, Text, Pressable, StyleSheet, View, ActivityIndicator } from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  Text,
+  Pressable,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Share,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
 import { FigmaEyebrow } from '../../components/FigmaScreenHeader';
@@ -34,6 +43,14 @@ export default function InternalLabScreen() {
     );
   };
 
+  const shareDiagnostics = useCallback(async (text: string) => {
+    try {
+      await Share.share({ message: text });
+    } catch {
+      /* cancelled */
+    }
+  }, []);
+
   const pingBff = useCallback(async () => {
     const url = useAppStore.getState().productionApiBaseUrl.trim().replace(/\/+$/, '');
     if (!url) {
@@ -48,18 +65,33 @@ export default function InternalLabScreen() {
         x02?: { reachable?: boolean };
       };
       if (!res.ok) {
-        setHealthLine(`HTTP ${res.status}`);
+        const line = `HTTP ${res.status} · ${url}`;
+        setHealthLine(line);
+        Alert.alert('Ping failed', line, [
+          { text: 'Share URL', onPress: () => void shareDiagnostics(line) },
+          { text: 'OK' },
+        ]);
         return;
       }
       setHealthLine(
         `OK · mode=${body.mode ?? '?'} · x02=${body.x02?.reachable ? 'up' : 'down'} · ${url}`,
       );
     } catch (e) {
-      setHealthLine(e instanceof Error ? e.message : String(e));
+      const msg = e instanceof Error ? e.message : String(e);
+      const line = `FAIL · ${msg} · ${url}`;
+      setHealthLine(line);
+      Alert.alert(
+        'Ping failed',
+        `Cannot reach BFF.\n${url}\n\n${msg}\n\nCheck: same Wi‑Fi, firewall :8790, Dev Lite running.`,
+        [
+          { text: 'Share details', onPress: () => void shareDiagnostics(line) },
+          { text: 'OK' },
+        ],
+      );
     } finally {
       setBusy(false);
     }
-  }, []);
+  }, [shareDiagnostics]);
 
   const testOtp = async () => {
     const email = useAppStore.getState().localProfile.email ?? 'dev@diary.one';
@@ -133,7 +165,8 @@ export default function InternalLabScreen() {
         <Pressable style={styles.importBtn} onPress={() => applyOfflineMockDiary()}>
           <Text style={styles.importLabel}>0 · Offline mock Diary (no cloud)</Text>
           <Text style={styles.importHint}>
-            Instant UI check. If this fails, tell us. If it works, Diary tab is fine — problem is cloud pipeline.
+            Instant UI check. If this fails, tell us. If it works, Diary tab is fine — problem is
+            cloud pipeline.
           </Text>
         </Pressable>
         <Pressable style={styles.importBtn} onPress={() => void launchDemoEvidenceImport()}>

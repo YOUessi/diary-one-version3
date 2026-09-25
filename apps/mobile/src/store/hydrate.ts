@@ -170,6 +170,8 @@ function applySnapshotToStore(snap: PersistedSnapshot) {
 
     productionApiToken: snap.productionApiToken ?? '',
 
+    sessionToken: snap.sessionToken ?? '',
+
     cloudProcessingTarget: snap.cloudProcessingTarget ?? 'research',
 
     capturedOriginals: snap.capturedOriginals ?? [],
@@ -334,6 +336,8 @@ const PERSIST_KEYS: (keyof ReturnType<typeof buildPersistedSlice>)[] = [
   'productionApiBaseUrl',
 
   'productionApiToken',
+
+  'sessionToken',
 
   'cloudProcessingTarget',
 

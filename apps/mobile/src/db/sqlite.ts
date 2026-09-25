@@ -50,6 +50,8 @@ export type PersistedSnapshot = {
 
   productionApiToken?: string;
 
+  sessionToken?: string;
+
   cloudProcessingTarget?: import('../backend/types').CloudProcessingTarget;
 
   capturedOriginals: CapturedOriginal[];
@@ -195,6 +197,8 @@ export function emptySnapshot(): PersistedSnapshot {
     researchEndpoint: '',
 
     researchToken: '',
+
+    sessionToken: '',
 
     capturedOriginals: [],
 

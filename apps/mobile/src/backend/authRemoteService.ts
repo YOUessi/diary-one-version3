@@ -14,7 +14,7 @@ export type OtpRequestResult =
   | { ok: false; reason: string };
 
 export type OtpVerifyResult =
-  | { ok: true; email: string; nickname?: string }
+  | { ok: true; email: string; nickname?: string; sessionToken?: string }
   | { ok: false; reason: string };
 
 /** ACC03 — BFF Dev Lite / production OTP. Falls back to local-only when BFF unset. */
@@ -79,6 +79,7 @@ export async function verifyEmailOtpRemote(email: string, code: string): Promise
     const body = (await res.json().catch(() => ({}))) as {
       ok?: boolean;
       email?: string;
+      session_token?: string;
       profile?: { email?: string; nickname?: string };
       detail?: string;
     };
@@ -86,12 +87,21 @@ export async function verifyEmailOtpRemote(email: string, code: string): Promise
       return { ok: false, reason: body.detail ?? `otp_verify_failed_${res.status}` };
     }
     const profile = useAppStore.getState().localProfile;
+    const sessionToken = (body.session_token ?? '').trim();
     useAppStore.getState().setLocalProfile({
       ...profile,
       email: body.profile?.email ?? email.trim(),
       nickname: body.profile?.nickname ?? profile.nickname,
     });
-    return { ok: true, email: body.email ?? email.trim(), nickname: body.profile?.nickname };
+    if (sessionToken) {
+      useAppStore.getState().setSessionToken(sessionToken);
+    }
+    return {
+      ok: true,
+      email: body.email ?? email.trim(),
+      nickname: body.profile?.nickname,
+      sessionToken: sessionToken || undefined,
+    };
   } catch (e) {
     return { ok: false, reason: e instanceof Error ? e.message : String(e) };
   }
