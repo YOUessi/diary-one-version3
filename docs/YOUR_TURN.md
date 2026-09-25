@@ -2,6 +2,14 @@
 
 代码侧已按路线图完成：**共享 OTP/SMTP、session Bearer 鉴权、Dev Lite 与量产 BFF 对齐、App 相册导入主链、登录 session 贯通云 API**。下列项依赖你的账号/密钥/硬件，无法由仓库单独完成。
 
+## 0. Daily Recap 视频（Expo Go）
+
+1. PC 安装 **ffmpeg** 并加入 PATH（`ffmpeg -version`）
+2. Dev Lite 健康检查：`ffmpeg_available: true`
+3. 手机 BFF URL 指向 PC → Diary → Share day → **Daily Recap**
+
+详见 `docs/DAILY_RECAP_VIDEO.md`。iOS Dev Client 可不走 PC，用本机 `expo-video-encoder`。
+
 ## 1. 真云（P2）
 
 1. [百炼控制台](https://bailian.console.aliyun.com/) 创建 **API Key**（`sk-…`）

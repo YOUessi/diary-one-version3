@@ -28,6 +28,7 @@
 | Chapter Detail / Morning Fishing | 43:1095 | ✅ | `ChapterDetailScreen` |
 | Chapter Detail / Your Story Empty | 112:1232 | ✅ | Your Story 空态 |
 | Chapter Detail / Motion Playing | 176:1966 | ⚠️ | Motion 仍图/短视频占位；播放态描边 + Playing |
+| Daily Recap / 9:16 MP4 | 184:2213+ | ✅ | 幻灯片 MP4；iOS 原生或 BFF ffmpeg |
 | Chapter Detail / Short Clip Playing | 176:2021 | ⚠️ | 短视频走 `MomentPlayer` |
 | Today PARTIAL（PRD/模型） | — | ✅ | 画板无独立帧；`TodayStatus` + Dev 切换 |
 

@@ -4,6 +4,7 @@ import type { CloudJobPoll } from './types';
 import type { X02PreviewResult } from '../cloud/types';
 import { buildBundleMultipartForm } from '../cloud/researchClient';
 import { resolveProductionBearer } from './resolveProductionBearer';
+import { useAppStore } from '../store/useAppStore';
 
 function base(url: string) {
   return url.trim().replace(/\/+$/, '');

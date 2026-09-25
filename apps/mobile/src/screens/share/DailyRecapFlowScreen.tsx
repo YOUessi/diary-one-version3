@@ -1,30 +1,30 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, layout, radius, spacing } from '../../theme';
 import { chaptersForDate, useAppStore } from '../../store/useAppStore';
-import { buildDailyRecapAsset } from '../../share/buildDailyRecap';
-import { saveImageToPhotos, shareImageUri } from '../../share/shareActions';
+import { buildDailyRecapAsset, type DailyRecapAsset } from '../../share/buildDailyRecap';
+import { saveVideoToPhotos, shareVideoUri } from '../../share/shareActions';
 import { shouldSimulateSharePrepareFailure } from '../../share/sharePrepareFail';
 import { isDailyRecapBlockedForDate } from '../../domain/dailyRecapReadiness';
 import type { DiaryStackParamList } from '../../navigation/types';
-import { MomentPlayer } from '../../components/MomentPlayer';
 import { ShareFlowCancelHeader } from '../../components/ShareFlowCancelHeader';
+import { RecapVideoPreview } from '../../components/RecapVideoPreview';
 
 type Route = RouteProp<DiaryStackParamList, 'DailyRecapFlow'>;
 type Nav = NativeStackNavigationProp<DiaryStackParamList, 'DailyRecapFlow'>;
 
-const recapCache = new Map<string, string>();
+const recapCache = new Map<string, DailyRecapAsset>();
 
 export default function DailyRecapFlowScreen() {
-  const { dateKey, phase } = useRoute<Route>().params;
+  const { dateKey, phase, errorHint } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
   const chapters = useAppStore((s) => chaptersForDate(s.chapters, dateKey));
-  const [uri, setUri] = useState<string | null>(recapCache.get(dateKey) ?? null);
-  const [playing, setPlaying] = useState(false);
+  const [asset, setAsset] = useState<DailyRecapAsset | null>(recapCache.get(dateKey) ?? null);
+  const [playing, setPlaying] = useState(true);
   const prepareForKey = useRef(dateKey);
 
   const dismissWithReadinessChanged = useCallback(() => {
@@ -48,9 +48,15 @@ export default function DailyRecapFlowScreen() {
         return;
       }
       recapCache.set(dateKey, out);
-      setUri(out);
+      setAsset(out);
+      setPlaying(true);
       navigation.replace('DailyRecapFlow', { dateKey, phase: 'preview' });
-    } catch {
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      if (msg.includes('ffmpeg_not_installed') || msg.includes('bff_url_required')) {
+        navigation.replace('DailyRecapFlow', { dateKey, phase: 'failed', errorHint: msg });
+        return;
+      }
       navigation.replace('DailyRecapFlow', { dateKey, phase: 'failed' });
     }
   }, [chapters, dateKey, dismissWithReadinessChanged, navigation]);
@@ -68,6 +74,7 @@ export default function DailyRecapFlowScreen() {
         <View style={styles.center}>
           <Text style={styles.phaseTitle}>9:16 Video</Text>
           <Text style={styles.phaseLead}>Preparing your Daily Recap…</Text>
+          <Text style={styles.phaseHint}>Building slides and encoding MP4 (device or Dev Lite ffmpeg).</Text>
         </View>
       </SafeAreaView>
     );
@@ -79,6 +86,15 @@ export default function DailyRecapFlowScreen() {
         <View style={styles.center}>
           <Text style={styles.phaseTitle}>Couldn&apos;t prepare this recap.</Text>
           <Text style={styles.phaseLead}>Your Diary is unchanged.</Text>
+          {errorHint ? (
+            <Text style={styles.errorHint}>
+              {errorHint.includes('ffmpeg')
+                ? 'Install ffmpeg on your PC and restart Dev Lite. See docs/DAILY_RECAP_VIDEO.md.'
+                : errorHint.includes('bff_url')
+                  ? 'Set Production BFF URL in Lab (same as cloud processing).'
+                  : errorHint.slice(0, 280)}
+            </Text>
+          ) : null}
           <Pressable onPress={() => navigation.replace('DailyRecapFlow', { dateKey, phase: 'preparing' })}>
             <Text style={styles.primaryLink}>Try Again</Text>
           </Pressable>
@@ -90,38 +106,36 @@ export default function DailyRecapFlowScreen() {
     );
   }
 
-  const previewUri = uri ?? recapCache.get(dateKey);
-  const videoSample = chapters[0]?.moments.find((m) => m.playbackUri)?.playbackUri;
+  const preview = asset ?? recapCache.get(dateKey);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       <ShareFlowCancelHeader onCancel={back} />
       <Text style={styles.previewEyebrow}>Daily Recap</Text>
-      <View style={styles.videoStub}>
-        {playing && videoSample ? (
-          <MomentPlayer uri={videoSample} playing onStop={() => setPlaying(false)} />
-        ) : previewUri ? (
-          <Pressable style={styles.playArea} onPress={() => videoSample && setPlaying(true)}>
-            <Image source={{ uri: previewUri }} style={styles.recapImage} resizeMode="cover" />
-            {videoSample ? <Text style={styles.playOverlay}>▶</Text> : null}
-          </Pressable>
+      <View style={styles.videoFrame}>
+        {preview ? (
+          <RecapVideoPreview
+            videoUri={preview.videoUri}
+            posterUri={preview.posterUri}
+            playing={playing}
+            onTogglePlay={() => setPlaying((p) => !p)}
+          />
         ) : (
-          <Pressable onPress={() => videoSample && setPlaying(true)}>
-            <Text style={styles.play}>▶</Text>
-          </Pressable>
+          <Text style={styles.missing}>No preview</Text>
         )}
       </View>
-      <Text style={styles.caption}>Original audio</Text>
+      <Text style={styles.caption}>
+        {preview?.hasAudio ? 'With original audio when available' : 'Silent slideshow · tap to pause'}
+      </Text>
       <View style={styles.actions}>
         <Pressable
           style={styles.btn}
           onPress={() => {
-            const shareUri = previewUri ?? videoSample;
-            if (!shareUri) {
-              Alert.alert('Not ready', 'Recap media is not available yet.');
+            if (!preview?.videoUri) {
+              Alert.alert('Not ready', 'Recap video is not available yet.');
               return;
             }
-            void shareImageUri(shareUri).catch((e) => Alert.alert('Share failed', String(e)));
+            void shareVideoUri(preview.videoUri).catch((e) => Alert.alert('Share failed', String(e)));
           }}
         >
           <Text style={styles.btnLabel}>Share</Text>
@@ -129,12 +143,12 @@ export default function DailyRecapFlowScreen() {
         <Pressable
           style={styles.btnOutline}
           onPress={() => {
-            if (!previewUri) {
-              Alert.alert('Not available', 'Save requires a prepared recap image.');
+            if (!preview?.videoUri) {
+              Alert.alert('Not available', 'Save requires a prepared recap video.');
               return;
             }
-            void saveImageToPhotos(previewUri)
-              .then(() => Alert.alert('Saved', 'Daily Recap saved to Photos.'))
+            void saveVideoToPhotos(preview.videoUri)
+              .then(() => Alert.alert('Saved', 'Daily Recap video saved to Photos.'))
               .catch((e) => Alert.alert('Save failed', String(e)));
           }}
         >
@@ -150,35 +164,24 @@ export default function DailyRecapFlowScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper, paddingHorizontal: layout.gutterDiary },
-  topAction: { minHeight: 44, justifyContent: 'center' },
-  topActionLabel: { fontSize: font.body, color: colors.accent, fontWeight: '600' },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.sm },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.sm, paddingHorizontal: spacing.md },
   phaseTitle: { fontSize: 22, fontWeight: '600', color: colors.ink, textAlign: 'center' },
-  phaseLead: { fontSize: font.body, color: colors.secondary, textAlign: 'center', marginBottom: spacing.lg },
+  phaseLead: { fontSize: font.body, color: colors.secondary, textAlign: 'center', marginBottom: spacing.sm },
+  phaseHint: { fontSize: font.micro, color: colors.tertiary, textAlign: 'center', marginBottom: spacing.lg },
+  errorHint: { fontSize: font.small, color: colors.secondary, textAlign: 'center', marginBottom: spacing.md },
   primaryLink: { fontSize: font.body, color: colors.accent, fontWeight: '700', marginTop: spacing.md },
   secondaryLink: { fontSize: font.body, color: colors.accent, fontWeight: '600', marginTop: spacing.md, textAlign: 'center' },
   previewEyebrow: { fontSize: font.small, color: colors.tertiary, marginTop: spacing.md },
-  videoStub: {
+  videoFrame: {
     width: '100%',
     aspectRatio: 9 / 16,
     maxHeight: 420,
     backgroundColor: colors.surface,
     borderRadius: radius.control,
-    alignItems: 'center',
-    justifyContent: 'center',
     marginVertical: spacing.md,
     overflow: 'hidden',
   },
-  playArea: { width: '100%', height: '100%' },
-  recapImage: { width: '100%', height: '100%' },
-  playOverlay: {
-    position: 'absolute',
-    alignSelf: 'center',
-    top: '45%',
-    fontSize: 32,
-    color: colors.paper,
-  },
-  play: { fontSize: 32, color: colors.ink },
+  missing: { textAlign: 'center', marginTop: '40%', color: colors.tertiary },
   caption: { fontSize: font.small, color: colors.secondary, marginBottom: spacing.md },
   actions: { gap: spacing.sm, paddingBottom: spacing.xl },
   btn: {

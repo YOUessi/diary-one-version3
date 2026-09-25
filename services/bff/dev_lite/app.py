@@ -25,6 +25,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from shared.api_auth import require_api_bearer
 from shared.otp import OtpMailConfig, OtpRequestBody, OtpService, OtpStore, OtpVerifyBody
+from shared.recap_render import ffmpeg_available
 from shared.sessions import SessionStore
 
 from dev_lite.job_store import (
@@ -36,6 +37,7 @@ from dev_lite.job_store import (
     write_job_meta,
 )
 from dev_lite.semantic_routes import router as semantic_router, semantic_analyze_batch
+from dev_lite.share_recap import router as share_recap_router
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -120,6 +122,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(semantic_router)
+app.include_router(share_recap_router, dependencies=[Depends(require_token)])
 
 
 @app.post("/v1/evidence/semantic-analyze")
@@ -221,6 +224,7 @@ async def health() -> dict[str, Any]:
         "expose_otp_in_response": settings.expose_otp_in_response,
         "allow_mock_preview": settings.allow_mock_preview,
         "smtp_configured": bool(settings.smtp_host.strip() and settings.smtp_from.strip()),
+        "ffmpeg_available": ffmpeg_available(),
         "x02": {
             "base_url": settings.x02_base_url,
             "reachable": x02_ok,

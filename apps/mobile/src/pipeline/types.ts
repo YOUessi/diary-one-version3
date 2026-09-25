@@ -13,7 +13,7 @@ export type PipelineTask = {
   createdAt: string;
   dayKey: string;
   dayRevisionId: string;
-  intakeSource: 'PHOTO_LIBRARY_TEST';
+  intakeSource: import('../domain/mediaIntake').MediaIntakeSource;
   status: PipelineTaskStatus;
   message: string;
   sourceCount: number;

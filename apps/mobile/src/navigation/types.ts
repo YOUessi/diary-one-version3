@@ -39,6 +39,7 @@ export type DiaryStackParamList = {
   DailyRecapFlow: {
     dateKey: string;
     phase: 'preparing' | 'preview' | 'failed' | 'readiness_changed';
+    errorHint?: string;
   };
 };
 

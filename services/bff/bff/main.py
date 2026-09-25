@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from bff.routes import auth_otp, day_revisions, health, jobs
+from bff.routes import auth_otp, day_revisions, health, jobs, share_recap
 from shared.db import init_db_async
 from shared.storage import ensure_bucket, minio_client
 
@@ -29,3 +29,4 @@ app.include_router(health.router)
 app.include_router(auth_otp.router)
 app.include_router(day_revisions.router)
 app.include_router(jobs.router)
+app.include_router(share_recap.router)
