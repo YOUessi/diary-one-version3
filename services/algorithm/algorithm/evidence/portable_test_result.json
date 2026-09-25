@@ -1,0 +1,23 @@
+{
+  "run_date": "2026-09-16",
+  "environment": "standalone_handoff_without_private_replay_archives",
+  "tests_discovered": 333,
+  "tests_executed_passed": 307,
+  "tests_skipped": 26,
+  "failures": 0,
+  "errors": 0,
+  "skip_categories": {
+    "private_real_replay_archives_intentionally_not_distributed": 25,
+    "local_socket_disabled_by_sandbox": 1
+  },
+  "external_api_calls": 0,
+  "comparison_to_freeze_environment": {
+    "tests_discovered": 333,
+    "tests_executed_passed": 333,
+    "tests_skipped": 0,
+    "failures": 0,
+    "errors": 0,
+    "evidence": "codex_local_checks.json"
+  },
+  "claim": "Portable engineering verification only; not real-model content-quality evidence."
+}

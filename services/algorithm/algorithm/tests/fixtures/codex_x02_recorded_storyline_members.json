@@ -1,0 +1,233 @@
+{
+  "provenance": {
+    "kind": "RECORDED_MEMBER_DATA_FOR_FIELD_HANDLING_TEST_ONLY",
+    "run_id": "1c2e4953-9491-464f-89ef-d178eaecdb28",
+    "recorded_at": "2026-09-02T09:10:58.110796Z",
+    "audit_sha256": "0854eae21551ef61fe6d6d09e1a4803b19395129d79dc6c2e9a260130926e02a",
+    "note": "Original thesis and model beat_map were not retained. Tests use neutral field-length strings and ID-only beat scaffolding; not an original proposal replay, visual-quality label, or end-to-end evaluation."
+  },
+  "recorded_rejection": {
+    "basis_normalization": {
+      "normalized": "ACTIVITY_THREAD",
+      "reason_code": "STORYLINE_BASIS_NORMALIZED_TO_GROUNDED_FOCUS",
+      "supplied": "DISCOVERY_SERIES"
+    },
+    "candidate_key": "ROUTE_SCENERY_URBAN_ANIMAL_ENCOUNTERS",
+    "detail": "storyline.thesis length is invalid",
+    "focus_code": "ROUTE_SCENERY",
+    "observation_ids": [
+      "2c774757-e660-5ad4-a6a6-969b3559892b",
+      "66a1ca2c-3a47-528a-8ca4-5df4cdedd63f",
+      "186bae20-b93c-5bc1-9aa3-b75cb095943f"
+    ],
+    "proposal_source": "MODEL_STORYLINE_PROPOSAL",
+    "reason_codes": [
+      "STORYLINE_CONTRACT_INVALID"
+    ],
+    "selection_status": "NOT_ELIGIBLE",
+    "source_asset_ids": [
+      "asset_01ed614f-e443-43a4-8f59-651e5db2032f",
+      "asset_bd5d27e2-61cf-4138-a7ae-b127429b39f9",
+      "asset_8fe1b8fb-9a23-4773-bcff-b37fdf1ba77b"
+    ],
+    "source_index": 6,
+    "storyline_basis": "ACTIVITY_THREAD",
+    "validation_status": "REJECTED"
+  },
+  "observations": [
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "01ed614f-e443-43a4-8f59-651e5db2032f",
+      "degraded_fields": [
+        {
+          "action": "DROP_ONLY_INVALID_LIST_ENTRY",
+          "json_field_path": "$.observations[*].subject_codes[0]",
+          "original_value_sentinel": "<OUTSIDE_CLOSED_VOCABULARY>",
+          "validation_rule_id": "X02V03_ENUM_LIST_VALUE_DROPPED"
+        },
+        {
+          "action": "USE_UNKNOWN_WITHOUT_INFERRING_REPLACEMENT_EPISODE",
+          "json_field_path": "$.observations[*].episode_code",
+          "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+          "validation_rule_id": "X02V02_EPISODE_URBAN_WALK"
+        }
+      ],
+      "episode_code": "UNKNOWN",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "frame_01ed614f-e443-43a4-8f59-651e5db2032f_w00_4500"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "frame_01ed614f-e443-43a4-8f59-651e5db2032f_w00_4500"
+          ],
+          "fact_id": "c4d8174e-e5a7-5840-ba08-995629648249",
+          "support_grade": "STRONG",
+          "text": "一只鹿在铺装路面上行走，左侧停有一台黄色工程车和一辆黑色SUV；背景为白墙红瓦建筑；前景有木质长椅、仿古灯笼及分类垃圾桶。"
+        }
+      ],
+      "id": "2c774757-e660-5ad4-a6a6-969b3559892b",
+      "limitations": [],
+      "media_kind": "PHOTO",
+      "motifs": [
+        "urban_wildlife",
+        "construction_vehicle",
+        "public_infrastructure"
+      ],
+      "quality_score": 0.75,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset_01ed614f-e443-43a4-8f59-651e5db2032f",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "PEOPLE",
+        "STREET_SCENE",
+        "OTHER"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "bd5d27e2-61cf-4138-a7ae-b127429b39f9",
+      "degraded_fields": [
+        {
+          "action": "DROP_ONLY_INVALID_LIST_ENTRY",
+          "json_field_path": "$.observations[*].subject_codes[0]",
+          "original_value_sentinel": "<OUTSIDE_CLOSED_VOCABULARY>",
+          "validation_rule_id": "X02V03_ENUM_LIST_VALUE_DROPPED"
+        },
+        {
+          "action": "USE_UNKNOWN_WITHOUT_INFERRING_REPLACEMENT_EPISODE",
+          "json_field_path": "$.observations[*].episode_code",
+          "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+          "validation_rule_id": "X02V02_EPISODE_URBAN_WALK"
+        }
+      ],
+      "episode_code": "UNKNOWN",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "frame_bd5d27e2-61cf-4138-a7ae-b127429b39f9_w00_4500"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "frame_bd5d27e2-61cf-4138-a7ae-b127429b39f9_w00_4500"
+          ],
+          "fact_id": "709b212f-37bc-5314-95b1-70cc868302d2",
+          "support_grade": "STRONG",
+          "text": "一只带角雄性鹿在路边草丛中低头啃食灌木；其后方停有一辆白色轿车；背景为坡地、松树与红砖堆；地面为砖砌人行道。"
+        }
+      ],
+      "id": "66a1ca2c-3a47-528a-8ca4-5df4cdedd63f",
+      "limitations": [],
+      "media_kind": "PHOTO",
+      "motifs": [
+        "urban_wildlife",
+        "vehicle_presence",
+        "greenery"
+      ],
+      "quality_score": 0.8,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset_bd5d27e2-61cf-4138-a7ae-b127429b39f9",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "PEOPLE",
+        "STREET_SCENE",
+        "OTHER"
+      ]
+    },
+    {
+      "activity_code": "WALKING",
+      "asset_id": "8fe1b8fb-9a23-4773-bcff-b37fdf1ba77b",
+      "degraded_fields": [
+        {
+          "action": "DROP_ONLY_INVALID_LIST_ENTRY",
+          "json_field_path": "$.observations[*].subject_codes[1]",
+          "original_value_sentinel": "<OUTSIDE_CLOSED_VOCABULARY>",
+          "validation_rule_id": "X02V03_ENUM_LIST_VALUE_DROPPED"
+        }
+      ],
+      "episode_code": "URBAN_WALK",
+      "event_kind": "PLAYFUL_ANIMAL",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "frame_8fe1b8fb-9a23-4773-bcff-b37fdf1ba77b_w00_4500"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "frame_8fe1b8fb-9a23-4773-bcff-b37fdf1ba77b_w00_4500"
+          ],
+          "fact_id": "ba204bd4-bed1-59f8-b29a-1f5288b3eca7",
+          "support_grade": "STRONG",
+          "text": "同一只长角鹿在铺装路面上行走，经过一根白色立柱、蓝色垃圾桶及一辆黄色工程车，背景为红瓦白墙建筑与传统屋顶结构。"
+        }
+      ],
+      "id": "186bae20-b93c-5bc1-9aa3-b75cb095943f",
+      "limitations": [],
+      "media_kind": "PHOTO",
+      "motifs": [
+        "urban_animal",
+        "construction",
+        "traditional_architecture"
+      ],
+      "quality_score": 0.8,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset_8fe1b8fb-9a23-4773-bcff-b37fdf1ba77b",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "DOG",
+        "STREET_SCENE"
+      ]
+    }
+  ],
+  "roles": [
+    {
+      "observation_id": "2c774757-e660-5ad4-a6a6-969b3559892b",
+      "reason_code": "GROUNDED_CONTENT_OR_EVENT_EVIDENCE",
+      "role": "KEEP",
+      "source_asset_id": "asset_01ed614f-e443-43a4-8f59-651e5db2032f"
+    },
+    {
+      "observation_id": "66a1ca2c-3a47-528a-8ca4-5df4cdedd63f",
+      "reason_code": "GROUNDED_CONTENT_OR_EVENT_EVIDENCE",
+      "role": "KEEP",
+      "source_asset_id": "asset_bd5d27e2-61cf-4138-a7ae-b127429b39f9"
+    },
+    {
+      "observation_id": "186bae20-b93c-5bc1-9aa3-b75cb095943f",
+      "reason_code": "GROUNDED_CONTENT_OR_EVENT_EVIDENCE",
+      "role": "KEEP",
+      "source_asset_id": "asset_8fe1b8fb-9a23-4773-bcff-b37fdf1ba77b"
+    }
+  ],
+  "asset_order": {
+    "asset_335c8c95-c07a-4106-b592-8be95af197b5": 0,
+    "asset_189a024d-41f1-4837-81fe-6cf3be2e0612": 1,
+    "asset_0aa3377b-8123-4a1c-bfa3-b9e4f21062be": 2,
+    "asset_6d8fd140-c11c-4728-a821-48e6f2eaaa26": 3,
+    "asset_01ed614f-e443-43a4-8f59-651e5db2032f": 4,
+    "asset_bd5d27e2-61cf-4138-a7ae-b127429b39f9": 5,
+    "asset_3bae7442-829f-4fce-8747-900eee61a0a4": 6,
+    "asset_8fe1b8fb-9a23-4773-bcff-b37fdf1ba77b": 7,
+    "asset_542845fe-cfba-4adb-af71-e96fc9225b26": 8,
+    "asset_39db1833-0919-4e50-a52e-894a3212baf3": 9,
+    "asset_b05dbbe2-acd9-44f9-af96-d60fdcd0ab85": 10,
+    "asset_852adcd6-bacb-494c-aff1-5feb108a672e": 11,
+    "asset_77448fbd-76b7-45c6-9107-e3ad377081a9": 12,
+    "asset_95fb545f-e5fd-4de5-a21e-e8743aa622db": 13,
+    "asset_2b79c5f1-3aec-41f3-8ae5-edb41d5eb773": 14,
+    "asset_6fbc8266-51cd-4335-8996-e2dedf69e5a1": 15,
+    "asset_1f52f9cd-cead-47e3-b992-ddf03c7f4daa": 16,
+    "asset_693a46a7-e29d-4a9b-a16f-8a605e6347e0": 17,
+    "asset_cc460044-4790-407d-9b86-94621539aa29": 18,
+    "asset_56ec0c6a-1349-4d26-8996-097d8117606a": 19,
+    "asset_d74bb7f1-6686-4d5b-9531-9ab1e7fa3eec": 20,
+    "asset_e409a5e6-64f9-41a7-8f55-a31d1a676f16": 21,
+    "asset_39e55c1e-574f-4e9b-b13b-5a0081b12f9d": 22,
+    "asset_ce83b8e6-ac70-4fc5-93da-c38781ce630c": 23,
+    "asset_dfac786d-21a0-4afc-8de8-a369bddf2ce7": 24,
+    "asset_2bdaa408-4c78-48f6-b5a7-4c8efdab1122": 25
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": "DIARY_ONE_X02_STORYLINE_V03",
+  "contract_status": "MODEL_OWNED_GROUPING_RESEARCH_IMPLEMENTATION_NOT_QUALITY_ACCEPTANCE",
+  "supersedes_grouping_policy": "DIARY_ONE_X02_STORYLINE_V02",
+  "grouping_authority": "STRUCTURE_MODEL",
+  "tag_role": "DESCRIPTIVE_METADATA_NOT_GROUPING_AUTHORITY",
+  "candidate_generation": "MODEL_PROPOSALS_ONLY",
+  "source_order_role": "EDITORIAL_INDEX_NOT_CAPTURE_TIME",
+  "storyline_bases": [
+    "EVENT_PROGRESSION",
+    "ACTIVITY_THREAD",
+    "DISCOVERY_SERIES",
+    "SOCIAL_INTERACTION"
+  ],
+  "beat_roles": [
+    "ENTRY",
+    "PROGRESSION",
+    "DISCOVERY",
+    "INTERACTION",
+    "CONTRAST",
+    "PEAK",
+    "RESULT",
+    "EXIT",
+    "ATMOSPHERE_SUPPORT"
+  ],
+  "storyline_forms": [
+    "SINGLE",
+    "ADJACENT_GROUP",
+    "RESUMED_EPISODE",
+    "LOCAL_EPISODE_GROUP",
+    "COMPACT_TWO_MEMBER"
+  ],
+  "max_content_members": 12,
+  "max_model_storyline_proposals": 12,
+  "compact_two_member_policy": {
+    "enabled": true,
+    "category_restriction": false,
+    "required_member_count": 2,
+    "minimum_supported_fact_count_per_member": 1,
+    "allowed_fact_support_grades": [
+      "STRONG",
+      "MODERATE"
+    ],
+    "content_distinctness_authority": "STRUCTURE_MODEL_NOT_TAG_DIFFERENCE"
+  },
+  "explicit_non_claims": [
+    "STRUCTURE_AND_REFERENCE_CHECKS_DO_NOT_PROVE_SEMANTIC_QUALITY",
+    "THIS_CONTRACT_DOES_NOT_IMPLEMENT_WINDOW_LEVEL_CONTENT_UNITS",
+    "THIS_CONTRACT_DOES_NOT_DECLARE_PRODUCTION_READINESS"
+  ]
+}

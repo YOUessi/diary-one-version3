@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexleap.tech/contracts/diary-one/validation-scorecard-v01.schema.json",
+  "title": "Diary One Validation Scorecard V01",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "suite_id",
+    "narrative_locale",
+    "input_fingerprint",
+    "contract_summary",
+    "scope",
+    "accuracy_claim_status",
+    "aggregate",
+    "conformance_results",
+    "trial_results",
+    "no_overall_score",
+    "frozen_pipeline_mutation_by_validation_run",
+    "status",
+    "fingerprint"
+  ],
+  "properties": {
+    "contract_version": {"const": "DIARY_ONE_VALIDATION_SCORECARD_V01"},
+    "suite_id": {"type": "string", "minLength": 1},
+    "narrative_locale": {"const": "zh-CN"},
+    "input_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "contract_summary": {
+      "type": "object",
+      "required": [
+        "suite_id",
+        "day_count",
+        "trial_count",
+        "design_gold_day_count",
+        "human_gold_day_count",
+        "status"
+      ]
+    },
+    "scope": {
+      "type": "object",
+      "required": ["validated", "not_validated"],
+      "properties": {
+        "validated": {"type": "array", "items": {"type": "string"}},
+        "not_validated": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "accuracy_claim_status": {
+      "enum": [
+        "NOT_ELIGIBLE_DESIGN_GOLD_ONLY",
+        "HUMAN_GOLD_PRESENT_SEPARATE_REPORT_REQUIRED"
+      ]
+    },
+    "aggregate": {
+      "type": "object",
+      "required": [
+        "day_count",
+        "trial_count",
+        "evaluation_status_counts",
+        "error_code_counts",
+        "conformance_pass_count",
+        "conformance_fail_count"
+      ],
+      "properties": {
+        "day_count": {"type": "integer", "minimum": 12, "maximum": 20},
+        "trial_count": {"type": "integer", "minimum": 12},
+        "evaluation_status_counts": {"type": "object"},
+        "error_code_counts": {"type": "object"},
+        "conformance_pass_count": {"type": "integer", "minimum": 0},
+        "conformance_fail_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "conformance_results": {"type": "array", "items": {"type": "object"}},
+    "trial_results": {"type": "array", "items": {"type": "object"}},
+    "no_overall_score": {"const": true},
+    "frozen_pipeline_mutation_by_validation_run": {"const": false},
+    "status": {
+      "enum": ["VALIDATION_SUITE_PASS", "VALIDATION_SUITE_FAIL"]
+    },
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,147 @@
+{
+  "schema_version": "DIARY_ONE_X02_STORYLINE_V02",
+  "contract_status": "PROVISIONAL_RESEARCH_STOP_LOSS_NOT_PERMANENT_PRODUCT_THRESHOLD",
+  "inherits_semantic_scope_from": "DIARY_ONE_X02_STORYLINE_V01",
+  "storyline_bases": [
+    "EVENT_PROGRESSION",
+    "ACTIVITY_THREAD",
+    "DISCOVERY_SERIES",
+    "SOCIAL_INTERACTION"
+  ],
+  "focus_codes": [
+    "LOCAL_COMMERCE",
+    "SOCIAL_EVENT",
+    "FOOD_EXPERIENCE",
+    "WORK_ACTIVITY",
+    "CRAFT_ACTIVITY",
+    "PET_INTERACTION",
+    "CULTURE_ARCHITECTURE",
+    "ROUTE_SCENERY"
+  ],
+  "focus_priority": [
+    "LOCAL_COMMERCE",
+    "SOCIAL_EVENT",
+    "FOOD_EXPERIENCE",
+    "WORK_ACTIVITY",
+    "CRAFT_ACTIVITY",
+    "PET_INTERACTION",
+    "CULTURE_ARCHITECTURE",
+    "ROUTE_SCENERY"
+  ],
+  "beat_roles": [
+    "ENTRY",
+    "PROGRESSION",
+    "DISCOVERY",
+    "INTERACTION",
+    "CONTRAST",
+    "PEAK",
+    "RESULT",
+    "EXIT",
+    "ATMOSPHERE_SUPPORT"
+  ],
+  "storyline_forms": [
+    "SINGLE",
+    "ADJACENT_GROUP",
+    "RESUMED_EPISODE",
+    "LOCAL_EPISODE_GROUP",
+    "COMPACT_TWO_MEMBER"
+  ],
+  "basis_by_focus": {
+    "LOCAL_COMMERCE": "DISCOVERY_SERIES",
+    "SOCIAL_EVENT": "EVENT_PROGRESSION",
+    "FOOD_EXPERIENCE": "EVENT_PROGRESSION",
+    "WORK_ACTIVITY": "ACTIVITY_THREAD",
+    "CRAFT_ACTIVITY": "ACTIVITY_THREAD",
+    "PET_INTERACTION": "SOCIAL_INTERACTION",
+    "CULTURE_ARCHITECTURE": "DISCOVERY_SERIES",
+    "ROUTE_SCENERY": "ACTIVITY_THREAD"
+  },
+  "thesis_by_focus_zh_hans": {
+    "LOCAL_COMMERCE": "当地摊贩与街巷生活",
+    "SOCIAL_EVENT": "一次共同参与的活动",
+    "FOOD_EXPERIENCE": "一段完整的用餐体验",
+    "WORK_ACTIVITY": "一段有进展的工作活动",
+    "CRAFT_ACTIVITY": "一次逐步展开的制作过程",
+    "PET_INTERACTION": "人与动物之间的具体互动",
+    "CULTURE_ARCHITECTURE": "沿途发现的建筑与文化细节",
+    "ROUTE_SCENERY": "沿路展开的步行与景致"
+  },
+  "culture_motif_tokens": [
+    "architecture",
+    "courtyard",
+    "gate",
+    "hall",
+    "lantern",
+    "marker",
+    "plaque",
+    "prayer",
+    "sign",
+    "temple",
+    "woodcarving"
+  ],
+  "commerce_motif_tokens": [
+    "fruit",
+    "market",
+    "produce",
+    "stall",
+    "vendor",
+    "vegetable"
+  ],
+  "route_setting_codes": [
+    "HISTORIC_STREET",
+    "NATURE_TRAIL",
+    "URBAN_STREET"
+  ],
+  "max_member_gap_in_source_order": 8,
+  "max_content_members": 12,
+  "max_model_storyline_proposals": 12,
+  "provisional_research_parameters": {
+    "parameter_status": "CALIBRATE_WITH_FRESH_REAL_RUNS_DO_NOT_TREAT_AS_UNIVERSAL",
+    "episode_partition_max_gap_in_source_order": 8,
+    "max_total_span_in_source_order": 12,
+    "max_interruption_ratio": 0.34,
+    "max_temporal_segments": 4,
+    "split_challenge_min_member_count": 6
+  },
+  "whole_vs_split_challenge": {
+    "enabled": true,
+    "local_member_gap_is_sufficient_alone": false,
+    "partition_counts": [
+      2,
+      3
+    ],
+    "require_total_span_audit": true,
+    "require_interruption_ratio_audit_for_long_span": true,
+    "require_temporal_segment_count_audit": true,
+    "required_trace_fields": [
+      "trigger_reason_codes",
+      "whole_candidate_summary",
+      "partition_alternatives",
+      "decision",
+      "reason_codes"
+    ]
+  },
+  "compact_two_member_policy": {
+    "enabled": true,
+    "category_restriction": false,
+    "required_member_count": 2,
+    "minimum_supported_fact_count_per_member": 1,
+    "allowed_fact_support_grades": [
+      "STRONG",
+      "MODERATE"
+    ],
+    "distinctness_any_of": [
+      "MEMBER_UNIQUE_GROUNDED_NORMALIZED_MOTIF"
+    ],
+    "each_member_must_contribute_unique_facet": true,
+    "beat_role_is_sufficient_alone": false,
+    "time_distance_is_sufficient_alone": false,
+    "required_pass_reason_code": "COMPACT_TWO_MEMBER_STORYLINE_GATE_PASSED"
+  },
+  "explicit_non_claims": [
+    "THESE_SOURCE_ORDER_THRESHOLDS_ARE_NOT_PERMANENT_PRODUCT_THRESHOLDS",
+    "THIS_CONTRACT_DOES_NOT_IMPLEMENT_WINDOW_LEVEL_CONTENT_UNITS",
+    "THIS_CONTRACT_DOES_NOT_PROVE_COMPLETE_MULTI_FACET_STORY_REASONING",
+    "THIS_CONTRACT_DOES_NOT_DECLARE_PRODUCTION_READINESS"
+  ]
+}

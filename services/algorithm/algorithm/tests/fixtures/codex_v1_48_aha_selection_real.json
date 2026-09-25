@@ -1,0 +1,562 @@
+{
+  "scope": "Recorded real candidates and selector inputs projected from V1.48; reproduces the exact pre-fix selection audit. Not semantic quality gold.",
+  "input_derivation": "All five PASSED candidates were DETERMINISTIC_EVENT_PEAK; supported fact scope and ranking fields are copied from observations. Chapter membership and beat fact links preserve the existing ownership check. Candidate ledger is reset to pre-selection status.",
+  "source_run": "var/codex_content_handoff_ab_v1_47/codex_v1_48_person1/candidate/codex_attempt_02/codex_full_run.json",
+  "source_run_sha256": "63bd0cc9082b79d453e5ecced20923a8c85c0a90e9faa1c3fc8cd5158dbc2f8e",
+  "time_reliability": {
+    "capture_time_reliable": false,
+    "interval_reliable": false,
+    "timezone_reliable": false
+  },
+  "candidate_material_labels": {
+    "839d3042-2696-5df9-9acc-31942adb2e5a": "M03",
+    "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2": "M09",
+    "a6ca9ad8-be78-547a-bca1-28ad9d23e982": "M12",
+    "b6204cab-229a-5a7e-8fdf-c6dc790f754c": "M13",
+    "d617eeeb-198b-5df6-b000-0ebcbad4e606": "M14"
+  },
+  "candidates": [
+    {
+      "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+      "observation_id": "cbdd6ae9-386f-59e0-a8c8-fe857f12d2f3",
+      "source_asset_id": "asset_13a140ce-fe6b-48d5-813b-77031ecbebd8",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "episode_code": "NATURE_WALK",
+      "subject_codes": [
+        "HISTORIC_ARCHITECTURE",
+        "LANDSCAPE",
+        "OTHER"
+      ],
+      "motifs": [
+        "prayer_plaques",
+        "stone_bridge",
+        "red_lanterns"
+      ],
+      "quality_score": 0.8,
+      "fact_ids": [
+        "8949c6fc-e636-5880-8456-2662380331d5"
+      ],
+      "event_fact_ids": [
+        "8949c6fc-e636-5880-8456-2662380331d5"
+      ],
+      "fact_support_grades": [
+        "STRONG"
+      ],
+      "proposal_source": "DETERMINISTIC_EVENT_PEAK"
+    },
+    {
+      "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+      "observation_id": "3e77be3d-f1ba-5cba-8e4c-feae87cd36a5",
+      "source_asset_id": "asset_6522750f-ce02-4ede-8a12-a195e05012ee",
+      "event_kind": "PLAYFUL_ANIMAL",
+      "event_salience": "MEDIUM",
+      "episode_code": "NATURE_WALK",
+      "subject_codes": [
+        "DOG",
+        "LANDSCAPE",
+        "STREET_SCENE"
+      ],
+      "motifs": [
+        "stone_path",
+        "forest",
+        "dog_walking"
+      ],
+      "quality_score": 0.9,
+      "fact_ids": [
+        "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+        "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+      ],
+      "event_fact_ids": [
+        "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+        "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+      ],
+      "fact_support_grades": [
+        "STRONG",
+        "STRONG"
+      ],
+      "proposal_source": "DETERMINISTIC_EVENT_PEAK"
+    },
+    {
+      "candidate_id": "a6ca9ad8-be78-547a-bca1-28ad9d23e982",
+      "observation_id": "a54861de-aa0e-53ab-a04a-626880d0c63e",
+      "source_asset_id": "asset_9c0a663b-dd6e-42f5-84f2-e030fc50dbf4",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "episode_code": "MARKET_VISIT",
+      "subject_codes": [
+        "FOOD_DESSERT",
+        "PEOPLE",
+        "CRAFT_OBJECT"
+      ],
+      "motifs": [
+        "food_stall",
+        "orange_lanterns",
+        "signage",
+        "ice_cream_cones"
+      ],
+      "quality_score": 0.95,
+      "fact_ids": [
+        "03b337cf-51d6-5e1a-982a-e6c9a68cad00"
+      ],
+      "event_fact_ids": [
+        "03b337cf-51d6-5e1a-982a-e6c9a68cad00"
+      ],
+      "fact_support_grades": [
+        "STRONG"
+      ],
+      "proposal_source": "DETERMINISTIC_EVENT_PEAK"
+    },
+    {
+      "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+      "observation_id": "2504c9d2-1827-57ba-a400-d2cbe947b66e",
+      "source_asset_id": "asset_b4731ca8-3d6c-4cb3-81cd-32fd1fa43774",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "episode_code": "HISTORIC_TOWN_WALK",
+      "subject_codes": [
+        "HISTORIC_ARCHITECTURE",
+        "STREET_SCENE"
+      ],
+      "motifs": [
+        "stone_sign",
+        "red_calligraphy",
+        "greenery"
+      ],
+      "quality_score": 0.85,
+      "fact_ids": [
+        "fd600078-c56b-5261-9993-5d10993322f8"
+      ],
+      "event_fact_ids": [
+        "fd600078-c56b-5261-9993-5d10993322f8"
+      ],
+      "fact_support_grades": [
+        "STRONG"
+      ],
+      "proposal_source": "DETERMINISTIC_EVENT_PEAK"
+    },
+    {
+      "candidate_id": "d617eeeb-198b-5df6-b000-0ebcbad4e606",
+      "observation_id": "107ec538-30f3-5039-96bb-dbfd1fd53e3b",
+      "source_asset_id": "asset_8978b0fc-1868-486a-8fa5-fed6a2a5a6dc",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "episode_code": "HISTORIC_TOWN_WALK",
+      "subject_codes": [
+        "STREET_SCENE",
+        "HISTORIC_ARCHITECTURE"
+      ],
+      "motifs": [
+        "canal",
+        "stone_bridge",
+        "white_walls",
+        "water_reflection"
+      ],
+      "quality_score": 0.88,
+      "fact_ids": [
+        "d9df4154-f84a-535a-b658-51f5e662eac5"
+      ],
+      "event_fact_ids": [
+        "d9df4154-f84a-535a-b658-51f5e662eac5"
+      ],
+      "fact_support_grades": [
+        "STRONG"
+      ],
+      "proposal_source": "DETERMINISTIC_EVENT_PEAK"
+    }
+  ],
+  "candidate_ledger": [
+    {
+      "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+      "validation_status": "PASSED",
+      "selection_status": "ELIGIBLE",
+      "reason_codes": [
+        "INDEPENDENT_LOCAL_EVENT_PEAK_SUPPORTED"
+      ]
+    },
+    {
+      "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+      "validation_status": "PASSED",
+      "selection_status": "ELIGIBLE",
+      "reason_codes": [
+        "INDEPENDENT_LOCAL_EVENT_PEAK_SUPPORTED"
+      ]
+    },
+    {
+      "candidate_id": "a6ca9ad8-be78-547a-bca1-28ad9d23e982",
+      "validation_status": "PASSED",
+      "selection_status": "ELIGIBLE",
+      "reason_codes": [
+        "INDEPENDENT_LOCAL_EVENT_PEAK_SUPPORTED"
+      ]
+    },
+    {
+      "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+      "validation_status": "PASSED",
+      "selection_status": "ELIGIBLE",
+      "reason_codes": [
+        "INDEPENDENT_LOCAL_EVENT_PEAK_SUPPORTED"
+      ]
+    },
+    {
+      "candidate_id": "d617eeeb-198b-5df6-b000-0ebcbad4e606",
+      "validation_status": "PASSED",
+      "selection_status": "ELIGIBLE",
+      "reason_codes": [
+        "INDEPENDENT_LOCAL_EVENT_PEAK_SUPPORTED"
+      ]
+    }
+  ],
+  "selected_chapters": [
+    {
+      "candidate_id": "ee127167-b73c-52c5-8276-2403d8cec1cd",
+      "source_asset_ids": [
+        "asset_3c580d3e-79d4-4b7c-8282-4e5dd5951615",
+        "asset_09b55a58-2bdd-4309-8ba5-376c095cf058",
+        "asset_89268a3d-d40f-4673-85c0-aafad5ad1cb9",
+        "asset_9c0a663b-dd6e-42f5-84f2-e030fc50dbf4",
+        "asset_e18ac5d7-f97d-45f3-8c5d-1738f0086ca9"
+      ],
+      "proposal_source": "MODEL_STORYLINE_PROPOSAL",
+      "episode_code": "MARKET_VISIT",
+      "storyline_identity": {
+        "beat_map": [
+          {
+            "observation_id": "284c8a07-2f78-5eb5-aca8-8f294ce8062b",
+            "beat_role": "ENTRY",
+            "fact_ids": [
+              "0f634a38-cd07-570e-91c8-9c6236b5adce"
+            ]
+          },
+          {
+            "observation_id": "7fcb76dd-b246-5ae6-b3b9-f3da909a3662",
+            "beat_role": "PROGRESSION",
+            "fact_ids": [
+              "fb09c82c-ea03-5bd7-86fd-f25df51e2ae8",
+              "14747127-4d09-55e9-bf8d-5428bb7b56f8"
+            ]
+          },
+          {
+            "observation_id": "241f7d33-63b0-5d50-8791-1936c60f7364",
+            "beat_role": "PROGRESSION",
+            "fact_ids": [
+              "6579ec1e-d236-5bfb-a86d-3370dff7a7c5",
+              "8fb3f0e4-7be6-5f8b-a446-efbce4ebab9f",
+              "61027112-9124-556e-91bb-2a0ea4a34d6b"
+            ]
+          },
+          {
+            "observation_id": "a54861de-aa0e-53ab-a04a-626880d0c63e",
+            "beat_role": "PEAK",
+            "fact_ids": [
+              "03b337cf-51d6-5e1a-982a-e6c9a68cad00"
+            ]
+          },
+          {
+            "observation_id": "b406cb5c-0af0-5ee2-950e-7efc092643e4",
+            "beat_role": "RESULT",
+            "fact_ids": [
+              "fa170b03-4c8c-5833-b096-d117cca6e9e9",
+              "6465e429-e79a-587f-9482-ebda46f328a2",
+              "b305dcf0-e125-5191-9c6d-fb2e14de308c"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "7f1d4d69-e287-5551-8c83-4b935de9c673",
+      "source_asset_ids": [
+        "asset_82575557-6628-4715-82e5-73f3f761fcc4",
+        "asset_e59c9bd4-d59f-433f-87d5-1e11ed9ad1dd",
+        "asset_bec8a5dd-76b0-4c98-8019-818e3d403378",
+        "asset_dba5ff94-dbad-47a5-82c8-fdc040ea1b6c",
+        "asset_b4731ca8-3d6c-4cb3-81cd-32fd1fa43774",
+        "asset_8978b0fc-1868-486a-8fa5-fed6a2a5a6dc",
+        "asset_8122576f-bfde-4917-814a-b2ac71e3fd08",
+        "asset_db700757-e55b-42c2-844e-ce363310a578",
+        "asset_ffe80baa-fa51-4bab-8ca1-e1fbfb87ed8c"
+      ],
+      "proposal_source": "MODEL_STORYLINE_PROPOSAL",
+      "episode_code": "HISTORIC_TOWN_WALK",
+      "storyline_identity": {
+        "beat_map": [
+          {
+            "observation_id": "c355420b-aaab-56c5-abf7-a8902256dfe1",
+            "beat_role": "ENTRY",
+            "fact_ids": [
+              "929f3ba2-0af4-576b-8b43-06b23855859c",
+              "b1ae0598-52a8-5a27-9041-8fa716dddcc3"
+            ]
+          },
+          {
+            "observation_id": "cf5a6a0d-0839-5ddc-90b9-42fc10bcbdc7",
+            "beat_role": "PROGRESSION",
+            "fact_ids": [
+              "9e75ecaf-42fe-5006-8151-c0065cd28963",
+              "ca84b156-b02e-59a0-9731-fef2acd61cff"
+            ]
+          },
+          {
+            "observation_id": "106de44d-09a1-50c9-ac85-cfb43214631e",
+            "beat_role": "PROGRESSION",
+            "fact_ids": [
+              "8c6fe5ef-b4a5-5e8c-a9b0-7a71a76250a2"
+            ]
+          },
+          {
+            "observation_id": "732019d3-8494-525b-ae6e-503c8cb9ff14",
+            "beat_role": "PEAK",
+            "fact_ids": [
+              "cf87fe59-663e-514c-aa3e-be251f1fd6bb"
+            ]
+          },
+          {
+            "observation_id": "2504c9d2-1827-57ba-a400-d2cbe947b66e",
+            "beat_role": "DISCOVERY",
+            "fact_ids": [
+              "fd600078-c56b-5261-9993-5d10993322f8"
+            ]
+          },
+          {
+            "observation_id": "107ec538-30f3-5039-96bb-dbfd1fd53e3b",
+            "beat_role": "PROGRESSION",
+            "fact_ids": [
+              "d9df4154-f84a-535a-b658-51f5e662eac5"
+            ]
+          },
+          {
+            "observation_id": "f2870ffa-e205-5784-ac98-e3cf2b5d7cea",
+            "beat_role": "PROGRESSION",
+            "fact_ids": [
+              "39b3dca0-5f65-5568-882e-7cf6a2944b62",
+              "6d099c3b-84c0-512d-af18-1ddba4e19863"
+            ]
+          },
+          {
+            "observation_id": "54fb3485-54ca-54c7-80f0-9032d67bf0ea",
+            "beat_role": "INTERACTION",
+            "fact_ids": [
+              "f67f91d2-a826-51f7-993c-b40e61edf441",
+              "b4c59a46-c720-559c-b2a0-a14d272b22e2",
+              "45a87c7f-6cec-599e-b1fb-7815f7b81e66",
+              "f65d1532-1479-51b7-9981-ee93c994a44a"
+            ]
+          },
+          {
+            "observation_id": "b225d5c8-d970-5317-aef3-b1810e228d77",
+            "beat_role": "EXIT",
+            "fact_ids": [
+              "71763657-d33c-5e69-8a3e-64e7d8921516",
+              "7cb5f19e-3cea-5e15-b497-0c2058756daa"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "f07c3c4a-cdcf-5385-a178-0fa9df8d2eda",
+      "source_asset_ids": [
+        "asset_13a140ce-fe6b-48d5-813b-77031ecbebd8",
+        "asset_6522750f-ce02-4ede-8a12-a195e05012ee",
+        "asset_342021e1-340b-4ec9-8ef0-3d80e19612bc"
+      ],
+      "proposal_source": "MODEL_STORYLINE_PROPOSAL",
+      "episode_code": "NATURE_WALK",
+      "storyline_identity": {
+        "beat_map": [
+          {
+            "observation_id": "cbdd6ae9-386f-59e0-a8c8-fe857f12d2f3",
+            "beat_role": "ENTRY",
+            "fact_ids": [
+              "8949c6fc-e636-5880-8456-2662380331d5"
+            ]
+          },
+          {
+            "observation_id": "3e77be3d-f1ba-5cba-8e4c-feae87cd36a5",
+            "beat_role": "PROGRESSION",
+            "fact_ids": [
+              "dd91db3d-28a1-52a7-ba6a-e99f091b20b6",
+              "9593f8e4-47af-5369-81c5-e0c6c62382dc"
+            ]
+          },
+          {
+            "observation_id": "19001885-8569-5755-b1e3-5d2f07f2f7fb",
+            "beat_role": "PEAK",
+            "fact_ids": [
+              "f2467e7d-2d51-58d3-b9fd-cedff630111d"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "asset_order": {
+    "asset_3c580d3e-79d4-4b7c-8282-4e5dd5951615": 0,
+    "asset_4c991c5e-f49c-4bbb-84f2-cf53cccac115": 1,
+    "asset_13a140ce-fe6b-48d5-813b-77031ecbebd8": 2,
+    "asset_82575557-6628-4715-82e5-73f3f761fcc4": 3,
+    "asset_896e37a7-d0dc-47d9-8e48-c4bd56797214": 4,
+    "asset_09b55a58-2bdd-4309-8ba5-376c095cf058": 5,
+    "asset_89268a3d-d40f-4673-85c0-aafad5ad1cb9": 6,
+    "asset_e59c9bd4-d59f-433f-87d5-1e11ed9ad1dd": 7,
+    "asset_6522750f-ce02-4ede-8a12-a195e05012ee": 8,
+    "asset_bec8a5dd-76b0-4c98-8019-818e3d403378": 9,
+    "asset_dba5ff94-dbad-47a5-82c8-fdc040ea1b6c": 10,
+    "asset_9c0a663b-dd6e-42f5-84f2-e030fc50dbf4": 11,
+    "asset_b4731ca8-3d6c-4cb3-81cd-32fd1fa43774": 12,
+    "asset_8978b0fc-1868-486a-8fa5-fed6a2a5a6dc": 13,
+    "asset_342021e1-340b-4ec9-8ef0-3d80e19612bc": 14,
+    "asset_8122576f-bfde-4917-814a-b2ac71e3fd08": 15,
+    "asset_db700757-e55b-42c2-844e-ce363310a578": 16,
+    "asset_e18ac5d7-f97d-45f3-8c5d-1738f0086ca9": 17,
+    "asset_ffe80baa-fa51-4bab-8ca1-e1fbfb87ed8c": 18,
+    "asset_c2208cb2-0bc4-4d2a-8541-54801f13c8b0": 19
+  },
+  "historical_selection_audit": {
+    "algorithm": "V04_1_AHA_LEXICOGRAPHIC_RELATION_AWARE_SET_SELECTION",
+    "search_contract": "EVENT_AND_DISCOVERY_AHA_PATHS_V02",
+    "search_outcome": "GROUNDED_AHA_SELECTED",
+    "event_candidate_count": 1,
+    "discovery_candidate_count": 4,
+    "eligible_candidate_count": 5,
+    "rank_fields": [
+      "event_salience",
+      "fact_support",
+      "event_specificity",
+      "novelty",
+      "presentation_quality_tiebreak"
+    ],
+    "ranked_candidate_ids": [
+      "a6ca9ad8-be78-547a-bca1-28ad9d23e982",
+      "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+      "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+      "d617eeeb-198b-5df6-b000-0ebcbad4e606",
+      "839d3042-2696-5df9-9acc-31942adb2e5a"
+    ],
+    "candidate_rank_inputs": {
+      "839d3042-2696-5df9-9acc-31942adb2e5a": {
+        "event_salience": 0.65,
+        "fact_support": 1.0,
+        "event_specificity": 1.0,
+        "novelty": 0.833333,
+        "presentation_quality_tiebreak": 0.8
+      },
+      "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2": {
+        "event_salience": 0.65,
+        "fact_support": 1.0,
+        "event_specificity": 1.0,
+        "novelty": 1.0,
+        "presentation_quality_tiebreak": 0.9
+      },
+      "a6ca9ad8-be78-547a-bca1-28ad9d23e982": {
+        "event_salience": 0.65,
+        "fact_support": 1.0,
+        "event_specificity": 1.0,
+        "novelty": 1.0,
+        "presentation_quality_tiebreak": 0.95
+      },
+      "b6204cab-229a-5a7e-8fdf-c6dc790f754c": {
+        "event_salience": 0.65,
+        "fact_support": 1.0,
+        "event_specificity": 1.0,
+        "novelty": 1.0,
+        "presentation_quality_tiebreak": 0.85
+      },
+      "d617eeeb-198b-5df6-b000-0ebcbad4e606": {
+        "event_salience": 0.65,
+        "fact_support": 1.0,
+        "event_specificity": 1.0,
+        "novelty": 0.875,
+        "presentation_quality_tiebreak": 0.88
+      }
+    },
+    "selected_candidate_ids": [
+      "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+      "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+      "839d3042-2696-5df9-9acc-31942adb2e5a"
+    ],
+    "published_sequence_candidate_ids": [
+      "839d3042-2696-5df9-9acc-31942adb2e5a",
+      "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+      "b6204cab-229a-5a7e-8fdf-c6dc790f754c"
+    ],
+    "publication_order_basis": "IMPORT_SEQUENCE_INDEX_THEN_CANDIDATE_ID_NOT_CHRONOLOGY",
+    "membership_order_separate_from_output_order": true,
+    "pair_ledger": [
+      {
+        "candidate_a_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+        "candidate_b_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+        "relation": "NO_CONFLICT_EVIDENCE",
+        "same_memory_evidence": [],
+        "distinct_memory_evidence": [],
+        "selection_effect": "ALLOW_COSELECT",
+        "reason_codes": [
+          "NO_CONFLICT_EVIDENCE_ALLOW_COSELECT"
+        ]
+      },
+      {
+        "candidate_a_id": "d617eeeb-198b-5df6-b000-0ebcbad4e606",
+        "candidate_b_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+        "relation": "NO_CONFLICT_EVIDENCE",
+        "same_memory_evidence": [],
+        "distinct_memory_evidence": [],
+        "selection_effect": "ALLOW_COSELECT",
+        "reason_codes": [
+          "NO_CONFLICT_EVIDENCE_ALLOW_COSELECT"
+        ]
+      },
+      {
+        "candidate_a_id": "d617eeeb-198b-5df6-b000-0ebcbad4e606",
+        "candidate_b_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+        "relation": "UNRESOLVED_POTENTIAL_CONFLICT",
+        "same_memory_evidence": [
+          "SAME_LOCAL_EVENT_SIGNATURE"
+        ],
+        "distinct_memory_evidence": [],
+        "selection_effect": "AT_MOST_ONE",
+        "reason_codes": [
+          "SAME_LOCAL_EVENT_SIGNATURE"
+        ]
+      },
+      {
+        "candidate_a_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+        "candidate_b_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+        "relation": "NO_CONFLICT_EVIDENCE",
+        "same_memory_evidence": [],
+        "distinct_memory_evidence": [],
+        "selection_effect": "ALLOW_COSELECT",
+        "reason_codes": [
+          "NO_CONFLICT_EVIDENCE_ALLOW_COSELECT"
+        ]
+      },
+      {
+        "candidate_a_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+        "candidate_b_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+        "relation": "NO_CONFLICT_EVIDENCE",
+        "same_memory_evidence": [],
+        "distinct_memory_evidence": [],
+        "selection_effect": "ALLOW_COSELECT",
+        "reason_codes": [
+          "NO_CONFLICT_EVIDENCE_ALLOW_COSELECT"
+        ]
+      }
+    ],
+    "chapter_conflicts": [
+      {
+        "aha_candidate_id": "a6ca9ad8-be78-547a-bca1-28ad9d23e982",
+        "chapter_candidate_id": "ee127167-b73c-52c5-8276-2403d8cec1cd",
+        "reason_code": "SAME_MODEL_ASSIGNED_CHAPTER_CORE_FACTS",
+        "selection_effect": "SUPPRESS_AHA_ONLY"
+      }
+    ],
+    "rejections": {
+      "a6ca9ad8-be78-547a-bca1-28ad9d23e982": "SAME_MODEL_ASSIGNED_CHAPTER_CORE_FACTS",
+      "d617eeeb-198b-5df6-b000-0ebcbad4e606": "SAME_LOCAL_EVENT_SIGNATURE"
+    },
+    "suppressed_by_candidate_id": {
+      "d617eeeb-198b-5df6-b000-0ebcbad4e606": "b6204cab-229a-5a7e-8fdf-c6dc790f754c"
+    },
+    "target_note": "One to two Ahas is the ordinary quality target and two to three is the rich-day target. Zero requires the explicit audited no-grounded-candidate outcome; no fabrication quota is enforced."
+  }
+}

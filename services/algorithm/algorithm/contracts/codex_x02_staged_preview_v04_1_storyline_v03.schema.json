@@ -1,0 +1,2374 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://diary-one.local/contracts/codex_x02_staged_preview_v04_1_storyline_v03.schema.json",
+  "title": "Diary One X02 V04.1 Preview with Model-owned Storyline V03",
+  "description": "Research-only V04.1 contract. semantic_day_state is the content truth and delivery_state is the delivery/readiness truth. The deprecated output_mode projection exists only for V04 client migration and must not be used to infer whether content absence and delivery failure are the same state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "experiment",
+    "experimental",
+    "leaderboard_eligible",
+    "validation_scope",
+    "production_ready",
+    "observation_semantic_contract_version",
+    "observation_semantic_contract_sha256",
+    "field_degradation_contract_version",
+    "field_degradation_contract_sha256",
+    "storyline_contract_version",
+    "storyline_contract_sha256",
+    "writer_surface_policy_version",
+    "evaluation_run_mode",
+    "cross_run_semantic_cache_used",
+    "session_id",
+    "bundle_manifest_sha256",
+    "coverage_status",
+    "unresolved_asset_ids",
+    "semantic_day_state",
+    "delivery_state",
+    "output_mode",
+    "selected_memory_outcomes",
+    "timeline_basis",
+    "timeline_date",
+    "time_reliability",
+    "observations",
+    "moments",
+    "chapters",
+    "ahas",
+    "decision_trace",
+    "trace"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "DIARY_ONE_X02_STAGED_PREVIEW_V04_1"
+    },
+    "experiment": {
+      "const": "X02_STAGED_REAL_MEDIA_PREVIEW"
+    },
+    "experimental": {
+      "const": true
+    },
+    "leaderboard_eligible": {
+      "const": false
+    },
+    "validation_scope": {
+      "const": "STAGED_PREVIEW_ONLY"
+    },
+    "production_ready": {
+      "const": false
+    },
+    "observation_semantic_contract_version": {
+      "const": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02"
+    },
+    "observation_semantic_contract_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "field_degradation_contract_version": {
+      "const": "DIARY_ONE_X02_FIELD_DEGRADATION_V01"
+    },
+    "field_degradation_contract_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "storyline_contract_version": {
+      "const": "DIARY_ONE_X02_STORYLINE_V03"
+    },
+    "storyline_contract_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "writer_surface_policy_version": {
+      "const": "DIARY_ONE_X02_WRITER_SURFACE_V02"
+    },
+    "evaluation_run_mode": {
+      "const": "FRESH_FULL_RUN"
+    },
+    "cross_run_semantic_cache_used": {
+      "const": false
+    },
+    "session_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "bundle_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coverage_status": {
+      "enum": [
+        "COMPLETE",
+        "PARTIAL_UNRESOLVED"
+      ]
+    },
+    "unresolved_asset_ids": {
+      "description": "Must exactly equal decision_trace.perception_batching.unresolved_asset_ids; exact cross-location value equality is asserted by the V04.1 contract tests.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "semantic_day_state": {
+      "description": "Semantic result derived from grounded selectable memory content, independent of copy or delivery failures.",
+      "enum": [
+        "CHAPTER_DAY",
+        "HIGHLIGHT_DAY",
+        "EMPTY_DAY",
+        "UNRESOLVED_DAY"
+      ]
+    },
+    "delivery_state": {
+      "description": "Current preview delivery/readiness state. This must not rewrite semantic_day_state.",
+      "enum": [
+        "READY_PRIMARY_COPY",
+        "READY_WITH_GROUNDED_COPY_FALLBACK",
+        "READY_WITH_ITEM_BLOCKS",
+        "PIPELINE_BLOCKED",
+        "NO_GROUNDED_MEMORY"
+      ]
+    },
+    "output_mode": {
+      "description": "Deprecated V04 compatibility projection only. Consumers must use semantic_day_state plus delivery_state for state truth.",
+      "enum": [
+        "CHAPTER_DAY",
+        "HIGHLIGHT_DAY",
+        "EMPTY_DAY",
+        "PIPELINE_BLOCKED"
+      ],
+      "deprecated": true
+    },
+    "selected_memory_outcomes": {
+      "description": "One row per S09-selected memory. Published chapters/ahas must exactly equal the media-ready, surface-verified rows by memory_type; that cross-array identity is asserted by the V04.1 contract tests.",
+      "type": "array",
+      "maxItems": 7,
+      "items": {
+        "$ref": "#/$defs/selectedMemoryOutcome"
+      }
+    },
+    "timeline_basis": {
+      "const": "SYNTHETIC_SEQUENCE_ONLY"
+    },
+    "timeline_date": {
+      "const": null
+    },
+    "time_reliability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capture_time_reliable",
+        "interval_reliable",
+        "timezone_reliable"
+      ],
+      "properties": {
+        "capture_time_reliable": {
+          "const": false
+        },
+        "interval_reliable": {
+          "const": false
+        },
+        "timezone_reliable": {
+          "const": false
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/observation"
+      }
+    },
+    "moments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/moment"
+      }
+    },
+    "chapters": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "$ref": "#/$defs/chapterMemory"
+      }
+    },
+    "ahas": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/ahaMemory"
+      }
+    },
+    "decision_trace": {
+      "type": "object",
+      "required": [
+        "trace_type",
+        "contains_hidden_reasoning",
+        "scope_note",
+        "stage_statuses",
+        "evidence_selection",
+        "perception_batching",
+        "observation_candidates",
+        "boundary_edges",
+        "observation_roles",
+        "chapter_candidates",
+        "aha_candidates",
+        "chapter_set_selection",
+        "aha_set_selection",
+        "s10_chapter_media",
+        "s10_aha_media",
+        "writer_items",
+        "blocked_memories",
+        "counts"
+      ],
+      "properties": {
+        "perception_batching": {
+          "$ref": "#/$defs/perceptionBatching"
+        },
+        "aha_set_selection": {
+          "$ref": "#/$defs/ahaSetSelection"
+        }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "pipeline_version",
+        "execution_mode",
+        "evaluation_run_mode",
+        "cross_run_semantic_cache_used",
+        "input_bundle_version",
+        "evidence_profile_version",
+        "provider",
+        "model",
+        "request_id",
+        "request_ids",
+        "model_calls",
+        "model_call_attempted_count",
+        "model_call_completed_count",
+        "model_call_failed_count",
+        "run_max_model_call_attempts",
+        "model_call_circuit_breaker_tripped",
+        "asset_count",
+        "evidence_frame_count",
+        "model_frame_count",
+        "uploaded_bytes",
+        "originals_uploaded",
+        "input_tokens",
+        "output_tokens",
+        "latency_seconds",
+        "estimated_cost_usd",
+        "stage_metrics",
+        "total_duration_ms",
+        "stage_metric_scope",
+        "s13_status"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "pipeline_version": {
+          "const": "X02_STAGED_REAL_MEDIA_PREVIEW_V04_1"
+        },
+        "execution_mode": {
+          "const": "STAGED_REAL_MEDIA_PREVIEW_NOT_PRODUCTION"
+        },
+        "evaluation_run_mode": {
+          "const": "FRESH_FULL_RUN"
+        },
+        "cross_run_semantic_cache_used": {
+          "const": false
+        },
+        "input_bundle_version": {
+          "enum": [
+            "DIARY_ONE_APP_LIBRARY_BUNDLE_V01",
+            "DIARY_ONE_APP_LIBRARY_BUNDLE_V02",
+            "DIARY_ONE_APP_LIBRARY_BUNDLE_V03"
+          ]
+        },
+        "evidence_profile_version": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "request_id": {
+          "type": "string"
+        },
+        "request_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "model_calls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "model_call_attempted_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "model_call_completed_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "model_call_failed_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "run_max_model_call_attempts": {
+          "const": 96
+        },
+        "model_call_circuit_breaker_tripped": {
+          "type": "boolean"
+        },
+        "asset_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidence_frame_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "model_frame_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "uploaded_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "model_evidence_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "originals_uploaded": {
+          "const": 0
+        },
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "latency_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "estimated_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stage_metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stageMetric"
+          }
+        },
+        "total_duration_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stage_metric_scope": {
+          "type": "string"
+        },
+        "s13_status": {
+          "const": "NOT_EXECUTED_IN_WEB_PREVIEW"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "coverage_status": {
+            "const": "PARTIAL_UNRESOLVED"
+          }
+        },
+        "required": [
+          "coverage_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "semantic_day_state": {
+            "const": "UNRESOLVED_DAY"
+          },
+          "delivery_state": {
+            "const": "PIPELINE_BLOCKED"
+          },
+          "output_mode": {
+            "const": "PIPELINE_BLOCKED"
+          },
+          "unresolved_asset_ids": {
+            "minItems": 1
+          },
+          "selected_memory_outcomes": {
+            "items": {
+              "$ref": "#/$defs/diagnosticSelectedMemoryOutcome"
+            }
+          },
+          "chapters": {
+            "items": {
+              "$ref": "#/$defs/diagnosticChapterMemory"
+            }
+          },
+          "ahas": {
+            "items": {
+              "$ref": "#/$defs/diagnosticAhaMemory"
+            }
+          },
+          "decision_trace": {
+            "properties": {
+              "perception_batching": {
+                "properties": {
+                  "coverage_status": {
+                    "const": "PARTIAL_UNRESOLVED"
+                  },
+                  "unresolved_asset_ids": {
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "coverage_status": {
+            "const": "COMPLETE"
+          }
+        },
+        "required": [
+          "coverage_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "semantic_day_state": {
+            "enum": [
+              "CHAPTER_DAY",
+              "HIGHLIGHT_DAY",
+              "EMPTY_DAY"
+            ]
+          },
+          "unresolved_asset_ids": {
+            "maxItems": 0
+          },
+          "selected_memory_outcomes": {
+            "items": {
+              "$ref": "#/$defs/completeSelectedMemoryOutcome"
+            }
+          },
+          "chapters": {
+            "items": {
+              "$ref": "#/$defs/validatedChapterMemory"
+            }
+          },
+          "ahas": {
+            "items": {
+              "$ref": "#/$defs/validatedAhaMemory"
+            }
+          },
+          "decision_trace": {
+            "properties": {
+              "perception_batching": {
+                "properties": {
+                  "coverage_status": {
+                    "const": "COMPLETE"
+                  },
+                  "unresolved_asset_ids": {
+                    "maxItems": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "semantic_day_state": {
+            "const": "UNRESOLVED_DAY"
+          }
+        },
+        "required": [
+          "semantic_day_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage_status": {
+            "const": "PARTIAL_UNRESOLVED"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "semantic_day_state": {
+            "const": "EMPTY_DAY"
+          }
+        },
+        "required": [
+          "semantic_day_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage_status": {
+            "const": "COMPLETE"
+          },
+          "delivery_state": {
+            "const": "NO_GROUNDED_MEMORY"
+          },
+          "output_mode": {
+            "const": "EMPTY_DAY"
+          },
+          "selected_memory_outcomes": {
+            "maxItems": 0
+          },
+          "chapters": {
+            "maxItems": 0
+          },
+          "ahas": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "semantic_day_state": {
+            "const": "CHAPTER_DAY"
+          }
+        },
+        "required": [
+          "semantic_day_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage_status": {
+            "const": "COMPLETE"
+          },
+          "selected_memory_outcomes": {
+            "minItems": 1,
+            "contains": {
+              "properties": {
+                "memory_type": {
+                  "const": "CHAPTER"
+                }
+              },
+              "required": [
+                "memory_type"
+              ]
+            },
+            "minContains": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "semantic_day_state": {
+            "const": "HIGHLIGHT_DAY"
+          }
+        },
+        "required": [
+          "semantic_day_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage_status": {
+            "const": "COMPLETE"
+          },
+          "selected_memory_outcomes": {
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/completeSelectedMemoryOutcome"
+                },
+                {
+                  "properties": {
+                    "memory_type": {
+                      "const": "AHA"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "chapters": {
+            "maxItems": 0
+          },
+          "ahas": {
+            "maxItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "delivery_state": {
+            "const": "NO_GROUNDED_MEMORY"
+          }
+        },
+        "required": [
+          "delivery_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage_status": {
+            "const": "COMPLETE"
+          },
+          "semantic_day_state": {
+            "const": "EMPTY_DAY"
+          },
+          "output_mode": {
+            "const": "EMPTY_DAY"
+          },
+          "selected_memory_outcomes": {
+            "maxItems": 0
+          },
+          "chapters": {
+            "maxItems": 0
+          },
+          "ahas": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "delivery_state": {
+            "const": "READY_PRIMARY_COPY"
+          }
+        },
+        "required": [
+          "delivery_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage_status": {
+            "const": "COMPLETE"
+          },
+          "semantic_day_state": {
+            "enum": [
+              "CHAPTER_DAY",
+              "HIGHLIGHT_DAY"
+            ]
+          },
+          "selected_memory_outcomes": {
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/modelVisibleSelectedMemoryOutcome"
+            }
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "chapters": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "ahas": {
+                "minItems": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "delivery_state": {
+            "const": "READY_WITH_GROUNDED_COPY_FALLBACK"
+          }
+        },
+        "required": [
+          "delivery_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage_status": {
+            "const": "COMPLETE"
+          },
+          "semantic_day_state": {
+            "enum": [
+              "CHAPTER_DAY",
+              "HIGHLIGHT_DAY"
+            ]
+          },
+          "selected_memory_outcomes": {
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/verifiedVisibleSelectedMemoryOutcome"
+            },
+            "contains": {
+              "$ref": "#/$defs/fallbackVisibleSelectedMemoryOutcome"
+            },
+            "minContains": 1
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "chapters": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "ahas": {
+                "minItems": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "delivery_state": {
+            "const": "READY_WITH_ITEM_BLOCKS"
+          }
+        },
+        "required": [
+          "delivery_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage_status": {
+            "const": "COMPLETE"
+          },
+          "semantic_day_state": {
+            "enum": [
+              "CHAPTER_DAY",
+              "HIGHLIGHT_DAY"
+            ]
+          },
+          "selected_memory_outcomes": {
+            "minItems": 2,
+            "items": {
+              "$ref": "#/$defs/completeSelectedMemoryOutcome"
+            },
+            "allOf": [
+              {
+                "contains": {
+                  "$ref": "#/$defs/verifiedVisibleSelectedMemoryOutcome"
+                },
+                "minContains": 1
+              },
+              {
+                "contains": {
+                  "$ref": "#/$defs/blockedDiagnosticSelectedMemoryOutcome"
+                },
+                "minContains": 1
+              }
+            ]
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "chapters": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "ahas": {
+                "minItems": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "delivery_state": {
+            "const": "PIPELINE_BLOCKED"
+          }
+        },
+        "required": [
+          "delivery_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "semantic_day_state": {
+            "enum": [
+              "CHAPTER_DAY",
+              "HIGHLIGHT_DAY",
+              "UNRESOLVED_DAY"
+            ]
+          },
+          "output_mode": {
+            "const": "PIPELINE_BLOCKED"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "coverage_status": {
+            "const": "COMPLETE"
+          },
+          "delivery_state": {
+            "const": "PIPELINE_BLOCKED"
+          }
+        },
+        "required": [
+          "coverage_status",
+          "delivery_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "selected_memory_outcomes": {
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/blockedDiagnosticSelectedMemoryOutcome"
+            }
+          },
+          "chapters": {
+            "maxItems": 0
+          },
+          "ahas": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "semantic_day_state": {
+            "const": "CHAPTER_DAY"
+          },
+          "delivery_state": {
+            "enum": [
+              "READY_PRIMARY_COPY",
+              "READY_WITH_GROUNDED_COPY_FALLBACK",
+              "READY_WITH_ITEM_BLOCKS"
+            ]
+          }
+        },
+        "required": [
+          "semantic_day_state",
+          "delivery_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "output_mode": {
+            "const": "CHAPTER_DAY"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "semantic_day_state": {
+            "const": "HIGHLIGHT_DAY"
+          },
+          "delivery_state": {
+            "enum": [
+              "READY_PRIMARY_COPY",
+              "READY_WITH_GROUNDED_COPY_FALLBACK",
+              "READY_WITH_ITEM_BLOCKS"
+            ]
+          }
+        },
+        "required": [
+          "semantic_day_state",
+          "delivery_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "output_mode": {
+            "const": "HIGHLIGHT_DAY"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "perceptionBatching": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy",
+        "max_assets",
+        "max_frames",
+        "max_evidence_bytes",
+        "single_asset_retry_limit",
+        "run_max_model_call_attempts",
+        "model_call_attempt_count",
+        "circuit_breaker_tripped",
+        "planned_batch_count",
+        "attempts",
+        "coverage_status",
+        "unresolved_asset_ids"
+      ],
+      "properties": {
+        "policy": {
+          "const": "V04_1_BOUNDED_ASSETS_FRAMES_BYTES_WITH_FAILURE_ISOLATION"
+        },
+        "max_assets": {
+          "const": 3
+        },
+        "max_frames": {
+          "const": 18
+        },
+        "max_evidence_bytes": {
+          "const": 4194304
+        },
+        "single_asset_retry_limit": {
+          "const": 1
+        },
+        "run_max_model_call_attempts": {
+          "const": 96
+        },
+        "model_call_attempt_count": {
+          "description": "Whole X02 V04.1 run count across Perception, Structure, and Writer provider-call attempts; not an S04-only count.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "circuit_breaker_tripped": {
+          "type": "boolean"
+        },
+        "planned_batch_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/perceptionAttempt"
+          }
+        },
+        "coverage_status": {
+          "enum": [
+            "COMPLETE",
+            "PARTIAL_UNRESOLVED"
+          ]
+        },
+        "unresolved_asset_ids": {
+          "description": "Must exactly equal the top-level unresolved_asset_ids array.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "perceptionAttempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempt_id",
+        "parent_attempt_id",
+        "asset_ids",
+        "asset_count",
+        "frame_count",
+        "evidence_bytes",
+        "provider_call_attempted",
+        "attempt_kind",
+        "status",
+        "reason_code",
+        "recovery_action",
+        "terminal_unresolved_asset_ids"
+      ],
+      "properties": {
+        "attempt_id": {
+          "type": "string",
+          "pattern": "^perception_attempt_[0-9]{3,}$"
+        },
+        "parent_attempt_id": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^perception_attempt_[0-9]{3,}$"
+            }
+          ]
+        },
+        "asset_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "asset_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "frame_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidence_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "provider_call_attempted": {
+          "type": "boolean"
+        },
+        "attempt_kind": {
+          "enum": [
+            "ROOT",
+            "SPLIT_CHILD",
+            "ORIGINAL_BATCH_RETRY",
+            "SINGLETON_RETRY",
+            "ITEM_RETRY"
+          ]
+        },
+        "status": {
+          "enum": [
+            "VALIDATED",
+            "VALIDATED_WITH_ITEM_FAILURES",
+            "FAILED",
+            "REJECTED_PREFLIGHT"
+          ]
+        },
+        "reason_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recovery_action": {
+          "enum": [
+            "NONE",
+            "BISECT",
+            "ORIGINAL_BATCH_RETRY",
+            "SINGLETON_RETRY",
+            "ITEM_LEVEL_RETRY",
+            "TERMINAL_UNRESOLVED",
+            "TERMINAL_PREFLIGHT",
+            "TERMINAL_ITEM_FAILURE"
+          ]
+        },
+        "terminal_unresolved_asset_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "attempt_kind": {
+                "const": "ROOT"
+              }
+            },
+            "required": [
+              "attempt_kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "parent_attempt_id": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "attempt_kind": {
+                "enum": [
+                  "SPLIT_CHILD",
+                  "ORIGINAL_BATCH_RETRY",
+                  "SINGLETON_RETRY",
+                  "ITEM_RETRY"
+                ]
+              }
+            },
+            "required": [
+              "attempt_kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "parent_attempt_id": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "REJECTED_PREFLIGHT"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "provider_call_attempted": {
+                "const": false
+              },
+              "reason_code": {
+                "const": "EVIDENCE_BUDGET_EXCEEDED"
+              },
+              "recovery_action": {
+                "const": "TERMINAL_PREFLIGHT"
+              },
+              "terminal_unresolved_asset_ids": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "VALIDATED"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "provider_call_attempted": {
+                "const": true
+              },
+              "recovery_action": {
+                "const": "NONE"
+              },
+              "terminal_unresolved_asset_ids": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "VALIDATED_WITH_ITEM_FAILURES"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "provider_call_attempted": {
+                "const": true
+              },
+              "recovery_action": {
+                "enum": [
+                  "ITEM_LEVEL_RETRY",
+                  "TERMINAL_ITEM_FAILURE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "FAILED"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "recovery_action": {
+                "enum": [
+                  "BISECT",
+                  "ORIGINAL_BATCH_RETRY",
+                  "SINGLETON_RETRY",
+                  "TERMINAL_UNRESOLVED"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "recovery_action": {
+                "enum": [
+                  "BISECT",
+                  "ORIGINAL_BATCH_RETRY",
+                  "SINGLETON_RETRY",
+                  "ITEM_LEVEL_RETRY",
+                  "NONE"
+                ]
+              }
+            },
+            "required": [
+              "recovery_action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "terminal_unresolved_asset_ids": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "recovery_action": {
+                "enum": [
+                  "TERMINAL_UNRESOLVED",
+                  "TERMINAL_PREFLIGHT",
+                  "TERMINAL_ITEM_FAILURE"
+                ]
+              }
+            },
+            "required": [
+              "recovery_action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "terminal_unresolved_asset_ids": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fact_id",
+        "text",
+        "evidence_frame_ids",
+        "support_grade"
+      ],
+      "properties": {
+        "fact_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "text": {
+          "type": "string"
+        },
+        "evidence_frame_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "support_grade": {
+          "enum": [
+            "STRONG",
+            "MODERATE",
+            "WEAK"
+          ]
+        }
+      }
+    },
+    "degradation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "json_field_path",
+        "validation_rule_id",
+        "action",
+        "original_value_sentinel"
+      ],
+      "properties": {
+        "json_field_path": {
+          "type": "string"
+        },
+        "validation_rule_id": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "original_value_sentinel": {
+          "type": "string"
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "asset_id",
+        "source_asset_id",
+        "media_kind",
+        "status",
+        "facts",
+        "setting_code",
+        "activity_code",
+        "episode_code",
+        "subject_codes",
+        "motifs",
+        "event_kind",
+        "event_salience",
+        "quality_score",
+        "limitations",
+        "degraded_fields",
+        "evidence_frame_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "asset_id": {
+          "type": "string"
+        },
+        "source_asset_id": {
+          "type": "string"
+        },
+        "media_kind": {
+          "enum": [
+            "PHOTO",
+            "VIDEO"
+          ]
+        },
+        "status": {
+          "enum": [
+            "OBSERVED",
+            "PARTIAL",
+            "INSUFFICIENT_EVIDENCE",
+            "FAILED"
+          ]
+        },
+        "facts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fact"
+          }
+        },
+        "setting_code": {
+          "type": "string"
+        },
+        "activity_code": {
+          "type": "string"
+        },
+        "episode_code": {
+          "type": "string"
+        },
+        "subject_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "motifs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "event_kind": {
+          "type": "string"
+        },
+        "event_salience": {
+          "type": "string"
+        },
+        "quality_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "degraded_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/degradation"
+          }
+        },
+        "evidence_frame_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "moment": {
+      "type": "object",
+      "required": [
+        "id",
+        "sequence_index",
+        "observation_ids",
+        "asset_ids",
+        "source_asset_ids",
+        "episode_codes",
+        "setting_codes",
+        "activity_codes",
+        "roles",
+        "time_label"
+      ]
+    },
+    "media": {
+      "type": "object",
+      "required": [
+        "asset_id",
+        "source_asset_id",
+        "observation_id",
+        "role",
+        "media_kind",
+        "preview_format",
+        "evidence_frame_ids",
+        "quality_score",
+        "motifs"
+      ]
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "candidate_id",
+        "title",
+        "time_label",
+        "story",
+        "tags",
+        "moment_ids",
+        "hero_asset_id",
+        "selected_media",
+        "evidence_support",
+        "evidence_frame_ids",
+        "claims",
+        "publication_status",
+        "surface_source",
+        "surface_policy_version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "candidate_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "title": {
+          "type": "string"
+        },
+        "time_label": {
+          "type": "string"
+        },
+        "story": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "type": "string"
+          }
+        },
+        "moment_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "hero_asset_id": {
+          "type": "string"
+        },
+        "selected_media": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/media"
+          }
+        },
+        "evidence_support": {
+          "enum": [
+            "STRONG",
+            "MODERATE",
+            "LIMITED"
+          ]
+        },
+        "evidence_frame_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "claims": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/fact"
+          }
+        },
+        "publication_status": {
+          "enum": [
+            "STAGED_PREVIEW_VALIDATED",
+            "STAGED_PREVIEW_DIAGNOSTIC_ONLY"
+          ]
+        },
+        "surface_source": {
+          "enum": [
+            "MODEL_WRITER",
+            "DETERMINISTIC_GROUNDED_FALLBACK"
+          ]
+        },
+        "surface_policy_version": {
+          "const": "DIARY_ONE_X02_WRITER_SURFACE_V02"
+        },
+        "storyline_identity": {
+          "$ref": "#/$defs/storylineIdentity"
+        }
+      }
+    },
+    "chapterMemory": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/memory"
+        },
+        {
+          "required": [
+            "storyline_identity"
+          ],
+          "properties": {
+            "selected_media": {
+              "minItems": 2,
+              "maxItems": 5
+            }
+          }
+        }
+      ]
+    },
+    "ahaMemory": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/memory"
+        },
+        {
+          "properties": {
+            "selected_media": {
+              "minItems": 1,
+              "maxItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "validatedChapterMemory": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/chapterMemory"
+        },
+        {
+          "properties": {
+            "publication_status": {
+              "const": "STAGED_PREVIEW_VALIDATED"
+            }
+          }
+        }
+      ]
+    },
+    "diagnosticChapterMemory": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/chapterMemory"
+        },
+        {
+          "properties": {
+            "publication_status": {
+              "const": "STAGED_PREVIEW_DIAGNOSTIC_ONLY"
+            }
+          }
+        }
+      ]
+    },
+    "validatedAhaMemory": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ahaMemory"
+        },
+        {
+          "properties": {
+            "publication_status": {
+              "const": "STAGED_PREVIEW_VALIDATED"
+            }
+          }
+        }
+      ]
+    },
+    "diagnosticAhaMemory": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ahaMemory"
+        },
+        {
+          "properties": {
+            "publication_status": {
+              "const": "STAGED_PREVIEW_DIAGNOSTIC_ONLY"
+            }
+          }
+        }
+      ]
+    },
+    "storylineBeat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_id",
+        "beat_role",
+        "fact_ids",
+        "contribution"
+      ],
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "beat_role": {
+          "enum": [
+            "ENTRY",
+            "PROGRESSION",
+            "DISCOVERY",
+            "INTERACTION",
+            "CONTRAST",
+            "PEAK",
+            "RESULT",
+            "EXIT",
+            "ATMOSPHERE_SUPPORT"
+          ]
+        },
+        "fact_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "contribution": {
+          "type": "string"
+        }
+      }
+    },
+    "storylineSegment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_ids",
+        "source_asset_ids",
+        "time_label"
+      ],
+      "properties": {
+        "observation_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "source_asset_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "time_label": {
+          "type": "string"
+        }
+      }
+    },
+    "splitChallenge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "triggered",
+        "trigger_reason_codes",
+        "whole_candidate_summary",
+        "partition_alternatives",
+        "decision",
+        "reason_codes"
+      ],
+      "properties": {
+        "triggered": {
+          "type": "boolean"
+        },
+        "trigger_reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "whole_candidate_summary": {
+          "type": "object"
+        },
+        "partition_alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "decision": {
+          "const": "NOT_PROGRAMMATICALLY_EVALUATED"
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "storylineIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "storyline_basis",
+        "focus_code",
+        "thesis",
+        "storyline_form",
+        "episode_codes",
+        "temporal_segments",
+        "interruption_observation_ids",
+        "beat_map",
+        "continuity_evidence",
+        "boundary_evidence",
+        "one_story_gate"
+      ],
+      "properties": {
+        "contract_version": {
+          "const": "DIARY_ONE_X02_STORYLINE_V03"
+        },
+        "storyline_basis": {
+          "enum": [
+            "EVENT_PROGRESSION",
+            "ACTIVITY_THREAD",
+            "DISCOVERY_SERIES",
+            "SOCIAL_INTERACTION"
+          ]
+        },
+        "focus_code": {
+          "type": "string",
+          "description": "Optional legacy annotation, retained as an empty string when absent. Not a grouping, ranking or independence signal."
+        },
+        "thesis": {
+          "type": "string"
+        },
+        "storyline_form": {
+          "enum": [
+            "SINGLE",
+            "ADJACENT_GROUP",
+            "RESUMED_EPISODE",
+            "LOCAL_EPISODE_GROUP",
+            "COMPACT_TWO_MEMBER"
+          ]
+        },
+        "episode_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "temporal_segments": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": {
+            "$ref": "#/$defs/storylineSegment"
+          }
+        },
+        "interruption_observation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "beat_map": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/storylineBeat"
+          }
+        },
+        "continuity_evidence": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "boundary_evidence": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "one_story_gate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "decision",
+            "reason_codes",
+            "member_count",
+            "total_span_in_source_order",
+            "interruption_count",
+            "interruption_ratio",
+            "temporal_segment_count",
+            "checks",
+            "split_challenge",
+            "validation_scope"
+          ],
+          "properties": {
+            "decision": {
+              "const": "PASS"
+            },
+            "reason_codes": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "member_count": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "total_span_in_source_order": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "interruption_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "interruption_ratio": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "temporal_segment_count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            },
+            "checks": {
+              "type": "object"
+            },
+            "split_challenge": {
+              "$ref": "#/$defs/splitChallenge"
+            },
+            "validation_scope": {
+              "const": "STRUCTURE_AND_REFERENCES_ONLY_NOT_SEMANTIC_VERIFICATION"
+            }
+          }
+        }
+      }
+    },
+    "ahaPairLedger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_a_id",
+        "candidate_b_id",
+        "relation",
+        "same_memory_evidence",
+        "distinct_memory_evidence",
+        "selection_effect",
+        "reason_codes"
+      ],
+      "properties": {
+        "candidate_a_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "candidate_b_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "relation": {
+          "enum": [
+            "EXACT_DUPLICATE",
+            "UNRESOLVED_POTENTIAL_CONFLICT",
+            "NO_CONFLICT_EVIDENCE"
+          ]
+        },
+        "same_memory_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "distinct_memory_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "selection_effect": {
+          "enum": [
+            "FORBID_COSELECT",
+            "AT_MOST_ONE",
+            "ALLOW_COSELECT"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ahaSetSelection": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "search_contract",
+        "search_outcome",
+        "eligible_candidate_count",
+        "ranked_candidate_ids",
+        "selected_candidate_ids",
+        "published_sequence_candidate_ids",
+        "publication_order_basis",
+        "pair_ledger",
+        "membership_order_separate_from_output_order",
+        "target_note"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "V04_1_AHA_LEXICOGRAPHIC_RELATION_AWARE_SET_SELECTION"
+        },
+        "search_contract": {
+          "const": "EVENT_AND_DISCOVERY_AHA_PATHS_V02"
+        },
+        "search_outcome": {
+          "enum": [
+            "GROUNDED_AHA_SELECTED",
+            "NO_GROUNDED_AHA_AFTER_SEARCH"
+          ]
+        },
+        "eligible_candidate_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ranked_candidate_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "selected_candidate_ids": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "published_sequence_candidate_ids": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "publication_order_basis": {
+          "const": "IMPORT_SEQUENCE_INDEX_THEN_CANDIDATE_ID_NOT_CHRONOLOGY"
+        },
+        "pair_ledger": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ahaPairLedger"
+          }
+        },
+        "membership_order_separate_from_output_order": {
+          "const": true
+        },
+        "target_note": {
+          "type": "string"
+        }
+      }
+    },
+    "selectedMemoryOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "memory_type",
+        "memory_id",
+        "selection_state",
+        "media_state",
+        "surface_state",
+        "visibility_state"
+      ],
+      "properties": {
+        "memory_type": {
+          "enum": [
+            "CHAPTER",
+            "AHA"
+          ]
+        },
+        "memory_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "selection_state": {
+          "const": "S09_SELECTED"
+        },
+        "media_state": {
+          "enum": [
+            "S10_MEDIA_READY",
+            "S10_MEDIA_BLOCKED"
+          ]
+        },
+        "surface_state": {
+          "enum": [
+            "MODEL_SURFACE_VERIFIED",
+            "DETERMINISTIC_FALLBACK_VERIFIED",
+            "COPY_BLOCKED",
+            "NOT_ATTEMPTED"
+          ]
+        },
+        "visibility_state": {
+          "enum": [
+            "VISIBLE_PREVIEW",
+            "DIAGNOSTIC_ONLY"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "media_state": {
+                "const": "S10_MEDIA_BLOCKED"
+              }
+            },
+            "required": [
+              "media_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "surface_state": {
+                "const": "NOT_ATTEMPTED"
+              },
+              "visibility_state": {
+                "const": "DIAGNOSTIC_ONLY"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "media_state": {
+                "const": "S10_MEDIA_READY"
+              }
+            },
+            "required": [
+              "media_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "surface_state": {
+                "enum": [
+                  "MODEL_SURFACE_VERIFIED",
+                  "DETERMINISTIC_FALLBACK_VERIFIED",
+                  "COPY_BLOCKED"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "surface_state": {
+                "const": "COPY_BLOCKED"
+              }
+            },
+            "required": [
+              "surface_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "media_state": {
+                "const": "S10_MEDIA_READY"
+              },
+              "visibility_state": {
+                "const": "DIAGNOSTIC_ONLY"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "visibility_state": {
+                "const": "VISIBLE_PREVIEW"
+              }
+            },
+            "required": [
+              "visibility_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "media_state": {
+                "const": "S10_MEDIA_READY"
+              },
+              "surface_state": {
+                "enum": [
+                  "MODEL_SURFACE_VERIFIED",
+                  "DETERMINISTIC_FALLBACK_VERIFIED"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "diagnosticSelectedMemoryOutcome": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/selectedMemoryOutcome"
+        },
+        {
+          "properties": {
+            "visibility_state": {
+              "const": "DIAGNOSTIC_ONLY"
+            }
+          }
+        }
+      ]
+    },
+    "verifiedVisibleSelectedMemoryOutcome": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/selectedMemoryOutcome"
+        },
+        {
+          "properties": {
+            "media_state": {
+              "const": "S10_MEDIA_READY"
+            },
+            "surface_state": {
+              "enum": [
+                "MODEL_SURFACE_VERIFIED",
+                "DETERMINISTIC_FALLBACK_VERIFIED"
+              ]
+            },
+            "visibility_state": {
+              "const": "VISIBLE_PREVIEW"
+            }
+          }
+        }
+      ]
+    },
+    "modelVisibleSelectedMemoryOutcome": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/verifiedVisibleSelectedMemoryOutcome"
+        },
+        {
+          "properties": {
+            "surface_state": {
+              "const": "MODEL_SURFACE_VERIFIED"
+            }
+          }
+        }
+      ]
+    },
+    "fallbackVisibleSelectedMemoryOutcome": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/verifiedVisibleSelectedMemoryOutcome"
+        },
+        {
+          "properties": {
+            "surface_state": {
+              "const": "DETERMINISTIC_FALLBACK_VERIFIED"
+            }
+          }
+        }
+      ]
+    },
+    "blockedDiagnosticSelectedMemoryOutcome": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/diagnosticSelectedMemoryOutcome"
+        },
+        {
+          "anyOf": [
+            {
+              "properties": {
+                "media_state": {
+                  "const": "S10_MEDIA_BLOCKED"
+                },
+                "surface_state": {
+                  "const": "NOT_ATTEMPTED"
+                }
+              }
+            },
+            {
+              "properties": {
+                "media_state": {
+                  "const": "S10_MEDIA_READY"
+                },
+                "surface_state": {
+                  "const": "COPY_BLOCKED"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "completeSelectedMemoryOutcome": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/selectedMemoryOutcome"
+        },
+        {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/verifiedVisibleSelectedMemoryOutcome"
+            },
+            {
+              "$ref": "#/$defs/blockedDiagnosticSelectedMemoryOutcome"
+            }
+          ]
+        }
+      ]
+    },
+    "stageMetric": {
+      "type": "object",
+      "required": [
+        "stage",
+        "duration_ms",
+        "model_calls",
+        "input_tokens",
+        "output_tokens",
+        "estimated_cost_usd"
+      ],
+      "properties": {
+        "stage": {
+          "type": "string"
+        },
+        "call_status": {
+          "enum": [
+            "COMPLETED",
+            "HTTP_FAILED",
+            "FAILED_BEFORE_RESPONSE",
+            "RESPONSE_INVALID"
+          ]
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "model_calls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "estimated_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

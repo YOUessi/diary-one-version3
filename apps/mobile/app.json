@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "diary-one-app",
+    "slug": "diary-one-app",
+    "scheme": "diaryone",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nexleap.diaryone.dev",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        },
+        "NSPhotoLibraryUsageDescription": "Diary One uses your photo library when you choose to save a captured original or update your profile photo.",
+        "NSPhotoLibraryAddUsageDescription": "Diary One saves images you choose to export to your photo library."
+      }
+    },
+    "android": {
+      "package": "com.nexleap.diaryone.dev",
+      "usesCleartextTraffic": true,
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-video",
+      "expo-sqlite",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Diary One to access photos you select for your profile."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow Diary One to save originals to your photo library.",
+          "savePhotosPermission": "Allow Diary One to save originals to your photo library."
+        }
+      ],
+      "expo-sharing"
+    ]
+  }
+}
