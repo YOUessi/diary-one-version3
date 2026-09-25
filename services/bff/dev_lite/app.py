@@ -30,12 +30,21 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from dev_lite.job_store import (
+    idempotent_reuse_status,
+    load_revision_index,
+    read_job_meta,
+    reload_jobs_from_disk,
+    save_revision_index,
+    write_job_meta,
+)
 from dev_lite.semantic_routes import router as semantic_router, semantic_analyze_batch
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 JOBS_DIR = DATA / "jobs"
 OTP_PATH = DATA / "otp.json"
+_revision_index: dict[str, str] = {}
 
 
 class Settings(BaseSettings):
@@ -120,10 +129,23 @@ async def semantic_analyze_multipart(request: Request) -> dict[str, Any]:
 
 
 
+def _persist_job(job_id: str, job_dir: Path) -> None:
+    job = _jobs.get(job_id)
+    if not job:
+        return
+    write_job_meta(job_dir, job)
+    rev = str(job.get("day_revision_id") or "").strip()
+    if rev:
+        _revision_index[rev] = job_id
+        save_revision_index(DATA, _revision_index)
+
+
 @app.on_event("startup")
 async def startup() -> None:
+    global _jobs, _revision_index
     _ensure_dirs()
     _load_otp()
+    _jobs, _revision_index = reload_jobs_from_disk(JOBS_DIR, DATA)
 
 
 @app.get("/health")
@@ -303,6 +325,22 @@ async def create_day_revision(request: Request) -> dict[str, Any]:
     else:
         rev_id = str(rev_field).strip() or f"dayrev_{uuid.uuid4()}"
 
+    existing_id = _revision_index.get(rev_id)
+    if existing_id:
+        existing = _jobs.get(existing_id)
+        if existing is None:
+            meta = read_job_meta(JOBS_DIR / existing_id)
+            if meta:
+                _jobs[existing_id] = meta
+                existing = meta
+        if existing and idempotent_reuse_status(str(existing.get("status", ""))):
+            return {
+                "job_id": existing_id,
+                "day_revision_id": rev_id,
+                "status": existing.get("status", "pending"),
+                "idempotent": True,
+            }
+
     job_id = str(uuid.uuid4())
     job_dir = JOBS_DIR / job_id
     frames_dir = job_dir / "frames"
@@ -330,6 +368,9 @@ async def create_day_revision(request: Request) -> dict[str, Any]:
         "result": None,
         "error": None,
     }
+    _revision_index[rev_id] = job_id
+    save_revision_index(DATA, _revision_index)
+    _persist_job(job_id, job_dir)
 
     asyncio.create_task(_process_job(job_id, job_dir))
     return {"job_id": job_id, "day_revision_id": rev_id, "status": "pending"}
@@ -452,8 +493,9 @@ async def _call_x02(job_dir: Path) -> dict[str, Any]:
 
 async def _process_job(job_id: str, job_dir: Path) -> None:
     job = _jobs[job_id]
-    job["status"] = "running"
+    job["status"] = "processing"
     job["message"] = "Calling X02…"
+    _persist_job(job_id, job_dir)
     try:
         result = await _call_x02(job_dir)
         (job_dir / "result.json").write_text(
@@ -462,6 +504,7 @@ async def _process_job(job_id: str, job_dir: Path) -> None:
         job["status"] = "succeeded"
         job["message"] = "X02 preview succeeded"
         job["result"] = result
+        _persist_job(job_id, job_dir)
     except Exception as e:  # noqa: BLE001
         if settings.allow_mock_preview:
             manifest = json.loads((job_dir / "bundle.json").read_text(encoding="utf-8"))
@@ -474,10 +517,12 @@ async def _process_job(job_id: str, job_dir: Path) -> None:
             job["status"] = "succeeded"
             job["message"] = f"Mock preview (X02 unavailable: {e})"
             job["result"] = result
+            _persist_job(job_id, job_dir)
         else:
             job["status"] = "failed"
             job["error"] = str(e)
             job["message"] = "Cloud processing failed"
+            _persist_job(job_id, job_dir)
 
 
 def main() -> None:

@@ -2,6 +2,7 @@ import json
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Request
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from bff.auth import require_bearer
@@ -36,6 +37,24 @@ async def create_day_revision(
 
     rev_id = await read_form_field(form.get("day_revision_id"))
     rev_id = rev_id or f"dayrev_{uuid.uuid4()}"
+
+    existing = await session.scalar(
+        select(CloudJob)
+        .where(CloudJob.day_revision_id == rev_id)
+        .order_by(CloudJob.created_at.desc())
+        .limit(1)
+    )
+    if existing and existing.status in (
+        JobStatus.pending,
+        JobStatus.processing,
+        JobStatus.succeeded,
+    ):
+        return {
+            "job_id": str(existing.id),
+            "day_revision_id": rev_id,
+            "status": existing.status.value,
+            "idempotent": True,
+        }
 
     job_id = uuid.uuid4()
     prefix = f"jobs/{job_id}/"
