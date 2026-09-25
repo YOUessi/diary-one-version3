@@ -23,22 +23,34 @@ Write-Host "   session_token ok"
 
 Write-Host "4. day-revisions idempotency (minimal manifest)" -ForegroundColor Cyan
 $rev = "dayrev_smoke_$(Get-Date -Format 'yyyyMMddHHmmss')"
-$manifest = '{"bundle_version":"DIARY_ONE_APP_LIBRARY_BUNDLE_V04","assets":[]}'
-# Use curl.exe for multipart if available
+$manifestPath = Join-Path $env:TEMP "diary-one-smoke-manifest.json"
+$manifestJson = '{"bundle_version":"DIARY_ONE_APP_LIBRARY_BUNDLE_V04","assets":[]}'
+[System.IO.File]::WriteAllText($manifestPath, $manifestJson, [System.Text.UTF8Encoding]::new($false))
 $job1 = curl.exe -s -S -X POST "$base/v1/day-revisions" -H "Authorization: Bearer $token" `
-  -F "manifest=$manifest;type=application/json" -F "day_revision_id=$rev"
+  -F "manifest=@$manifestPath;type=application/json" -F "day_revision_id=$rev"
 $j1 = $job1 | ConvertFrom-Json
 if (-not $j1.job_id) { throw "day-revision failed: $job1" }
 Write-Host "   job1=$($j1.job_id)"
 
 $job2 = curl.exe -s -S -X POST "$base/v1/day-revisions" -H "Authorization: Bearer $token" `
-  -F "manifest=$manifest;type=application/json" -F "day_revision_id=$rev"
+  -F "manifest=@$manifestPath;type=application/json" -F "day_revision_id=$rev"
 $j2 = $job2 | ConvertFrom-Json
 if ($j2.job_id -ne $j1.job_id) { throw "idempotent expected same job_id" }
 Write-Host "   idempotent ok (same job_id)"
 
-Write-Host "5. GET /v1/jobs/$($j1.job_id)" -ForegroundColor Cyan
-$poll = Invoke-RestMethod -Uri "$base/v1/jobs/$($j1.job_id)" -Headers $h
-Write-Host "   status=$($poll.status)"
+Write-Host "5. Poll /v1/jobs/$($j1.job_id) (max 90s)" -ForegroundColor Cyan
+$deadline = (Get-Date).AddSeconds(90)
+$final = $null
+do {
+  $poll = Invoke-RestMethod -Uri "$base/v1/jobs/$($j1.job_id)" -Headers $h
+  Write-Host "   status=$($poll.status)"
+  if ($poll.status -in @("succeeded", "failed")) { $final = $poll; break }
+  Start-Sleep -Seconds 2
+} while ((Get-Date) -lt $deadline)
 
-Write-Host "`nSmoke done. Start Dev Lite first: .\scripts\start-dev-lite.ps1" -ForegroundColor Green
+if (-not $final) { throw "job did not reach terminal state in 90s" }
+if ($final.status -eq "failed") {
+  Write-Host "   WARN: job failed (X02 down or no DASHSCOPE_API_KEY?) — OTP/idempotent path OK" -ForegroundColor Yellow
+}
+
+Write-Host "`nSmoke done." -ForegroundColor Green

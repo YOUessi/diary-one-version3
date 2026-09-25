@@ -5,7 +5,7 @@
 | 里程碑 | 状态 | 备注 |
 |--------|------|------|
 | M0 Figma 主屏 / 四 Tab | ✅ | FIGMA_04_COVERAGE |
-| M1 Dev Lite + OTP API | 🔄 | 幂等+任务落盘已补；见 BACKEND_ROADMAP |
+| M1 Dev Lite + OTP API | 🔄 | 幂等+落盘+重启续跑；`smoke-dev-lite.ps1` |
 | M2 Offline Diary | ✅ | Lab 按钮 0 |
 | M2 Demo/相册 → 云 → Diary | 🔄 | fixture 伪云；手机复测 Lab A |
 | M3 真 V1.75 | ⏳ | **待你确认 DashScope Key** |

@@ -2,6 +2,7 @@
 
 ## 2026-09-25
 
+- **PC 冒烟** `smoke-dev-lite.ps1`：health / OTP / day-revisions 幂等 / job poll → succeeded（`ALLOW_MOCK_PREVIEW=true` 无 X02 时 mock 回落）
 - 环境：Expo Go Android 57；BFF Dev Lite（本机）
 - T0.4 Offline mock：待用户确认
 - T2.1 Demo→云：曾失败（本地 Bundle）；已修 Demo JPEG，待复测

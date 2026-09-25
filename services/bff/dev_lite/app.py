@@ -94,6 +94,15 @@ def _save_otp() -> None:
     OTP_PATH.write_text(json.dumps(_otp, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+async def _form_bytes(part: Any) -> bytes:
+    """Starlette may return UploadFile or plain str for multipart fields."""
+    if part is None:
+        raise HTTPException(status_code=400, detail="missing form field")
+    if hasattr(part, "read"):
+        return await part.read()
+    return str(part).encode("utf-8")
+
+
 def require_token(
     creds: Optional[HTTPAuthorizationCredentials] = Depends(bearer),
 ) -> None:
@@ -140,12 +149,53 @@ def _persist_job(job_id: str, job_dir: Path) -> None:
         save_revision_index(DATA, _revision_index)
 
 
+def _job_dir_for(job_id: str) -> Path:
+    return JOBS_DIR / job_id
+
+
+def _hydrate_job_from_disk(job_id: str) -> dict[str, Any] | None:
+    """Load job into memory from job_meta.json or legacy result.json."""
+    if job_id in _jobs:
+        return _jobs[job_id]
+    job_dir = _job_dir_for(job_id)
+    meta = read_job_meta(job_dir)
+    if meta:
+        _jobs[job_id] = meta
+        return meta
+    result_path = job_dir / "result.json"
+    if result_path.exists():
+        meta = {
+            "job_id": job_id,
+            "day_revision_id": "",
+            "status": "succeeded",
+            "message": "Loaded from disk",
+            "bundle_version": None,
+            "result": json.loads(result_path.read_text(encoding="utf-8")),
+            "error": None,
+        }
+        _jobs[job_id] = meta
+        return meta
+    return None
+
+
 @app.on_event("startup")
 async def startup() -> None:
     global _jobs, _revision_index
     _ensure_dirs()
     _load_otp()
     _jobs, _revision_index = reload_jobs_from_disk(JOBS_DIR, DATA)
+    for job_id, job in list(_jobs.items()):
+        status = str(job.get("status") or "")
+        if status not in ("pending", "processing"):
+            continue
+        job_dir = _job_dir_for(job_id)
+        if not (job_dir / "bundle.json").exists():
+            continue
+        if status == "processing":
+            job["status"] = "pending"
+            job["message"] = "Resuming after restart"
+            _persist_job(job_id, job_dir)
+        asyncio.create_task(_process_job(job_id, job_dir))
 
 
 @app.get("/health")
@@ -311,7 +361,7 @@ async def create_day_revision(request: Request) -> dict[str, Any]:
     if manifest_part is None:
         raise HTTPException(status_code=400, detail="manifest required")
 
-    manifest_bytes = await manifest_part.read()
+    manifest_bytes = await _form_bytes(manifest_part)
     try:
         manifest_json = json.loads(manifest_bytes.decode("utf-8"))
     except json.JSONDecodeError as e:
@@ -320,8 +370,8 @@ async def create_day_revision(request: Request) -> dict[str, Any]:
     rev_field = form.get("day_revision_id")
     if rev_field is None:
         rev_id = f"dayrev_{uuid.uuid4()}"
-    elif hasattr(rev_field, "read"):
-        rev_id = (await rev_field.read()).decode("utf-8").strip() or f"dayrev_{uuid.uuid4()}"
+    elif hasattr(rev_field, "read") or isinstance(rev_field, (str, bytes)):
+        rev_id = (await _form_bytes(rev_field)).decode("utf-8").strip() or f"dayrev_{uuid.uuid4()}"
     else:
         rev_id = str(rev_field).strip() or f"dayrev_{uuid.uuid4()}"
 
@@ -348,15 +398,15 @@ async def create_day_revision(request: Request) -> dict[str, Any]:
     (job_dir / "bundle.json").write_bytes(manifest_bytes)
 
     profile_part = form.get("app_client_profile")
-    if profile_part is not None and hasattr(profile_part, "read"):
-        (job_dir / "app_client_profile.json").write_bytes(await profile_part.read())
+    if profile_part is not None:
+        (job_dir / "app_client_profile.json").write_bytes(await _form_bytes(profile_part))
 
     for key, part in form.items():
         if key in ("manifest", "app_client_profile", "day_revision_id"):
             continue
-        if not hasattr(part, "read"):
+        if not (hasattr(part, "read") or isinstance(part, (str, bytes))):
             continue
-        frame_bytes = await part.read()
+        frame_bytes = await _form_bytes(part)
         (frames_dir / f"{key}.jpg").write_bytes(frame_bytes)
 
     _jobs[job_id] = {
@@ -378,18 +428,8 @@ async def create_day_revision(request: Request) -> dict[str, Any]:
 
 @app.get("/v1/jobs/{job_id}", dependencies=[Depends(require_token)])
 async def get_job(job_id: str) -> dict[str, Any]:
-    job = _jobs.get(job_id)
+    job = _hydrate_job_from_disk(job_id)
     if not job:
-        # cold restart: look for result file
-        result_path = JOBS_DIR / job_id / "result.json"
-        if result_path.exists():
-            result = json.loads(result_path.read_text(encoding="utf-8"))
-            return {
-                "job_id": job_id,
-                "status": "succeeded",
-                "message": "Loaded from disk",
-                "result": result,
-            }
         raise HTTPException(status_code=404, detail="Job not found")
 
     body: dict[str, Any] = {

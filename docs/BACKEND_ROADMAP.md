@@ -27,7 +27,7 @@ App 合同：`apps/mobile/src/backend/productionCloudService.ts`、`authRemoteSe
 | POST `/v1/auth/otp/*` | ✅ SMTP | ⚠️ 仅 dev_code | 登录 |
 | POST `/v1/day-revisions` | ✅ | ✅ | 上传 Bundle |
 | GET `/v1/jobs/{id}` | ✅ | ✅ | 轮询 |
-| day_revision **幂等** | 🔄 本轮补 | 🔄 本轮补 | 防重复扣费/双任务 |
+| day_revision **幂等** | ✅ | ✅ | 防重复扣费/双任务 |
 
 ---
 
@@ -36,8 +36,8 @@ App 合同：`apps/mobile/src/backend/productionCloudService.ts`、`authRemoteSe
 ### 阶段 1 — Dev Lite 内测主链（你现在）
 
 1. ✅ 盘点（本文）  
-2. 🔄 **幂等 + 任务落盘**（BFF 重启可恢复 poll）  
-3. ⏳ `scripts/smoke-dev-lite.ps1` 一键冒烟  
+2. ✅ **幂等 + 任务落盘**（BFF 重启可恢复 poll + 续跑 pending）  
+3. ✅ `scripts/smoke-dev-lite.ps1` 一键冒烟  
 4. ⏳ 真 qwen + 关 mock（你配 `DASHSCOPE_API_KEY`）  
 5. ⏳ SMTP 真 OTP（`set-smtp.ps1`）  
 
