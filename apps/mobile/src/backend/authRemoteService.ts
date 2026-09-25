@@ -1,12 +1,12 @@
 import { useAppStore } from '../store/useAppStore';
+import { resolveProductionBearer } from './resolveProductionBearer';
 
 function authBase(): { url: string; token: string } {
   const s = useAppStore.getState();
   const fromStore = s.productionApiBaseUrl.trim();
   const fromEnv = (process.env.EXPO_PUBLIC_DEV_BFF_URL ?? '').trim();
   const url = fromStore || fromEnv;
-  const token = s.productionApiToken.trim() || (process.env.EXPO_PUBLIC_DEV_BFF_TOKEN ?? 'dev-token');
-  return { url: url.replace(/\/+$/, ''), token };
+  return { url: url.replace(/\/+$/, ''), token: resolveProductionBearer() };
 }
 
 export type OtpRequestResult =

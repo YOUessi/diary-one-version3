@@ -14,7 +14,7 @@ App 合同：`apps/mobile/src/backend/productionCloudService.ts`、`authRemoteSe
 |------|------|------|------|
 | Dev Lite 主服务 | `dev_lite/app.py` | ✅ 主链可用 | health / OTP / day-revisions / jobs |
 | Dev Lite 语义 | `dev_lite/semantic_routes.py` | ⚠️ | Windows analyze 501；路由在 App TS |
-| 量产 BFF | `bff/main.py` + `routes/*` | ⚠️ | day-revisions + jobs；OTP 为内存 stub |
+| 量产 BFF | `bff/main.py` + `routes/*` | ✅ | day-revisions + jobs；OTP=`shared/otp.py` |
 | Worker | `worker/processor.py` | ✅ | MinIO → X02 |
 | 共享模型 | `shared/models.py` | ✅ | `CloudJob` 无 day_revision 唯一约束 |
 | X02 | 本机 `:8787` | 外置 | `DASHSCOPE_API_KEY` + qwen |
@@ -43,14 +43,14 @@ App 合同：`apps/mobile/src/backend/productionCloudService.ts`、`authRemoteSe
 
 ### 阶段 2 — 与量产对齐
 
-6. 量产 `auth_otp` 复用 Dev Lite SMTP 逻辑（`shared/otp.py`）  
-7. Docker compose 本地跑通 worker  
-8. `day_revision_id` DB 唯一索引（可选，与幂等逻辑一致）  
+6. ✅ 量产 `auth_otp` ← `shared/otp.py` + SMTP 环境变量  
+7. ⏳ Docker compose 本地跑通 worker（`smoke-docker.ps1` 验 OTP/session）  
+8. `day_revision_id` DB 唯一索引（可选；失败重试与唯一约束冲突，暂应用层幂等）  
 
 ### 阶段 3 — 商用
 
 9. OSS 替换 MinIO  
-10. 会话鉴权：`session_token` 校验 day-revisions（非仅 dev-token）  
+10. ✅ `session_token` Bearer 校验 day-revisions / jobs（Dev Lite + 量产 BFF）  
 11. 监控 / 限流 / 日志  
 
 ---

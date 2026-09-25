@@ -13,10 +13,11 @@ import { applyDiaryDayUpdate, applyTodayStatus } from '../store/applyDiaryDay';
 import { mapTodayStatusFromPreview } from '../cloud/mapTodayStatus';
 import { diaryTodayKey } from '../domain/dayKey';
 import { createDayRevisionId } from '../domain/dayRevision';
-import { PHOTO_LIBRARY_TEST_SOURCE } from '../domain/mediaIntake';
+import { PHOTO_LIBRARY_TEST_SOURCE, type MediaIntakeSource } from '../domain/mediaIntake';
 import { attachHeroUrisFromBundle } from './attachHeroUris';
 import { rememberPipelineTask } from '../db/ledger';
 import { recordPipelineLedger } from '../db/assetLedger';
+import { resolveProductionBearer } from '../backend/resolveProductionBearer';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -30,7 +31,7 @@ function resolveCloudTarget(): {
     return {
       target: 'production',
       endpoint: s.productionApiBaseUrl.trim(),
-      token: s.productionApiToken.trim() || 'dev-token',
+      token: resolveProductionBearer(),
     };
   }
   return {
@@ -196,7 +197,10 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
   }
 }
 
-export function enqueuePipeline(items: PickedMedia[]): string | null {
+export function enqueuePipeline(
+  items: PickedMedia[],
+  intakeSource: MediaIntakeSource = PHOTO_LIBRARY_TEST_SOURCE,
+): string | null {
   const active = useAppStore.getState().pipelineTasks.some(
     (t) => t.status !== 'succeeded' && t.status !== 'failed',
   );
@@ -210,7 +214,7 @@ export function enqueuePipeline(items: PickedMedia[]): string | null {
     createdAt: new Date().toISOString(),
     dayKey,
     dayRevisionId: createDayRevisionId(dayKey),
-    intakeSource: PHOTO_LIBRARY_TEST_SOURCE,
+    intakeSource,
     status: 'queued',
     message: 'Queued',
     sourceCount: items.length,

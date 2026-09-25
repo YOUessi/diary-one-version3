@@ -13,13 +13,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
-import random
-import secrets
-import smtplib
-import ssl
-import time
 import uuid
-from email.message import EmailMessage
 from pathlib import Path
 from typing import Any, Optional
 
@@ -27,8 +21,11 @@ import httpx
 from fastapi import Depends, FastAPI, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from shared.api_auth import require_api_bearer
+from shared.otp import OtpMailConfig, OtpRequestBody, OtpService, OtpStore, OtpVerifyBody
+from shared.sessions import SessionStore
 
 from dev_lite.job_store import (
     idempotent_reuse_status,
@@ -44,6 +41,7 @@ ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 JOBS_DIR = DATA / "jobs"
 OTP_PATH = DATA / "otp.json"
+SESSIONS_PATH = DATA / "sessions.json"
 _revision_index: dict[str, str] = {}
 
 
@@ -72,26 +70,29 @@ if settings.smtp_host and os.environ.get("EXPOSE_OTP_IN_RESPONSE") is None:
     settings.expose_otp_in_response = False
 bearer = HTTPBearer(auto_error=False)
 _jobs: dict[str, dict[str, Any]] = {}
-_otp: dict[str, dict[str, Any]] = {}
-_lock = asyncio.Lock()
+_sessions = SessionStore(SESSIONS_PATH)
+
+
+def _otp_mail_config() -> OtpMailConfig:
+    return OtpMailConfig(
+        smtp_host=settings.smtp_host,
+        smtp_port=settings.smtp_port,
+        smtp_user=settings.smtp_user,
+        smtp_password=settings.smtp_password,
+        smtp_from=settings.smtp_from,
+        smtp_security=settings.smtp_security,
+        otp_ttl_seconds=settings.otp_ttl_seconds,
+        expose_otp_in_response=settings.expose_otp_in_response,
+        strict_smtp_required=True,
+    )
+
+
+_otp_service = OtpService(_otp_mail_config(), OtpStore(OTP_PATH))
 
 
 def _ensure_dirs() -> None:
     JOBS_DIR.mkdir(parents=True, exist_ok=True)
     DATA.mkdir(parents=True, exist_ok=True)
-
-
-def _load_otp() -> None:
-    global _otp
-    if OTP_PATH.exists():
-        try:
-            _otp = json.loads(OTP_PATH.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
-            _otp = {}
-
-
-def _save_otp() -> None:
-    OTP_PATH.write_text(json.dumps(_otp, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 async def _form_bytes(part: Any) -> bytes:
@@ -106,10 +107,8 @@ async def _form_bytes(part: Any) -> bytes:
 def require_token(
     creds: Optional[HTTPAuthorizationCredentials] = Depends(bearer),
 ) -> None:
-    if not settings.api_token:
-        return
-    if creds is None or creds.credentials != settings.api_token:
-        raise HTTPException(status_code=401, detail="unauthorized")
+    header = f"Bearer {creds.credentials}" if creds else None
+    require_api_bearer(header, settings.api_token, _sessions, invalid_status=401)
 
 
 app = FastAPI(title="Diary One Dev Lite BFF", version="0.2.0")
@@ -182,7 +181,7 @@ def _hydrate_job_from_disk(job_id: str) -> dict[str, Any] | None:
 async def startup() -> None:
     global _jobs, _revision_index
     _ensure_dirs()
-    _load_otp()
+    _otp_service.mail = _otp_mail_config()
     _jobs, _revision_index = reload_jobs_from_disk(JOBS_DIR, DATA)
     for job_id, job in list(_jobs.items()):
         status = str(job.get("status") or "")
@@ -230,95 +229,18 @@ async def health() -> dict[str, Any]:
     }
 
 
-class OtpRequest(BaseModel):
-    email: str = Field(min_length=3)
-
-
-class OtpVerify(BaseModel):
-    email: str = Field(min_length=3)
-    code: str = Field(min_length=4, max_length=12)
-
-
-def _smtp_configured() -> bool:
-    return bool(settings.smtp_host.strip() and settings.smtp_from.strip())
-
-
-def _send_otp_email(to_email: str, code: str) -> None:
-    """Blocking SMTP send — run via asyncio.to_thread from request handler."""
-    if not _smtp_configured():
-        raise RuntimeError("smtp_not_configured")
-    msg = EmailMessage()
-    msg["Subject"] = "Diary One verification code"
-    msg["From"] = settings.smtp_from.strip()
-    msg["To"] = to_email
-    msg.set_content(
-        f"Your Diary One code is: {code}\n\n"
-        f"It expires in {settings.otp_ttl_seconds // 60} minutes.\n"
-        "If you did not request this, ignore this email.\n"
-    )
-    host = settings.smtp_host.strip()
-    port = int(settings.smtp_port)
-    user = settings.smtp_user.strip()
-    password = settings.smtp_password
-    security = (settings.smtp_security or "ssl").lower()
-    if security == "ssl":
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(host, port, context=context, timeout=30) as smtp:
-            if user:
-                smtp.login(user, password)
-            smtp.send_message(msg)
-    elif security == "starttls":
-        context = ssl.create_default_context()
-        with smtplib.SMTP(host, port, timeout=30) as smtp:
-            smtp.ehlo()
-            smtp.starttls(context=context)
-            smtp.ehlo()
-            if user:
-                smtp.login(user, password)
-            smtp.send_message(msg)
-    else:
-        with smtplib.SMTP(host, port, timeout=30) as smtp:
-            if user:
-                smtp.login(user, password)
-            smtp.send_message(msg)
-
-
 @app.post("/v1/auth/otp/request")
-async def otp_request(body: OtpRequest) -> dict[str, Any]:
+async def otp_request(body: OtpRequestBody) -> dict[str, Any]:
     """ACC03：真 SMTP 发信；未配 SMTP 时仅在 expose_otp 下回传码（不推荐商用验收）。"""
-    email = body.email.strip().lower()
-    code = f"{random.randint(0, 999999):06d}"
-    async with _lock:
-        _otp[email] = {
-            "code": code,
-            "expires_at": time.time() + settings.otp_ttl_seconds,
-            "attempts": 0,
-        }
-        _save_otp()
-
-    out: dict[str, Any] = {
-        "ok": True,
-        "email": email,
-        "ttl_seconds": settings.otp_ttl_seconds,
-    }
-
-    if _smtp_configured():
-        try:
-            await asyncio.to_thread(_send_otp_email, email, code)
-        except Exception as e:  # noqa: BLE001
-            raise HTTPException(status_code=502, detail=f"smtp_send_failed:{e}") from e
-        out["message"] = "OTP sent by email."
-        out["delivery"] = "smtp"
-        if settings.expose_otp_in_response:
-            out["dev_code"] = code
-        return out
-
-    out["message"] = "OTP issued. Configure SMTP_* for real email delivery."
-    if settings.expose_otp_in_response:
-        out["dev_code"] = code
-        out["delivery"] = "response_only"
-    else:
-        out["delivery"] = "email_not_configured"
+    try:
+        out = await _otp_service.request(body.email)
+    except RuntimeError as e:
+        if str(e) == "smtp_not_configured":
+            raise HTTPException(status_code=502, detail="smtp_send_failed:smtp_not_configured") from e
+        raise
+    except Exception as e:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail=f"smtp_send_failed:{e}") from e
+    if out.get("_error") == "smtp_required":
         raise HTTPException(
             status_code=503,
             detail="smtp_required: set SMTP_HOST/SMTP_FROM or temporarily EXPOSE_OTP_IN_RESPONSE=true",
@@ -327,31 +249,12 @@ async def otp_request(body: OtpRequest) -> dict[str, Any]:
 
 
 @app.post("/v1/auth/otp/verify")
-async def otp_verify(body: OtpVerify) -> dict[str, Any]:
-    email = body.email.strip().lower()
-    digits = "".join(c for c in body.code if c.isdigit())
-    async with _lock:
-        entry = _otp.get(email)
-        if not entry:
-            raise HTTPException(status_code=400, detail="no_otp_requested")
-        if time.time() > float(entry["expires_at"]):
-            raise HTTPException(status_code=400, detail="otp_expired")
-        entry["attempts"] = int(entry.get("attempts", 0)) + 1
-        if entry["attempts"] > 8:
-            raise HTTPException(status_code=429, detail="too_many_attempts")
-        if digits != entry["code"]:
-            _save_otp()
-            raise HTTPException(status_code=400, detail="invalid_code")
-        del _otp[email]
-        _save_otp()
-
-    session_token = secrets.token_urlsafe(24)
-    return {
-        "ok": True,
-        "email": email,
-        "session_token": session_token,
-        "profile": {"email": email, "nickname": email.split("@")[0] or "Guest"},
-    }
+async def otp_verify(body: OtpVerifyBody) -> dict[str, Any]:
+    result, err = await _otp_service.verify(body.email, body.code, sessions=_sessions)
+    if err:
+        status = 429 if err == "too_many_attempts" else 400
+        raise HTTPException(status_code=status, detail=err)
+    return result or {}
 
 
 @app.post("/v1/day-revisions", dependencies=[Depends(require_token)])

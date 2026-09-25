@@ -65,7 +65,9 @@ export default function AccountHomeScreen() {
         text: 'Log out',
         style: 'destructive',
         onPress: () => {
-          useAppStore.getState().setLocalProfile({
+          const store = useAppStore.getState();
+          store.setSessionToken('');
+          store.setLocalProfile({
             nickname: 'Guest',
             email: undefined,
           });

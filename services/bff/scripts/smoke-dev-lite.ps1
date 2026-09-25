@@ -20,6 +20,8 @@ $verify = Invoke-RestMethod -Uri "$base/v1/auth/otp/verify" -Method POST -Header
   -ContentType "application/json" -Body (@{ email = "smoke@diary.one"; code = $otp.dev_code } | ConvertTo-Json)
 if (-not $verify.session_token) { throw "verify failed" }
 Write-Host "   session_token ok"
+$sessionH = @{ Authorization = "Bearer $($verify.session_token)"; Accept = "application/json" }
+$h = $sessionH
 
 Write-Host "4. day-revisions idempotency (minimal manifest)" -ForegroundColor Cyan
 $rev = "dayrev_smoke_$(Get-Date -Format 'yyyyMMddHHmmss')"

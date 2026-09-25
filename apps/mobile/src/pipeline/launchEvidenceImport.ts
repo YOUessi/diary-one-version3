@@ -1,12 +1,15 @@
 import { Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { fromPickerAssets } from './fromPicker';
+import { PHOTO_LIBRARY_TEST_SOURCE, PHOTO_LIBRARY_USER_SOURCE } from '../domain/mediaIntake';
 import { enqueuePipeline } from './runPipeline';
 import { createDemoPickedPhoto } from './createDemoPhoto';
 import { dedupePickedMedia } from './dedupeMedia';
 
-/** IMP01 — system picker；图+视频 → 去重 → 抽帧/压缩 → 云（P3）。 */
-export async function launchEvidenceImport(): Promise<void> {
+/** IMP01 — system picker；图+视频 → 去重 → 抽帧/压缩 → 云。 */
+export async function launchEvidenceImportFromLibrary(
+  intakeSource: typeof PHOTO_LIBRARY_TEST_SOURCE | typeof PHOTO_LIBRARY_USER_SOURCE = PHOTO_LIBRARY_USER_SOURCE,
+): Promise<void> {
   const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (!perm.granted) {
     Alert.alert(
@@ -38,7 +41,7 @@ export async function launchEvidenceImport(): Promise<void> {
     return;
   }
 
-  const taskId = enqueuePipeline(unique);
+  const taskId = enqueuePipeline(unique, intakeSource);
   if (!taskId) {
     Alert.alert('Pipeline busy', 'Wait for the current cloud processing task to finish.');
     return;
@@ -59,7 +62,7 @@ export async function launchDemoEvidenceImport(): Promise<void> {
     const item = await createDemoPickedPhoto();
     // Demo 每次新文件；允许重复跑真云（skipKnownLedger=false）
     const { unique } = await dedupePickedMedia([item], { skipKnownLedger: false });
-    const taskId = enqueuePipeline(unique);
+    const taskId = enqueuePipeline(unique, PHOTO_LIBRARY_TEST_SOURCE);
     if (!taskId) {
       Alert.alert('Pipeline busy', 'Wait for the current task to finish.');
       return;
@@ -71,4 +74,9 @@ export async function launchDemoEvidenceImport(): Promise<void> {
   } catch (e) {
     Alert.alert('Demo import failed', e instanceof Error ? e.message : String(e));
   }
+}
+
+/** Lab / Device — keeps PHOTO_LIBRARY_TEST intake label. */
+export async function launchEvidenceImport(): Promise<void> {
+  return launchEvidenceImportFromLibrary(PHOTO_LIBRARY_TEST_SOURCE);
 }

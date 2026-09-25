@@ -3,7 +3,7 @@ import type { AppLibraryBundle } from '../pipeline/bundleTypes';
 import type { CloudJobPoll } from './types';
 import type { X02PreviewResult } from '../cloud/types';
 import { buildBundleMultipartForm } from '../cloud/researchClient';
-import { useAppStore } from '../store/useAppStore';
+import { resolveProductionBearer } from './resolveProductionBearer';
 
 function base(url: string) {
   return url.trim().replace(/\/+$/, '');
@@ -17,7 +17,7 @@ function auth(token: string): Record<string, string> {
 /** Production BFF — multipart upload → async job (diary-one-server). */
 export async function submitProductionDayRevision(
   apiBaseUrl: string,
-  token: string,
+  token: string | undefined,
   dayRevisionId: string,
   bundleDir: string,
   bundleJsonPath: string,
@@ -37,7 +37,7 @@ export async function submitProductionDayRevision(
 
   const res = await fetch(`${base(apiBaseUrl)}/v1/day-revisions`, {
     method: 'POST',
-    headers: { Accept: 'application/json', ...auth(token) },
+    headers: { Accept: 'application/json', ...auth(token ?? resolveProductionBearer()) },
     body: form,
   });
 
@@ -60,7 +60,7 @@ export async function pollProductionCloudJob(
   jobId: string,
 ): Promise<CloudJobPoll> {
   const res = await fetch(`${base(apiBaseUrl)}/v1/jobs/${encodeURIComponent(jobId)}`, {
-    headers: { Accept: 'application/json', ...auth(token) },
+    headers: { Accept: 'application/json', ...auth(token ?? resolveProductionBearer()) },
   });
 
   if (res.status === 404) {

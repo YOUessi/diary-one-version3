@@ -24,6 +24,7 @@ import { DayPrepareBanner } from '../../components/DayPrepareBanner';
 import { ShareDayReadinessSheet } from '../../components/ShareDayReadinessSheet';
 import { CloudProcessingBanner } from '../../components/CloudProcessingBanner';
 import { activePipelineTask } from '../../pipeline/pipelineActive';
+import { launchEvidenceImportFromLibrary } from '../../pipeline/launchEvidenceImport';
 
 type Nav = NativeStackNavigationProp<DiaryStackParamList, 'DiaryHome'>;
 
@@ -180,11 +181,24 @@ export default function DiaryHomeScreen() {
             pointerEvents={calendarDayPreparing ? 'none' : 'auto'}
           >
           {isViewingToday && !todayHasMemories && (todayStatus === 'ZERO_CURATED' || todayStatus === 'NO_RECORDINGS') ? (
-            <Text style={styles.emptyToday}>
-              {todayStatus === 'NO_RECORDINGS'
-                ? 'No recordings today.'
-                : 'No memories were created from today\'s recordings.'}
-            </Text>
+            <View style={styles.emptyBlock}>
+              <Text style={styles.emptyToday}>
+                {todayStatus === 'NO_RECORDINGS'
+                  ? 'No recordings today.'
+                  : 'No memories were created from today\'s recordings.'}
+              </Text>
+              <Pressable
+                style={styles.importBtn}
+                onPress={() => void launchEvidenceImportFromLibrary()}
+                accessibilityRole="button"
+                accessibilityLabel="Import photos or videos from library"
+              >
+                <Text style={styles.importBtnText}>Import from library</Text>
+              </Pressable>
+              <Text style={styles.importHint}>
+                Photos or videos on this phone → cloud processing → Diary. Device recordings sync separately.
+              </Text>
+            </View>
           ) : null}
 
           {recapHasChapters ? (
@@ -267,12 +281,24 @@ const styles = StyleSheet.create({
   loadFailedText: { fontSize: font.small, color: colors.secondary },
   tryAgain: { fontSize: font.small, fontWeight: '600', color: colors.accent },
   searchLink: { fontSize: font.small, fontWeight: '600', color: colors.accent },
+  emptyBlock: { marginBottom: spacing.md, gap: spacing.sm },
   emptyToday: {
     fontSize: font.body,
     color: colors.secondary,
-    marginBottom: spacing.md,
     lineHeight: 22,
   },
+  importBtn: {
+    alignSelf: 'flex-start',
+    minHeight: layout.minTouch,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.accent,
+  },
+  importBtnText: { fontSize: font.small, fontWeight: '600', color: colors.accent },
+  importHint: { fontSize: font.micro, color: colors.tertiary, lineHeight: 18 },
   recapRow: {
     borderWidth: 1,
     borderColor: colors.divider,

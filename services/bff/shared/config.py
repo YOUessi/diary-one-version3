@@ -16,6 +16,14 @@ class Settings(BaseSettings):
     x02_base_url: str = "http://127.0.0.1:8787"
     x02_token: str = ""
     queue_key: str = "diary:cloud_jobs"
+    expose_otp_in_response: bool = True
+    otp_ttl_seconds: int = 600
+    smtp_host: str = ""
+    smtp_port: int = 465
+    smtp_user: str = ""
+    smtp_password: str = ""
+    smtp_from: str = ""
+    smtp_security: str = "ssl"
 
 
 settings = Settings()

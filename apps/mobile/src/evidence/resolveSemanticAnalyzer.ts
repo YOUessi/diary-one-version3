@@ -2,6 +2,7 @@ import { createFallbackSemanticAnalyzer } from './fallbackAnalyzer';
 import { createNativeVisionAnalyzer } from './nativeVisionAnalyzer';
 import { createRemoteSemanticAnalyzer } from './remoteSemanticAnalyzer';
 import type { SemanticAnalyzer } from './semanticAnalyzer';
+import { resolveProductionBearer } from '../backend/resolveProductionBearer';
 import { useAppStore } from '../store/useAppStore';
 
 export function resolveSemanticAnalyzer(options?: {
@@ -11,7 +12,7 @@ export function resolveSemanticAnalyzer(options?: {
 }): SemanticAnalyzer {
   const state = useAppStore.getState();
   const bffUrl = (options?.bffBaseUrl ?? state.productionApiBaseUrl ?? '').trim();
-  const token = options?.bffToken ?? state.productionApiToken ?? 'dev-token';
+  const token = options?.bffToken ?? resolveProductionBearer();
 
   const native = createNativeVisionAnalyzer();
   if (native && !options?.preferRemote) {
