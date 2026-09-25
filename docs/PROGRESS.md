@@ -20,12 +20,5 @@
 
 ## GitHub 仓
 
-- 本地 monorepo 已就绪：`E:\AI耳机\diary-one`（初始 commit 已有）
-- 目标远程：`https://github.com/Nexleap-Tech/Diary_one`（private）
-- 阻塞：本机访问 GitHub 超时 / API 403；需网络可达且组织有建仓权限后执行：
-
-```powershell
-gh auth login -h github.com -p https -w -s "repo,read:org,workflow"
-cd E:\AI耳机\diary-one
-.\scripts\push-to-github.ps1
-```
+- ✅ 私有仓已创建并推送：https://github.com/Nexleap-Tech/Diary_one  
+- 本地：`E:\AI耳机\diary-one` → `origin/main`（账号 `7tiantian`）
