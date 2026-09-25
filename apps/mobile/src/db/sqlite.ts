@@ -116,6 +116,17 @@ export async function initDatabase(): Promise<void> {
 
     );
 
+    CREATE TABLE IF NOT EXISTS raw_assets (
+      original_sha256 TEXT PRIMARY KEY NOT NULL,
+      asset_key TEXT NOT NULL,
+      media_kind TEXT NOT NULL,
+      file_name TEXT,
+      byte_size INTEGER,
+      first_seen_at TEXT NOT NULL,
+      last_seen_at TEXT NOT NULL,
+      use_count INTEGER NOT NULL DEFAULT 1
+    );
+
   `);
 
 }

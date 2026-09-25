@@ -96,7 +96,7 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
   try {
     patchTask(taskId, {
       status: 'building_evidence',
-      message: `Normalizing ${items.length} asset(s)…`,
+      message: `Deduping + normalizing ${items.length} asset(s) (compress / frames)…`,
     });
 
     const sessionFolder = `bundle-${taskId}`;

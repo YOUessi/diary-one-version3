@@ -1,8 +1,9 @@
 import * as FileSystem from 'expo-file-system/legacy';
-import * as ImageManipulator from 'expo-image-manipulator';
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import { sha256File } from './sha256File';
 import { ensureLocalFileUri } from './ensureLocalFileUri';
+import { writeNormalizedFrame, EVIDENCE_FRAME } from './evidenceNormalize';
+import { rememberRawAssetsFromBundleAssets } from './dedupeMedia';
 import type { PickedMedia } from './types';
 import {
   type AppLibraryBundle,
@@ -29,58 +30,6 @@ function extFromName(name?: string, fallback = 'jpg'): string {
   return (m?.[1] ?? fallback).toLowerCase();
 }
 
-async function writeNormalizedFrame(
-  sourceUri: string,
-  destUri: string,
-  spatial: SpatialTransform,
-  sourceW?: number,
-  sourceH?: number,
-): Promise<void> {
-  // Always start from a simple resize — `extent` is unreliable on some Android Expo Go builds.
-  const fallback = async () => {
-    const result = await ImageManipulator.manipulateAsync(
-      sourceUri,
-      [{ resize: { width: 768, height: 1024 } }],
-      { compress: 0.84, format: ImageManipulator.SaveFormat.JPEG },
-    );
-    await FileSystem.copyAsync({ from: result.uri, to: destUri });
-  };
-
-  if (spatial === 'CENTER_CROP_ASPECT_FILL') {
-    await fallback();
-    return;
-  }
-
-  try {
-    const w = Math.max(1, sourceW ?? 3);
-    const h = Math.max(1, sourceH ?? 4);
-    const scale = Math.min(768 / w, 1024 / h);
-    const newW = Math.max(1, Math.round(w * scale));
-    const newH = Math.max(1, Math.round(h * scale));
-    const originX = Math.round((768 - newW) / 2);
-    const originY = Math.round((1024 - newH) / 2);
-    const result = await ImageManipulator.manipulateAsync(
-      sourceUri,
-      [
-        { resize: { width: newW, height: newH } },
-        {
-          extent: {
-            width: 768,
-            height: 1024,
-            originX,
-            originY,
-            backgroundColor: '#000000',
-          },
-        },
-      ],
-      { compress: 0.84, format: ImageManipulator.SaveFormat.JPEG },
-    );
-    await FileSystem.copyAsync({ from: result.uri, to: destUri });
-  } catch {
-    await fallback();
-  }
-}
-
 type FrameRow = {
   frame_id: string;
   window_index: number;
@@ -102,12 +51,19 @@ async function frameFromUri(
   spatial: SpatialTransform,
   sourceW: number | undefined,
   sourceH: number | undefined,
-  meta: Omit<FrameRow, 'relative_path' | 'sha256' | 'spatial_transform'>,
+  meta: Omit<FrameRow, 'relative_path' | 'sha256' | 'spatial_transform' | 'width' | 'height'>,
 ): Promise<FrameRow> {
   const destUri = `${bundleDir}${destRelative}`;
   await writeNormalizedFrame(sourceUri, destUri, spatial, sourceW, sourceH);
   const sha256 = await sha256File(destUri);
-  return { ...meta, spatial_transform: spatial, relative_path: destRelative, sha256 };
+  return {
+    ...meta,
+    spatial_transform: spatial,
+    relative_path: destRelative,
+    sha256,
+    width: EVIDENCE_FRAME.width,
+    height: EVIDENCE_FRAME.height,
+  };
 }
 
 export async function buildAppLibraryBundle(
@@ -141,8 +97,6 @@ export async function buildAppLibraryBundle(
         sample_role: 'PHOTO_REPRESENTATIVE',
         canonical_offset_ms: 4500,
         source_timestamp_ms: null,
-        width: 768,
-        height: 1024,
       });
       assets.push({
         asset_id: assetId,
@@ -188,7 +142,10 @@ export async function buildAppLibraryBundle(
             ? 'WINDOW_EARLY'
             : 'WINDOW_LATE';
       const fraction = (fi + 1) / (canonicalOffsets.length + 1);
-      const source_timestamp_ms = Math.max(0, Math.min(durationMs - 1, Math.round(durationMs * fraction)));
+      const source_timestamp_ms = Math.max(
+        0,
+        Math.min(durationMs - 1, Math.round(durationMs * fraction)),
+      );
       const thumb = await VideoThumbnails.getThumbnailAsync(localUri, {
         time: source_timestamp_ms,
         quality: 0.85,
@@ -202,8 +159,6 @@ export async function buildAppLibraryBundle(
           sample_role,
           canonical_offset_ms: offset as 1500 | 4500 | 7500,
           source_timestamp_ms,
-          width: 768,
-          height: 1024,
         }),
       );
     }
@@ -239,8 +194,8 @@ export async function buildAppLibraryBundle(
     },
     device: DEVICE_STUB,
     normalization: {
-      width: 768,
-      height: 1024,
+      width: EVIDENCE_FRAME.width,
+      height: EVIDENCE_FRAME.height,
       orientation: 'PORTRAIT',
       aspect_ratio: '3:4',
       spatial_transform: spatial,
@@ -250,6 +205,16 @@ export async function buildAppLibraryBundle(
     },
     assets,
   };
+
+  await rememberRawAssetsFromBundleAssets(
+    assets as Array<{
+      asset_id?: string;
+      original_sha256?: string;
+      media_kind?: string;
+      source_display_name?: string;
+      original_bytes?: number;
+    }>,
+  );
 
   const jsonPath = `${bundleDir}bundle.json`;
   await FileSystem.writeAsStringAsync(jsonPath, JSON.stringify(bundle, null, 2));

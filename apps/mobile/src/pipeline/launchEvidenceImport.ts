@@ -3,8 +3,9 @@ import * as ImagePicker from 'expo-image-picker';
 import { fromPickerAssets } from './fromPicker';
 import { enqueuePipeline } from './runPipeline';
 import { createDemoPickedPhoto } from './createDemoPhoto';
+import { dedupePickedMedia } from './dedupeMedia';
 
-/** IMP01 — system picker only; queues evidence pipeline (P3). */
+/** IMP01 — system picker；图+视频 → 去重 → 抽帧/压缩 → 云（P3）。 */
 export async function launchEvidenceImport(): Promise<void> {
   const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (!perm.granted) {
@@ -17,23 +18,38 @@ export async function launchEvidenceImport(): Promise<void> {
     return;
   }
   const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ['images'],
+    // PRD：相册主动选入图/视频；抽帧逻辑在 buildAppLibraryBundle
+    mediaTypes: ['images', 'videos'],
     allowsMultipleSelection: Platform.OS === 'ios',
-    selectionLimit: Platform.OS === 'ios' ? 3 : 1,
-    quality: 0.9,
+    selectionLimit: Platform.OS === 'ios' ? 6 : 1,
+    quality: 1,
     exif: false,
+    videoMaxDuration: 120,
   });
   if (result.canceled || !result.assets.length) return;
 
-  const items = fromPickerAssets(result.assets);
-  const taskId = enqueuePipeline(items);
+  const picked = fromPickerAssets(result.assets);
+  const { unique, skippedSessionDupes, skippedLedgerDupes } = await dedupePickedMedia(picked);
+  if (!unique.length) {
+    Alert.alert(
+      'All duplicates',
+      `Skipped ${skippedSessionDupes + skippedLedgerDupes} duplicate(s). Nothing new to process.`,
+    );
+    return;
+  }
+
+  const taskId = enqueuePipeline(unique);
   if (!taskId) {
     Alert.alert('Pipeline busy', 'Wait for the current cloud processing task to finish.');
     return;
   }
+  const skipNote =
+    skippedSessionDupes + skippedLedgerDupes > 0
+      ? ` Skipped ${skippedSessionDupes + skippedLedgerDupes} duplicate(s).`
+      : '';
   Alert.alert(
     'Pipeline started',
-    `${items.length} photo(s) queued. Watch Active tasks below, then open Diary.`,
+    `${unique.length} item(s) queued (photos/videos → compress/frames).${skipNote} Watch Active tasks, then Diary.`,
   );
 }
 
@@ -41,7 +57,9 @@ export async function launchEvidenceImport(): Promise<void> {
 export async function launchDemoEvidenceImport(): Promise<void> {
   try {
     const item = await createDemoPickedPhoto();
-    const taskId = enqueuePipeline([item]);
+    // Demo 每次新文件；允许重复跑真云（skipKnownLedger=false）
+    const { unique } = await dedupePickedMedia([item], { skipKnownLedger: false });
+    const taskId = enqueuePipeline(unique);
     if (!taskId) {
       Alert.alert('Pipeline busy', 'Wait for the current task to finish.');
       return;
