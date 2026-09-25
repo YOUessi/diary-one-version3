@@ -111,7 +111,15 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
       bundleDir,
       bundleJsonPath: jsonPath,
       bundleVersion: bundle.bundle_version,
-      message: `${bundle.bundle_version} written on device`,
+      message: (() => {
+        const video = bundle.assets.find(
+          (a) => (a as { media_kind?: string }).media_kind === 'VIDEO',
+        ) as { semantic_route_summary?: string } | undefined;
+        const summary = video?.semantic_route_summary;
+        return summary
+          ? `${bundle.bundle_version} · ${summary}`
+          : `${bundle.bundle_version} written on device`;
+      })(),
     });
 
     const { target, endpoint, token } = resolveCloudTarget();

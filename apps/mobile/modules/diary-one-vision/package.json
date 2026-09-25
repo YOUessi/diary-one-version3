@@ -1,0 +1,9 @@
+{
+  "name": "diary-one-vision",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "peerDependencies": {
+    "expo": "*",
+    "expo-modules-core": "*"
+  }
+}

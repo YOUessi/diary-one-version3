@@ -19,6 +19,11 @@ import { PipelineTaskList } from '../../components/PipelineTaskList';
 import { AssetLedgerList } from '../../components/AssetLedgerList';
 import { launchEvidenceImport, launchDemoEvidenceImport } from '../../pipeline/launchEvidenceImport';
 import { applyOfflineMockDiary } from '../../pipeline/applyOfflineMockDiary';
+import {
+  formatSemanticRouteSummary,
+  getLastSemanticRouteAudit,
+} from '../../evidence/lastSemanticRoute';
+import { isNativeVisionAvailable } from '../../evidence/nativeVisionAnalyzer';
 import { useAppStore } from '../../store/useAppStore';
 import { colors, font, layout, radius, spacing } from '../../theme';
 import { PHOTO_LIBRARY_TEST_SOURCE } from '../../domain/mediaIntake';
@@ -179,6 +184,22 @@ export default function InternalLabScreen() {
           <Text style={styles.importLabel}>B · Import from photo library</Text>
           <Text style={styles.importHint}>
             Real photos. Often blocked on Expo Go Android — prefer A if B fails.
+          </Text>
+        </Pressable>
+        <Pressable
+          style={styles.importBtn}
+          onPress={() => {
+            const audit = getLastSemanticRouteAudit();
+            const vision = isNativeVisionAvailable() ? 'DiaryOneVision=yes' : 'DiaryOneVision=no (Expo Go)';
+            Alert.alert(
+              'Semantic route debug',
+              `${formatSemanticRouteSummary(audit)}\n\n${vision}\n\nImport a video with B to refresh.`,
+            );
+          }}
+        >
+          <Text style={styles.importLabel}>C · Semantic route debug</Text>
+          <Text style={styles.importHint}>
+            Last VIDEO semantic audit (1/3/5/10 frames). Native Vision only in Dev Client / expo run:ios.
           </Text>
         </Pressable>
 

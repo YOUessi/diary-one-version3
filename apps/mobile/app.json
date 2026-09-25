@@ -48,7 +48,8 @@
           "savePhotosPermission": "Allow Diary One to save originals to your photo library."
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      "./modules/diary-one-vision"
     ]
   }
 }

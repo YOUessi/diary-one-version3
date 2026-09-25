@@ -24,11 +24,13 @@ from pathlib import Path
 from typing import Any, Optional
 
 import httpx
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from dev_lite.semantic_routes import router as semantic_router, semantic_analyze_batch
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -100,6 +102,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(semantic_router)
+
+
+@app.post("/v1/evidence/semantic-analyze")
+async def semantic_analyze_multipart(request: Request) -> dict[str, Any]:
+    """Accept probe_0, probe_1, … JPEG parts (batch)."""
+    form = await request.form()
+    files: list[UploadFile] = []
+    for key in sorted(form.keys()):
+        if not key.startswith("probe_"):
+            continue
+        part = form[key]
+        if hasattr(part, "read"):
+            files.append(part)  # type: ignore[arg-type]
+    return await semantic_analyze_batch(files)
+
 
 
 @app.on_event("startup")
