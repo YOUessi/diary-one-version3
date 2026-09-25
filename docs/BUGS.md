@@ -5,5 +5,6 @@
 | B001 | P0 | Pipeline | Expo Go Android 相册 / Demo 曾 Pipeline failed | 🔄 | 已加 Offline + 真 JPEG Demo；需复测云 |
 | B002 | P1 | Expo Go | Reanimated / MediaLibraryNext 曾红屏 | ✅ | 锁 SDK57 依赖 + legacy media |
 | B003 | P2 | 网络 | 手机 Ping 依赖防火墙 8790 | 开放 | setup -OpenFirewall |
+| B-GH1 | P1 | GitHub | `gh auth` / github.com 创建 org 仓失败（超时或 API 403） | 开放 | 本地 monorepo 已就绪；网络/权限恢复后执行 `scripts/push-to-github.ps1` |
 
 新增 Bug：复制一行，状态用 开放/🔄/✅。
