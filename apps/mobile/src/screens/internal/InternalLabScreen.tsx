@@ -67,6 +67,7 @@ export default function InternalLabScreen() {
       const res = await fetch(`${url}/health`);
       const body = (await res.json().catch(() => ({}))) as {
         mode?: string;
+        ffmpeg_available?: boolean;
         x02?: { reachable?: boolean };
       };
       if (!res.ok) {
@@ -79,7 +80,9 @@ export default function InternalLabScreen() {
         return;
       }
       setHealthLine(
-        `OK · mode=${body.mode ?? '?'} · x02=${body.x02?.reachable ? 'up' : 'down'} · ${url}`,
+        `OK · mode=${body.mode ?? '?'} · x02=${body.x02?.reachable ? 'up' : 'down'} · ffmpeg=${
+          body.ffmpeg_available ? 'yes' : 'no'
+        } · ${url}`,
       );
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);

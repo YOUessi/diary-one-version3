@@ -126,7 +126,12 @@ export function PairingConnectedScreen() {
       visualHint="Connected · battery reported when hardware is available"
       primaryLabel="Continue"
       onPrimary={() => navigation.navigate('PermissionBluetoothRequest')}
-    />
+    >
+      <Text style={styles.note}>
+        This build simulates pairing for onboarding only. The Device tab stays Not connected until real
+        hardware BLE is linked in a production update.
+      </Text>
+    </OnboardingScaffold>
   );
 }
 

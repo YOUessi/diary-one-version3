@@ -44,7 +44,7 @@ App 合同：`apps/mobile/src/backend/productionCloudService.ts`、`authRemoteSe
 ### 阶段 2 — 与量产对齐
 
 6. ✅ 量产 `auth_otp` ← `shared/otp.py` + SMTP 环境变量  
-7. ⏳ Docker compose 本地跑通 worker（`smoke-docker.ps1` 验 OTP/session）  
+7. 🔄 Docker compose（BFF 镜像含 ffmpeg；`smoke-docker.ps1` + `smoke-recap.ps1`）  
 8. `day_revision_id` DB 唯一索引（可选；失败重试与唯一约束冲突，暂应用层幂等）  
 
 ### 阶段 3 — 商用

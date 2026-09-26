@@ -3,7 +3,7 @@
 ## 行为
 
 - 按当日 **Chapter** 英雄图生成最多 8 张幻灯片（1080×1920）
-- 每张约 **2.5s**，**24fps**，H.264 MP4
+- 每张约 **2.5s**，**24fps**，H.264 MP4，**Ken Burns 缓推** + **0.45s 交叉淡入淡出**
 - **分享 / 存相册** 使用 `video/mp4`（不再只是静态图）
 
 ## 编码路径（自动回退）
@@ -17,11 +17,12 @@ Expo Go 在 Android / 无原生模块时，**必须**走 Dev Lite BFF + ffmpeg�
 
 ## PC 准备（Expo Go 联调）
 
-1. 安装 [ffmpeg](https://ffmpeg.org/download.html) 并加入 `PATH`
+1. 安装 ffmpeg 并加入 `PATH`（Windows：`services/bff/scripts/install-ffmpeg-windows.ps1` 或 [ffmpeg.org](https://ffmpeg.org/download.html)）
 2. 验证：`ffmpeg -version`
 3. 起 Dev Lite：`services/bff/scripts/start-dev-lite.ps1`
 4. `GET http://<LAN>:8790/health` → `ffmpeg_available: true`
 5. 手机 Lab：**Production BFF URL** 指向 PC `:8790`
+6. PC 冒烟：`services/bff/scripts/smoke-recap.ps1`
 
 ## API
 
