@@ -19,6 +19,22 @@ param(
 $ErrorActionPreference = "Stop"
 $ServerRoot = Split-Path -Parent $PSScriptRoot
 
+function Resolve-DiaryPython {
+  if ($env:DIARY_ONE_PYTHON -and (Test-Path -LiteralPath $env:DIARY_ONE_PYTHON)) {
+    return $env:DIARY_ONE_PYTHON
+  }
+  $pathDirs = ($env:PATH -split ';') | Where-Object { $_ -and $_ -notmatch 'Anaconda|conda|WindowsApps' }
+  foreach ($dir in $pathDirs) {
+    $candidate = Join-Path $dir.TrimEnd('\') 'python.exe'
+    if (Test-Path -LiteralPath $candidate) { return $candidate }
+  }
+  return (Get-Command python -ErrorAction Stop).Source
+}
+
+$PythonExe = Resolve-DiaryPython
+$PythonExeEsc = $PythonExe.Replace("'", "''")
+Write-Host "Python for X02/BFF: $PythonExe" -ForegroundColor DarkGray
+
 # Monorepo: services/algorithm/algorithm ; legacy: ../nexleap-diary-one/algorithm or E:\AI耳机\nexleap-diary-one
 $candidates = @(
   (Join-Path $ServerRoot "..\algorithm\algorithm"),
@@ -84,10 +100,21 @@ if ($null -ne $env:EXPOSE_OTP_IN_RESPONSE -and $env:EXPOSE_OTP_IN_RESPONSE -ne "
 }
 
 Push-Location $ServerRoot
-python -c "import fastapi,uvicorn,httpx,pydantic_settings" 2>$null
+$__ea = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+& $PythonExe -m pip install -q legacy-cgi *> $null
+$ErrorActionPreference = $__ea
+& $PythonExe -c "import cgi" 2>$null
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "Installing legacy-cgi for X02 (Python 3.13+)..."
+  & $PythonExe -m pip install legacy-cgi
+  & $PythonExe -c "import cgi"
+  if ($LASTEXITCODE -ne 0) { throw "X02 requires: $PythonExe -m pip install legacy-cgi" }
+}
+& $PythonExe -c "import fastapi,uvicorn,httpx,pydantic_settings" 2>$null
 if ($LASTEXITCODE -ne 0) {
   Write-Host "Installing Python deps (fastapi/uvicorn/httpx)..."
-  python -m pip install "fastapi>=0.115" "uvicorn[standard]>=0.32" "httpx>=0.28" "pydantic-settings>=2.6" "python-multipart>=0.0.17"
+  & $PythonExe -m pip install "fastapi>=0.115" "uvicorn[standard]>=0.32" "httpx>=0.28" "pydantic-settings>=2.6" "python-multipart>=0.0.17"
 }
 Pop-Location
 
@@ -95,17 +122,11 @@ $dashEscaped = $env:DASHSCOPE_API_KEY -replace "'", "''"
 
 $x02Cmd = @"
 Set-Location '$AlgoRoot'
-python -m pip install -q legacy-cgi 2>`$null
-python -c "import cgi" 2>`$null
-if (`$LASTEXITCODE -ne 0) {
-  Write-Host "X02 needs stdlib cgi on Python 3.13+. Run: python -m pip install legacy-cgi" -ForegroundColor Red
-  exit 1
-}
 `$env:PYTHONPATH = 'src'
 `$env:PYTHONDONTWRITEBYTECODE = '1'
 `$env:DASHSCOPE_API_KEY = '$dashEscaped'
 Write-Host 'Starting X02 on 127.0.0.1:$X02Port adapter=$Adapter'
-python -m diary_one_ci.x01_server --adapter $Adapter --host 127.0.0.1 --port $X02Port
+'$PythonExeEsc' -m diary_one_ci.x01_server --adapter $Adapter --host 127.0.0.1 --port $X02Port
 "@
 
 $bffCmd = @"
@@ -124,12 +145,12 @@ Set-Location '$ServerRoot'
 `$env:SMTP_SECURITY = '$($env:SMTP_SECURITY)'
 if (`$env:SMTP_HOST) { Write-Host "SMTP OTP enabled via `$env:SMTP_HOST" } else { Write-Host "OTP: no SMTP — set via .\scripts\set-smtp.ps1 (see docs/REAL_CLOUD_SETUP.md)" }
 Write-Host 'Starting Dev Lite BFF on 0.0.0.0:$BffPort (allow_mock=$allowMock)'
-python -m uvicorn dev_lite.app:app --host 0.0.0.0 --port $BffPort
+'$PythonExeEsc' -m uvicorn dev_lite.app:app --host 0.0.0.0 --port $BffPort
 "@
 
-Start-Process powershell -ArgumentList "-NoExit", "-Command", $x02Cmd
+Start-Process powershell -ArgumentList "-NoProfile", "-NoExit", "-Command", $x02Cmd
 Start-Sleep -Seconds 2
-Start-Process powershell -ArgumentList "-NoExit", "-Command", $bffCmd
+Start-Process powershell -ArgumentList "-NoProfile", "-NoExit", "-Command", $bffCmd
 
 Write-Host ""
 Write-Host "Opened 2 terminals (X02 + BFF)." -ForegroundColor Green
