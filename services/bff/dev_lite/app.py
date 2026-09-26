@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import time
 import uuid
 from pathlib import Path
 from typing import Any, Optional
@@ -121,6 +122,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def access_log(request: Request, call_next):  # type: ignore[no-untyped-def]
+    started = time.perf_counter()
+    response = await call_next(request)
+    ms = (time.perf_counter() - started) * 1000
+    path = request.url.path
+    if path != "/health":
+        print(
+            f"[dev_lite] {request.method} {path} → {response.status_code} ({ms:.0f}ms)",
+            flush=True,
+        )
+    return response
+
+
 app.include_router(semantic_router)
 app.include_router(share_recap_router, dependencies=[Depends(require_token)])
 

@@ -8,11 +8,29 @@ import { FigmaEyebrow } from '../../components/FigmaScreenHeader';
 import { SettingsRow } from '../../components/SettingsRow';
 import { colors, font, layout, radius, spacing } from '../../theme';
 import type { AccountStackParamList } from '../../navigation/types';
+import { useAppStore } from '../../store/useAppStore';
 
 type Nav = NativeStackNavigationProp<AccountStackParamList, 'PrivacyData'>;
 
+function consentLabel(
+  consent: boolean | null,
+  version: string | null,
+): string {
+  if (consent === true) {
+    return version
+      ? `Cloud evidence: agreed (${version})`
+      : 'Cloud evidence: agreed';
+  }
+  if (consent === false) {
+    return 'Cloud evidence: browse on device only (upload blocked)';
+  }
+  return 'Cloud evidence: not set (setup survey skipped or not run)';
+}
+
 export default function PrivacyDataScreen() {
   const navigation = useNavigation<Nav>();
+  const cloudEvidenceConsent = useAppStore((s) => s.cloudEvidenceConsent);
+  const cloudEvidenceConsentVersion = useAppStore((s) => s.cloudEvidenceConsentVersion);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -21,6 +39,13 @@ export default function PrivacyDataScreen() {
         <Text style={styles.title}>Privacy & Data</Text>
         <Text style={styles.lead}>
           Manage the memory data and account data Diary One stores for you.
+        </Text>
+        <Text style={styles.consentStatus}>
+          {consentLabel(cloudEvidenceConsent, cloudEvidenceConsentVersion)}
+        </Text>
+        <Text style={styles.consentHint}>
+          Signing in is not upload consent. Change this by replaying setup preferences, or see Privacy
+          Policy.
         </Text>
 
         <FigmaEyebrow>YOUR DATA</FigmaEyebrow>
@@ -61,7 +86,8 @@ export default function PrivacyDataScreen() {
         </View>
 
         <Text style={styles.footer}>
-          Automatic raw clips are transitional processing input and are not kept long-term when they are not selected. Manual Originals remain until you delete them.
+          Automatic raw clips are transitional processing input and are not kept long-term when they are
+          not selected. Manual Originals remain until you delete them.
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -82,6 +108,20 @@ const styles = StyleSheet.create({
     fontSize: font.body,
     color: colors.secondary,
     lineHeight: 22,
+    paddingHorizontal: layout.gutterDiary,
+    marginBottom: spacing.sm,
+  },
+  consentStatus: {
+    fontSize: font.small,
+    fontWeight: '600',
+    color: colors.ink,
+    paddingHorizontal: layout.gutterDiary,
+    marginBottom: 4,
+  },
+  consentHint: {
+    fontSize: font.micro,
+    color: colors.tertiary,
+    lineHeight: 18,
     paddingHorizontal: layout.gutterDiary,
     marginBottom: spacing.md,
   },

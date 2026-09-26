@@ -24,7 +24,7 @@ App 合同：`apps/mobile/src/backend/productionCloudService.ts`、`authRemoteSe
 | 端点 | Dev Lite | 量产 BFF | App 使用 |
 |------|----------|----------|----------|
 | GET `/health` | ✅ + x02 | ✅ 简版 | Lab Ping |
-| POST `/v1/auth/otp/*` | ✅ SMTP | ⚠️ 仅 dev_code | 登录 |
+| POST `/v1/auth/otp/*` | ✅ SMTP | ✅ shared/otp + SMTP env | 登录 |
 | POST `/v1/day-revisions` | ✅ | ✅ | 上传 Bundle |
 | GET `/v1/jobs/{id}` | ✅ | ✅ | 轮询 |
 | day_revision **幂等** | ✅ | ✅ | 防重复扣费/双任务 |
@@ -44,14 +44,14 @@ App 合同：`apps/mobile/src/backend/productionCloudService.ts`、`authRemoteSe
 ### 阶段 2 — 与量产对齐
 
 6. ✅ 量产 `auth_otp` ← `shared/otp.py` + SMTP 环境变量  
-7. 🔄 Docker compose（BFF 镜像含 ffmpeg；`smoke-docker.ps1` + `smoke-recap.ps1`）  
+7. ✅ Docker compose healthcheck + README / stop-dev-lite  
 8. `day_revision_id` DB 唯一索引（可选；失败重试与唯一约束冲突，暂应用层幂等）  
 
 ### 阶段 3 — 商用
 
 9. OSS 替换 MinIO  
 10. ✅ `session_token` Bearer 校验 day-revisions / jobs（Dev Lite + 量产 BFF）  
-11. 监控 / 限流 / 日志  
+11. 🔄 Dev Lite 简易 access log；完整监控 / 限流待商用  
 
 ---
 
@@ -59,8 +59,9 @@ App 合同：`apps/mobile/src/backend/productionCloudService.ts`、`authRemoteSe
 
 ```powershell
 cd E:\AI耳机\diary-one\services\bff
-.\scripts\start-dev-lite.ps1          # 需 DASHSCOPE 时先 set-dashscope-key
-.\scripts\smoke-dev-lite.ps1          # 冒烟（阶段 1-3 后）
+.\scripts\start-dev-lite-background.ps1   # 或 start-dev-lite.ps1
+.\scripts\smoke-dev-lite.ps1
+.\scripts\stop-dev-lite.ps1
 ```
 
 手机：Lab Apply → Ping → Demo / B 相册。

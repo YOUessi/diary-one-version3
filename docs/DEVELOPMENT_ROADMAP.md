@@ -81,7 +81,7 @@
 |--------|------|------|
 | M0 壳层 + Figma 主屏 | ✅ | 见 FIGMA_04_COVERAGE |
 | M1 Dev Lite + OTP API | ✅ | shared OTP；session 鉴权；真 SMTP 见 YOUR_TURN |
-| M2 Demo/相册 → Diary | ✅ | 消费者 Import + Lab；真 V1.75 待 Key |
+| M2 Demo/相册 → Diary | ✅ | Lab 导入；真 V1.75 待 Key |
 | M3 真 V1.75 | ⏳ | 待 DashScope Key |
 | M4 TestFlight 内测包 | ⏳ | EAS preview |
 | M5 上架阻断项关闭 | ⏳ | 见 APP_STORE_RELEASE |
