@@ -95,8 +95,12 @@ $dashEscaped = $env:DASHSCOPE_API_KEY -replace "'", "''"
 
 $x02Cmd = @"
 Set-Location '$AlgoRoot'
-python -c "import legacy_cgi" 2>`$null
-if (`$LASTEXITCODE -ne 0) { python -m pip install -q legacy-cgi }
+python -m pip install -q legacy-cgi 2>`$null
+python -c "import cgi" 2>`$null
+if (`$LASTEXITCODE -ne 0) {
+  Write-Host "X02 needs stdlib cgi on Python 3.13+. Run: python -m pip install legacy-cgi" -ForegroundColor Red
+  exit 1
+}
 `$env:PYTHONPATH = 'src'
 `$env:PYTHONDONTWRITEBYTECODE = '1'
 `$env:DASHSCOPE_API_KEY = '$dashEscaped'

@@ -5,8 +5,10 @@ import datetime
 
 try:
     import cgi
-except ModuleNotFoundError:  # Python 3.13+
-    import legacy_cgi as cgi  # pip install legacy-cgi
+except ModuleNotFoundError:  # Python 3.13+ — pip install legacy-cgi (provides cgi module)
+    raise SystemExit(
+        "Python 3.13+ removed stdlib cgi. Run: python -m pip install legacy-cgi"
+    ) from None
 import getpass
 import hmac
 import json
