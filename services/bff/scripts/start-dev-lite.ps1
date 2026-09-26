@@ -1,4 +1,4 @@
-"""
+<#
 Start Dev Lite stack for Expo Go (no Docker) — REAL cloud by default.
 
   1) X02 on 127.0.0.1:8787  (adapter qwen → 阿里云百炼 DashScope)
@@ -7,7 +7,7 @@ Start Dev Lite stack for Expo Go (no Docker) — REAL cloud by default.
 Usage:
   .\scripts\start-dev-lite.ps1                 # real qwen (needs DASHSCOPE_API_KEY)
   .\scripts\start-dev-lite.ps1 -Adapter fixture  # ONLY for offline UI debug — not quality
-"""
+#>
 param(
   [ValidateSet("fixture", "qwen")]
   [string]$Adapter = "qwen",
