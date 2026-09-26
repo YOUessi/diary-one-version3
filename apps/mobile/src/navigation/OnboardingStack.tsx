@@ -24,6 +24,7 @@ import {
 } from '../screens/onboarding/permissionScreens';
 import SetupCompleteScreen from '../screens/onboarding/SetupCompleteScreen';
 import HardwareBasicsScreen from '../screens/onboarding/HardwareBasicsScreen';
+import PreferenceSurveyScreen from '../screens/onboarding/PreferenceSurveyScreen';
 
 const Stack = createNativeStackNavigator<OnboardingStackParamList>();
 
@@ -49,6 +50,7 @@ export default function OnboardingStack() {
       <Stack.Screen name="PermissionNotificationsDenied" component={PermissionNotificationsDeniedScreen} />
       <Stack.Screen name="SetupComplete" component={SetupCompleteScreen} />
       <Stack.Screen name="HardwareBasics" component={HardwareBasicsScreen} />
+      <Stack.Screen name="PreferenceSurvey" component={PreferenceSurveyScreen} />
     </Stack.Navigator>
   );
 }

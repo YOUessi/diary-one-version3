@@ -5,8 +5,6 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { OnboardingScaffold } from '../../components/OnboardingScaffold';
 import { colors, font, spacing } from '../../theme';
 import type { OnboardingStackParamList } from '../../navigation/types';
-import { completeWithoutHardware } from '../../onboarding/completeWithoutHardware';
-
 type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'SetupComplete'>;
 
 export default function SetupCompleteScreen() {
@@ -21,7 +19,7 @@ export default function SetupCompleteScreen() {
       primaryLabel="Start device basics"
       onPrimary={() => navigation.navigate('HardwareBasics', { step: 0 })}
       secondaryLabel="Skip device basics"
-      onSecondary={() => completeWithoutHardware()}
+      onSecondary={() => navigation.navigate('PreferenceSurvey', { step: 0 })}
     >
       <Text style={styles.sub}>Takes about 30 seconds.</Text>
       <View style={styles.card}>

@@ -12,7 +12,7 @@ export const PRIVACY_SECTION_COPY: Record<
   memory_profile: {
     title: 'Memory Profile & Stories',
     body:
-      'Your nickname, memory preferences, and “what you remember” edits are stored locally and may be included when you export data. They influence expression only when supporting facts exist.',
+      'Your nickname, memory preferences, and “what you remember” edits are stored locally and may be included when you export data. They influence expression only when supporting facts exist. An optional setup survey writes into the same preferences — it never invents moments you did not capture.',
   },
   export_data: {
     title: 'Export My Data',
@@ -27,7 +27,7 @@ export const PRIVACY_SECTION_COPY: Record<
   privacy_policy: {
     title: 'Privacy Policy',
     body:
-      'Diary One processes recordings to create memories you can revisit. Policy details will be published with the App Store release. This build stores research API settings only on device.',
+      'Diary One processes recordings to create memories you can revisit. Signing in is not cloud-upload consent: uploading selected evidence requires a separate agreement (recorded with a version). Policy details will be published with the App Store release. This build stores research API settings only on device.',
   },
   terms: {
     title: 'Terms',

@@ -200,6 +200,12 @@ function applySnapshotToStore(snap: PersistedSnapshot) {
 
     onboardingComplete: snap.onboardingComplete ?? true,
 
+    preferenceSurveyComplete: snap.preferenceSurveyComplete ?? true,
+
+    cloudEvidenceConsent: snap.cloudEvidenceConsent ?? null,
+
+    cloudEvidenceConsentVersion: snap.cloudEvidenceConsentVersion ?? null,
+
     selectedDateKey: diaryTodayKey(),
 
   });
@@ -249,6 +255,12 @@ function applyFreshSeed() {
     bundleExportVersion: 'V04',
 
     onboardingComplete: false,
+
+    preferenceSurveyComplete: false,
+
+    cloudEvidenceConsent: null,
+
+    cloudEvidenceConsentVersion: null,
 
     selectedDateKey: diaryTodayKey(),
 
@@ -366,6 +378,12 @@ const PERSIST_KEYS: (keyof ReturnType<typeof buildPersistedSlice>)[] = [
   'bundleExportVersion',
 
   'onboardingComplete',
+
+  'preferenceSurveyComplete',
+
+  'cloudEvidenceConsent',
+
+  'cloudEvidenceConsentVersion',
 
 ];
 

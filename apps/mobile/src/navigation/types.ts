@@ -18,6 +18,8 @@ export type OnboardingStackParamList = {
   PermissionNotificationsDenied: undefined;
   SetupComplete: undefined;
   HardwareBasics: { step: number };
+  /** Meeting 2026-09-23 light preference survey (skippable). */
+  PreferenceSurvey: { step: number };
 };
 
 export type DiaryStackParamList = {

@@ -5,7 +5,6 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { OnboardingScaffold } from '../../components/OnboardingScaffold';
 import { colors, font } from '../../theme';
 import type { OnboardingStackParamList } from '../../navigation/types';
-import { completeWithoutHardware } from '../../onboarding/completeWithoutHardware';
 
 type Nav = NativeStackNavigationProp<OnboardingStackParamList>;
 
@@ -22,7 +21,7 @@ export function PairingStartScreen() {
       primaryLabel="Find Diary One"
       onPrimary={() => navigation.navigate('PairingBluetoothPermission')}
       secondaryLabel="Continue without a device"
-      onSecondary={() => completeWithoutHardware()}
+      onSecondary={() => navigation.navigate('PreferenceSurvey', { step: 0 })}
     />
   );
 }
@@ -126,12 +125,7 @@ export function PairingConnectedScreen() {
       visualHint="Connected · battery reported when hardware is available"
       primaryLabel="Continue"
       onPrimary={() => navigation.navigate('PermissionBluetoothRequest')}
-    >
-      <Text style={styles.note}>
-        This build simulates pairing for onboarding only. The Device tab stays Not connected until real
-        hardware BLE is linked in a production update.
-      </Text>
-    </OnboardingScaffold>
+    />
   );
 }
 

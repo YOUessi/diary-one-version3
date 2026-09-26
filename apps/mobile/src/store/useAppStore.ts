@@ -127,6 +127,14 @@ type AppState = {
 
   onboardingComplete: boolean;
 
+  /** Meeting 2026-09-23 preference survey finished or skipped. */
+  preferenceSurveyComplete: boolean;
+
+  /** Explicit cloud evidence upload consent (separate from login). */
+  cloudEvidenceConsent: boolean | null;
+
+  cloudEvidenceConsentVersion: string | null;
+
   /** Figma Daily Recap readiness changed — transient UI on Diary home. */
   dailyRecapShareBlockedBanner: boolean;
 
@@ -249,6 +257,12 @@ export const useAppStore = create<AppState>((set) => ({
   bundleExportVersion: 'V04',
 
   onboardingComplete: true,
+
+  preferenceSurveyComplete: true,
+
+  cloudEvidenceConsent: null,
+
+  cloudEvidenceConsentVersion: null,
 
   dailyRecapShareBlockedBanner: false,
 
@@ -500,6 +514,12 @@ export function buildPersistedSlice(state: AppState) {
     bundleExportVersion: state.bundleExportVersion,
 
     onboardingComplete: state.onboardingComplete,
+
+    preferenceSurveyComplete: state.preferenceSurveyComplete,
+
+    cloudEvidenceConsent: state.cloudEvidenceConsent,
+
+    cloudEvidenceConsentVersion: state.cloudEvidenceConsentVersion,
 
   };
 

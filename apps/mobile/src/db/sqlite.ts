@@ -80,6 +80,12 @@ export type PersistedSnapshot = {
 
   onboardingComplete?: boolean;
 
+  preferenceSurveyComplete?: boolean;
+
+  cloudEvidenceConsent?: boolean | null;
+
+  cloudEvidenceConsentVersion?: string | null;
+
   pipelineAssetLedger?: AssetLedgerEntry[];
 
 };

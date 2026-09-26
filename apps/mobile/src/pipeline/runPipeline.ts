@@ -127,6 +127,12 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
     const task = useAppStore.getState().pipelineTasks.find((t) => t.id === taskId);
 
     if (endpoint) {
+      const consent = useAppStore.getState().cloudEvidenceConsent;
+      if (consent === false) {
+        throw new Error(
+          'Cloud evidence upload is off. Agree in setup preferences, or change Privacy settings after a future Account control is shipped.',
+        );
+      }
       patchTask(taskId, {
         status: 'uploading',
         message: target === 'production' ? 'Connecting to production API…' : 'Connecting to research API…',

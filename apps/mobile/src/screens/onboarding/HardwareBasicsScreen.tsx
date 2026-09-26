@@ -3,7 +3,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { OnboardingScaffold } from '../../components/OnboardingScaffold';
-import { useAppStore } from '../../store/useAppStore';
 import { HARDWARE_BASICS } from './hardwareBasicsContent';
 import type { OnboardingStackParamList } from '../../navigation/types';
 
@@ -13,7 +12,6 @@ type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'HardwareBasics'>
 export default function HardwareBasicsScreen() {
   const { step } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
-  const setOnboardingComplete = useAppStore((s) => s.setOnboardingComplete);
   const page = HARDWARE_BASICS[step];
   if (!page) {
     navigation.replace('HardwareBasics', { step: 0 });
@@ -22,7 +20,7 @@ export default function HardwareBasicsScreen() {
 
   const onPrimary = () => {
     if (step >= HARDWARE_BASICS.length - 1) {
-      setOnboardingComplete(true);
+      navigation.navigate('PreferenceSurvey', { step: 0 });
       return;
     }
     navigation.push('HardwareBasics', { step: step + 1 });

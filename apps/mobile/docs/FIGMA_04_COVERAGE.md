@@ -99,6 +99,7 @@
 | Privacy & Data / Notifications / Language | 71:993+ | ✅ | |
 | Help & Feedback | 127:1139 | ✅ | Device Basics 7 步 |
 | Auth Sign In / Email OTP | 127:1179+ | ✅ | Onboarding |
+| Preference survey（会议 2026-09-23） | — | ✅ | 登录后可跳过；写入 Preferences + 云同意；**非 Figma 帧** |
 | Current Plan / Licenses | 画板 Account 行 | ✅ | `PlanScreen` / `LicensesScreen` |
 | APP095 Interaction Contract | 371:2608 | ➖ | 文本契约 |
 
@@ -146,7 +147,8 @@
 | 搜索仅本地字面 | ✅ `localSearch` |
 | Sync ≠ 云端处理 | ✅ Device Sync vs Research pipeline 分离 |
 | 未连接不伪造电量/同步时间 | ✅ |
-| Captured 不含相册测试源（用户路径） | ✅ 证据导入仅 `__DEV__` |
+| Captured 不含相册测试源（用户路径） | ✅ 证据导入仅 `__DEV__` / Lab |
+| Diary 空态无额外 Import 按钮 | ✅ 对齐 Figma 文案，导入仅 Lab |
 
 ---
 
