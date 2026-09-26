@@ -95,6 +95,8 @@ $dashEscaped = $env:DASHSCOPE_API_KEY -replace "'", "''"
 
 $x02Cmd = @"
 Set-Location '$AlgoRoot'
+python -c "import legacy_cgi" 2>`$null
+if (`$LASTEXITCODE -ne 0) { python -m pip install -q legacy-cgi }
 `$env:PYTHONPATH = 'src'
 `$env:PYTHONDONTWRITEBYTECODE = '1'
 `$env:DASHSCOPE_API_KEY = '$dashEscaped'

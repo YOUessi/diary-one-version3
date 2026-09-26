@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 import argparse
-import cgi
 import datetime
+
+try:
+    import cgi
+except ModuleNotFoundError:  # Python 3.13+
+    import legacy_cgi as cgi  # pip install legacy-cgi
 import getpass
 import hmac
 import json
