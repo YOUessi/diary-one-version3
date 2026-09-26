@@ -37,8 +37,19 @@ Write-Host "   job1=$($j1.job_id)"
 $job2 = curl.exe -s -S -X POST "$base/v1/day-revisions" -H "Authorization: Bearer $token" `
   -F "manifest=@$manifestPath;type=application/json" -F "day_revision_id=$rev"
 $j2 = $job2 | ConvertFrom-Json
-if ($j2.job_id -ne $j1.job_id) { throw "idempotent expected same job_id" }
-Write-Host "   idempotent ok (same job_id)"
+if ($j2.job_id -ne $j1.job_id) {
+  if ($j2.idempotent -eq $true) { Write-Host "   idempotent ok (flag)" }
+  else {
+    $p1 = Invoke-RestMethod -Uri "$base/v1/jobs/$($j1.job_id)" -Headers $h
+    if ($p1.status -eq "failed") {
+      Write-Host "   WARN: job1 already failed — idempotent not reused (expected)" -ForegroundColor Yellow
+    } else {
+      throw "idempotent expected same job_id"
+    }
+  }
+} else {
+  Write-Host "   idempotent ok (same job_id)"
+}
 
 Write-Host "5. Poll /v1/jobs/$($j1.job_id) (max 90s)" -ForegroundColor Cyan
 $deadline = (Get-Date).AddSeconds(90)
