@@ -46,7 +46,13 @@ export function validatePreviewResult(result: X02PreviewResult): ValidateOutcome
   }
 
   if (result.delivery_state === 'PIPELINE_BLOCKED') {
-    return { ok: false, reason: `Pipeline blocked: ${result.delivery_state}` };
+    const empty =
+      result.chapters.length === 0 &&
+      result.ahas.length === 0 &&
+      result.selected_memory_outcomes.length === 0;
+    if (!empty) {
+      return { ok: false, reason: `Pipeline blocked: ${result.delivery_state}` };
+    }
   }
 
   const visibleOutcomes = result.selected_memory_outcomes.filter(

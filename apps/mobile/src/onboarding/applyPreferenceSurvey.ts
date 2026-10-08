@@ -1,30 +1,61 @@
 import { useAppStore } from '../store/useAppStore';
 import {
   CLOUD_EVIDENCE_CONSENT_VERSION,
-  PREFERENCE_SURVEY_STEPS,
   type SurveyAnswers,
 } from './preferenceSurvey';
-import type { NotificationSettings } from '../domain/appSettings';
+import { avoidById, categoryLabel, styleById, tagById } from './tagLibrary';
 
-/** Apply survey → Preferences + notifications + evidence consent, then enter Diary. */
-export function applyPreferenceSurveyAndFinish(answers: SurveyAnswers) {
-  const store = useAppStore.getState();
+export function buildPreferenceLines(answers: SurveyAnswers): { title: string; text: string }[] {
   const lines: { title: string; text: string }[] = [];
 
-  for (const step of PREFERENCE_SURVEY_STEPS) {
-    if (step.kind === 'text') {
-      const t = answers.openText.trim();
-      if (t) lines.push({ title: 'What matters most', text: t.slice(0, 150) });
-      continue;
-    }
-    if (!step.preferenceLines) continue;
-    const picked = answers.selections[step.id] ?? [];
-    for (const id of picked) {
-      const text = step.preferenceLines[id];
-      if (text) lines.push({ title: 'From setup', text });
+  if (answers.categories.length) {
+    lines.push({
+      title: 'Preferred content',
+      text: `Prefer writing about: ${answers.categories.map(categoryLabel).join(', ')}.`,
+    });
+  }
+
+  const tagLabels = answers.interestTags
+    .map((id) => tagById(id)?.label)
+    .filter((x): x is string => Boolean(x));
+  if (tagLabels.length) {
+    lines.push({
+      title: 'Interest tags',
+      text: `Boost these tags when evidence exists: ${tagLabels.join(', ')}.`,
+    });
+  }
+
+  const style = answers.styleId ? styleById(answers.styleId) : undefined;
+  if (style) {
+    lines.push({
+      title: 'Writing style',
+      text: `Writing style: ${style.label}. ${style.description}`,
+    });
+  }
+
+  for (const id of answers.avoidTopics) {
+    const avoid = avoidById(id);
+    if (avoid) {
+      lines.push({
+        title: `Avoid: ${avoid.label}`,
+        text: avoid.negativePrompt,
+      });
     }
   }
 
+  const open = answers.openText.trim();
+  if (open) {
+    lines.push({
+      title: 'What matters most',
+      text: open.slice(0, 150),
+    });
+  }
+
+  return lines;
+}
+
+function writeSurveyPreferences(answers: SurveyAnswers) {
+  const lines = buildPreferenceLines(answers);
   if (lines.length > 0) {
     useAppStore.setState({
       preferences: lines.map((p, i) => ({
@@ -35,32 +66,25 @@ export function applyPreferenceSurveyAndFinish(answers: SurveyAnswers) {
     });
   }
 
-  const notify = answers.selections.notify?.[0];
-  let notificationSettings: NotificationSettings = {
-    memoriesReady: true,
-    deviceAlerts: false,
-  };
-  if (notify === 'memories') {
-    notificationSettings = { memoriesReady: true, deviceAlerts: false };
-  } else if (notify === 'device') {
-    notificationSettings = { memoriesReady: true, deviceAlerts: true };
-  } else if (notify === 'none') {
-    notificationSettings = { memoriesReady: false, deviceAlerts: false };
-  }
-
-  const consent = answers.selections.consent?.[0];
-  const cloudEvidenceConsent = consent === 'agree';
-  const cloudEvidenceConsentVersion = cloudEvidenceConsent
-    ? CLOUD_EVIDENCE_CONSENT_VERSION
-    : null;
-
-  store.setNotificationSettings(notificationSettings);
+  const cloudEvidenceConsent = answers.consent === 'agree';
   useAppStore.setState({
     cloudEvidenceConsent,
-    cloudEvidenceConsentVersion,
+    cloudEvidenceConsentVersion: cloudEvidenceConsent ? CLOUD_EVIDENCE_CONSENT_VERSION : null,
     preferenceSurveyComplete: true,
+  });
+}
+
+/** Apply survey from onboarding → Preferences + consent, then enter Diary. */
+export function applyPreferenceSurveyAndFinish(answers: SurveyAnswers) {
+  writeSurveyPreferences(answers);
+  useAppStore.setState({
     onboardingComplete: true,
   });
+}
+
+/** Apply survey from Account retake — stay in Account, do not re-toggle onboarding. */
+export function applyPreferenceSurveyFromAccount(answers: SurveyAnswers) {
+  writeSurveyPreferences(answers);
 }
 
 export function skipPreferenceSurveyAndFinish() {

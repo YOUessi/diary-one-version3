@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from './FigmaBackHeader';
-import { colors, font, layout, radius, spacing } from '../theme';
+import { colors, layout, spacing, type } from '../theme';
 
 type Props = {
   eyebrow?: string;
   title: string;
+  /** Pairing/Setup Complete = 34; Permissions = 28 */
+  titleSize?: 'large' | 'section';
   lead?: string;
+  /** Prefer ReactNode illustrations over plain visualHint text. */
+  visual?: ReactNode;
   visualHint?: string;
   calloutTitle?: string;
   calloutBody?: string;
+  /** Figma permission boards use a white system-prompt card. */
+  calloutVariant?: 'rail' | 'prompt';
   primaryLabel?: string;
   onPrimary?: () => void;
   primaryDisabled?: boolean;
@@ -24,10 +30,13 @@ type Props = {
 export function OnboardingScaffold({
   eyebrow,
   title,
+  titleSize = 'large',
   lead,
+  visual,
   visualHint,
   calloutTitle,
   calloutBody,
+  calloutVariant = 'rail',
   primaryLabel,
   onPrimary,
   primaryDisabled,
@@ -47,17 +56,30 @@ export function OnboardingScaffold({
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.title}>{title}</Text>
+        <Text style={titleSize === 'section' ? styles.titleSection : styles.title}>{title}</Text>
         {lead ? <Text style={styles.lead}>{lead}</Text> : null}
-        {visualHint ? (
+        {visual ? (
+          <>
+            {visual}
+            {visualHint ? <Text style={styles.visualCaption}>{visualHint}</Text> : null}
+          </>
+        ) : visualHint ? (
           <View style={styles.visual}>
             <Text style={styles.visualText}>{visualHint}</Text>
           </View>
         ) : null}
         {calloutTitle || calloutBody ? (
-          <View style={styles.callout}>
-            {calloutTitle ? <Text style={styles.calloutTitle}>{calloutTitle}</Text> : null}
-            {calloutBody ? <Text style={styles.calloutBody}>{calloutBody}</Text> : null}
+          <View style={calloutVariant === 'prompt' ? styles.promptCard : styles.callout}>
+            {calloutTitle ? (
+              <Text style={calloutVariant === 'prompt' ? styles.promptTitle : styles.calloutTitle}>
+                {calloutTitle}
+              </Text>
+            ) : null}
+            {calloutBody ? (
+              <Text style={calloutVariant === 'prompt' ? styles.promptBody : styles.calloutBody}>
+                {calloutBody}
+              </Text>
+            ) : null}
           </View>
         ) : null}
         {children}
@@ -87,7 +109,7 @@ export function OnboardingScaffold({
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
   eyebrowOnly: {
-    fontSize: font.micro,
+    ...type.metadata,
     fontWeight: '600',
     color: colors.secondary,
     letterSpacing: 0.8,
@@ -100,46 +122,86 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
     flexGrow: 1,
   },
+  /** Pairing / Setup Complete — primary titles are 34 in Figma */
   title: {
-    fontSize: 28,
-    fontWeight: '600',
+    ...type.titleLarge,
     color: colors.ink,
-    letterSpacing: -0.3,
     marginBottom: spacing.sm,
   },
-  lead: { fontSize: font.body, color: colors.secondary, lineHeight: 24, marginBottom: spacing.lg },
+  titleSection: {
+    ...type.titleSection,
+    color: colors.ink,
+    marginBottom: spacing.sm,
+  },
+  lead: { ...type.bodyStory, color: colors.secondary, marginBottom: spacing.lg },
+  /** Figma Pairing / Setup — hardware placeholder r16 × ~220 */
   visual: {
-    minHeight: 200,
+    minHeight: 220,
     backgroundColor: colors.surface,
-    borderRadius: radius.control,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.lg,
     padding: spacing.md,
   },
-  visualText: { fontSize: font.small, color: colors.tertiary, textAlign: 'center' },
+  visualText: { ...type.caption, color: colors.tertiary, textAlign: 'center' },
+  visualCaption: {
+    ...type.caption,
+    color: colors.tertiary,
+    textAlign: 'center',
+    marginTop: spacing.sm,
+    marginBottom: spacing.lg,
+  },
   callout: {
     borderLeftWidth: 3,
-    borderLeftColor: colors.divider,
+    borderLeftColor: colors.accent,
     paddingLeft: spacing.md,
     marginBottom: spacing.lg,
   },
-  calloutTitle: { fontSize: font.body, fontWeight: '600', color: colors.ink, marginBottom: 4 },
-  calloutBody: { fontSize: font.small, color: colors.secondary, lineHeight: 20 },
-  footer: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.md, gap: spacing.sm },
+  calloutTitle: { ...type.bodyStory, fontWeight: '600', color: colors.ink, marginBottom: 4 },
+  calloutBody: { ...type.caption, color: colors.secondary, lineHeight: 20 },
+  /** Figma Permissions placeholder card — r16 */
+  promptCard: {
+    backgroundColor: colors.card,
+    borderRadius: 16,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
+    marginBottom: spacing.lg,
+    marginTop: spacing.md,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  promptTitle: {
+    ...type.bodyStory,
+    fontWeight: '600',
+    color: colors.ink,
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  promptBody: { ...type.caption, color: colors.secondary, textAlign: 'center', lineHeight: 20 },
+  footer: {
+    paddingHorizontal: layout.gutterDiary,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.lg,
+    gap: spacing.sm,
+  },
   primary: {
     backgroundColor: colors.ink,
-    borderRadius: radius.pill,
-    minHeight: layout.buttonHeight,
+    borderRadius: 12,
+    minHeight: 52,
     alignItems: 'center',
     justifyContent: 'center',
   },
   primaryDisabled: { opacity: 0.45 },
-  primaryLabel: { color: colors.paper, fontWeight: '700', fontSize: font.body },
+  primaryLabel: { fontSize: 15, lineHeight: 20, color: colors.paper, fontWeight: '600' },
   secondary: {
     minHeight: layout.minTouch,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  secondaryLabel: { color: colors.accent, fontWeight: '600', fontSize: font.body },
+  secondaryLabel: { ...type.bodyStory, color: colors.accent, fontWeight: '600' },
 });

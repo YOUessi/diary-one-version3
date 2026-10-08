@@ -5,7 +5,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
 import { MemoryTag } from '../../components/MemoryTag';
-import { colors, font, layout, spacing } from '../../theme';
+import { colors, layout, spacing, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import type { MemoryStackParamList } from '../../navigation/types';
 import type { Chapter } from '../../model';
@@ -72,21 +72,22 @@ export default function TopicDetailScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
   scroll: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
+  /** Figma 67:1027 — title 28; chapter rows ~112 */
   title: {
-    fontSize: 28,
-    fontWeight: '600',
+    ...type.titleSection,
     color: colors.ink,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
   },
   card: {
-    marginBottom: spacing.lg,
-    paddingBottom: spacing.lg,
-    borderBottomWidth: 1,
+    marginBottom: spacing.md,
+    paddingBottom: spacing.md,
+    minHeight: 112,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.divider,
   },
-  cardTitle: { fontSize: font.body, fontWeight: '700', color: colors.ink, marginBottom: 4 },
-  cardMeta: { fontSize: font.small, color: colors.tertiary, marginBottom: spacing.sm },
+  cardTitle: { ...type.titleChapter, color: colors.ink, marginBottom: 4 },
+  cardMeta: { ...type.caption, color: colors.tertiary, marginBottom: spacing.sm },
   tagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginBottom: spacing.sm },
-  quote: { fontSize: font.body, color: colors.secondary, lineHeight: 22, fontStyle: 'italic' },
-  empty: { fontSize: font.body, color: colors.secondary },
+  quote: { ...type.bodyStory, color: colors.secondary },
+  empty: { ...type.bodyStory, color: colors.secondary },
 });

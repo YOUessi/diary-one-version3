@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+import os
 
 
 class Settings(BaseSettings):
@@ -24,6 +25,11 @@ class Settings(BaseSettings):
     smtp_password: str = ""
     smtp_from: str = ""
     smtp_security: str = "ssl"
+    allow_mock_preview: bool = True
 
 
 settings = Settings()
+
+# Align with Dev Lite: SMTP configured → do not echo OTP unless env overrides.
+if settings.smtp_host.strip() and os.environ.get("EXPOSE_OTP_IN_RESPONSE") is None:
+    settings.expose_otp_in_response = False

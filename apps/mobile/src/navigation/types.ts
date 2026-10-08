@@ -19,7 +19,7 @@ export type OnboardingStackParamList = {
   SetupComplete: undefined;
   HardwareBasics: { step: number };
   /** Meeting 2026-09-23 light preference survey (skippable). */
-  PreferenceSurvey: { step: number };
+  PreferenceSurvey: { step: number; mode?: 'onboarding' | 'account' };
 };
 
 export type DiaryStackParamList = {
@@ -55,6 +55,12 @@ export type MemoryStackParamList = {
   OriginalDeleteConfirm: { captureId: string };
 };
 
+export type DeviceStackParamList = {
+  DeviceHome: undefined;
+  AutomaticCapture: undefined;
+  DeviceSettings: undefined;
+};
+
 export type AccountStackParamList = {
   AccountHome: undefined;
   MemoryPreferences: undefined;
@@ -70,13 +76,8 @@ export type AccountStackParamList = {
   HelpFeedback: undefined;
   Plan: undefined;
   Licenses: undefined;
+  PreferenceSurvey: { step: number; mode?: 'onboarding' | 'account' };
   InternalLab: undefined;
-};
-
-export type DeviceStackParamList = {
-  DeviceHome: undefined;
-  AutomaticCapture: undefined;
-  DeviceSettings: undefined;
 };
 
 export type PrivacyDetailSection =

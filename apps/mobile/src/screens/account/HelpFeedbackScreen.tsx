@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
 import { FigmaEyebrow } from '../../components/FigmaScreenHeader';
 import { SettingsRow } from '../../components/SettingsRow';
-import { colors, font, layout, radius, spacing } from '../../theme';
+import { colors, font, layout, radius, spacing, type } from '../../theme';
 import type { AccountStackParamList, HelpTopicId } from '../../navigation/types';
 import { HELP_TOPICS } from './helpContent';
 
@@ -83,29 +83,29 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
   scroll: { paddingBottom: spacing.xl },
   title: {
-    fontSize: 28,
-    fontWeight: '600',
+    ...type.titleLarge,
     color: colors.ink,
     paddingHorizontal: layout.gutterDiary,
     marginBottom: spacing.md,
   },
+  /** Figma 127:1139 — search h48 r12; FAQ rows ~50 */
   search: {
     marginHorizontal: layout.gutterDiary,
-    borderWidth: 1,
-    borderColor: colors.divider,
-    borderRadius: radius.control,
-    padding: spacing.md,
-    fontSize: font.body,
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    minHeight: 48,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    ...type.bodyStory,
     color: colors.ink,
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
   card: {
     marginHorizontal: layout.gutterDiary,
-    borderWidth: 1,
-    borderColor: colors.divider,
-    borderRadius: radius.control,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: 0,
     marginBottom: spacing.sm,
+    minHeight: 50,
+    justifyContent: 'center',
   },
   empty: { fontSize: font.small, color: colors.secondary, paddingVertical: spacing.md },
   footer: {

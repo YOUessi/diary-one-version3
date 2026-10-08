@@ -14,7 +14,7 @@ import { mapTodayStatusFromPreview } from '../cloud/mapTodayStatus';
 import { diaryTodayKey } from '../domain/dayKey';
 import { createDayRevisionId } from '../domain/dayRevision';
 import { PHOTO_LIBRARY_TEST_SOURCE, type MediaIntakeSource } from '../domain/mediaIntake';
-import { attachHeroUrisFromBundle } from './attachHeroUris';
+import { attachChapterMediaFromBundle } from './attachChapterMedia';
 import { rememberPipelineTask } from '../db/ledger';
 import { recordPipelineLedger } from '../db/assetLedger';
 import { resolveProductionBearer } from '../backend/resolveProductionBearer';
@@ -27,18 +27,45 @@ function resolveCloudTarget(): {
   token: string;
 } {
   const s = useAppStore.getState();
-  if (s.cloudProcessingTarget === 'production' && s.productionApiBaseUrl.trim()) {
+  const productionUrl = s.productionApiBaseUrl.trim();
+  const researchUrl = s.researchEndpoint.trim();
+
+  // Prefer Production BFF whenever URL is set (Expo Go Dev Lite path).
+  if (s.cloudProcessingTarget === 'production' || (productionUrl && !researchUrl)) {
+    if (productionUrl) {
+      return {
+        target: 'production',
+        endpoint: productionUrl,
+        token: resolveProductionBearer(),
+      };
+    }
+  }
+
+  if (s.cloudProcessingTarget === 'research' && researchUrl) {
+    return {
+      target: 'research',
+      endpoint: researchUrl,
+      token: s.researchToken,
+    };
+  }
+
+  // Last resort: any configured URL
+  if (productionUrl) {
     return {
       target: 'production',
-      endpoint: s.productionApiBaseUrl.trim(),
+      endpoint: productionUrl,
       token: resolveProductionBearer(),
     };
   }
-  return {
-    target: 'research',
-    endpoint: s.researchEndpoint.trim(),
-    token: s.researchToken,
-  };
+  if (researchUrl) {
+    return {
+      target: 'research',
+      endpoint: researchUrl,
+      token: s.researchToken,
+    };
+  }
+
+  return { target: 'production', endpoint: '', token: resolveProductionBearer() };
 }
 
 async function runCloudPreview(
@@ -58,11 +85,22 @@ async function runCloudPreview(
       bundleDir,
       jsonPath,
     );
-    patchTask(taskId, { status: 'cloud_processing', message: `Production job ${jobId}…` });
+    patchTask(taskId, { status: 'cloud_processing', message: `Uploaded · job ${jobId.slice(0, 8)}…` });
     for (let i = 0; i < 180; i++) {
       const poll = await pollProductionCloudJob(endpoint, token, jobId);
-      if (poll.state === 'succeeded') return poll.result;
+      if (poll.state === 'succeeded') {
+        if (!poll.result) {
+          throw new Error('Cloud job succeeded but returned no result payload');
+        }
+        return poll.result;
+      }
       if (poll.state === 'failed') throw new Error(poll.message);
+      if (i % 2 === 0) {
+        patchTask(taskId, {
+          status: 'cloud_processing',
+          message: poll.message ? `Cloud: ${poll.message}` : `Polling job… (${i + 1})`,
+        });
+      }
       await sleep(1500);
     }
     throw new Error('Production job timed out while polling (4.5 min)');
@@ -128,9 +166,9 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
 
     if (endpoint) {
       const consent = useAppStore.getState().cloudEvidenceConsent;
-      if (consent === false) {
+      if (consent !== true) {
         throw new Error(
-          'Cloud evidence upload is off. Agree in setup preferences, or change Privacy settings after a future Account control is shipped.',
+          'Cloud evidence upload requires consent. Turn it on in Account → Privacy & Data.',
         );
       }
       patchTask(taskId, {
@@ -168,28 +206,37 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
       const dayKey =
         useAppStore.getState().pipelineTasks.find((t) => t.id === taskId)?.dayKey ?? diaryTodayKey();
       const mapped = mapPreviewToDiary(preview, dayKey);
-      const chaptersWithHero = await attachHeroUrisFromBundle(
+      const chaptersWithHero = await attachChapterMediaFromBundle(
         mapped.chapters,
+        preview.chapters,
         bundleDir,
         jsonPath,
       );
       applyDiaryDayUpdate(dayKey, chaptersWithHero, mapped.smallMemories);
       applyTodayStatus(mapTodayStatusFromPreview(preview));
-      patchTask(taskId, {
-        status: 'succeeded',
-        message: `Diary updated · ${chaptersWithHero.length} memories, ${mapped.smallMemories.length} small · ${preview.delivery_state ?? 'ok'}`,
-        bundleVersion: bundle.bundle_version,
-      });
+      const fallbackNote = preview.dev_lite_fallback === true ? ' · mock fallback' : '';
+      if (chaptersWithHero.length === 0 && mapped.smallMemories.length === 0) {
+        patchTask(taskId, {
+          status: 'succeeded',
+          message: `Cloud OK but 0 memories (${preview.semantic_day_state ?? preview.delivery_state ?? 'empty'})${fallbackNote}`,
+          bundleVersion: bundle.bundle_version,
+        });
+        Alert.alert(
+          'Cloud finished — no memories',
+          `X02 returned an empty day (${preview.delivery_state ?? preview.semantic_day_state ?? 'unknown'}). Demo JPEG often has nothing to ground.\n\nTry Lab B with real photos, or enable Docker ALLOW_MOCK_PREVIEW so Diary still gets a mock chapter.`,
+        );
+      } else {
+        patchTask(taskId, {
+          status: 'succeeded',
+          message: `Diary updated · ${chaptersWithHero.length} memories, ${mapped.smallMemories.length} small · ${preview.delivery_state ?? 'ok'}${fallbackNote}`,
+          bundleVersion: bundle.bundle_version,
+        });
+      }
     } else {
-      patchTask(taskId, { status: 'uploading', message: 'No API URL — mock upload…' });
-      await sleep(400);
-      patchTask(taskId, { status: 'cloud_processing', message: 'Mock worker (set API on Device)…' });
-      await sleep(900);
-      patchTask(taskId, {
-        status: 'succeeded',
-        message: 'Bundle saved locally. Configure cloud API in Account → Evidence pipeline lab.',
-      });
-      useAppStore.setState({ todayStatus: 'READY' });
+      // Fail-closed: Expo Go internal beta must hit real BFF, never fake success.
+      throw new Error(
+        'No cloud API URL. Account → Evidence pipeline lab → Apply .env BFF defaults (http://<PC-LAN>:8790).',
+      );
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

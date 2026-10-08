@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
+    pull_policy: missing
     environment:
       POSTGRES_USER: diary
       POSTGRES_PASSWORD: diary
@@ -17,6 +18,7 @@ services:
 
   redis:
     image: redis:7-alpine
+    pull_policy: missing
     ports:
       - "6379:6379"
     healthcheck:
@@ -26,8 +28,10 @@ services:
       retries: 10
 
   minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
+    image: cgr.dev/chainguard/minio:latest
+    pull_policy: missing
+    user: "0:0"
+    command: ["server", "/data", "--console-address", ":9001"]
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
@@ -36,48 +40,83 @@ services:
       - "9001:9001"
     volumes:
       - miniodata:/data
+    healthcheck:
+      test: ["CMD", "/usr/bin/minio", "--version"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 8s
 
   bff:
     build: .
     command: uvicorn bff.main:app --host 0.0.0.0 --port 8790
     ports:
       - "8790:8790"
-    env_file:
-      - .env
     environment:
-      DATABASE_URL: postgresql+asyncpg://diary:diary@postgres:5432/diary_one
+      DATABASE_URL: postgresql+asyncpg://diary:diary@postgres:5432/diary_one?ssl=false
       DATABASE_URL_SYNC: postgresql+psycopg://diary:diary@postgres:5432/diary_one
       REDIS_URL: redis://redis:6379/0
       MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_SECURE: "false"
+      X02_BASE_URL: http://host.docker.internal:8787
+      API_TOKEN: ${API_TOKEN:-dev-token}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      SMTP_SECURITY: ${SMTP_SECURITY:-ssl}
+      EXPOSE_OTP_IN_RESPONSE: ${EXPOSE_OTP_IN_RESPONSE:-false}
+      ALLOW_MOCK_PREVIEW: ${ALLOW_MOCK_PREVIEW:-true}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8790/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
       minio:
-        condition: service_started
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    volumes:
+      - bffdata:/app/data
 
   worker:
     build: .
     command: python -m worker.main
-    env_file:
-      - .env
     environment:
-      DATABASE_URL: postgresql+asyncpg://diary:diary@postgres:5432/diary_one
+      DATABASE_URL: postgresql+asyncpg://diary:diary@postgres:5432/diary_one?ssl=false
       DATABASE_URL_SYNC: postgresql+psycopg://diary:diary@postgres:5432/diary_one
       REDIS_URL: redis://redis:6379/0
       MINIO_ENDPOINT: minio:9000
-      X02_BASE_URL: ${X02_BASE_URL:-http://host.docker.internal:8787}
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_SECURE: "false"
+      X02_BASE_URL: http://host.docker.internal:8787
+      API_TOKEN: ${API_TOKEN:-dev-token}
+      ALLOW_MOCK_PREVIEW: ${ALLOW_MOCK_PREVIEW:-true}
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
       minio:
-        condition: service_started
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+        condition: service_healthy
+      bff:
+        condition: service_healthy
 
 volumes:
   pgdata:
   miniodata:
+  bffdata:

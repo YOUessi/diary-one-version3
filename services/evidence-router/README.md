@@ -1,15 +1,22 @@
 # Evidence router (Dev Lite / parity)
 
-Minimal profile defaults for `POST /v1/evidence/semantic-route`.
-
 Full Python engine lives in `E:\AI耳机\diary_one_app_evidence_v0_2_dev8_mobileclip_router`.
-To import it on **Mac**:
+
+## Windows MobileCLIP (wired)
+
+Dev Lite now loads MobileCLIP for `POST /v1/evidence/semantic-analyze` when:
 
 ```powershell
-$env:PYTHONPATH = "E:\AI耳机\diary_one_app_evidence_v0_2_dev8_mobileclip_router\src"
+$env:DIARY_ONE_MOBILECLIP_CHECKPOINT = "…\mobileclip_s0.pt"
 ```
 
-On **Windows**, authoritative routing runs in the Expo app TypeScript port (`apps/mobile/src/evidence/`).
-MobileCLIP on BFF is documented for a later milestone — do not claim it runs in Expo Go without weights.
+See **`docs/WINDOWS_MOBILECLIP_BFF.md`**.
 
-Apple Vision helper (Mac): `scripts/vision_feature_print.m` from the reference package.
+`start-dev-lite.ps1` adds the reference package `src` to `PYTHONPATH` automatically.
+
+## Profiles
+
+- Phone TypeScript routing switches to `MOBILECLIP_*` profiles when `modelId` contains `MOBILECLIP`.
+- iOS Dev Client still uses Apple Vision (`DiaryOneVision`) when the native module is present.
+
+Apple Vision helper (Mac only): `scripts/vision_feature_print.m` from the reference package.

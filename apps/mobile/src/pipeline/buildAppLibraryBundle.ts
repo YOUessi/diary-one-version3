@@ -13,7 +13,7 @@ import {
   type SpatialTransform,
 } from './bundleTypes';
 import { buildSemanticVideoEvidence } from '../evidence/runSemanticVideoEvidence';
-import { formatSemanticRouteSummary } from '../evidence/lastSemanticRoute';
+import * as Crypto from 'expo-crypto';
 
 const DEVICE_STUB = {
   device_id: 'PHOTO_LIBRARY_TEST',
@@ -23,7 +23,7 @@ const DEVICE_STUB = {
 };
 
 function newSessionId(): string {
-  return globalThis.crypto?.randomUUID?.() ?? `session-${Date.now()}`;
+  return Crypto.randomUUID();
 }
 
 function extFromName(name?: string, fallback = 'jpg'): string {
@@ -79,11 +79,17 @@ export async function buildAppLibraryBundle(
 
   const sessionId = newSessionId();
   const assets: Record<string, unknown>[] = [];
+  /** Sidecar for App: map asset_id → local source URI (original not packed in bundle). */
+  const sourceUris: Record<string, { uri: string; media_kind: 'PHOTO' | 'VIDEO' }> = {};
 
   for (let sequenceIndex = 0; sequenceIndex < items.length; sequenceIndex++) {
     const item = items[sequenceIndex];
     const assetId = `asset-${sequenceIndex}`;
     const localUri = await ensureLocalFileUri(item.uri, assetId);
+    sourceUris[assetId] = {
+      uri: localUri,
+      media_kind: item.mediaType === 'video' ? 'VIDEO' : 'PHOTO',
+    };
     const isPhoto = item.mediaType !== 'video';
     const originalSha = await sha256File(localUri);
     const ext = extFromName(item.fileName, isPhoto ? 'jpg' : 'mp4');
@@ -126,7 +132,6 @@ export async function buildAppLibraryBundle(
     let evidence_window_count: 1 | 2 | 4 | 6 | 10 = 1;
     let evidence_sampling_profile = 'VIDEO_SINGLE_WINDOW_THREE';
     let frames: FrameRow[] = [];
-    let semantic_route_summary: string | undefined;
 
     try {
       const semantic = await buildSemanticVideoEvidence({
@@ -141,16 +146,13 @@ export async function buildAppLibraryBundle(
       frames = semantic.frames as FrameRow[];
       evidence_sampling_profile = semantic.evidence_sampling_profile;
       evidence_window_count = semantic.evidence_window_count as typeof evidence_window_count;
-      semantic_route_summary = formatSemanticRouteSummary(semantic.semanticRoute);
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
+    } catch {
       evidence_window_count =
         durationMs <= 10_000 ? 1 : durationMs <= 30_000 ? 2 : durationMs <= 90_000 ? 4 : 6;
       evidence_sampling_profile =
         evidence_window_count === 1
           ? 'VIDEO_SINGLE_WINDOW_THREE'
           : 'VIDEO_MULTI_WINDOW_TWO_PER_WINDOW';
-      semantic_route_summary = `semantic_failed:${msg}`;
 
       const canonicalOffsets =
         evidence_window_count === 1
@@ -202,7 +204,6 @@ export async function buildAppLibraryBundle(
       materialized_video: false,
       evidence_sampling_profile,
       evidence_window_count,
-      semantic_route_summary,
       frames,
     });
   }
@@ -241,6 +242,10 @@ export async function buildAppLibraryBundle(
 
   const jsonPath = `${bundleDir}bundle.json`;
   await FileSystem.writeAsStringAsync(jsonPath, JSON.stringify(bundle, null, 2));
+  await FileSystem.writeAsStringAsync(
+    `${bundleDir}source_uris.json`,
+    JSON.stringify(sourceUris, null, 2),
+  );
   return { bundle, jsonPath };
 }
 

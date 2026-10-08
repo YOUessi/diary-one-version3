@@ -12,14 +12,27 @@ param(
 
 $ErrorActionPreference = "Stop"
 $ServerRoot = Split-Path -Parent $PSScriptRoot
-$AppRoot = Resolve-Path (Join-Path $ServerRoot "..\diary-one-app")
-
-$lan = (
-  Get-NetIPAddress -AddressFamily IPv4 |
-  Where-Object { $_.IPAddress -notmatch '^(127\.|169\.254\.)' } |
-  Select-Object -First 1 -ExpandProperty IPAddress
+# Monorepo App: diary-one/apps/mobile ; legacy sibling: diary-one-app
+$appCandidates = @(
+  (Join-Path $ServerRoot "..\..\apps\mobile"),
+  (Join-Path $ServerRoot "..\diary-one-app"),
+  "E:\AI耳机\diary-one\apps\mobile",
+  "E:\AI耳机\diary-one-app"
 )
-if (-not $lan) { throw "No LAN IPv4 found. Connect Wi-Fi first." }
+$AppRoot = $null
+foreach ($c in $appCandidates) {
+  try {
+    $resolved = Resolve-Path $c -ErrorAction Stop
+    if (Test-Path (Join-Path $resolved "package.json")) {
+      $AppRoot = $resolved.Path
+      break
+    }
+  } catch { continue }
+}
+if (-not $AppRoot) { throw "App root not found (expected diary-one/apps/mobile)." }
+
+. (Join-Path $PSScriptRoot "_lan-ip.ps1")
+$lan = $DiaryLanIPv4
 
 Write-Host "=== Diary One commercial-dev setup ===" -ForegroundColor Cyan
 Write-Host "LAN IP: $lan"
@@ -41,12 +54,26 @@ if ($OpenFirewall) {
 }
 
 $envPath = Join-Path $AppRoot ".env"
-@"
+$keepLines = @()
+if (Test-Path $envPath) {
+  foreach ($line in Get-Content $envPath) {
+    if ($line -match '^\s*#' -or $line -notmatch '=') { continue }
+    $key = ($line -split '=', 2)[0].Trim()
+    if ($key -in @('EXPO_PUBLIC_DEV_BFF_URL', 'EXPO_PUBLIC_DEV_BFF_TOKEN')) { continue }
+    if ($key -like 'EXPO_PUBLIC_*') { $keepLines += $line }
+  }
+}
+$envBody = @"
 # Auto-written by setup-commercial-dev.ps1 — restart Metro after change
+# Phone must use Wi-Fi LAN (192.168.x), never WSL 172.22.x
 EXPO_PUBLIC_DEV_BFF_URL=http://${lan}:8790
 EXPO_PUBLIC_DEV_BFF_TOKEN=dev-token
-"@ | Set-Content -Path $envPath -Encoding UTF8
-Write-Host "Wrote $envPath"
+"@
+if ($keepLines.Count -gt 0) {
+  $envBody = $envBody.TrimEnd() + "`r`n" + ($keepLines -join "`r`n") + "`r`n"
+}
+$envBody | Set-Content -Path $envPath -Encoding UTF8
+Write-Host "Wrote $envPath (BFF http://${lan}:8790)"
 
 $serverEnv = Join-Path $ServerRoot ".env"
 if (-not (Test-Path $serverEnv)) {
@@ -79,9 +106,9 @@ try {
 
 Write-Host ""
 Write-Host "Phone Expo Go:" -ForegroundColor Cyan
-Write-Host "  Metro:  npx expo start --go --lan --clear   (in diary-one-app)"
+Write-Host "  Metro:  cd $AppRoot ; npx expo start --go --lan --clear"
 Write-Host "  URL:    exp://${lan}:8081"
 Write-Host "  BFF:    http://${lan}:8790   token=dev-token"
 Write-Host "Admin once:  .\scripts\setup-commercial-dev.ps1 -OpenFirewall"
 Write-Host "Real AI:     set DASHSCOPE_API_KEY then start-dev-lite -Adapter qwen"
-Write-Host "Doc:         diary-one-app\docs\COMMERCIAL_EXPO_GO.md"
+Write-Host "Doc:         diary-one\services\bff\docs\EXPO_GO_DEV_LITE.md"

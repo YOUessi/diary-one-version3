@@ -9,7 +9,7 @@ from bff.auth import require_bearer
 from shared.db import get_async_session
 from shared.models import CloudJob, JobStatus
 from shared.queue import enqueue_job
-from shared.form_fields import read_form_field
+from shared.form_fields import read_form_bytes, read_form_field
 from shared.storage import minio_client, upload_bytes
 
 router = APIRouter(prefix="/v1", dependencies=[Depends(require_bearer)])
@@ -29,7 +29,9 @@ async def create_day_revision(
     if manifest_part is None:
         raise HTTPException(status_code=400, detail="manifest required")
 
-    manifest_bytes = await manifest_part.read()
+    manifest_bytes = await read_form_bytes(manifest_part)
+    if not manifest_bytes:
+        raise HTTPException(status_code=400, detail="manifest required")
     try:
         manifest_json = json.loads(manifest_bytes.decode("utf-8"))
     except json.JSONDecodeError:
@@ -64,8 +66,9 @@ async def create_day_revision(
 
     profile_part = form.get("app_client_profile")
     if profile_part is not None:
-        profile_bytes = await profile_part.read()
-        upload_bytes(client, f"{prefix}app_client_profile.json", profile_bytes, "application/json")
+        profile_bytes = await read_form_bytes(profile_part)
+        if profile_bytes:
+            upload_bytes(client, f"{prefix}app_client_profile.json", profile_bytes, "application/json")
 
     for key, part in form.items():
         if key in ("manifest", "app_client_profile", "day_revision_id"):

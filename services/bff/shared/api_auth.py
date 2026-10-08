@@ -16,7 +16,11 @@ def require_api_bearer(
     *,
     invalid_status: int = 401,
 ) -> None:
-    """Accept static API_TOKEN (Lab) or OTP session_token."""
+    """Accept static API_TOKEN (Lab) or OTP session_token.
+
+    Empty API_TOKEN + no Authorization → open (local lab).
+    Empty API_TOKEN + invalid Bearer → reject (do not treat garbage as open).
+    """
     token = parse_bearer(authorization)
     if not token:
         if not api_token:
@@ -27,9 +31,6 @@ def require_api_bearer(
         return
 
     if sessions and sessions.resolve_email(token):
-        return
-
-    if not api_token:
         return
 
     raise HTTPException(status_code=invalid_status, detail="unauthorized")

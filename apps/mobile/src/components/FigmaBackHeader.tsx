@@ -27,8 +27,15 @@ export function FigmaBackHeader({
 
 const styles = StyleSheet.create({
   wrap: { paddingHorizontal: layout.gutterDiary },
-  back: { minHeight: 44, justifyContent: 'center', width: 40 },
-  backText: { fontSize: 28, color: colors.ink, fontWeight: '300' },
+  /** Figma back hit target 44×44 */
+  back: {
+    width: 44,
+    height: 44,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  /** Figma list/settings Back Glyph ≈ 34 */
+  backText: { fontSize: 34, color: colors.ink, fontWeight: '300', marginTop: -4, lineHeight: 36 },
   eyebrow: {
     fontSize: font.micro,
     fontWeight: '600',

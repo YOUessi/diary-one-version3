@@ -1,4 +1,5 @@
 FROM python:3.12-slim
+ENV PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
 
 WORKDIR /app
 ENV PYTHONPATH=/app
@@ -14,3 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY shared ./shared
 COPY bff ./bff
 COPY worker ./worker
+COPY dev_lite ./dev_lite

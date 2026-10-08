@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, ScrollView, Pressable, Alert, ActivityIndicator } from 'react-native';
+import { Text, StyleSheet, ScrollView, Pressable, Alert, ActivityIndicator, Linking } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
-import { colors, font, layout, radius, spacing } from '../../theme';
+import { DiscardConfirmCard } from '../../components/DiscardConfirmCard';
+import { colors, font, layout, spacing } from '../../theme';
 import type { AccountStackParamList } from '../../navigation/types';
-import { PRIVACY_SECTION_COPY } from './privacyContent';
+import {
+  PRIVACY_SECTION_COPY,
+  PRIVACY_URL_PENDING_NOTE,
+  TERMS_URL_PENDING_NOTE,
+  privacyPolicyUrl,
+  termsUrl,
+} from './privacyContent';
 import { buildPersistedSlice, useAppStore } from '../../store/useAppStore';
 import { exportLocalDataService, wipeLocalDataService } from '../../backend/privacyService';
 
@@ -18,6 +25,7 @@ export default function PrivacyDetailScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<AccountStackParamList>>();
   const copy = PRIVACY_SECTION_COPY[section];
   const [busy, setBusy] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const exportData = async () => {
     setBusy(true);
@@ -31,24 +39,12 @@ export default function PrivacyDetailScreen() {
     }
   };
 
-  const deleteLocal = () => {
-    Alert.alert(
-      'Delete local data?',
-      'Removes memories, captured originals, profile, and settings from this iPhone. This cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            void wipeLocalDataService().then(() => {
-              Alert.alert('Done', 'Local data was reset to the demo seed.');
-              navigation.popToTop();
-            });
-          },
-        },
-      ],
-    );
+  const confirmDeleteLocal = () => {
+    setDeleteOpen(false);
+    void wipeLocalDataService().then(() => {
+      Alert.alert('Done', 'Local data was reset to the demo seed.');
+      navigation.popToTop();
+    });
   };
 
   return (
@@ -57,6 +53,24 @@ export default function PrivacyDetailScreen() {
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>{copy.title}</Text>
         <Text style={styles.body}>{copy.body}</Text>
+        {section === 'privacy_policy' ? (
+          privacyPolicyUrl() ? (
+            <Pressable style={styles.btn} onPress={() => void Linking.openURL(privacyPolicyUrl())}>
+              <Text style={styles.btnText}>Open privacy policy</Text>
+            </Pressable>
+          ) : (
+            <Text style={styles.pending}>{PRIVACY_URL_PENDING_NOTE}</Text>
+          )
+        ) : null}
+        {section === 'terms' ? (
+          termsUrl() ? (
+            <Pressable style={styles.btn} onPress={() => void Linking.openURL(termsUrl())}>
+              <Text style={styles.btnText}>Open terms of use</Text>
+            </Pressable>
+          ) : (
+            <Text style={styles.pending}>{TERMS_URL_PENDING_NOTE}</Text>
+          )
+        ) : null}
         {section === 'export_data' ? (
           <Pressable style={styles.btn} onPress={() => void exportData()} disabled={busy}>
             {busy ? (
@@ -67,11 +81,21 @@ export default function PrivacyDetailScreen() {
           </Pressable>
         ) : null}
         {section === 'delete_account' ? (
-          <Pressable style={styles.btnDanger} onPress={deleteLocal}>
+          <Pressable style={styles.btnDanger} onPress={() => setDeleteOpen(true)}>
             <Text style={styles.btnDangerText}>Delete local data on this iPhone</Text>
           </Pressable>
         ) : null}
       </ScrollView>
+
+      <DiscardConfirmCard
+        visible={deleteOpen}
+        title="Delete local data?"
+        message="Removes memories, captured originals, profile, and settings from this iPhone. This cannot be undone."
+        keepLabel="Cancel"
+        discardLabel="Delete"
+        onKeepEditing={() => setDeleteOpen(false)}
+        onDiscard={confirmDeleteLocal}
+      />
     </SafeAreaView>
   );
 }
@@ -81,23 +105,29 @@ const styles = StyleSheet.create({
   scroll: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
   title: { fontSize: 28, fontWeight: '600', color: colors.ink, marginBottom: spacing.md },
   body: { fontSize: font.body, lineHeight: 24, color: colors.secondary },
+  pending: {
+    marginTop: spacing.md,
+    fontSize: font.small,
+    lineHeight: 20,
+    color: colors.tertiary,
+  },
   btn: {
     marginTop: spacing.lg,
     backgroundColor: colors.ink,
-    borderRadius: radius.pill,
-    minHeight: layout.buttonHeight,
+    borderRadius: 12,
+    minHeight: 52,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btnText: { color: colors.paper, fontWeight: '700' },
+  btnText: { fontSize: 15, lineHeight: 20, color: colors.paper, fontWeight: '600' },
   btnDanger: {
     marginTop: spacing.lg,
     borderWidth: 1,
     borderColor: colors.accent,
-    borderRadius: radius.pill,
-    minHeight: layout.buttonHeight,
+    borderRadius: 12,
+    minHeight: 52,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btnDangerText: { color: colors.accent, fontWeight: '700' },
+  btnDangerText: { fontSize: 15, lineHeight: 20, color: colors.accent, fontWeight: '600' },
 });

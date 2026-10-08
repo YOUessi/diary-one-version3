@@ -1,3 +1,5 @@
+import * as FileSystem from 'expo-file-system/legacy';
+import * as VideoThumbnails from 'expo-video-thumbnails';
 import { requireOptionalNativeModule } from 'expo-modules-core';
 import type { SemanticAnalyzer, SemanticAnalyzeResult } from './semanticAnalyzer';
 
@@ -7,8 +9,20 @@ type NativeVisionPayload = {
   classifications: Array<Array<{ identifier: string; confidence: number }>>;
 };
 
+export type ExtractedVideoFrame = {
+  uri: string;
+  requestedMs: number;
+  actualPtsMs: number;
+};
+
 const NativeDiaryOneVision = requireOptionalNativeModule<{
+  isAvailable?: boolean;
   analyzeImages: (uris: string[]) => Promise<NativeVisionPayload>;
+  extractVideoFrames: (
+    videoUri: string,
+    timestampsMs: number[],
+    destDir: string,
+  ) => Promise<ExtractedVideoFrame[]>;
 }>('DiaryOneVision');
 
 export function isNativeVisionAvailable(): boolean {
@@ -34,6 +48,31 @@ export function createNativeVisionAnalyzer(): SemanticAnalyzer | null {
       }));
     },
   };
+}
+
+/** AVFoundation timestamps on TestFlight/Dev Client; Expo thumbnails on Expo Go. */
+export async function extractVideoFramesAtTimes(
+  videoUri: string,
+  timestampsMs: number[],
+  destDir: string,
+): Promise<ExtractedVideoFrame[]> {
+  if (NativeDiaryOneVision?.extractVideoFrames) {
+    await FileSystem.makeDirectoryAsync(destDir, { intermediates: true });
+    return NativeDiaryOneVision.extractVideoFrames(videoUri, timestampsMs, destDir);
+  }
+  const rows: ExtractedVideoFrame[] = [];
+  for (const requestedMs of timestampsMs) {
+    const thumb = await VideoThumbnails.getThumbnailAsync(videoUri, {
+      time: Math.max(0, requestedMs),
+      quality: 0.85,
+    });
+    rows.push({
+      uri: thumb.uri,
+      requestedMs,
+      actualPtsMs: requestedMs,
+    });
+  }
+  return rows;
 }
 
 export type { SemanticAnalyzeResult };

@@ -3,12 +3,14 @@ import { ScrollView, View, Text, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font, layout, spacing } from '../../theme';
+import { colors, layout, spacing, type } from '../../theme';
 import { ChapterBlock } from '../../components/ChapterBlock';
 import { SmallMemory } from '../../components/SmallMemory';
 import { TodayStatusBanner } from '../../components/TodayStatus';
 import { MemoryCalendar } from '../../components/MemoryCalendar';
 import { FigmaScreenHeader } from '../../components/FigmaScreenHeader';
+import { SearchGlyph } from '../../components/SearchGlyph';
+import { ShareGlyph } from '../../components/ShareGlyph';
 import { performDeviceSync } from '../../device/deviceSync';
 import {
   useAppStore,
@@ -95,13 +97,29 @@ export default function DiaryHomeScreen() {
     && chaptersForDate(chapters, selectedDateKey).length === 0
     && smallMemoriesForDate(smallMemoriesByDate, selectedDateKey).length === 0;
 
-  const renderFeed = (items: ReturnType<typeof buildDayFeed>, showDateOnCard: boolean) =>
+  const renderFeed = (items: ReturnType<typeof buildDayFeed>, isTodaySection: boolean) =>
     items.map((item, index) => {
       if (item.kind === 'day_header') {
+        const isToday = item.label === 'Today';
         return (
-          <View key={`h-${index}`} style={styles.dayHeader}>
-            <Text style={styles.dayTitle}>{item.label}</Text>
-            {item.sub ? <Text style={styles.daySub}>{item.sub}</Text> : null}
+          <View key={`h-${index}`} style={[styles.dayHeader, isToday && styles.dayHeaderToday]}>
+            <Text style={[styles.dayTitle, isToday ? styles.dayTitleToday : styles.dayTitlePast]}>
+              {item.label}
+            </Text>
+            <View style={styles.dayHeaderTrailing}>
+              {item.sub ? <Text style={styles.daySub}>{item.sub}</Text> : null}
+              {isTodaySection && isToday && recapHasChapters ? (
+                <Pressable
+                  onPress={() => navigation.navigate('ShareDaySelector', { dateKey: recapDateKey })}
+                  hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel="Share day"
+                  style={styles.shareHit}
+                >
+                  <ShareGlyph />
+                </Pressable>
+              ) : null}
+            </View>
           </View>
         );
       }
@@ -118,7 +136,7 @@ export default function DiaryHomeScreen() {
           aiStory={c.aiStory}
           tags={c.tags}
           heroUri={c.heroUri}
-          showDateMeta={showDateOnCard}
+          showDateMeta={false}
           onPress={() => navigation.navigate('ChapterDetail', { chapterId: c.id })}
         />
       );
@@ -126,24 +144,25 @@ export default function DiaryHomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <FigmaScreenHeader
-        title="Diary"
-        rightAccessory={
-          <Pressable
-            onPress={() => navigation.navigate('Search', {})}
-            hitSlop={12}
-            accessibilityRole="button"
-            accessibilityLabel="Search memories"
-          >
-            <Text style={styles.searchLink}>Search</Text>
-          </Pressable>
-        }
-      />
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.gutter}>
+          <FigmaScreenHeader
+            title="Diary"
+            rightAccessory={
+              <Pressable
+                onPress={() => navigation.navigate('Search', {})}
+                hitSlop={8}
+                accessibilityRole="button"
+                accessibilityLabel="Search memories"
+              >
+                <SearchGlyph />
+              </Pressable>
+            }
+          />
+
           <MemoryCalendar
             expanded={false}
             selectedDateKey={selectedDateKey}
@@ -159,12 +178,7 @@ export default function DiaryHomeScreen() {
 
           {pipelineTask ? <CloudProcessingBanner task={pipelineTask} /> : null}
 
-          <DayPrepareBanner
-            visible={
-              calendarDayPreparing
-              || (isViewingToday && (todayStatus === 'PREPARING' || todayStatus === 'READY_PREPARING'))
-            }
-          />
+          <DayPrepareBanner visible={calendarDayPreparing} />
 
           {showTodayBanner ? (
             <TodayStatusBanner
@@ -176,37 +190,30 @@ export default function DiaryHomeScreen() {
           ) : null}
 
           <View
-            style={calendarDayPreparing ? styles.feedPreparing : undefined}
+            style={[styles.section, calendarDayPreparing ? styles.feedPreparing : undefined]}
             pointerEvents={calendarDayPreparing ? 'none' : 'auto'}
           >
-          {isViewingToday && !todayHasMemories && (todayStatus === 'ZERO_CURATED' || todayStatus === 'NO_RECORDINGS') ? (
-            <Text style={styles.emptyToday}>
-              {todayStatus === 'NO_RECORDINGS'
-                ? 'No recordings today.'
-                : 'No memories were created from today\'s recordings.'}
-            </Text>
-          ) : null}
+            {isViewingToday && !todayHasMemories && (todayStatus === 'ZERO_CURATED' || todayStatus === 'NO_RECORDINGS') ? (
+              <Text style={styles.emptyToday}>
+                {todayStatus === 'NO_RECORDINGS'
+                  ? 'No recordings today.'
+                  : "No memories were created from today's recordings."}
+              </Text>
+            ) : null}
 
-          {recapHasChapters ? (
-            <Pressable
-              style={styles.recapRow}
-              onPress={() => navigation.navigate('ShareDaySelector', { dateKey: recapDateKey })}
-            >
-              <Text style={styles.recapLabel}>Share day</Text>
-              <Text style={styles.recapHint}>Daily Recap · photo collage</Text>
-            </Pressable>
-          ) : null}
+            {isViewingToday ? renderFeed(todayFeed, true) : renderFeed(selectedDayFeed, false)}
 
-          {isViewingToday ? renderFeed(todayFeed, false) : renderFeed(selectedDayFeed, true)}
-
-          {selectedPastDayEmpty ? (
-            <Text style={styles.emptyToday}>No memories for this day.</Text>
-          ) : null}
+            {selectedPastDayEmpty ? (
+              <Text style={styles.emptyToday}>No memories for this day.</Text>
+            ) : null}
+          </View>
 
           {isViewingToday ? (
             <>
               {earlierBlocks.map((block) => (
-                <View key={block.dateKey}>{renderFeed(block.items, true)}</View>
+                <View key={block.dateKey} style={styles.section}>
+                  {renderFeed(block.items, false)}
+                </View>
               ))}
               {historyLoadState === 'loading' ? (
                 <Text style={styles.loadStatus}>Loading earlier memories…</Text>
@@ -226,7 +233,6 @@ export default function DiaryHomeScreen() {
               ) : null}
             </>
           ) : null}
-          </View>
         </View>
       </ScrollView>
       <ShareDayReadinessSheet
@@ -239,48 +245,64 @@ export default function DiaryHomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
-  scroll: { paddingBottom: spacing.xl },
-  gutter: { paddingHorizontal: layout.gutterDiary },
+  scroll: {
+    paddingBottom: layout.tabBarHeight + spacing.xxxl + spacing.lg,
+  },
+  gutter: {
+    paddingHorizontal: layout.gutterDiary,
+    gap: spacing.xxl,
+  },
+  section: {
+    gap: spacing.xl,
+    width: '100%',
+  },
   dayHeader: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: spacing.sm,
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    minHeight: 32,
+    width: '100%',
   },
-  dayTitle: { fontSize: font.h2, fontWeight: '700', color: colors.ink },
-  daySub: { fontSize: font.small, color: colors.tertiary },
+  dayHeaderToday: { minHeight: 40 },
+  dayHeaderTrailing: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: spacing.xs,
+  },
+  dayTitle: { color: colors.ink },
+  dayTitleToday: { ...type.titleSection },
+  dayTitlePast: { ...type.titleChapter },
+  daySub: {
+    ...type.caption,
+    color: colors.tertiary,
+    textAlign: 'right',
+    minWidth: 80,
+    marginBottom: 2,
+  },
+  shareHit: {
+    width: layout.minTouch,
+    height: layout.minTouch,
+    marginBottom: -4,
+  },
   loadMore: {
     minHeight: layout.minTouch,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: spacing.md,
   },
-  loadMoreText: { fontSize: font.small, fontWeight: '600', color: colors.accent },
+  loadMoreText: { ...type.captionEmphasis, color: colors.accent },
   loadStatus: {
     textAlign: 'center',
-    fontSize: font.small,
+    ...type.caption,
     color: colors.secondary,
     marginTop: spacing.md,
   },
   loadFailed: { alignItems: 'center', marginTop: spacing.md, gap: spacing.sm },
-  loadFailedText: { fontSize: font.small, color: colors.secondary },
-  tryAgain: { fontSize: font.small, fontWeight: '600', color: colors.accent },
-  searchLink: { fontSize: font.small, fontWeight: '600', color: colors.accent },
+  loadFailedText: { ...type.caption, color: colors.secondary },
+  tryAgain: { ...type.captionEmphasis, color: colors.accent },
   emptyToday: {
-    fontSize: font.body,
+    ...type.bodyStory,
     color: colors.secondary,
-    marginBottom: spacing.md,
-    lineHeight: 22,
   },
-  recapRow: {
-    borderWidth: 1,
-    borderColor: colors.divider,
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-  },
-  recapLabel: { fontSize: font.body, fontWeight: '600', color: colors.ink },
-  recapHint: { fontSize: font.micro, color: colors.tertiary, marginTop: 4 },
   feedPreparing: { opacity: 0.42 },
 });

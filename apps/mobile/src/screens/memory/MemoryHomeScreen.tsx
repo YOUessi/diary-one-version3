@@ -3,8 +3,9 @@ import { ScrollView, View, Text, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font, layout, radius, spacing } from '../../theme';
+import { colors, layout, radius, spacing, type } from '../../theme';
 import { FigmaScreenHeader } from '../../components/FigmaScreenHeader';
+import { SearchGlyph } from '../../components/SearchGlyph';
 import { CapturedGridCell } from '../../components/CapturedGridCell';
 import { useAppStore } from '../../store/useAppStore';
 import type { MemoryStackParamList } from '../../navigation/types';
@@ -26,44 +27,53 @@ export default function MemoryHomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <FigmaScreenHeader title="Memory" />
+      <View style={styles.gutter}>
+        <FigmaScreenHeader title="Memory" />
+      </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {showUnsynced ? (
-          <View style={styles.banner}>
-            <Text style={styles.bannerTitle}>New recordings on Diary One</Text>
-            <Text style={styles.bannerSub}>Sync when you&apos;re ready</Text>
-          </View>
-        ) : null}
-
         <Pressable
           onPress={() => navigation.navigate('Search', {})}
           style={styles.searchBox}
           accessibilityRole="button"
+          accessibilityLabel="Search your memories"
         >
+          <SearchGlyph />
           <Text style={styles.searchPlaceholder}>Search your memories...</Text>
         </Pressable>
 
+        {showUnsynced ? (
+          <Pressable
+            style={styles.banner}
+            onPress={() => {
+              const parent = navigation.getParent();
+              parent?.navigate('DeviceTab');
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="New recordings on Diary One. Sync when you're ready"
+          >
+            <View style={styles.bannerCopy}>
+              <Text style={styles.bannerTitle}>New recordings on Diary One</Text>
+              <Text style={styles.bannerSub}>Sync when you&apos;re ready</Text>
+            </View>
+            <Text style={styles.bannerChevron}>›</Text>
+          </Pressable>
+        ) : null}
+
         <View style={styles.sectionRow}>
           <Text style={styles.sectionTitle}>Captured by You</Text>
-          <Pressable onPress={() => navigation.navigate('CapturedByYou', { filter: 'all' })}>
-            <Text style={styles.seeAll}>See all ›</Text>
+          <Pressable
+            onPress={() => navigation.navigate('CapturedByYou', { filter: 'all' })}
+            hitSlop={8}
+            style={styles.seeAllHit}
+          >
+            <Text style={styles.seeAll}>See all</Text>
+            <Text style={styles.seeAllChevron}>›</Text>
           </Pressable>
         </View>
         <Text style={styles.sectionSub}>Photos and videos you chose to capture.</Text>
-        <View style={styles.countRow}>
-          <Text style={styles.counts}>
-            {photoCount} photos · {videoCount} videos
-          </Text>
-          <View style={styles.quickFilters}>
-            <Pressable onPress={() => navigation.navigate('CapturedByYou', { filter: 'photo' })}>
-              <Text style={styles.quickFilter}>Photos</Text>
-            </Pressable>
-            <Text style={styles.countSep}>·</Text>
-            <Pressable onPress={() => navigation.navigate('CapturedByYou', { filter: 'video' })}>
-              <Text style={styles.quickFilter}>Videos</Text>
-            </Pressable>
-          </View>
-        </View>
+        <Text style={styles.counts}>
+          {photoCount} photos · {videoCount} videos
+        </Text>
         {preview.length > 0 ? (
           <View style={styles.previewGrid}>
             {preview.map((cell) => (
@@ -78,10 +88,15 @@ export default function MemoryHomeScreen() {
 
         {showTopics ? (
           <>
-            <View style={styles.sectionRow}>
+            <View style={[styles.sectionRow, styles.topicsHead]}>
               <Text style={styles.sectionTitle}>Your Topics</Text>
-              <Pressable onPress={() => navigation.navigate('TopicsList')}>
-                <Text style={styles.seeAll}>See all ›</Text>
+              <Pressable
+                onPress={() => navigation.navigate('TopicsList')}
+                hitSlop={8}
+                style={styles.seeAllHit}
+              >
+                <Text style={styles.seeAll}>See all</Text>
+                <Text style={styles.seeAllChevron}>›</Text>
               </Pressable>
             </View>
             <Text style={styles.sectionSub}>Themes Diary One noticed in your memories.</Text>
@@ -105,41 +120,49 @@ export default function MemoryHomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
-  scroll: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
-  banner: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.control,
-    padding: spacing.md,
-    marginBottom: spacing.md,
+  gutter: { paddingHorizontal: layout.gutterDiary },
+  scroll: {
+    paddingHorizontal: layout.gutterDiary,
+    paddingBottom: layout.tabBarHeight + spacing.xxxl,
   },
-  bannerTitle: { fontSize: font.small, fontWeight: '600', color: colors.ink },
-  bannerSub: { fontSize: font.micro, color: colors.secondary, marginTop: 2 },
   searchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: colors.card,
     borderWidth: 1,
     borderColor: colors.divider,
     borderRadius: radius.control,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
+    paddingRight: spacing.md,
+    paddingLeft: 2,
     marginBottom: spacing.lg,
     minHeight: layout.minTouch,
-    justifyContent: 'center',
   },
-  searchPlaceholder: { fontSize: font.body, color: colors.tertiary },
+  searchPlaceholder: { ...type.bodyStory, color: colors.tertiary, flex: 1 },
+  banner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.control,
+    padding: spacing.md,
+    marginBottom: spacing.lg,
+    minHeight: layout.minTouch,
+  },
+  bannerCopy: { flex: 1 },
+  bannerTitle: { ...type.captionEmphasis, color: colors.ink },
+  bannerSub: { ...type.metadata, color: colors.secondary, marginTop: 2 },
+  bannerChevron: { ...type.titleChapter, color: colors.tertiary, fontWeight: '300' },
   sectionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: spacing.md,
   },
-  sectionTitle: { fontSize: font.h2, fontWeight: '700', color: colors.ink },
-  seeAll: { fontSize: font.small, fontWeight: '600', color: colors.accent },
-  sectionSub: { fontSize: font.small, color: colors.secondary, marginTop: 4 },
-  countRow: { marginTop: spacing.xs, marginBottom: spacing.sm },
-  counts: { fontSize: font.micro, color: colors.tertiary },
-  quickFilters: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: 4 },
-  quickFilter: { fontSize: font.small, fontWeight: '600', color: colors.accent },
-  countSep: { color: colors.tertiary },
+  topicsHead: { marginTop: spacing.xl },
+  sectionTitle: { ...type.titleChapter, color: colors.ink },
+  seeAllHit: { flexDirection: 'row', alignItems: 'center', minHeight: layout.minTouch },
+  seeAll: { ...type.captionEmphasis, color: colors.accent },
+  seeAllChevron: { ...type.captionEmphasis, color: colors.accent, marginLeft: 2 },
+  sectionSub: { ...type.caption, color: colors.secondary, marginTop: 4 },
+  counts: { ...type.metadata, color: colors.tertiary, marginTop: spacing.xs, marginBottom: spacing.sm },
   previewGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.md },
   topicGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.sm },
   topicChip: {
@@ -147,8 +170,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.divider,
   },
-  topicText: { fontSize: font.small, color: colors.ink, fontWeight: '500' },
+  topicText: { ...type.captionEmphasis, color: colors.ink },
 });

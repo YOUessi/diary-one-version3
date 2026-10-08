@@ -8,6 +8,7 @@ import {
 import { hydrateAssetLedger, serializeAssetLedger } from '../db/assetLedger';
 
 import { useAppStore, buildPersistedSlice } from './useAppStore';
+import { applyBundledMotion } from '../assets/motionAssets';
 
 import {
 
@@ -24,6 +25,7 @@ import {
 } from '../model';
 
 import { diaryTodayKey } from '../domain/dayKey';
+import { formatChapterDateLong } from '../domain/formatChapterDate';
 
 import { DEFAULT_LOCAL_PROFILE } from '../domain/localProfile';
 import { PHOTO_LIBRARY_TEST_SOURCE } from '../domain/mediaIntake';
@@ -121,11 +123,14 @@ function shiftSeedDates() {
 
 
   const capturedOriginals = seedCaptured.map((cap) => {
-
     const dateKey = cap.dateKey === '2026-08-16' ? today : yesterday;
-
-    return { ...cap, dateKey };
-
+    const timePart = cap.capturedAtLabel?.includes(' · ')
+      ? cap.capturedAtLabel.split(' · ').slice(1).join(' · ')
+      : undefined;
+    const capturedAtLabel = timePart
+      ? `${formatChapterDateLong(dateKey)} · ${timePart}`
+      : formatChapterDateLong(dateKey);
+    return { ...cap, dateKey, capturedAtLabel };
   });
 
 
@@ -290,6 +295,18 @@ export async function bootstrapStore(): Promise<void> {
 
   }
 
+  try {
+
+    const withMotion = await applyBundledMotion(useAppStore.getState().chapters);
+
+    useAppStore.setState({ chapters: withMotion });
+
+  } catch {
+
+    /* bundled clips missing */
+
+  }
+
   applyDevCloudDefaults();
 
 }
@@ -301,6 +318,18 @@ export async function resetLocalAppData(): Promise<void> {
   await clearSnapshot();
 
   applyFreshSeed();
+
+  try {
+
+    const withMotion = await applyBundledMotion(useAppStore.getState().chapters);
+
+    useAppStore.setState({ chapters: withMotion });
+
+  } catch {
+
+    /* ignore */
+
+  }
 
   const s = useAppStore.getState();
 

@@ -1,10 +1,12 @@
-"""
-Save SMTP settings for real OTP email (User env, not Git).
+<#
+Save SMTP for real OTP email (Windows User env, not Git).
 
-  .\scripts\set-smtp.ps1 -SmtpHost smtp.163.com -Port 465 -User you@163.com -Password '授权码' -From you@163.com
+  .\scripts\set-smtp.ps1 -SmtpHost smtp.163.com -Port 465 -User 'you@163.com' -Password '授权码' -From 'you@163.com'
 
-Free options: 163/QQ 邮箱授权码, or Resend/Brevo SMTP.
-"""
+QQ: smtp.qq.com port 465 ssl, password = 邮箱授权码 (not login password).
+163: smtp.163.com port 465 ssl.
+Gmail: smtp.gmail.com port 587 -Security starttls, App Password.
+#>
 param(
   [Parameter(Mandatory = $true)][string]$SmtpHost,
   [int]$Port = 465,
@@ -32,5 +34,6 @@ $env:SMTP_FROM = $From.Trim()
 $env:SMTP_SECURITY = $Security
 $env:EXPOSE_OTP_IN_RESPONSE = "false"
 
-Write-Host "SMTP saved to User environment. OTP will be emailed; App will NOT show dev_code." -ForegroundColor Green
-Write-Host "Restart Dev Lite after this."
+Write-Host "SMTP saved. App will NOT show dev_code after you restart BFF." -ForegroundColor Green
+Write-Host "Restart: stop-dev-lite.ps1 then start-dev-lite.ps1 -Adapter qwen"
+Write-Host "Or Docker: .\scripts\up-docker-stack.ps1"

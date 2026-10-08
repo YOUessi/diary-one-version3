@@ -13,7 +13,8 @@ type Props = {
 export function RecapVideoPreview({ videoUri, posterUri, playing, onTogglePlay }: Props) {
   const player = useVideoPlayer(videoUri, (p) => {
     p.loop = true;
-    p.muted = false;
+    /** Figma page_05 — Original audio OFF by default. */
+    p.muted = true;
   });
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
   wrap: { width: '100%', height: '100%' },
   video: { width: '100%', height: '100%' },
   overlay: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.12)',

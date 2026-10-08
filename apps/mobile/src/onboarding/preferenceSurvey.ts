@@ -1,108 +1,76 @@
-/** ACC03 / PREF02 — light onboarding survey (meeting 2026-09-23).
- * Skippable. Writes Memory Preferences + consent only — never invents day content.
+/**
+ * ACC03 / PREF02 — Figma Preference Onboarding (node 2145-2).
+ * Skippable. Hits closed tag library + negative prompts → Memory Preferences.
+ * Never invents Topics or day content.
  */
+import {
+  AVOID_TOPICS,
+  TAG_CATEGORIES,
+  WRITING_STYLES,
+  type TagCategoryId,
+} from './tagLibrary';
 
-export type SurveyStepKind = 'single' | 'multi' | 'text' | 'consent';
-
-export type SurveyOption = { id: string; label: string };
+export type SurveyStepKind =
+  | 'intro'
+  | 'category_grid'
+  | 'text'
+  | 'tag_chips'
+  | 'style_list'
+  | 'avoid_chips'
+  | 'review'
+  | 'consent';
 
 export type SurveyStep = {
   id: string;
   kind: SurveyStepKind;
   title: string;
-  lead: string;
-  options?: SurveyOption[];
-  /** Maps selected option ids → preference text lines */
-  preferenceLines?: Record<string, string>;
-  maxLength?: number;
+  lead?: string;
 };
 
+/** Copy locked to Figma 2145 + Expo Go test guide §2.5 (8-category tag library). */
 export const PREFERENCE_SURVEY_STEPS: SurveyStep[] = [
   {
-    id: 'moments',
-    kind: 'single',
-    title: 'What should Diary keep more of?',
-    lead: 'This only guides how existing recordings are chosen and worded — it never invents moments you did not capture.',
-    options: [
-      { id: 'outdoors', label: 'Outdoors and travel' },
-      { id: 'people', label: 'Family and time with people' },
-      { id: 'work', label: 'Work and everyday routines' },
-      { id: 'any', label: 'Whatever the day actually held' },
-    ],
-    preferenceLines: {
-      outdoors: 'Prefer outdoor and travel moments when they exist.',
-      people: 'Prefer family and shared moments when they exist.',
-      work: 'Prefer work and everyday routine moments when they exist.',
-      any: 'Follow the day as recorded; no strong category preference.',
-    },
+    id: 'intro',
+    kind: 'intro',
+    title: 'Help Diary get to know you',
+    lead:
+      'Choose the moments you would like to remember. Diary only works with what was actually captured and will not make up anything that did not happen.',
   },
   {
-    id: 'less',
-    kind: 'multi',
-    title: 'What would you rather see less of?',
-    lead: 'Optional. Matches “few and true” — not a daily quota.',
-    options: [
-      { id: 'commute', label: 'Repeated commuting' },
-      { id: 'scape', label: 'Empty landscapes with no people' },
-      { id: 'meeting', label: 'Long indoor meetings' },
-      { id: 'none', label: 'No preference for now' },
-    ],
-    preferenceLines: {
-      commute: 'De-emphasize repeated commuting when other moments exist.',
-      scape: 'De-emphasize empty landscapes when other moments exist.',
-      meeting: 'De-emphasize long indoor meetings when other moments exist.',
-    },
-  },
-  {
-    id: 'count',
-    kind: 'single',
-    title: 'At the end of a day, how many main memories feel right?',
-    lead: 'Research only. The app still follows what was actually recorded — this does not force a count.',
-    options: [
-      { id: 'few', label: 'Fewer (1–2)' },
-      { id: 'mid', label: 'About 3–4' },
-      { id: 'real', label: 'No target — stay true to the day' },
-    ],
-  },
-  {
-    id: 'people_clues',
-    kind: 'single',
-    title: 'Are you open to “who was with you” clues later?',
-    lead: 'Default stays off. Face or voice features need a separate permission if we ever ship them.',
-    options: [
-      { id: 'yes', label: 'Open to it later (with separate consent)' },
-      { id: 'no', label: 'Not for now' },
-    ],
-  },
-  {
-    id: 'share',
-    kind: 'single',
-    title: 'When you share, what do you use most?',
-    lead: 'Helps product priority only. You can still share any way later.',
-    options: [
-      { id: 'original', label: 'Original clips' },
-      { id: 'collage', label: 'Photo collage' },
-      { id: 'recap', label: 'Daily Recap video' },
-      { id: 'rare', label: 'I rarely share' },
-    ],
-  },
-  {
-    id: 'notify',
-    kind: 'single',
-    title: 'Notifications',
-    lead: 'No marketing. You can change this anytime in Account.',
-    options: [
-      { id: 'memories', label: 'Only when memories are ready' },
-      { id: 'device', label: 'Memories ready and important device alerts' },
-      { id: 'none', label: 'Neither for now' },
-    ],
+    id: 'categories',
+    kind: 'category_grid',
+    title: 'Which kind of content do you like Diary to write more?',
+    lead: 'Choose as many as you like. You can change this anytime in Settings.',
   },
   {
     id: 'open',
     kind: 'text',
-    title: 'One sentence for Diary',
-    lead: 'Optional. Stored as a Memory Preference — the same place as Account → Preferences.',
-    maxLength: 150,
+    title: 'Anything else you’d like Diary to write for?',
+    lead: 'Optional — a person, project, or goal. Stored with your Memory Preferences.',
+  },
+  {
+    id: 'tags',
+    kind: 'tag_chips',
+    title: 'Select tags that you are interested in',
+    lead: 'These hit Diary’s closed tag library. Choose tags that match what you hope to keep when evidence exists.',
+  },
+  {
+    id: 'style',
+    kind: 'style_list',
+    title: 'What style of content do you like most?',
+    lead: 'One primary voice for memory copy. You can change preferences later in Account.',
+  },
+  {
+    id: 'avoid',
+    kind: 'avoid_chips',
+    title: 'Select topics Diary will not write for you',
+    lead: 'Diary will de-emphasize these when other moments exist. Optional.',
+  },
+  {
+    id: 'review',
+    kind: 'review',
+    title: 'Review your preferences',
+    lead: 'Confirm what Diary will use as declared preferences. Nothing here creates fake memories.',
   },
   {
     id: 'consent',
@@ -110,21 +78,34 @@ export const PREFERENCE_SURVEY_STEPS: SurveyStep[] = [
     title: 'Cloud processing consent',
     lead:
       'To generate memories, Diary One may upload the smallest visual evidence from media you choose. Signing in is not the same as this consent.',
-    options: [
-      { id: 'agree', label: 'Agree and continue' },
-      { id: 'local', label: 'Browse on this device only for now' },
-    ],
   },
 ];
 
 export type SurveyAnswers = {
-  selections: Record<string, string[]>;
+  /** Category ids from TAG_CATEGORIES */
+  categories: TagCategoryId[];
+  /** Positive library tag ids */
+  interestTags: string[];
+  /** Avoid topic ids */
+  avoidTopics: string[];
+  /** Writing style id */
+  styleId: string | null;
   openText: string;
+  /** consent: agree | local */
+  consent: 'agree' | 'local' | null;
 };
 
 export const EMPTY_SURVEY_ANSWERS: SurveyAnswers = {
-  selections: {},
+  categories: [],
+  interestTags: [],
+  avoidTopics: [],
+  styleId: null,
   openText: '',
+  consent: null,
 };
 
 export const CLOUD_EVIDENCE_CONSENT_VERSION = 'DIARY_ONE_CLOUD_EVIDENCE_V01';
+
+export const SURVEY_OPEN_TEXT_MAX = 150;
+
+export { TAG_CATEGORIES, AVOID_TOPICS, WRITING_STYLES };

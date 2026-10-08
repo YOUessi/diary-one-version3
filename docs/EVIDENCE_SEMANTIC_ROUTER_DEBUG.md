@@ -40,7 +40,8 @@ App 落地：`apps/mobile/src/evidence/` · 原生：`modules/diary-one-vision/`
 |------|-------------------------|--------|
 | **Expo Go** | ❌ 无原生 Vision | 用 fallback，**不可当质量验收** |
 | **`npx expo run:ios` / EAS Dev Client** | ✅ `DiaryOneVision` | 真 768-d + Top10 标签 |
-| Windows PC Dev Lite | `semantic-analyze` → 501 | 路由在手机 TS；Mac 才可接参考 Python helper |
+| Windows PC Dev Lite + MobileCLIP 权重 | ✅ `semantic-analyze` → 512-d | 见 `WINDOWS_MOBILECLIP_BFF.md`；路由仍在手机 TS |
+| Windows 未配权重 | `semantic-analyze` → 501 | App 回落 degraded fallback |
 
 真 Vision 调试必须出 **开发包**（不是商店里的 Expo Go）：
 
@@ -86,7 +87,7 @@ npx expo run:ios
 
 | 方法 | 路径 | 用途 |
 |------|------|------|
-| POST | `/v1/evidence/semantic-analyze` | 上传探针 JPEG；Windows 预期 501 |
+| POST | `/v1/evidence/semantic-analyze` | 上传探针 JPEG；Windows + checkpoint → MobileCLIP |
 | POST | `/v1/evidence/semantic-route` | 已有向量/标签时做服务端审计（可选） |
 | POST | `/v1/day-revisions` | 既有云处理主链（不变） |
 
@@ -114,4 +115,4 @@ App 默认对齐 **`M4_SEMANTIC_ROUTER_V01` / Apple Vision gate**：
 - `probe_step_ms = 1000` + 最后一帧  
 - 档位：`FRAME_1 | FRAME_3 | FRAME_5 | FIXED_SEQUENCE_10`  
 
-MobileCLIP 研究分支（`M4_MOBILECLIP_*`）**未**打进 Expo Go；需权重与独立实验脚本，见参考包 README。
+MobileCLIP：**已接 Windows Dev Lite**（权重 + `start-dev-lite.ps1`）。Expo Go 视频导入走 `remote_bff`；见 `WINDOWS_MOBILECLIP_BFF.md`。

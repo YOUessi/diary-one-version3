@@ -26,7 +26,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from shared.api_auth import require_api_bearer
 from shared.otp import OtpMailConfig, OtpRequestBody, OtpService, OtpStore, OtpVerifyBody
+from shared.oauth import OAuthBody, exchange_oauth
 from shared.recap_render import ffmpeg_available
+from dev_lite.mobileclip_backend import get_embedder, mobileclip_status
 from shared.sessions import SessionStore
 
 from dev_lite.job_store import (
@@ -39,6 +41,7 @@ from dev_lite.job_store import (
 )
 from dev_lite.semantic_routes import router as semantic_router, semantic_analyze_batch
 from dev_lite.share_recap import router as share_recap_router
+from dev_lite.share_compose import router as share_compose_router
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -138,11 +141,12 @@ async def access_log(request: Request, call_next):  # type: ignore[no-untyped-de
     return response
 
 
-app.include_router(semantic_router)
+app.include_router(semantic_router, dependencies=[Depends(require_token)])
 app.include_router(share_recap_router, dependencies=[Depends(require_token)])
+app.include_router(share_compose_router, dependencies=[Depends(require_token)])
 
 
-@app.post("/v1/evidence/semantic-analyze")
+@app.post("/v1/evidence/semantic-analyze", dependencies=[Depends(require_token)])
 async def semantic_analyze_multipart(request: Request) -> dict[str, Any]:
     """Accept probe_0, probe_1, … JPEG parts (batch)."""
     form = await request.form()
@@ -233,6 +237,8 @@ async def health() -> dict[str, Any]:
     except Exception as e:  # noqa: BLE001
         x02_detail = {"error": str(e)}
 
+    # Touch MobileCLIP lazy loader so /health reflects checkpoint readiness.
+    get_embedder()
     return {
         "status": "ok",
         "mode": "dev_lite",
@@ -242,6 +248,7 @@ async def health() -> dict[str, Any]:
         "allow_mock_preview": settings.allow_mock_preview,
         "smtp_configured": bool(settings.smtp_host.strip() and settings.smtp_from.strip()),
         "ffmpeg_available": ffmpeg_available(),
+        "mobileclip": mobileclip_status(),
         "x02": {
             "base_url": settings.x02_base_url,
             "reachable": x02_ok,
@@ -276,6 +283,11 @@ async def otp_verify(body: OtpVerifyBody) -> dict[str, Any]:
         status = 429 if err == "too_many_attempts" else 400
         raise HTTPException(status_code=status, detail=err)
     return result or {}
+
+
+@app.post("/v1/auth/oauth")
+async def oauth_login(body: OAuthBody) -> dict[str, Any]:
+    return await exchange_oauth(body, _sessions)
 
 
 @app.post("/v1/day-revisions", dependencies=[Depends(require_token)])
@@ -370,47 +382,16 @@ async def get_job(job_id: str) -> dict[str, Any]:
 
 
 def _mock_preview(manifest: dict[str, Any]) -> dict[str, Any]:
-    """合同形状占位：仅用于无 X02 / 无 Key 时验 App 写回。"""
-    n = len(manifest.get("assets") or [])
-    ch_id = f"mock-ch-{uuid.uuid4().hex[:8]}"
-    aha_id = f"mock-aha-{uuid.uuid4().hex[:8]}"
-    title = f"Imported day · {n} asset(s)"
-    story = "Dev lite mock preview. Start X02 with a DashScope key for real V1.75 output."
-    return {
-        "schema_version": "DIARY_ONE_X02_STAGED_PREVIEW_V04_1",
-        "delivery_state": "STAGED_PREVIEW_DELIVERED",
-        "semantic_day_state": "HAS_CONTENT",
-        "chapters": [
-            {
-                "id": ch_id,
-                "title": title,
-                "time_label": "Afternoon",
-                "story": story,
-                "tags": ["Import", "Dev"],
-                "moment_ids": [f"m-{i}" for i in range(max(1, min(3, n or 1)))],
-                "publication_status": "STAGED_PREVIEW_VALIDATED",
-            }
-        ],
-        "ahas": [
-            {
-                "id": aha_id,
-                "story": "A small memory from your photo library import (mock).",
-                "publication_status": "STAGED_PREVIEW_VALIDATED",
-            }
-        ],
-        "selected_memory_outcomes": [
-            {
-                "memory_type": "CHAPTER",
-                "memory_id": ch_id,
-                "visibility_state": "VISIBLE_PREVIEW",
-            },
-            {
-                "memory_type": "AHA",
-                "memory_id": aha_id,
-                "visibility_state": "VISIBLE_PREVIEW",
-            },
-        ],
-    }
+    """合同形状占位：仅用于无 X02 / 无 Key 时验 App 写回。含 hero_asset_id / selected_media。"""
+    from shared.mock_preview import mock_preview_result
+
+    result = mock_preview_result(manifest)
+    # Keep shorter story for dev lite UI.
+    if result.get("chapters"):
+        result["chapters"][0]["story"] = (
+            "Dev lite mock preview. Start X02 with a DashScope key for real V1.75 output."
+        )
+    return result
 
 
 async def _call_x02(job_dir: Path) -> dict[str, Any]:
@@ -440,18 +421,33 @@ async def _call_x02(job_dir: Path) -> dict[str, Any]:
                     ("app_client_profile.json", profile.read_bytes(), "application/json"),
                 )
             )
-        frames_dir = job_dir / "frames"
-        if frames_dir.exists():
-            for frame_file in sorted(frames_dir.glob("*.jpg")):
-                files.append(
-                    (
-                        frame_file.stem,
-                        (frame_file.name, frame_file.read_bytes(), "image/jpeg"),
-                    )
-                )
+        for asset in manifest.get("assets") or []:
+            for frame in asset.get("frames") or []:
+                frame_id = str(frame.get("frame_id") or "")
+                rel = str(frame.get("relative_path") or "")
+                if not frame_id:
+                    continue
+                candidates = []
+                if rel:
+                    candidates.append(job_dir / rel)
+                candidates.append(job_dir / "frames" / f"{frame_id}.jpg")
+                local = next((path for path in candidates if path.exists()), None)
+                if local is None:
+                    raise FileNotFoundError(f"Evidence frame missing for {frame_id}")
+                files.append((frame_id, (local.name, local.read_bytes(), "image/jpeg")))
 
         res = await client.post(f"{base}{preview_path}", headers=headers, files=files)
-        res.raise_for_status()
+        if res.is_error:
+            detail = res.text[:2000]
+            try:
+                payload = res.json()
+                message = payload.get("message") or payload.get("error") or detail
+                code = payload.get("code") or payload.get("error") or str(res.status_code)
+                raise RuntimeError(f"X02 {res.status_code} {code}: {message}")
+            except RuntimeError:
+                raise
+            except Exception:
+                raise RuntimeError(f"X02 {res.status_code}: {detail}") from None
         return res.json()
 
 
@@ -462,11 +458,23 @@ async def _process_job(job_id: str, job_dir: Path) -> None:
     _persist_job(job_id, job_dir)
     try:
         result = await _call_x02(job_dir)
+        # Fixture / tiny evidence often returns EMPTY_DAY with zero memories.
+        # For Expo Go internal beta (ALLOW_MOCK_PREVIEW), substitute a contract-shaped mock
+        # so Demo → Diary still shows a chapter (quality still counts as non-real).
+        if settings.allow_mock_preview and _preview_has_no_memories(result):
+            manifest = json.loads((job_dir / "bundle.json").read_text(encoding="utf-8"))
+            mock = _mock_preview(manifest)
+            mock["dev_lite_fallback"] = True
+            mock["dev_lite_x02_empty"] = True
+            mock["dev_lite_x02_delivery_state"] = result.get("delivery_state")
+            result = mock
+            job["message"] = "Mock preview (X02 returned no grounded memories)"
+        else:
+            job["message"] = "X02 preview succeeded"
         (job_dir / "result.json").write_text(
             json.dumps(result, ensure_ascii=False), encoding="utf-8"
         )
         job["status"] = "succeeded"
-        job["message"] = "X02 preview succeeded"
         job["result"] = result
         _persist_job(job_id, job_dir)
     except Exception as e:  # noqa: BLE001
@@ -487,6 +495,19 @@ async def _process_job(job_id: str, job_dir: Path) -> None:
             job["error"] = str(e)
             job["message"] = "Cloud processing failed"
             _persist_job(job_id, job_dir)
+
+
+def _preview_has_no_memories(result: dict[str, Any]) -> bool:
+    chapters = result.get("chapters") or []
+    ahas = result.get("ahas") or []
+    if chapters or ahas:
+        return False
+    delivery = str(result.get("delivery_state") or "")
+    semantic = str(result.get("semantic_day_state") or "")
+    if delivery in ("NO_GROUNDED_MEMORY",) or semantic in ("EMPTY_DAY",):
+        return True
+    outcomes = result.get("selected_memory_outcomes") or []
+    return len(outcomes) == 0
 
 
 def main() -> None:

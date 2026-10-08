@@ -3,14 +3,16 @@ import { View, Text, TextInput, Pressable, FlatList, StyleSheet, ActivityIndicat
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font, layout, spacing } from '../../theme';
+import { colors, font, layout, radius, spacing, type } from '../../theme';
 import { FigmaScreenHeader } from '../../components/FigmaScreenHeader';
+import { SearchGlyph } from '../../components/SearchGlyph';
 import { MemoryTag } from '../../components/MemoryTag';
 import { useAppStore } from '../../store/useAppStore';
 import { searchChapters } from '../../search/localSearch';
 import { formatChapterDateLong } from '../../domain/formatChapterDate';
 import type { DiaryStackParamList } from '../../navigation/types';
 import type { MemoryStackParamList } from '../../navigation/types';
+import { isDevFailSimulationEnabled } from '../../config/devFailSimulation';
 
 type DiaryRoute = RouteProp<DiaryStackParamList, 'Search'>;
 type MemoryRoute = RouteProp<MemoryStackParamList, 'Search'>;
@@ -32,6 +34,7 @@ export default function SearchScreen() {
   const [query, setQuery] = useState(initial);
   const debounced = useDebounced(query, 280);
   const [searchPhase, setSearchPhase] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
+  const [retryNonce, setRetryNonce] = useState(0);
   const searchFailAlternate = useRef(false);
 
   useEffect(() => {
@@ -41,16 +44,16 @@ export default function SearchScreen() {
     }
     setSearchPhase('loading');
     const t = setTimeout(() => {
-      if (searchFailAlternate.current) {
+      if (isDevFailSimulationEnabled() && searchFailAlternate.current) {
         searchFailAlternate.current = false;
         setSearchPhase('error');
         return;
       }
-      searchFailAlternate.current = true;
+      if (isDevFailSimulationEnabled()) searchFailAlternate.current = true;
       setSearchPhase('done');
     }, 280);
     return () => clearTimeout(t);
-  }, [debounced]);
+  }, [debounced, retryNonce]);
 
   const results = useMemo(() => {
     try {
@@ -84,6 +87,7 @@ export default function SearchScreen() {
         </View>
       </View>
       <View style={styles.searchRow}>
+        <SearchGlyph />
         <TextInput
           autoFocus
           value={query}
@@ -104,9 +108,12 @@ export default function SearchScreen() {
           </Pressable>
         </View>
       ) : searchPhase === 'loading' ? (
-        <View style={styles.loadingRow}>
-          <ActivityIndicator color={colors.accent} />
-          <Text style={styles.loadingText}>Searching memories…</Text>
+        <View style={styles.emptyBlock}>
+          <Text style={styles.queryEcho}>{debounced.trim()}</Text>
+          <View style={styles.loadingRow}>
+            <ActivityIndicator color={colors.accent} />
+            <Text style={styles.loadingText}>Searching memories…</Text>
+          </View>
         </View>
       ) : searchPhase === 'error' ? (
         <View style={styles.emptyBlock}>
@@ -115,16 +122,7 @@ export default function SearchScreen() {
           <Text style={styles.emptyBody}>
             Your existing memories are still available. Try the search again.
           </Text>
-          <Pressable
-            onPress={() => {
-              searchFailAlternate.current = true;
-              setSearchPhase('loading');
-              setTimeout(() => {
-                searchFailAlternate.current = false;
-                setSearchPhase('done');
-              }, 280);
-            }}
-          >
+          <Pressable onPress={() => setRetryNonce((n) => n + 1)}>
             <Text style={styles.tryAgain}>Try Again</Text>
           </Pressable>
         </View>
@@ -179,19 +177,35 @@ const styles = StyleSheet.create({
   },
   backText: { fontSize: 28, color: colors.ink, fontWeight: '300' },
   headerWrap: { flex: 1, marginLeft: -spacing.sm },
+  /** Figma 174:1921 — search field h48 r12 */
   searchRow: {
-    paddingHorizontal: layout.gutterDiary,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.divider,
+    marginHorizontal: layout.gutterDiary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    minHeight: 48,
+    paddingRight: spacing.md,
+    marginBottom: spacing.lg,
+    gap: 10,
   },
-  input: { fontSize: font.body, color: colors.ink, paddingVertical: spacing.md },
-  hintBlock: { padding: layout.gutterDiary, gap: spacing.sm },
-  hint: { fontSize: font.small, color: colors.secondary, lineHeight: 20 },
-  tryExample: { fontSize: font.small, fontWeight: '600', color: colors.accent },
+  input: { flex: 1, ...type.bodyStory, color: colors.ink, paddingVertical: spacing.sm },
+  hintBlock: { paddingHorizontal: layout.gutterDiary, gap: spacing.sm },
+  hint: { ...type.caption, color: colors.secondary, lineHeight: 20 },
+  tryExample: { ...type.caption, color: colors.tertiary },
   emptyBlock: { padding: layout.gutterDiary, gap: spacing.sm },
   emptyTitle: { fontSize: font.body, fontWeight: '600', color: colors.ink },
   emptyBody: { fontSize: font.small, color: colors.secondary, lineHeight: 20 },
-  tryAgain: { fontSize: font.small, fontWeight: '600', color: colors.accent, marginTop: spacing.sm },
+  /** Figma Search Failed — text link 13/510, not filled CTA */
+  tryAgain: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '500',
+    color: colors.secondary,
+    marginTop: spacing.sm,
+    minHeight: 44,
+    textAlignVertical: 'center',
+  },
   loadingRow: {
     flexDirection: 'row',
     alignItems: 'center',

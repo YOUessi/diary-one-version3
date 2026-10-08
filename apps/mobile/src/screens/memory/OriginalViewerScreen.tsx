@@ -6,7 +6,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library/legacy';
-import { colors, font, layout, spacing, radius } from '../../theme';
+import { colors, layout, spacing } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import type { MemoryStackParamList } from '../../navigation/types';
 import { OriginalVideoPlayer } from '../../components/OriginalVideoPlayer';
@@ -14,6 +14,7 @@ import { OriginalVideoPlayer } from '../../components/OriginalVideoPlayer';
 type Route = RouteProp<MemoryStackParamList, 'OriginalViewer'>;
 type Nav = NativeStackNavigationProp<MemoryStackParamList, 'OriginalViewer'>;
 
+/** Figma 65:1042 — black immersive viewer, cream media card, 3 bottom actions. */
 export default function OriginalViewerScreen() {
   const { captureId } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
@@ -21,17 +22,13 @@ export default function OriginalViewerScreen() {
 
   const shareOriginal = async () => {
     if (!item) return;
-    const message = [
-      item.capturedAtLabel ?? 'Captured by You',
-      item.kind === 'video' && item.durationSec != null ? `Video · ${item.durationSec}s` : 'Photo',
-    ].join('\n');
     try {
       const fileUri = item.playbackUri ?? item.posterUri;
       if (fileUri && (await Sharing.isAvailableAsync())) {
         await Sharing.shareAsync(fileUri, { dialogTitle: 'Share original' });
         return;
       }
-      await Sharing.shareAsync(message, { dialogTitle: 'Share original' });
+      Alert.alert('Share', 'No shareable file URI yet for this original.');
     } catch (e) {
       Alert.alert('Share failed', e instanceof Error ? e.message : String(e));
     }
@@ -65,39 +62,43 @@ export default function OriginalViewerScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       <View style={styles.topBar}>
-        <Pressable onPress={() => navigation.goBack()} style={styles.back}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.back} hitSlop={12}>
           <Text style={styles.backText}>‹</Text>
         </Pressable>
-        <Pressable
-          onPress={() => navigation.navigate('OriginalDeleteConfirm', { captureId })}
-          hitSlop={8}
-        >
-          <Text style={styles.deleteLink}>⌫ Delete Original</Text>
-        </Pressable>
+        <Text style={styles.viewerMeta} numberOfLines={1}>
+          {item?.capturedAtLabel ?? 'Captured by You'}
+        </Text>
+        <View style={styles.back} />
       </View>
-
-      {item?.capturedAtLabel ? <Text style={styles.viewerMeta}>{item.capturedAtLabel}</Text> : null}
 
       <View style={styles.viewer}>
         {videoUri ? (
           <OriginalVideoPlayer uri={videoUri} durationSec={item?.durationSec} />
         ) : imageUri ? (
-          <Image source={{ uri: imageUri }} style={styles.image} resizeMode="contain" />
+          <Image source={{ uri: imageUri }} style={styles.image} resizeMode="cover" />
         ) : (
-          <>
-            <Text style={styles.kind}>{item?.kind === 'video' ? 'Video original' : 'Photo original'}</Text>
-            {item?.durationSec ? <Text style={styles.meta}>Duration {item.durationSec}s</Text> : null}
-            <Text style={styles.hint}>Immersive playback after device sync provides media URIs.</Text>
-          </>
+          <View style={styles.placeholder}>
+            <View style={styles.placeholderOrb} />
+            <View style={styles.placeholderWave} />
+          </View>
         )}
       </View>
 
       <View style={styles.actions}>
         <Pressable style={styles.actionBtn} onPress={() => void saveToPhotos()}>
-          <Text style={styles.actionText}>⇩ Save to Photos</Text>
+          <Text style={styles.actionIcon}>⇩</Text>
+          <Text style={styles.actionText}>Save to Photos</Text>
         </Pressable>
         <Pressable style={styles.actionBtn} onPress={() => void shareOriginal()}>
-          <Text style={styles.actionText}>↗ Share</Text>
+          <Text style={styles.actionIcon}>↗</Text>
+          <Text style={styles.actionText}>Share</Text>
+        </Pressable>
+        <Pressable
+          style={styles.actionBtn}
+          onPress={() => navigation.navigate('OriginalDeleteConfirm', { captureId })}
+        >
+          <Text style={styles.actionIcon}>⌫</Text>
+          <Text style={styles.actionText}>Delete Original</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -105,48 +106,70 @@ export default function OriginalViewerScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.ink },
+  safe: { flex: 1, backgroundColor: '#000000' },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingRight: layout.gutterDiary,
+    paddingHorizontal: spacing.sm,
+    minHeight: 44,
   },
-  back: { padding: layout.gutterDiary, minHeight: layout.minTouch, justifyContent: 'center' },
-  backText: { fontSize: 28, color: colors.paper, fontWeight: '300' },
-  deleteLink: { fontSize: font.small, color: colors.paper, fontWeight: '600' },
+  back: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  backText: { fontSize: 34, color: colors.paper, fontWeight: '300', lineHeight: 36 },
   viewerMeta: {
-    fontSize: font.small,
-    color: colors.tertiary,
-    paddingHorizontal: layout.gutterDiary,
-    marginBottom: spacing.sm,
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.paper,
+    textAlign: 'center',
   },
+  /** Figma 65:1042 — media r12 cream; Viewer Actions 353×72, buttons 112×64 */
   viewer: {
     flex: 1,
-    margin: layout.gutterDiary,
-    borderRadius: radius.control,
-    backgroundColor: '#2A2A2A',
+    marginHorizontal: layout.gutterDiary,
+    marginTop: spacing.md,
+    marginBottom: spacing.lg,
+    borderRadius: 12,
+    backgroundColor: colors.surface,
+    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: spacing.lg,
-    overflow: 'hidden',
   },
   image: { width: '100%', height: '100%' },
-  playWrap: { alignItems: 'center', gap: spacing.sm },
-  play: { fontSize: 36, color: colors.paper },
-  playHint: { color: colors.tertiary, fontSize: font.small },
-  kind: { color: colors.paper, fontSize: font.h2, fontWeight: '600' },
-  meta: { color: colors.tertiary, marginTop: spacing.sm },
-  hint: { color: colors.tertiary, fontSize: font.small, textAlign: 'center', marginTop: spacing.lg },
-  actions: { flexDirection: 'row', gap: spacing.sm, padding: layout.gutterDiary },
+  placeholder: { flex: 1, width: '100%', backgroundColor: colors.paper },
+  placeholderOrb: {
+    position: 'absolute',
+    top: '18%',
+    right: '18%',
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: colors.accentSoft,
+  },
+  placeholderWave: {
+    position: 'absolute',
+    left: '-20%',
+    right: '-20%',
+    bottom: -40,
+    height: 160,
+    borderRadius: 999,
+    backgroundColor: colors.card,
+  },
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: layout.gutterDiary,
+    paddingBottom: spacing.md,
+    minHeight: 72,
+    gap: spacing.sm,
+  },
   actionBtn: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: colors.secondary,
-    borderRadius: radius.pill,
-    minHeight: layout.minTouch,
+    maxWidth: 112,
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: 64,
+    gap: 6,
   },
-  actionText: { color: colors.paper, fontWeight: '600' },
+  actionIcon: { fontSize: 17, color: colors.paper },
+  actionText: { fontSize: 11, lineHeight: 14, color: colors.paper, textAlign: 'center' },
 });

@@ -5,10 +5,9 @@ import type { AppLibraryBundle } from '../pipeline/bundleTypes';
 import type { ResearchHealth, X02PreviewResult } from './types';
 
 import { useAppStore } from '../store/useAppStore';
-
-
-
+import { memoryPreferencesForUpload } from '../domain/memoryPreferencesCloud';
 import { ALGORITHM_LOCK } from '../config/algorithmLock';
+import { appendRnFile, postMultipartText } from './rnFormData';
 
 const DEFAULT_PREVIEW_PATH = ALGORITHM_LOCK.x02PreviewPath;
 
@@ -70,8 +69,6 @@ export async function resolvePreviewUrl(endpoint: string, token: string): Promis
 
 type FrameRef = { frame_id: string; relative_path: string };
 
-
-
 export async function buildBundleMultipartForm(
   bundleDir: string,
   manifest: AppLibraryBundle,
@@ -85,57 +82,21 @@ export async function buildBundleMultipartForm(
   }
 
   if (clientProfile?.memory_preferences.length) {
-
-    form.append('app_client_profile', {
-
-      string: JSON.stringify(clientProfile),
-
-      type: 'application/json',
-
-      name: 'app_client_profile.json',
-
-    } as unknown as Blob);
-
+    form.append('app_client_profile', JSON.stringify(clientProfile));
   }
 
-  form.append('manifest', {
-
-    string: JSON.stringify(manifest),
-
-    type: 'application/json',
-
-    name: 'bundle.json',
-
-  } as unknown as Blob);
-
-
+  form.append('manifest', JSON.stringify(manifest));
 
   for (const asset of manifest.assets) {
-
     const frames = (asset.frames as FrameRef[]) ?? [];
-
     for (const frame of frames) {
-
       const uri = `${bundleDir}${frame.relative_path}`;
-
       const name = frame.relative_path.split('/').pop() ?? `${frame.frame_id}.jpg`;
-
-      form.append(frame.frame_id, {
-
-        uri,
-
-        type: 'image/jpeg',
-
-        name,
-
-      } as unknown as Blob);
-
+      appendRnFile(form, frame.frame_id, uri, name);
     }
-
   }
 
   return form;
-
 }
 
 
@@ -156,9 +117,7 @@ export async function runResearchPreview(
 
   const manifest = JSON.parse(raw) as AppLibraryBundle;
 
-  const prefs = useAppStore.getState().preferences.map((p) =>
-    p.title ? `${p.title}: ${p.text}` : p.text,
-  );
+  const prefs = memoryPreferencesForUpload(useAppStore.getState().preferences);
 
   const form = await buildBundleMultipartForm(bundleDir, manifest, {
     memory_preferences: prefs,
@@ -167,55 +126,24 @@ export async function runResearchPreview(
 
 
   const previewUrl = await resolvePreviewUrl(endpoint, token);
+  const posted = await postMultipartText(previewUrl, form, {
+    Accept: 'application/json',
+    ...auth(token),
+  });
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15 * 60 * 1000);
-
-  let res: Response;
-  try {
-    res = await fetch(previewUrl, {
-      method: 'POST',
-      headers: { Accept: 'application/json', ...auth(token) },
-      body: form,
-      signal: controller.signal,
-    });
-  } catch (e) {
-    clearTimeout(timeout);
-    if (e instanceof Error && e.name === 'AbortError') {
-      throw new Error('Preview timed out after 15 minutes. Check server logs and retry.');
-    }
-    throw e;
-  }
-  clearTimeout(timeout);
-
-
-
-  if (!res.ok) {
-
-    let detail = `Preview failed (${res.status})`;
-
+  if (!posted.ok) {
+    let detail = `Preview failed (${posted.status})`;
     try {
-
-      const err = (await res.json()) as { message?: string; error?: string };
-
+      const err = JSON.parse(posted.text) as { message?: string; error?: string };
       if (err.message) detail = err.message;
-
       else if (err.error) detail = err.error;
-
     } catch {
-
-      /* ignore */
-
+      if (posted.text) detail = posted.text.slice(0, 300);
     }
-
     throw new Error(detail);
-
   }
 
-
-
-  return (await res.json()) as X02PreviewResult;
-
+  return JSON.parse(posted.text) as X02PreviewResult;
 }
 
 

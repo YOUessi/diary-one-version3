@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors, font, radius, spacing } from '../theme';
+import { colors, radius, spacing, type } from '../theme';
 
 type Tone = 'primary' | 'neutral';
 
+/** Figma D1/Tag — Primary on chapter cards; Neutral on detail “More about”. */
 export function MemoryTag({ label, tone = 'primary' }: { label: string; tone?: Tone }) {
   const isPrimary = tone === 'primary';
   return (
@@ -15,15 +16,17 @@ export function MemoryTag({ label, tone = 'primary' }: { label: string; tone?: T
 
 const styles = StyleSheet.create({
   tag: {
+    height: 26,
     paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
+    paddingVertical: spacing.xs,
     borderRadius: radius.pill,
-    marginRight: 6,
-    marginBottom: 4,
+    marginRight: spacing.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   primary: { backgroundColor: colors.accentSoft },
   neutral: { backgroundColor: colors.surface },
-  text: { fontSize: font.micro, fontWeight: '500' },
-  textPrimary: { color: colors.accent },
+  text: { ...type.captionEmphasis },
+  textPrimary: { color: colors.ink },
   textNeutral: { color: colors.secondary },
 });

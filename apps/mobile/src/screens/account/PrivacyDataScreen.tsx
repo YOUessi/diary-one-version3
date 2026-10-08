@@ -1,12 +1,12 @@
 import React from 'react';
-import { Text, StyleSheet, ScrollView, View } from 'react-native';
+import { Text, StyleSheet, ScrollView, View, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
 import { FigmaEyebrow } from '../../components/FigmaScreenHeader';
 import { SettingsRow } from '../../components/SettingsRow';
-import { colors, font, layout, radius, spacing } from '../../theme';
+import { colors, font, layout, radius, spacing, type } from '../../theme';
 import type { AccountStackParamList } from '../../navigation/types';
 import { useAppStore } from '../../store/useAppStore';
 
@@ -31,6 +31,7 @@ export default function PrivacyDataScreen() {
   const navigation = useNavigation<Nav>();
   const cloudEvidenceConsent = useAppStore((s) => s.cloudEvidenceConsent);
   const cloudEvidenceConsentVersion = useAppStore((s) => s.cloudEvidenceConsentVersion);
+  const setCloudEvidenceConsent = useAppStore((s) => s.setCloudEvidenceConsent);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -44,9 +45,29 @@ export default function PrivacyDataScreen() {
           {consentLabel(cloudEvidenceConsent, cloudEvidenceConsentVersion)}
         </Text>
         <Text style={styles.consentHint}>
-          Signing in is not upload consent. Change this by replaying setup preferences, or see Privacy
-          Policy.
+          Signing in is not upload consent. Cloud upload runs only when status is agreed — change it
+          here anytime.
         </Text>
+
+        <FigmaEyebrow>CLOUD EVIDENCE</FigmaEyebrow>
+        <View style={styles.card}>
+          <Pressable
+            onPress={() => setCloudEvidenceConsent(true)}
+            style={styles.choiceRow}
+            accessibilityRole="button"
+          >
+            <Text style={styles.choiceLabel}>Allow cloud evidence upload</Text>
+            <Text style={styles.choiceMark}>{cloudEvidenceConsent === true ? '✓' : ''}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setCloudEvidenceConsent(false)}
+            style={styles.choiceRow}
+            accessibilityRole="button"
+          >
+            <Text style={styles.choiceLabel}>Browse on this device only</Text>
+            <Text style={styles.choiceMark}>{cloudEvidenceConsent === false ? '✓' : ''}</Text>
+          </Pressable>
+        </View>
 
         <FigmaEyebrow>YOUR DATA</FigmaEyebrow>
         <View style={styles.card}>
@@ -97,17 +118,16 @@ export default function PrivacyDataScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
   scroll: { paddingBottom: spacing.xl },
+  /** Figma 71:993 — title 28; list rows ~52 */
   title: {
-    fontSize: 28,
-    fontWeight: '600',
+    ...type.titleSection,
     color: colors.ink,
     paddingHorizontal: layout.gutterDiary,
     marginBottom: spacing.sm,
   },
   lead: {
-    fontSize: font.body,
+    ...type.bodyStory,
     color: colors.secondary,
-    lineHeight: 22,
     paddingHorizontal: layout.gutterDiary,
     marginBottom: spacing.sm,
   },
@@ -133,6 +153,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     marginBottom: spacing.sm,
   },
+  choiceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 52,
+    paddingVertical: spacing.sm,
+  },
+  choiceLabel: { fontSize: font.body, color: colors.ink, flex: 1, paddingRight: spacing.sm },
+  choiceMark: { fontSize: font.body, color: colors.ink, fontWeight: '700', minWidth: 20 },
   footer: {
     fontSize: font.micro,
     color: colors.tertiary,

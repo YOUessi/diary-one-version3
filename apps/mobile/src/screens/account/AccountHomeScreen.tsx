@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaScreenHeader, FigmaEyebrow } from '../../components/FigmaScreenHeader';
-import { colors, spacing, radius, font, layout } from '../../theme';
+import { colors, spacing, radius, layout, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import type { AccountStackParamList } from '../../navigation/types';
 import type { TodayStatus } from '../../model';
@@ -24,7 +24,6 @@ const TODAY_STATES: TodayStatus[] = [
   'PARTIAL',
 ];
 
-/** Matches app.json expo.version (Figma About). */
 const APP_VERSION = '1.0.0';
 
 function SettingsRow({
@@ -39,10 +38,10 @@ function SettingsRow({
   return (
     <Pressable onPress={onPress} style={styles.row}>
       <Text style={styles.rowLabel}>{label}</Text>
-      <Text style={styles.rowTrailing}>
-        {value ? `${value} ` : ''}
-        ›
-      </Text>
+      <View style={styles.rowTrailingWrap}>
+        {value ? <Text style={styles.rowValue}>{value}</Text> : null}
+        <Text style={styles.rowChevron}>›</Text>
+      </View>
     </Pressable>
   );
 }
@@ -59,110 +58,142 @@ export default function AccountHomeScreen() {
   const initial = localProfile.nickname.slice(0, 1).toUpperCase();
 
   const logOut = () => {
-    Alert.alert('Log out', 'Diary One keeps your memories on this device. Logging out clears only local profile in this test build.', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Log out',
-        style: 'destructive',
-        onPress: () => {
-          const store = useAppStore.getState();
-          store.setSessionToken('');
-          store.setLocalProfile({
-            nickname: 'Guest',
-            email: undefined,
-          });
+    Alert.alert(
+      'Log out',
+      'Diary One keeps your memories on this device. Logging out clears only local profile in this test build.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Log out',
+          style: 'destructive',
+          onPress: () => {
+            const store = useAppStore.getState();
+            store.setSessionToken('');
+            store.setLocalProfile({
+              nickname: 'Guest',
+              email: undefined,
+            });
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <FigmaScreenHeader title="Account" />
-      {isInternalBetaBuild ? (
+      <View style={styles.gutter}>
+        <FigmaScreenHeader title="Account" />
+      </View>
+      {isInternalBetaBuild || showInternalLabTools ? (
         <View style={styles.betaBanner}>
-          <FigmaEyebrow>Internal beta</FigmaEyebrow>
-          <Text style={styles.betaCopy}>
-            UI follows Figma 04. Account and cloud features may use test backends.
-          </Text>
+          {isInternalBetaBuild ? (
+            <>
+              <FigmaEyebrow>Internal beta</FigmaEyebrow>
+              <Text style={styles.betaCopy}>
+                UI follows Figma 04. Account and cloud features may use test backends.
+              </Text>
+            </>
+          ) : null}
+          {showInternalLabTools ? (
+            <Pressable
+              style={styles.replayTop}
+              onPress={() => useAppStore.getState().setOnboardingComplete(false)}
+            >
+              <Text style={styles.replayTopLabel}>Replay sign-in (onboarding)</Text>
+              <Text style={styles.replayTopHint}>Returns to Sign in to Diary One</Text>
+            </Pressable>
+          ) : null}
         </View>
       ) : null}
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <Pressable
-          onPress={() => navigation.navigate('EditProfile')}
-          style={styles.profileRow}
-        >
-          {localProfile.avatarUri ? (
-            <Image source={{ uri: localProfile.avatarUri }} style={styles.avatarImage} />
-          ) : (
-            <View style={styles.avatar}>
-              <Text style={styles.avatarLetter}>{initial}</Text>
+        <View style={styles.profileCard}>
+          <Pressable onPress={() => navigation.navigate('EditProfile')} style={styles.profileRow}>
+            {localProfile.avatarUri ? (
+              <Image source={{ uri: localProfile.avatarUri }} style={styles.avatarImage} />
+            ) : (
+              <View style={styles.avatar}>
+                <Text style={styles.avatarLetter}>{initial}</Text>
+              </View>
+            )}
+            <View style={styles.profileCopy}>
+              <Text style={styles.profileName}>{localProfile.nickname}</Text>
+              <Text style={styles.profileSub}>{profileSub}</Text>
             </View>
-          )}
-          <View style={styles.profileCopy}>
-            <Text style={styles.profileName}>{localProfile.nickname}</Text>
-            <Text style={styles.profileSub}>{profileSub}</Text>
-          </View>
-          <View style={styles.editRow}>
-            <Text style={styles.editTrailing}>Edit</Text>
-            <Text style={styles.editChevron}>›</Text>
-          </View>
-        </Pressable>
+            <View style={styles.editRow}>
+              <Text style={styles.editTrailing}>Edit</Text>
+              <Text style={styles.editChevron}>›</Text>
+            </View>
+          </Pressable>
 
-        <FigmaEyebrow>What matters to you</FigmaEyebrow>
-        {preferences.length === 0 ? (
-          <>
-            <Text style={styles.hint}>Tell Diary One what matters to you.</Text>
-            <Pressable onPress={() => navigation.navigate('PreferenceAdd')}>
-              <Text style={styles.addPref}>+ Add what matters to you</Text>
-            </Pressable>
-          </>
-        ) : (
-          <>
-            <View style={styles.prefChips}>
-              {preferences.slice(0, 4).map((p) => (
-                <View key={p.id} style={styles.prefChip}>
-                  <Text style={styles.prefChipText}>{p.title}</Text>
-                </View>
-              ))}
-              {preferences.length > 4 ? (
-                <View style={styles.prefChip}>
-                  <Text style={styles.prefChipText}>+{preferences.length - 4}</Text>
-                </View>
+          <View style={styles.cardDivider} />
+
+          <Text style={styles.cardEyebrow}>WHAT MATTERS TO YOU</Text>
+          {preferences.length === 0 ? (
+            <>
+              <Text style={styles.prefHint}>Tell Diary One what matters to you.</Text>
+              <Pressable onPress={() => navigation.navigate('PreferenceAdd')} style={styles.addHit}>
+                <Text style={styles.addPref}>+ Add what matters to you</Text>
+              </Pressable>
+              {showInternalLabTools ? (
+                <Pressable
+                  onPress={() => navigation.navigate('PreferenceSurvey', { step: 0, mode: 'account' })}
+                  style={styles.addHit}
+                >
+                  <Text style={styles.addPrefMuted}>Start preference survey</Text>
+                </Pressable>
               ) : null}
-            </View>
-            <Pressable onPress={() => navigation.navigate('PreferenceAdd')} style={styles.prefActions}>
-              <Text style={styles.addShort}>+ Add</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => navigation.navigate('MemoryPreferences')}
-              style={styles.manageRow}
-            >
-              <Text style={styles.manageLabel}>Manage</Text>
-              <Text style={styles.manageChevron}>›</Text>
-            </Pressable>
-          </>
-        )}
+            </>
+          ) : (
+            <>
+              <View style={styles.prefChips}>
+                {preferences.slice(0, 4).map((p) => (
+                  <View key={p.id} style={styles.prefChip}>
+                    <Text style={styles.prefChipText}>{p.title}</Text>
+                  </View>
+                ))}
+                {preferences.length > 4 ? (
+                  <View style={styles.prefChip}>
+                    <Text style={styles.prefChipText}>+{preferences.length - 4}</Text>
+                  </View>
+                ) : null}
+              </View>
+              <View style={styles.prefActions}>
+                <Pressable onPress={() => navigation.navigate('PreferenceAdd')}>
+                  <Text style={styles.addShort}>+ Add</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => navigation.navigate('MemoryPreferences')}
+                  style={styles.manageHit}
+                >
+                  <Text style={styles.manageLabel}>Manage</Text>
+                  <Text style={styles.manageChevron}>›</Text>
+                </Pressable>
+              </View>
+              {showInternalLabTools ? (
+                <Pressable
+                  onPress={() => navigation.navigate('PreferenceSurvey', { step: 0, mode: 'account' })}
+                  style={styles.addHit}
+                >
+                  <Text style={styles.addPrefMuted}>Retake preference survey</Text>
+                </Pressable>
+              ) : null}
+            </>
+          )}
+        </View>
 
         <FigmaEyebrow>Plan</FigmaEyebrow>
-        <View style={styles.listCard}>
-          <SettingsRow label="Current Plan" value="Basic" onPress={() => navigation.navigate('Plan')} />
-        </View>
+        <SettingsRow label="Current Plan" value="Basic" onPress={() => navigation.navigate('Plan')} />
 
         <FigmaEyebrow>Privacy & data</FigmaEyebrow>
-        <View style={styles.listCard}>
-          <SettingsRow label="Privacy & Data" onPress={() => navigation.navigate('PrivacyData')} />
-        </View>
+        <SettingsRow label="Privacy & Data" onPress={() => navigation.navigate('PrivacyData')} />
 
         <FigmaEyebrow>App settings</FigmaEyebrow>
-        <View style={styles.listCard}>
-          <SettingsRow label="Notifications" onPress={() => navigation.navigate('Notifications')} />
-          <SettingsRow
-            label="Language"
-            value={languageDisplayLabel(language)}
-            onPress={() => navigation.navigate('Language')}
-          />
-        </View>
+        <SettingsRow label="Notifications" onPress={() => navigation.navigate('Notifications')} />
+        <SettingsRow
+          label="Language"
+          value={languageDisplayLabel(language)}
+          onPress={() => navigation.navigate('Language')}
+        />
 
         {showInternalLabTools ? (
           <>
@@ -170,34 +201,28 @@ export default function AccountHomeScreen() {
             <Text style={styles.hint}>
               Open lab → Apply BFF → Ping → Import photos. OTP uses the same BFF.
             </Text>
-            <View style={styles.listCard}>
-              <SettingsRow
-                label="Evidence pipeline lab"
-                onPress={() => navigation.navigate('InternalLab')}
-              />
-              <SettingsRow
-                label="Replay sign-in (onboarding)"
-                onPress={() => {
-                  useAppStore.getState().setOnboardingComplete(false);
-                }}
-              />
-            </View>
+            <SettingsRow
+              label="Evidence pipeline lab"
+              onPress={() => navigation.navigate('InternalLab')}
+            />
+            <SettingsRow
+              label="Replay sign-in (onboarding)"
+              onPress={() => {
+                useAppStore.getState().setOnboardingComplete(false);
+              }}
+            />
           </>
         ) : null}
 
         <FigmaEyebrow>Support</FigmaEyebrow>
-        <View style={styles.listCard}>
-          <SettingsRow label="Help & Feedback" onPress={() => navigation.navigate('HelpFeedback')} />
-        </View>
+        <SettingsRow label="Help & Feedback" onPress={() => navigation.navigate('HelpFeedback')} />
 
         <FigmaEyebrow>About</FigmaEyebrow>
-        <View style={styles.listCard}>
-          <View style={styles.rowStatic}>
-            <Text style={styles.rowLabel}>App Version</Text>
-            <Text style={styles.rowValue}>{APP_VERSION}</Text>
-          </View>
-          <SettingsRow label="Licenses" onPress={() => navigation.navigate('Licenses')} />
+        <View style={styles.rowStatic}>
+          <Text style={styles.rowLabel}>App Version</Text>
+          <Text style={styles.rowValue}>{APP_VERSION}</Text>
         </View>
+        <SettingsRow label="Licenses" onPress={() => navigation.navigate('Licenses')} />
 
         <Pressable onPress={logOut} style={styles.logout}>
           <Text style={styles.logoutText}>Log Out</Text>
@@ -226,41 +251,59 @@ export default function AccountHomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
-  scroll: { paddingBottom: spacing.xl },
+  gutter: { paddingHorizontal: layout.gutterDiary },
+  scroll: {
+    paddingHorizontal: layout.gutterDiary,
+    paddingBottom: layout.tabBarHeight + spacing.xxxl,
+  },
+  profileCard: {
+    backgroundColor: colors.card,
+    borderRadius: 20,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+  },
   profileRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: layout.gutterDiary,
-    marginBottom: spacing.lg,
     gap: spacing.md,
+    minHeight: layout.minTouch,
   },
   avatar: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: colors.accentSoft,
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarImage: { width: 52, height: 52, borderRadius: 26 },
-  avatarLetter: { fontSize: font.h2, fontWeight: '700', color: colors.accent },
+  avatarLetter: { ...type.titleChapter, color: colors.ink },
   profileCopy: { flex: 1 },
-  profileName: { fontSize: font.h2, fontWeight: '700', color: colors.ink },
-  profileSub: { fontSize: font.small, color: colors.secondary, marginTop: 2 },
+  profileName: { ...type.titleChapter, color: colors.ink },
+  profileSub: { ...type.caption, color: colors.secondary, marginTop: 2 },
   editRow: { flexDirection: 'row', alignItems: 'center', gap: 2 },
-  editTrailing: { fontSize: font.small, fontWeight: '600', color: colors.accent },
-  editChevron: { fontSize: font.small, color: colors.tertiary },
-  hint: {
-    fontSize: font.small,
-    color: colors.secondary,
-    paddingHorizontal: layout.gutterDiary,
+  editTrailing: { ...type.caption, color: colors.secondary },
+  editChevron: { ...type.caption, color: colors.tertiary },
+  cardDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.divider,
+    marginVertical: spacing.md,
+  },
+  cardEyebrow: {
+    ...type.metadata,
+    fontWeight: '600',
+    color: colors.tertiary,
+    letterSpacing: 0.8,
     marginBottom: spacing.sm,
   },
+  prefHint: { ...type.bodyStory, color: colors.ink, marginBottom: spacing.sm },
+  addHit: { minHeight: layout.minTouch, justifyContent: 'center' },
+  addPref: { ...type.bodyStory, fontWeight: '500', color: colors.ink },
+  addPrefMuted: { ...type.caption, color: colors.accent },
   prefChips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
-    paddingHorizontal: layout.gutterDiary,
     marginBottom: spacing.sm,
   },
   prefChip: {
@@ -268,73 +311,50 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.divider,
   },
-  prefChipText: { fontSize: font.small, fontWeight: '600', color: colors.ink },
-  prefActions: { paddingHorizontal: layout.gutterDiary, paddingVertical: spacing.sm },
-  addShort: { fontSize: font.body, fontWeight: '600', color: colors.accent },
-  manageRow: {
+  prefChipText: { ...type.captionEmphasis, color: colors.ink },
+  prefActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: 4,
-    paddingHorizontal: layout.gutterDiary,
-    paddingBottom: spacing.md,
+    justifyContent: 'space-between',
     minHeight: layout.minTouch,
   },
-  manageLabel: { fontSize: font.body, fontWeight: '600', color: colors.accent },
-  manageChevron: { fontSize: font.body, color: colors.tertiary },
-  addPref: {
-    fontSize: font.body,
-    fontWeight: '600',
-    color: colors.accent,
-    paddingHorizontal: layout.gutterDiary,
-    paddingVertical: spacing.md,
-  },
-  listCard: {
-    marginHorizontal: layout.gutterDiary,
-    backgroundColor: colors.card,
-    borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.divider,
-    overflow: 'hidden',
+  addShort: { ...type.bodyStory, fontWeight: '600', color: colors.ink },
+  manageHit: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  manageLabel: { ...type.bodyStory, fontWeight: '600', color: colors.secondary },
+  manageChevron: { ...type.bodyStory, color: colors.tertiary },
+  hint: {
+    ...type.caption,
+    color: colors.secondary,
     marginBottom: spacing.sm,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    minHeight: layout.minTouch,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.divider,
+    minHeight: 48,
   },
   rowStatic: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    minHeight: layout.minTouch,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.divider,
+    minHeight: 48,
   },
-  rowLabel: { fontSize: font.body, color: colors.ink },
-  rowValue: { fontSize: font.body, color: colors.secondary },
-  rowTrailing: { fontSize: font.body, color: colors.tertiary },
+  rowLabel: { ...type.bodyStory, color: colors.ink },
+  rowTrailingWrap: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  rowValue: { ...type.bodyStory, color: colors.secondary },
+  rowChevron: { fontSize: 20, color: colors.tertiary, fontWeight: '300' },
   logout: {
-    marginTop: spacing.lg,
-    marginHorizontal: layout.gutterDiary,
+    marginTop: spacing.xl,
     minHeight: layout.minTouch,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logoutText: { fontSize: font.body, fontWeight: '600', color: colors.accent },
+  logoutText: { ...type.bodyStory, fontWeight: '600', color: colors.accent },
   chips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 6,
-    paddingHorizontal: layout.gutterDiary,
   },
   chip: {
     paddingHorizontal: spacing.sm,
@@ -352,5 +372,16 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.sm,
     gap: 4,
   },
-  betaCopy: { fontSize: font.small, color: colors.secondary, lineHeight: 20 },
+  betaCopy: { ...type.caption, color: colors.secondary, lineHeight: 20 },
+  replayTop: {
+    marginTop: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.accent,
+    borderRadius: radius.pill,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    alignItems: 'center',
+  },
+  replayTopLabel: { ...type.bodyStory, fontWeight: '700', color: colors.accent },
+  replayTopHint: { ...type.metadata, color: colors.secondary, marginTop: 4 },
 });

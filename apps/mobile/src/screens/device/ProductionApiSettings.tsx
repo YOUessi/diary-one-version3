@@ -38,9 +38,9 @@ export function ProductionApiSettings() {
     <View style={[styles.wrap, { marginHorizontal: layout.gutterDiary }]}>
       <Text style={styles.title}>Production API (BFF)</Text>
       <Text style={styles.hint}>
-        Expo Go: run diary-one-server Dev Lite (no Docker). Phone URL is your PC LAN IP port 8790,
-        token dev-token. See docs/EXPO_GO_DEV_LITE.md. Saving here also switches cloud target to
-        Production BFF.
+        Expo Go: run diary-one/services/bff Dev Lite (no Docker). Phone URL is your PC LAN IP port
+        8790, token dev-token. See services/bff/docs/EXPO_GO_DEV_LITE.md. Saving here also switches
+        cloud target to Production BFF.
       </Text>
       <TextInput
         value={draftUrl}

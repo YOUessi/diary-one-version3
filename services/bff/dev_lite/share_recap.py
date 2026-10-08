@@ -1,11 +1,12 @@
 """Daily Recap video render for Expo Go (requires ffmpeg on PC)."""
 from __future__ import annotations
 
+import shutil
 import uuid
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 from fastapi.responses import FileResponse
 
 from shared.recap_render import ffmpeg_available, render_slideshow_mp4
@@ -23,8 +24,15 @@ async def _form_bytes(part: Any) -> bytes:
     return str(part).encode("utf-8")
 
 
+def _cleanup_work_dir(work_dir: Path) -> None:
+    shutil.rmtree(work_dir, ignore_errors=True)
+
+
 @router.post("/v1/share/daily-recap/render")
-async def render_daily_recap(request: Request) -> FileResponse:
+async def render_daily_recap(
+    request: Request,
+    background_tasks: BackgroundTasks,
+) -> FileResponse:
     if not ffmpeg_available():
         raise HTTPException(
             status_code=503,
@@ -81,8 +89,10 @@ async def render_daily_recap(request: Request) -> FileResponse:
             slide_duration_sec=max(0.5, min(slide_duration, 10.0)),
         )
     except RuntimeError as e:
+        _cleanup_work_dir(work_dir)
         raise HTTPException(status_code=500, detail=str(e)) from e
 
+    background_tasks.add_task(_cleanup_work_dir, work_dir)
     return FileResponse(
         path=out,
         media_type="video/mp4",

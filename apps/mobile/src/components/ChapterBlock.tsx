@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
-import { colors, font, layout, spacing } from '../theme';
+import { colors, layout, radius, spacing, type } from '../theme';
 import { MemoryTag } from './MemoryTag';
 
-/** Figma D1/Chapter Card — editorial block on Paper, no outer card or shadow. */
+/** Figma D1/Chapter Card — hero 198 · time · title · tags · story. */
 export function ChapterBlock({
   title,
   dateLabel,
@@ -34,17 +34,29 @@ export function ChapterBlock({
         {heroUri ? (
           <Image source={{ uri: heroUri }} style={styles.heroImage} resizeMode="cover" />
         ) : (
-          <Text style={styles.heroPlaceholder}>Hero · curated still</Text>
+          <View style={styles.heroPlaceholder}>
+            <View style={styles.sun} />
+            <View style={styles.wave} />
+          </View>
         )}
       </View>
-      {weakTime ? <Text style={styles.weakTime}>{weakTime}</Text> : null}
-      <Text style={styles.title}>{title}</Text>
-      {showDateMeta ? <Text style={styles.meta}>{dateLabel}</Text> : null}
-      <Text style={styles.story} numberOfLines={2}>{aiStory}</Text>
-      <View style={styles.tagRow} pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-        {tags.slice(0, 2).map((t) => (
-          <MemoryTag key={t} label={t} tone="primary" />
-        ))}
+      <View style={styles.copy}>
+        {weakTime ? <Text style={styles.weakTime}>{weakTime}</Text> : null}
+        <Text style={styles.title}>{title}</Text>
+        {showDateMeta ? <Text style={styles.meta}>{dateLabel}</Text> : null}
+        <View
+          style={styles.tagRow}
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
+          {tags.slice(0, 2).map((t) => (
+            <MemoryTag key={t} label={t} tone="primary" />
+          ))}
+        </View>
+        <Text style={styles.story} numberOfLines={2}>
+          {aiStory}
+        </Text>
       </View>
     </Pressable>
   );
@@ -52,30 +64,66 @@ export function ChapterBlock({
 
 const styles = StyleSheet.create({
   block: {
-    marginBottom: spacing.lg,
+    width: '100%',
+    gap: spacing.md,
+    marginBottom: 0,
     minHeight: layout.minTouch,
   },
   pressed: { opacity: 0.92 },
   hero: {
     width: '100%',
-    aspectRatio: 4 / 3,
+    height: layout.heroHome,
     backgroundColor: colors.surface,
-    borderRadius: 8,
+    borderRadius: radius.media,
     overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.sm,
   },
   heroImage: { width: '100%', height: '100%' },
-  heroPlaceholder: { fontSize: font.small, color: colors.tertiary },
-  weakTime: {
-    fontSize: font.small,
-    fontWeight: '600',
-    color: colors.secondary,
-    marginBottom: 4,
+  heroPlaceholder: {
+    flex: 1,
+    backgroundColor: colors.surface,
   },
-  title: { fontSize: 22, fontWeight: '600', color: colors.ink, letterSpacing: -0.1 },
-  meta: { fontSize: font.micro, color: colors.tertiary, marginTop: 4 },
-  story: { fontSize: font.body, lineHeight: 22, color: colors.secondary, marginTop: spacing.sm },
-  tagRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: spacing.sm },
+  sun: {
+    position: 'absolute',
+    top: 30,
+    right: 48,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#F5E6C8',
+  },
+  wave: {
+    position: 'absolute',
+    left: -34,
+    bottom: -40,
+    width: 420,
+    height: 150,
+    borderRadius: 210,
+    backgroundColor: '#F7F5F0',
+  },
+  copy: {
+    width: '100%',
+    gap: spacing.sm,
+  },
+  weakTime: {
+    ...type.metadata,
+    color: colors.tertiary,
+  },
+  title: {
+    ...type.titleChapter,
+    color: colors.ink,
+  },
+  meta: {
+    ...type.caption,
+    color: colors.tertiary,
+  },
+  tagRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    height: 26,
+    overflow: 'hidden',
+  },
+  story: {
+    ...type.bodyStory,
+    color: colors.secondary,
+  },
 });

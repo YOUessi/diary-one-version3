@@ -23,6 +23,11 @@ function isVisibleAha(result: X02PreviewResult, ahaId: string, publication: stri
   return outcome?.visibility_state === 'VISIBLE_PREVIEW';
 }
 
+/**
+ * Map X02 staged preview → Diary chapters / small memories.
+ * Media URIs are attached later via `attachChapterMediaFromBundle`
+ * using `hero_asset_id` + `selected_media`.
+ */
 export function mapPreviewToDiary(
   result: X02PreviewResult,
   dayKey: string,
@@ -31,20 +36,37 @@ export function mapPreviewToDiary(
 
   const chapters: Chapter[] = result.chapters
     .filter((ch) => isVisibleChapter(result, ch.id, ch.publication_status))
-    .map((ch) => ({
-      id: ch.id,
-      title: ch.title,
-      dateKey: dayKey,
-      dateLabel,
-      weakTime: ch.time_label || undefined,
-      aiStory: ch.story,
-      tags: ch.tags.slice(0, 2),
-      detailTags: ch.tags.length > 2 ? ch.tags.slice(2) : undefined,
-      moments: ch.moment_ids.map((id, index) => ({
-        id,
-        label: ch.time_label && index === 0 ? ch.time_label : `Moment ${index + 1}`,
-      })),
-    }));
+    .map((ch) => {
+      const selected = ch.selected_media ?? [];
+      const momentPlaceholders =
+        selected.length > 0
+          ? selected.map((m, index) => ({
+              id: `${ch.id}-media-${m.asset_id}-${index}`,
+              label:
+                index === 0 && ch.time_label
+                  ? ch.time_label
+                  : `Moment ${index + 1}`,
+            }))
+          : (ch.moment_ids ?? []).map((id, index) => ({
+              id,
+              label: ch.time_label && index === 0 ? ch.time_label : `Moment ${index + 1}`,
+            }));
+
+      return {
+        id: ch.id,
+        title: ch.title,
+        dateKey: dayKey,
+        dateLabel,
+        weakTime: ch.time_label || undefined,
+        aiStory: ch.story,
+        tags: ch.tags.slice(0, 2),
+        detailTags: ch.tags.length > 2 ? ch.tags.slice(2) : undefined,
+        moments:
+          momentPlaceholders.length > 0
+            ? momentPlaceholders
+            : [{ id: `${ch.id}-m0`, label: ch.time_label || 'Moment 1' }],
+      };
+    });
 
   const smallMemories: SmallMemory[] = result.ahas
     .filter((a) => isVisibleAha(result, a.id, a.publication_status))

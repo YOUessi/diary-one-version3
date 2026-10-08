@@ -1,9 +1,10 @@
-import React, { useCallback, useMemo, useRef, useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import React, { useCallback, useMemo, useRef, useEffect, useState } from 'react';
+import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import { colors, font, layout, radius, spacing } from '../theme';
 import { STORY_DISCARD_ALERT } from '../domain/discardCopy';
+import { DiscardConfirmCard } from './DiscardConfirmCard';
 
 export type YourStorySaveState = 'idle' | 'saving' | 'failed';
 
@@ -32,10 +33,15 @@ export function YourStorySheet({
 }: Props) {
   const ref = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%', '75%'], []);
+  const [discardOpen, setDiscardOpen] = useState(false);
 
   useEffect(() => {
-    if (open) ref.current?.expand();
-    else ref.current?.close();
+    if (open) {
+      ref.current?.expand();
+    } else {
+      setDiscardOpen(false);
+      ref.current?.close();
+    }
   }, [open]);
 
   const renderBackdrop = useCallback(
@@ -46,7 +52,10 @@ export function YourStorySheet({
   );
 
   const handleSheetChange = (index: number) => {
-    if (index < 0) onClose();
+    if (index < 0) {
+      setDiscardOpen(false);
+      onClose();
+    }
   };
 
   const requestClose = () => {
@@ -54,32 +63,28 @@ export function YourStorySheet({
       ref.current?.close();
       return;
     }
-    Alert.alert(STORY_DISCARD_ALERT.title, STORY_DISCARD_ALERT.message, [
-      { text: STORY_DISCARD_ALERT.keepEditing, style: 'cancel' },
-      {
-        text: STORY_DISCARD_ALERT.discard,
-        style: 'destructive',
-        onPress: () => ref.current?.close(),
-      },
-    ]);
+    setDiscardOpen(true);
   };
 
   const saving = saveState === 'saving';
   const failed = saveState === 'failed';
 
   return (
+    <>
     <BottomSheet
       ref={ref}
       index={-1}
       snapPoints={snapPoints}
-      enablePanDownToClose={!saving}
+      enablePanDownToClose={!saving && !dirty}
       onChange={handleSheetChange}
       backdropComponent={renderBackdrop}
       backgroundStyle={styles.sheetBg}
       handleIndicatorStyle={styles.handle}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>Edit what you remember</Text>
+        <Text style={styles.title}>
+          {hasExistingStory ? 'Edit what you remember' : 'Add what you remember'}
+        </Text>
         <Text style={styles.lead}>What would you like to remember about this memory?</Text>
         <BottomSheetTextInput
           multiline
@@ -101,13 +106,13 @@ export function YourStorySheet({
           </View>
         ) : null}
         <View style={styles.actions}>
-          {hasExistingStory && onRemove ? (
+          {hasExistingStory && onRemove && !failed ? (
             <Pressable onPress={onRemove} style={styles.btn}>
-              <Text style={styles.remove}>Remove</Text>
+              <Text style={styles.remove}>Remove note</Text>
             </Pressable>
           ) : null}
           <Pressable onPress={requestClose} style={styles.btn} disabled={saving}>
-            <Text style={styles.cancel}>{failed ? 'Cancel' : 'Cancel'}</Text>
+            <Text style={styles.cancel}>Cancel</Text>
           </Pressable>
           {failed ? (
             <Pressable onPress={onSave} style={[styles.btn, styles.save]}>
@@ -125,14 +130,38 @@ export function YourStorySheet({
         </View>
       </View>
     </BottomSheet>
+      <DiscardConfirmCard
+        visible={discardOpen}
+        title={STORY_DISCARD_ALERT.title}
+        message={STORY_DISCARD_ALERT.message}
+        keepLabel={STORY_DISCARD_ALERT.keepEditing}
+        discardLabel={STORY_DISCARD_ALERT.discard}
+        onKeepEditing={() => setDiscardOpen(false)}
+        onDiscard={() => {
+          setDiscardOpen(false);
+          ref.current?.close();
+        }}
+      />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  sheetBg: { backgroundColor: colors.card },
+  /** Figma 134:1842 — sheet top r16; title 22; Save 88×44 r12 */
+  sheetBg: {
+    backgroundColor: colors.card,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
   handle: { backgroundColor: colors.divider },
   content: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
-  title: { fontSize: font.h2, fontWeight: '600', marginBottom: spacing.xs, color: colors.ink },
+  title: {
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: '600',
+    marginBottom: spacing.xs,
+    color: colors.ink,
+  },
   lead: { fontSize: font.small, color: colors.secondary, marginBottom: spacing.md },
   input: {
     minHeight: 120,
@@ -148,10 +177,25 @@ const styles = StyleSheet.create({
   error: { fontSize: font.small, color: colors.accent, marginTop: spacing.sm },
   savingRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.md },
   savingText: { fontSize: font.small, color: colors.secondary },
-  actions: { flexDirection: 'row', justifyContent: 'flex-end', marginTop: spacing.md, gap: spacing.sm, flexWrap: 'wrap' },
-  btn: { minHeight: layout.minTouch, justifyContent: 'center', paddingHorizontal: spacing.md },
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: spacing.md,
+    gap: spacing.sm,
+    flexWrap: 'wrap',
+  },
+  btn: { minHeight: 44, justifyContent: 'center', paddingHorizontal: spacing.md },
   cancel: { fontSize: font.body, color: colors.secondary },
   remove: { fontSize: font.body, color: colors.accent, fontWeight: '600' },
-  save: { backgroundColor: colors.ink, borderRadius: radius.pill, paddingHorizontal: spacing.lg },
-  saveText: { color: colors.paper, fontWeight: '600' },
+  save: {
+    backgroundColor: colors.ink,
+    borderRadius: 12,
+    minWidth: 88,
+    minHeight: 44,
+    paddingHorizontal: spacing.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  saveText: { fontSize: 15, lineHeight: 20, color: colors.paper, fontWeight: '600' },
 });

@@ -785,7 +785,14 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             "experiment": X02_EXPERIMENT,
             "experimental": True,
             "leaderboardEligible": False,
-            "productionReady": False,
+            "productionReady": bool(
+                self.stage_gateway.ready
+                and (
+                    "alibaba" in str(self.stage_gateway.provider or "").lower()
+                    or "qwen" in str(self.stage_gateway.model or "").lower()
+                    or "dashscope" in str(self.stage_gateway.provider or "").lower()
+                )
+            ),
             "modelReady": self.stage_gateway.ready,
             "provider": self.stage_gateway.provider,
             "model": self.stage_gateway.model,

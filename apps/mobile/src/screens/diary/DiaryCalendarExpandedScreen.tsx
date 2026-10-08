@@ -10,6 +10,7 @@ import { TodayStatusBanner } from '../../components/TodayStatus';
 import { MemoryCalendar } from '../../components/MemoryCalendar';
 import { FigmaScreenHeader } from '../../components/FigmaScreenHeader';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
+import { SearchGlyph } from '../../components/SearchGlyph';
 import { performDeviceSync } from '../../device/deviceSync';
 import { useAppStore, chaptersForDate, smallMemoriesForDate } from '../../store/useAppStore';
 import { daysWithContent } from '../../model';
@@ -107,8 +108,8 @@ export default function DiaryCalendarExpandedScreen() {
       <FigmaScreenHeader
         title="Diary"
         rightAccessory={
-          <Pressable onPress={() => navigation.navigate('Search', {})} hitSlop={12}>
-            <Text style={styles.searchLink}>Search</Text>
+          <Pressable onPress={() => navigation.navigate('Search', {})} hitSlop={12} accessibilityLabel="Search">
+            <SearchGlyph />
           </Pressable>
         }
       />
@@ -205,7 +206,6 @@ const styles = StyleSheet.create({
   loadFailed: { alignItems: 'center', marginTop: spacing.md, gap: spacing.sm },
   loadFailedText: { fontSize: font.small, color: colors.secondary },
   tryAgain: { fontSize: font.small, fontWeight: '600', color: colors.accent },
-  searchLink: { fontSize: font.small, fontWeight: '600', color: colors.accent },
   emptyDay: {
     fontSize: font.body,
     color: colors.secondary,

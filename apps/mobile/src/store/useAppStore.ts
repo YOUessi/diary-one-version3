@@ -44,6 +44,8 @@ import {
 
 import type { BundleExportVersion } from '../pipeline/bundleTypes';
 import type { CloudProcessingTarget } from '../backend/types';
+import { CLOUD_EVIDENCE_CONSENT_VERSION } from '../onboarding/preferenceSurvey';
+import { isDevFailSimulationEnabled } from '../config/devFailSimulation';
 
 import {
 
@@ -61,7 +63,7 @@ import {
 
 
 
-export type DeviceLinkState = 'disconnected' | 'lab_linked';
+export type DeviceLinkState = 'disconnected' | 'lab_linked' | 'hardware_linked';
 
 
 
@@ -152,6 +154,8 @@ type AppState = {
 
   setCloudProcessingTarget: (target: CloudProcessingTarget) => void;
 
+  setCloudEvidenceConsent: (agreed: boolean) => void;
+
   setLocalProfile: (profile: LocalProfile) => void;
 
   setDeviceLinkState: (state: DeviceLinkState) => void;
@@ -228,7 +232,7 @@ export const useAppStore = create<AppState>((set) => ({
 
   sessionToken: '',
 
-  cloudProcessingTarget: 'research',
+  cloudProcessingTarget: 'production',
 
   localProfile: DEFAULT_LOCAL_PROFILE,
 
@@ -283,21 +287,25 @@ export const useAppStore = create<AppState>((set) => ({
 
   setCloudProcessingTarget: (cloudProcessingTarget) => set({ cloudProcessingTarget }),
 
+  setCloudEvidenceConsent: (agreed) =>
+    set({
+      cloudEvidenceConsent: agreed,
+      cloudEvidenceConsentVersion: agreed ? CLOUD_EVIDENCE_CONSENT_VERSION : null,
+    }),
+
   setLocalProfile: (localProfile) => set({ localProfile }),
 
   setDeviceLinkState: (deviceLinkState) =>
-
-    set({
-
+    set((s) => ({
       deviceLinkState,
-
-      devicePendingRecordings: deviceLinkState === 'lab_linked',
-
+      devicePendingRecordings:
+        deviceLinkState === 'lab_linked' || deviceLinkState === 'hardware_linked',
       todayStatus:
-
-        deviceLinkState === 'lab_linked' ? 'READY_NEW_RECORDINGS' : 'READY',
-
-    }),
+        deviceLinkState === 'lab_linked' || deviceLinkState === 'hardware_linked'
+          ? 'READY_NEW_RECORDINGS'
+          : 'READY',
+      deviceBatteryPercent: deviceLinkState === 'disconnected' ? null : s.deviceBatteryPercent,
+    })),
 
   setNotificationSettings: (notificationSettings) => set({ notificationSettings }),
 
@@ -335,7 +343,7 @@ export const useAppStore = create<AppState>((set) => ({
 
       }
 
-      if (s.historyLoadFailAlternate) {
+      if (isDevFailSimulationEnabled() && s.historyLoadFailAlternate) {
 
         set({ historyLoadState: 'failed', historyLoadFailAlternate: false });
 
@@ -349,7 +357,7 @@ export const useAppStore = create<AppState>((set) => ({
 
         historyLoadState: 'idle',
 
-        historyLoadFailAlternate: true,
+        historyLoadFailAlternate: isDevFailSimulationEnabled(),
 
       });
 

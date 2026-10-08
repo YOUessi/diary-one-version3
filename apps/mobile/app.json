@@ -14,6 +14,9 @@
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true
         },
+        "NSBluetoothAlwaysUsageDescription": "Diary One uses Bluetooth to discover and connect to your Diary One wearable for pairing and device control.",
+        "NSBluetoothPeripheralUsageDescription": "Diary One uses Bluetooth to communicate with your Diary One wearable.",
+        "NSLocalNetworkUsageDescription": "Diary One uses the local network to sync recordings from your Diary One and to reach your development cloud services on the same Wi‑Fi.",
         "NSPhotoLibraryUsageDescription": "Diary One uses your photo library when you choose to save a captured original or update your profile photo.",
         "NSPhotoLibraryAddUsageDescription": "Diary One saves images you choose to export to your photo library."
       }
@@ -49,6 +52,8 @@
         }
       ],
       "expo-sharing",
+      "expo-apple-authentication",
+      "expo-web-browser",
       "./modules/diary-one-vision"
     ]
   }

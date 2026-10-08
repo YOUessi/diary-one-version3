@@ -156,6 +156,49 @@ export const DEFAULT_SEMANTIC_ROUTING_PROFILE: SemanticRoutingProfile = {
   frame5MeanMin: 0.45,
 };
 
+/** Windows BFF MobileCLIP image-only (512-d, no prompt labels). */
+export const MOBILECLIP_IMAGE_ROUTING_PROFILE: SemanticRoutingProfile = {
+  ...DEFAULT_SEMANTIC_ROUTING_PROFILE,
+  profileId: 'MOBILECLIP_S0_IMAGE_GATE_V01',
+  modelId: 'MOBILECLIP_S0_FASTVIT_MCI0_IMAGE_512',
+  featureWeight: 1,
+  classificationWeight: 0,
+  transitionSimilarityMax: 0.7,
+  contextChangeEnabled: false,
+  endpointContextChangeEnabled: false,
+};
+
+/** Windows BFF MobileCLIP + scene prompts (aligned to M4_MOBILECLIP_PROMPT_ROUTER_V01). */
+export const MOBILECLIP_PROMPT_ROUTING_PROFILE: SemanticRoutingProfile = {
+  ...DEFAULT_SEMANTIC_ROUTING_PROFILE,
+  profileId: 'MOBILECLIP_S0_PROMPT_GATE_V04',
+  modelId: 'MOBILECLIP_S0_IMAGE_512_SCENE_PROMPTS_V01',
+  featureWeight: 0.65,
+  classificationWeight: 0.35,
+  transitionSimilarityMax: 0.5,
+  cumulativeSeparationMin: 0.4,
+  cumulativeSupportedSeparationMin: 0.4,
+  cumulativeStrongSeparationMin: 0.4,
+  cumulativeStrongCrossSimilarityMax: 0.45,
+  contextChangeEnabled: true,
+  endpointContextChangeEnabled: true,
+  frame1MeanMin: 0.7,
+};
+
+export function routingProfileForModelId(
+  modelId: string | undefined,
+  hasClassifications: boolean,
+): SemanticRoutingProfile {
+  const id = modelId ?? '';
+  if (id.includes('MOBILECLIP')) {
+    if (hasClassifications || id.includes('SCENE_PROMPTS')) {
+      return MOBILECLIP_PROMPT_ROUTING_PROFILE;
+    }
+    return MOBILECLIP_IMAGE_ROUTING_PROFILE;
+  }
+  return DEFAULT_SEMANTIC_ROUTING_PROFILE;
+}
+
 export type ProbePlanItem = {
   requestedMs: number;
   uri: string;

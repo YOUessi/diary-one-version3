@@ -111,3 +111,47 @@ export function resolveAuthApiHint(): string {
   const { url } = authBase();
   return url || '(set Production BFF URL in Lab, or EXPO_PUBLIC_DEV_BFF_URL)';
 }
+
+export type OAuthResult =
+  | { ok: true; email: string; sessionToken?: string }
+  | { ok: false; reason: string };
+
+export async function completeOAuthLogin(
+  provider: 'apple' | 'google',
+  identityToken: string,
+): Promise<OAuthResult> {
+  const { url } = authBase();
+  if (!url) {
+    return { ok: false, reason: 'Set Production BFF URL (Lab Apply) before Apple/Google sign-in.' };
+  }
+  try {
+    const res = await fetch(`${url}/v1/auth/oauth`, {
+      method: 'POST',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider, identity_token: identityToken }),
+    });
+    const body = (await res.json().catch(() => ({}))) as {
+      email?: string;
+      session_token?: string;
+      profile?: { email?: string; nickname?: string };
+      detail?: string;
+    };
+    if (!res.ok) {
+      return { ok: false, reason: body.detail ?? `oauth_failed_${res.status}` };
+    }
+    const email = (body.profile?.email ?? body.email ?? '').trim();
+    const profile = useAppStore.getState().localProfile;
+    useAppStore.getState().setLocalProfile({
+      ...profile,
+      email: email || profile.email,
+      nickname: body.profile?.nickname ?? profile.nickname,
+    });
+    const sessionToken = (body.session_token ?? '').trim();
+    if (sessionToken) {
+      useAppStore.getState().setSessionToken(sessionToken);
+    }
+    return { ok: true, email, sessionToken: sessionToken || undefined };
+  } catch (e) {
+    return { ok: false, reason: e instanceof Error ? e.message : String(e) };
+  }
+}

@@ -33,16 +33,20 @@ cd E:\AI耳机\diary-one\services\bff
 
 ## Docker 量产栈
 
+**前提：** Docker Desktop = Running，且 **WSL2** 已启用（否则 `docker` 会挂起）。
+
 ```powershell
 cd E:\AI耳机\diary-one\services\bff
-copy .env.example .env
-# 编辑 .env：API_TOKEN、X02_BASE_URL=http://host.docker.internal:8787
-docker compose up -d --build
-docker compose run --rm bff python -m shared.db_init
-.\scripts\smoke-docker.ps1
-# Recap（容器内需 ffmpeg — Dockerfile 已装）:
-.\scripts\smoke-recap.ps1
+copy .env.example .env   # 仅首次
+.\scripts\up-docker-stack.ps1
+# 或手动：
+# docker compose up -d --build
+# docker compose run --rm bff python -m shared.db_init
+# .\scripts\smoke-docker.ps1
 ```
+
+停栈：`docker compose down`  
+日志：`docker compose logs -f bff worker`
 
 宿主机改代码不重建镜像：
 

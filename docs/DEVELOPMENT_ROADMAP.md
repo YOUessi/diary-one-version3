@@ -42,7 +42,7 @@
 | D5 | 相册导入（iOS 优先；Android 注明 Expo Go 限制） |
 | D6 | Today 七态 + 日历 + Chapter Detail + Your Story |
 | D7 | Memory 搜索 / Captured / Topics（纪律：Tag 不可点、Small 无详情） |
-| D8 | Share 四条 flow（Cancel 顶栏） |
+| D8 | Share 四条 flow（Preparing 顶栏 Cancel；Preview 无） |
 | D9 | Device 诚实 Not connected；Lab link 仅开发 |
 | D10 | Account 资料 / 偏好 / 隐私页 |
 

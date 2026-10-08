@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { useVideoPlayer, VideoView } from 'expo-video';
-import { colors, font, radius } from '../theme';
+import { colors, layout, radius, type } from '../theme';
 
 type Props = {
   uri: string;
@@ -9,6 +9,7 @@ type Props = {
   onStop: () => void;
 };
 
+/** Figma Short Clip Playing — accent frame + Playing; tap media to stop. */
 export function MomentPlayer({ uri, playing, onStop }: Props) {
   const player = useVideoPlayer(uri, (p) => {
     p.loop = false;
@@ -38,25 +39,28 @@ export function MomentPlayer({ uri, playing, onStop }: Props) {
   }
 
   return (
-    <View style={styles.wrap}>
-      <VideoView style={styles.video} player={player} nativeControls contentFit="cover" />
-      <View style={styles.playingBadge}>
+    <Pressable
+      onPress={onStop}
+      style={styles.wrap}
+      accessibilityLabel="Stop playback"
+      accessibilityState={{ selected: true }}
+    >
+      <VideoView style={styles.video} player={player} nativeControls={false} contentFit="cover" />
+      <View style={styles.playingBadge} pointerEvents="none">
         <Text style={styles.playingText}>Playing</Text>
       </View>
-      <Pressable onPress={onStop} style={styles.stop} accessibilityLabel="Stop playback">
-        <Text style={styles.stopText}>Stop</Text>
-      </Pressable>
-    </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   wrap: {
-    height: 200,
-    borderRadius: radius.control,
+    height: layout.heroHome,
+    borderRadius: radius.media,
     overflow: 'hidden',
     borderWidth: 2,
     borderColor: colors.accent,
+    backgroundColor: colors.surface,
   },
   playingBadge: {
     position: 'absolute',
@@ -67,24 +71,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 6,
   },
-  playingText: { color: colors.paper, fontSize: font.micro, fontWeight: '700' },
+  playingText: { ...type.metadata, color: colors.paper, fontWeight: '700' },
   video: { width: '100%', height: '100%' },
   poster: {
-    height: 200,
+    height: layout.heroHome,
     backgroundColor: colors.surface,
-    borderRadius: radius.control,
+    borderRadius: radius.media,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  hint: { fontSize: font.small, color: colors.tertiary },
-  stop: {
-    position: 'absolute',
-    right: 8,
-    bottom: 8,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-  },
-  stopText: { color: '#fff', fontSize: font.micro, fontWeight: '600' },
+  hint: { ...type.caption, color: colors.tertiary },
 });

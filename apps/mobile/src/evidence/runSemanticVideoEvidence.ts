@@ -1,8 +1,8 @@
 import * as FileSystem from 'expo-file-system/legacy';
-import * as VideoThumbnails from 'expo-video-thumbnails';
 import { measureProbeQualityFromUri } from './probeQuality';
 import { planProbeTimestampsMs } from './probePlan';
 import { resolveSemanticAnalyzer, describeAnalyzer } from './resolveSemanticAnalyzer';
+import { extractVideoFramesAtTimes } from './nativeVisionAnalyzer';
 import { routeSemanticClip } from './semanticRouter';
 import {
   canonicalOffsetForRole,
@@ -13,12 +13,15 @@ import {
 import { setLastSemanticRouteAudit } from './lastSemanticRoute';
 import {
   DEFAULT_SEMANTIC_ROUTING_PROFILE,
+  routingProfileForModelId,
   type SemanticRouteAudit,
   type SemanticRoutingProfile,
 } from './types';
 import type { SpatialTransform } from '../pipeline/bundleTypes';
 import { writeNormalizedFrame, EVIDENCE_FRAME } from '../pipeline/evidenceNormalize';
 import { sha256File } from '../pipeline/sha256File';
+import { createFallbackSemanticAnalyzer } from './fallbackAnalyzer';
+import type { SemanticAnalyzer } from './semanticAnalyzer';
 
 type FrameRow = {
   frame_id: string;
@@ -75,29 +78,38 @@ export async function buildSemanticVideoEvidence(
     profile?: SemanticRoutingProfile;
   },
 ): Promise<SemanticVideoBundleResult> {
-  const profile = params.profile ?? DEFAULT_SEMANTIC_ROUTING_PROFILE;
-  const analyzer = resolveSemanticAnalyzer();
-  const timestamps = planProbeTimestampsMs(params.durationMs, profile);
+  const probeProfile = params.profile ?? DEFAULT_SEMANTIC_ROUTING_PROFILE;
+  let analyzer: SemanticAnalyzer = resolveSemanticAnalyzer();
+  const timestamps = planProbeTimestampsMs(params.durationMs, probeProfile);
 
-  const probeThumbs: Array<{ requestedMs: number; actualPtsMs: number; uri: string }> = [];
-  for (const requestedMs of timestamps) {
-    const thumb = await VideoThumbnails.getThumbnailAsync(params.localVideoUri, {
-      time: requestedMs,
-      quality: 0.7,
-    });
-    probeThumbs.push({
-      requestedMs,
-      actualPtsMs: requestedMs,
-      uri: thumb.uri,
-    });
-  }
+  const probeDir = `${params.bundleDir}probes_${params.assetId}/`;
+  const probeThumbs = await extractVideoFramesAtTimes(
+    params.localVideoUri,
+    timestamps,
+    probeDir,
+  );
 
   let analyzeResults;
-  if (analyzer.analyzeImageUris) {
-    analyzeResults = await analyzer.analyzeImageUris(probeThumbs.map((p) => p.uri));
-  } else {
-    analyzeResults = await Promise.all(probeThumbs.map((p) => analyzer.analyzeImageUri(p.uri)));
+  try {
+    if (analyzer.analyzeImageUris) {
+      analyzeResults = await analyzer.analyzeImageUris(probeThumbs.map((p) => p.uri));
+    } else {
+      analyzeResults = await Promise.all(probeThumbs.map((p) => analyzer.analyzeImageUri(p.uri)));
+    }
+  } catch {
+    // BFF MobileCLIP not ready → degraded Expo fallback (still completes cloud path)
+    analyzer = createFallbackSemanticAnalyzer();
+    if (analyzer.analyzeImageUris) {
+      analyzeResults = await analyzer.analyzeImageUris(probeThumbs.map((p) => p.uri));
+    } else {
+      analyzeResults = await Promise.all(probeThumbs.map((p) => analyzer.analyzeImageUri(p.uri)));
+    }
   }
+
+  const hasLabels = (analyzeResults[0]?.classifications?.length ?? 0) > 0;
+  const profile =
+    params.profile ??
+    routingProfileForModelId(analyzeResults[0]?.modelId, hasLabels);
 
   const probes = await Promise.all(
     probeThumbs.map(async (thumb, index) => {
@@ -128,15 +140,18 @@ export async function buildSemanticVideoEvidence(
 
   const selectedMs = selectFrameTimestampsMs(decision);
   const frameCount = decision.targetFrameCount;
+  const selectedDir = `${params.bundleDir}selected_${params.assetId}/`;
+  const selectedThumbs = await extractVideoFramesAtTimes(
+    params.localVideoUri,
+    selectedMs,
+    selectedDir,
+  );
   const frames: FrameRow[] = [];
 
-  for (let fi = 0; fi < selectedMs.length; fi++) {
-    const source_timestamp_ms = selectedMs[fi];
-    const thumb = await VideoThumbnails.getThumbnailAsync(params.localVideoUri, {
-      time: source_timestamp_ms,
-      quality: 0.85,
-    });
-    const role = sampleRoleForIndex(fi, selectedMs.length);
+  for (let fi = 0; fi < selectedThumbs.length; fi++) {
+    const thumb = selectedThumbs[fi];
+    const source_timestamp_ms = Math.round(thumb.actualPtsMs);
+    const role = sampleRoleForIndex(fi, selectedThumbs.length);
     const rel = `frames/${params.assetId}_${fi}.jpg`;
     frames.push(
       await frameFromUri(thumb.uri, rel, params.bundleDir, params.spatial, params.sourceW, params.sourceH, {

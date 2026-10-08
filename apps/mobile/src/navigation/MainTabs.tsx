@@ -11,7 +11,13 @@ const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export default function MainTabs() {
   return (
-    <Tab.Navigator tabBar={(props) => <AppTabBar {...props} />} screenOptions={{ headerShown: false }}>
+    <Tab.Navigator
+      tabBar={(props) => <AppTabBar {...props} />}
+      screenOptions={{
+        headerShown: false,
+        sceneStyle: { backgroundColor: '#FAF9F6' },
+      }}
+    >
       <Tab.Screen name="DiaryTab" component={DiaryStack} options={{ title: 'Diary' }} />
       <Tab.Screen name="MemoryTab" component={MemoryStack} options={{ title: 'Memory' }} />
       <Tab.Screen name="DeviceTab" component={DeviceStack} options={{ title: 'Device' }} />

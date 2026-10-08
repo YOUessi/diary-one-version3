@@ -1,4 +1,5 @@
 import type { SemanticAnalyzer } from './semanticAnalyzer';
+import { appendRnFile, postMultipartText } from '../cloud/rnFormData';
 
 export function createRemoteSemanticAnalyzer(
   baseUrl: string,
@@ -14,28 +15,26 @@ export function createRemoteSemanticAnalyzer(
     },
     async analyzeImageUris(uris: string[]) {
       const form = new FormData();
-      uris.forEach((uri, index) => {
-        form.append(`probe_${index}`, {
-          uri,
-          name: `probe_${index}.jpg`,
-          type: 'image/jpeg',
-        } as unknown as Blob);
-      });
+      for (let index = 0; index < uris.length; index += 1) {
+        appendRnFile(form, `probe_${index}`, uris[index]!, `probe_${index}.jpg`);
+      }
       const headers: Record<string, string> = { Accept: 'application/json' };
       if (token) headers.Authorization = `Bearer ${token}`;
-      const res = await fetch(`${root}/v1/evidence/semantic-analyze`, {
-        method: 'POST',
-        headers,
-        body: form,
-      });
-      const body = (await res.json().catch(() => ({}))) as {
+      const posted = await postMultipartText(`${root}/v1/evidence/semantic-analyze`, form, headers);
+      type SemanticBody = {
         modelId?: string;
         results?: Array<{ vector: number[]; classifications: Array<{ identifier: string; confidence: number }> }>;
         detail?: string;
         degraded?: boolean;
       };
-      if (!res.ok) {
-        throw new Error(body.detail ?? `semantic-analyze HTTP ${res.status}`);
+      let body: SemanticBody = {};
+      try {
+        body = JSON.parse(posted.text) as SemanticBody;
+      } catch {
+        body = {};
+      }
+      if (!posted.ok) {
+        throw new Error(body.detail ?? `semantic-analyze HTTP ${posted.status}`);
       }
       const results = body.results ?? [];
       if (results.length !== uris.length) {

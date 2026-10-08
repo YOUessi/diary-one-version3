@@ -4,7 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaScreenHeader, FigmaEyebrow } from '../../components/FigmaScreenHeader';
-import { colors, spacing, radius, font, layout } from '../../theme';
+import { DeviceHeroMark } from '../../components/DeviceHeroMark';
+import { colors, spacing, radius, layout, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import { PipelineTaskList } from '../../components/PipelineTaskList';
 import { BackendConnectivityCard } from '../../components/BackendConnectivityCard';
@@ -15,44 +16,35 @@ import type { DeviceStackParamList } from '../../navigation/types';
 
 type Nav = NativeStackNavigationProp<DeviceStackParamList, 'DeviceHome'>;
 
-function DeviceMetricRow({ label, value, muted }: { label: string; value: string; muted?: boolean }) {
-  return (
-    <View style={styles.metricRow}>
-      <Text style={styles.metricLabel}>{label}</Text>
-      <Text style={[styles.metricValue, muted && styles.metricMuted]}>{value}</Text>
-    </View>
-  );
-}
-
-function NavRow({
+function DeviceMetricRow({
   label,
   value,
-  onPress,
-  disabled,
+  last,
+  mutedLabel,
 }: {
   label: string;
-  value?: string;
-  onPress?: () => void;
-  disabled?: boolean;
+  value: string;
+  last?: boolean;
+  mutedLabel?: boolean;
 }) {
   return (
-    <Pressable
-      onPress={onPress}
-      disabled={disabled || !onPress}
-      style={[styles.navRow, disabled && styles.navRowDisabled]}
-    >
-      <Text style={[styles.navLabel, disabled && styles.navLabelDisabled]}>{label}</Text>
-      <Text style={styles.navTrailing}>
-        {value ? `${value} ` : ''}
-        ›
-      </Text>
-    </Pressable>
+    <View style={[styles.metricRow, last && styles.metricRowLast]}>
+      <Text style={[styles.metricLabel, mutedLabel && styles.metricLabelMuted]}>{label}</Text>
+      <Text style={styles.metricValue}>{value}</Text>
+    </View>
   );
 }
 
 function formatLastSynced(iso: string | null): string {
   if (!iso) return 'Unavailable';
   const dt = new Date(iso);
+  const today = new Date();
+  const sameDay =
+    dt.getFullYear() === today.getFullYear()
+    && dt.getMonth() === today.getMonth()
+    && dt.getDate() === today.getDate();
+  const time = dt.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit' });
+  if (sameDay) return `Today, ${time}`;
   return dt.toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -68,100 +60,132 @@ export default function DeviceHomeScreen() {
   const devicePendingRecordings = useAppStore((s) => s.devicePendingRecordings);
   const lastSyncedAt = useAppStore((s) => s.lastSyncedAt);
   const automaticCaptureMode = useAppStore((s) => s.automaticCaptureMode);
-  const linked = deviceLinkState === 'lab_linked';
+  const linked = deviceLinkState === 'lab_linked' || deviceLinkState === 'hardware_linked';
   const deviceBatteryPercent = useAppStore((s) => s.deviceBatteryPercent);
-  const captureLabel =
-    automaticCaptureMode === 'high' ? 'High frequency' : 'Standard';
+  const captureLabel = automaticCaptureMode === 'high' ? 'High frequency' : 'Standard';
 
   const onSync = () => {
     void performDeviceSync();
   };
 
+  const statusRight = !linked
+    ? 'Unavailable'
+    : deviceBatteryPercent != null
+      ? `${deviceBatteryPercent}% battery`
+      : 'Battery level unavailable';
+
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <FigmaScreenHeader title="Device" />
+      <View style={styles.gutter}>
+        <FigmaScreenHeader title="Device" />
+      </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {showInternalLabTools ? <BackendConnectivityCard /> : null}
 
-        <View style={styles.statusCard}>
-          <View style={styles.dotRow}>
-            <View style={[styles.dot, linked && styles.dotOn]} />
-            <Text style={styles.statusTitle}>{linked ? 'Connected' : 'Not connected'}</Text>
-          </View>
-          {linked ? (
-            <Text style={styles.statusSub}>
-              {deviceBatteryPercent != null
-                ? `${deviceBatteryPercent}% battery`
-                : 'Battery level unavailable'}
-            </Text>
-          ) : (
-            <Text style={styles.statusSub}>Unavailable</Text>
-          )}
+        <DeviceHeroMark connected={linked} />
+
+        <View style={styles.statusRow}>
+          <Text style={styles.statusTitle}>{linked ? 'Connected' : 'Not connected'}</Text>
+          <Text style={styles.statusRight}>{statusRight}</Text>
         </View>
 
-        <FigmaEyebrow>On Device</FigmaEyebrow>
-        <View style={styles.card}>
-          <DeviceMetricRow
-            label="Storage"
-            value={linked ? 'Available' : 'Unavailable'}
-            muted={!linked}
-          />
+        <Text style={styles.sectionLabel}>On Device</Text>
+        <View style={styles.metrics}>
+          <DeviceMetricRow label="Storage" value={linked ? 'Available' : 'Unavailable'} mutedLabel />
           <DeviceMetricRow
             label="New recordings"
             value={linked ? (devicePendingRecordings ? 'Yes' : 'None') : 'Unavailable'}
-            muted={!linked}
+            mutedLabel
           />
           <DeviceMetricRow
             label="Ready to sync"
             value={linked ? (devicePendingRecordings ? 'Ready' : 'Up to date') : 'Unavailable'}
-            muted={!linked}
+            mutedLabel
           />
           <DeviceMetricRow
             label="Last synced"
             value={linked ? formatLastSynced(lastSyncedAt) : 'Unavailable'}
-            muted={!linked}
-          />
-          <Pressable
-            style={[styles.syncBtn, !linked && styles.syncBtnDisabled]}
-            onPress={onSync}
-            disabled={!linked}
-          >
-            <Text style={[styles.syncLabel, !linked && styles.syncLabelDisabled]}>Sync</Text>
-          </Pressable>
-        </View>
-
-        <FigmaEyebrow>Automatic Capture</FigmaEyebrow>
-        <View style={styles.card}>
-          <NavRow
-            label="Automatic Capture"
-            value={linked ? captureLabel : 'Unavailable'}
-            onPress={linked ? () => navigation.navigate('AutomaticCapture') : undefined}
-            disabled={!linked}
+            mutedLabel
+            last
           />
         </View>
 
-        <FigmaEyebrow>Device Settings</FigmaEyebrow>
-        <View style={styles.card}>
-          <NavRow label="Device Settings" onPress={() => navigation.navigate('DeviceSettings')} />
-        </View>
+        <Pressable
+          style={[styles.syncBtn, !linked && styles.syncBtnDisabled]}
+          onPress={onSync}
+          disabled={!linked}
+          accessibilityRole="button"
+          accessibilityLabel="Sync"
+        >
+          <Text style={[styles.syncLabel, !linked && styles.syncLabelDisabled]}>Sync</Text>
+        </Pressable>
+
+        <Pressable
+          style={styles.navBlock}
+          onPress={linked ? () => navigation.navigate('AutomaticCapture') : undefined}
+          disabled={!linked}
+        >
+          <View style={styles.navCopy}>
+            <Text style={[styles.navTitle, !linked && styles.navTitleMuted]}>Automatic Capture</Text>
+            <Text style={styles.navSub}>{linked ? captureLabel : 'Unavailable'}</Text>
+          </View>
+          <Text style={styles.navChevron}>›</Text>
+        </Pressable>
+
+        <Pressable style={styles.navBlock} onPress={() => navigation.navigate('DeviceSettings')}>
+          <Text style={linked ? styles.navTitle : styles.navTitleMuted}>Device Settings</Text>
+          <Text style={styles.navChevron}>›</Text>
+        </Pressable>
 
         {showInternalLabTools ? (
           <>
-            <FigmaEyebrow>Research & cloud preview</FigmaEyebrow>
-            <ResearchApiSettings />
+            <FigmaEyebrow>Cloud processing (Expo Go)</FigmaEyebrow>
             <Text style={styles.pipelineLead}>
-              Builds App Library Bundle V04 (default) on this phone and calls your research X02 preview when URL
-              is set. Does not enter Captured by You and does not replace device sync.
+              Use Production BFF Dev Lite (:8790) for Demo → Diary. Device Sync is separate and stays
+              Unavailable while headphones are not connected.
             </Text>
+            <Pressable
+              onPress={() => {
+                const parent = navigation.getParent();
+                parent?.navigate('AccountTab', { screen: 'InternalLab' });
+              }}
+              style={styles.pipelineBtn}
+            >
+              <Text style={styles.pipelineBtnText}>Open Evidence pipeline lab</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                void import('../../config/applyDevCloudDefaults').then((m) => {
+                  m.applyDevCloudDefaults();
+                  m.ensureDevCloudConsentForLab();
+                  Alert.alert('BFF defaults applied', 'Then open Lab → Ping → Demo photo.');
+                });
+              }}
+              style={styles.pipelineBtn}
+            >
+              <Text style={styles.pipelineBtnText}>Apply .env BFF + cloud consent</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                void import('../../pipeline/launchEvidenceImport').then((m) =>
+                  m.launchDemoEvidenceImport(),
+                );
+              }}
+              style={styles.pipelineBtn}
+            >
+              <Text style={styles.pipelineBtnText}>A · Demo photo → cloud → Diary</Text>
+            </Pressable>
             <Pressable
               onPress={() => {
                 void import('../../pipeline/launchEvidenceImport').then((m) => m.launchEvidenceImport());
               }}
               style={styles.pipelineBtn}
             >
-              <Text style={styles.pipelineBtnText}>Import from photo library (evidence test)</Text>
+              <Text style={styles.pipelineBtnText}>B · Import from photo library</Text>
             </Pressable>
             <PipelineTaskList tasks={pipelineTasks} />
+            <FigmaEyebrow>Research API (optional)</FigmaEyebrow>
+            <ResearchApiSettings />
           </>
         ) : null}
       </ScrollView>
@@ -171,69 +195,69 @@ export default function DeviceHomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
-  scroll: { paddingBottom: spacing.xl },
-  statusCard: {
-    marginHorizontal: layout.gutterDiary,
-    marginBottom: spacing.sm,
-    paddingVertical: spacing.sm,
+  gutter: { paddingHorizontal: layout.gutterDiary },
+  scroll: {
+    paddingHorizontal: layout.gutterDiary,
+    paddingBottom: layout.tabBarHeight + spacing.xxxl,
   },
-  dotRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.tertiary },
-  dotOn: { backgroundColor: colors.accent },
-  statusTitle: { fontSize: font.h2, fontWeight: '700', color: colors.ink },
-  statusSub: { fontSize: font.small, color: colors.secondary, marginTop: 2 },
-  card: {
-    marginHorizontal: layout.gutterDiary,
-    backgroundColor: colors.card,
-    borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.divider,
-    overflow: 'hidden',
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    marginBottom: spacing.xl,
+  },
+  statusTitle: { ...type.titleChapter, color: colors.ink },
+  statusRight: { ...type.caption, color: colors.secondary },
+  sectionLabel: {
+    ...type.titleChapter,
+    color: colors.ink,
     marginBottom: spacing.sm,
   },
+  metrics: { marginBottom: spacing.md },
   metricRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    minHeight: layout.minTouch,
+    minHeight: 44,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.divider,
   },
-  metricLabel: { fontSize: font.body, color: colors.ink },
-  metricValue: { fontSize: font.body, color: colors.secondary },
-  metricMuted: { color: colors.tertiary },
+  metricRowLast: { borderBottomWidth: 0 },
+  metricLabel: { ...type.bodyStory, color: colors.ink },
+  metricLabelMuted: { color: colors.secondary },
+  metricValue: { ...type.captionEmphasis, fontWeight: '700', color: colors.ink },
+  /** Figma 44:1347 — Sync 48×r12 */
   syncBtn: {
-    margin: spacing.md,
     backgroundColor: colors.ink,
-    borderRadius: radius.pill,
-    minHeight: layout.buttonHeight,
+    borderRadius: 12,
+    minHeight: 48,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: spacing.xl,
   },
-  syncBtnDisabled: { backgroundColor: colors.divider },
-  syncLabel: { fontSize: font.body, fontWeight: '700', color: colors.paper },
-  syncLabelDisabled: { color: colors.secondary },
-  navRow: {
+  syncBtnDisabled: { backgroundColor: '#B5B5B5' },
+  syncLabel: { fontSize: 15, lineHeight: 20, fontWeight: '600', color: colors.paper },
+  syncLabelDisabled: { color: colors.card },
+  navBlock: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
     minHeight: layout.minTouch,
+    paddingVertical: spacing.sm,
+    marginBottom: spacing.xs,
   },
-  navRowDisabled: { opacity: 0.85 },
-  navLabel: { fontSize: font.body, color: colors.ink },
-  navLabelDisabled: { color: colors.secondary },
-  navTrailing: { fontSize: font.body, color: colors.tertiary },
+  navCopy: { flex: 1 },
+  navTitle: { ...type.bodyStory, color: colors.ink },
+  navTitleMuted: { ...type.bodyStory, color: colors.secondary },
+  navSub: { ...type.caption, color: colors.tertiary, marginTop: 2 },
+  navChevron: { fontSize: 22, color: colors.tertiary, fontWeight: '300' },
   pipelineLead: {
-    fontSize: font.small,
+    ...type.caption,
     color: colors.secondary,
-    paddingHorizontal: layout.gutterDiary,
     marginBottom: spacing.md,
     lineHeight: 20,
   },
   pipelineBtn: {
-    marginHorizontal: layout.gutterDiary,
     backgroundColor: colors.surface,
     borderRadius: radius.pill,
     borderWidth: 1,
@@ -243,5 +267,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: spacing.md,
   },
-  pipelineBtnText: { color: colors.ink, fontWeight: '600', fontSize: font.body },
+  pipelineBtnText: { ...type.bodyStory, fontWeight: '600', color: colors.ink },
 });

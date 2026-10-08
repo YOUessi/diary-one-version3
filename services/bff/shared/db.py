@@ -7,10 +7,18 @@ from sqlalchemy.orm import Session, sessionmaker
 from shared.config import settings
 from shared.models import Base
 
-async_engine = create_async_engine(settings.database_url, pool_pre_ping=True)
+async_engine = create_async_engine(
+    settings.database_url,
+    pool_pre_ping=True,
+    connect_args={"ssl": False},
+)
 AsyncSessionLocal = async_sessionmaker(async_engine, expire_on_commit=False)
 
-sync_engine = create_engine(settings.database_url_sync, pool_pre_ping=True)
+sync_engine = create_engine(
+    settings.database_url_sync,
+    pool_pre_ping=True,
+    connect_args={"sslmode": "disable"},
+)
 SyncSessionLocal = sessionmaker(sync_engine, expire_on_commit=False)
 
 

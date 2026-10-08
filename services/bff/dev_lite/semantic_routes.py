@@ -1,11 +1,10 @@
 """
 Dev Lite evidence semantic endpoints.
 
-- POST /v1/evidence/semantic-analyze — JPEG probes → vectors + labels (Mac helper when available)
-- POST /v1/evidence/semantic-route — stateless route from client-supplied embeddings (JSON)
-
-On Windows without PYTHONPATH to the reference package, semantic-analyze returns 501 with guidance.
-Routing math on phone uses the TypeScript port; this endpoint re-validates audits server-side when possible.
+- POST /v1/evidence/semantic-analyze — JPEG probes → vectors + labels
+    Windows: MobileCLIP via diary_one_app_evidence_v0_2_dev8_mobileclip_router
+    when DIARY_ONE_MOBILECLIP_CHECKPOINT is set
+- POST /v1/evidence/semantic-route — stateless audit echo (routing authority stays on phone TS)
 """
 from __future__ import annotations
 
@@ -17,6 +16,13 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, UploadFile
 from pydantic import BaseModel, Field
+
+from dev_lite.mobileclip_backend import (
+    analyze_jpeg_bytes,
+    ensure_reference_on_path,
+    get_embedder,
+    mobileclip_status,
+)
 
 router = APIRouter(prefix="/v1/evidence", tags=["evidence"])
 
@@ -49,6 +55,7 @@ class SemanticRouteRequest(BaseModel):
 
 
 def _try_import_reference_router() -> Any | None:
+    ensure_reference_on_path()
     try:
         from diary_one_app.engine.semantic import SemanticProbeEngine  # type: ignore
 
@@ -59,12 +66,13 @@ def _try_import_reference_router() -> Any | None:
 
 @router.post("/semantic-route")
 async def semantic_route(body: SemanticRouteRequest) -> dict[str, Any]:
-    """Stateless audit: echoes probe count and notes that authoritative routing runs on device."""
+    """Stateless audit: echoes probe count; authoritative routing runs on device TS."""
     profile_path = EVIDENCE_ROUTER_ROOT / "semantic_profile_defaults.json"
     profile_defaults: dict[str, Any] = {}
     if profile_path.is_file():
         profile_defaults = json.loads(profile_path.read_text(encoding="utf-8"))
     reference = _try_import_reference_router()
+    mc = mobileclip_status()
     return {
         "ok": True,
         "platform": platform.system(),
@@ -75,10 +83,11 @@ async def semantic_route(body: SemanticRouteRequest) -> dict[str, Any]:
         "profile_id": body.profile_id,
         "profile_defaults_keys": list(profile_defaults.keys()),
         "reference_router_importable": reference is not None,
+        "mobileclip": mc,
         "message": (
-            "Authoritative semantic routing runs in apps/mobile TypeScript (Feature Print 768-d + "
-            "Classify top-10 + 40/60 fusion). Re-run full Python engine by importing diary_one_app "
-            "via PYTHONPATH on Mac when validating parity."
+            "Authoritative semantic routing runs in apps/mobile TypeScript. "
+            "On Windows, probe embeddings come from MobileCLIP via "
+            "POST /v1/evidence/semantic-analyze when the checkpoint is configured."
         ),
         "target_frame_hint": min(10, max(1, len(body.probes))),
     }
@@ -87,15 +96,38 @@ async def semantic_route(body: SemanticRouteRequest) -> dict[str, Any]:
 async def semantic_analyze_batch(files: list[UploadFile]) -> dict[str, Any]:
     if not files:
         raise HTTPException(status_code=400, detail="no probes uploaded")
+
+    # Prefer MobileCLIP whenever checkpoint is configured (Windows + any OS).
+    embedder = get_embedder()
+    if embedder is not None:
+        blobs: list[bytes] = []
+        for part in files:
+            raw = await part.read()
+            if not raw:
+                raise HTTPException(status_code=400, detail="empty probe upload")
+            blobs.append(raw)
+        try:
+            return analyze_jpeg_bytes(blobs)
+        except Exception as exc:  # noqa: BLE001
+            raise HTTPException(status_code=500, detail=f"MobileCLIP analyze failed: {exc}") from exc
+
+    st = mobileclip_status()
     if platform.system() == "Windows":
         raise HTTPException(
             status_code=501,
             detail=(
-                "Windows Dev Lite cannot run Apple Vision. Phone uses native module or degraded "
-                "fallback; optional POST /v1/evidence/semantic-route with vectors from client."
+                "MobileCLIP not ready on Windows Dev Lite. "
+                f"reason={st.get('reason')}. "
+                "Set DIARY_ONE_MOBILECLIP_CHECKPOINT to mobileclip_s0.pt, install "
+                "torch/timm/pillow (+ optional apple/ml-mobileclip for prompts), "
+                "restart BFF. See docs/WINDOWS_MOBILECLIP_BFF.md"
             ),
         )
     raise HTTPException(
         status_code=501,
-        detail="Configure Mac Apple Vision helper or use on-device DiaryOneVision module.",
+        detail=(
+            "No semantic analyzer configured. On Windows use MobileCLIP checkpoint; "
+            "on iPhone use DiaryOneVision Dev Client; "
+            f"status={st.get('reason')}"
+        ),
     )

@@ -3,16 +3,18 @@ import { Modal, Pressable, StyleSheet, Text, View, ActivityIndicator } from 'rea
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { colors, font, layout, spacing } from '../../theme';
+import { colors, layout, spacing } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import type { DiaryStackParamList } from '../../navigation/types';
+import { isDevFailSimulationEnabled } from '../../config/devFailSimulation';
 
 type Route = RouteProp<DiaryStackParamList, 'YourStoryRemoveConfirm'>;
 type Nav = NativeStackNavigationProp<DiaryStackParamList, 'YourStoryRemoveConfirm'>;
 
-/** Alternates failure on every other remove attempt (APP045 test build). */
+/** Alternates failure on every other remove when Lab fail-sim is on. */
 let storyRemoveFailNext = false;
 
+/** Figma 307:2211 / 308:2296 — Note Confirmation card r12; actions 145×44 r12. */
 export default function YourStoryRemoveConfirmScreen() {
   const { chapterId } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
@@ -22,13 +24,13 @@ export default function YourStoryRemoveConfirmScreen() {
   const confirm = () => {
     setRemoving(true);
     setTimeout(() => {
-      if (storyRemoveFailNext) {
+      if (isDevFailSimulationEnabled() && storyRemoveFailNext) {
         storyRemoveFailNext = false;
         setRemoving(false);
         navigation.replace('YourStoryRemoveFailed', { chapterId });
         return;
       }
-      storyRemoveFailNext = true;
+      if (isDevFailSimulationEnabled()) storyRemoveFailNext = true;
       updateYourStory(chapterId, undefined);
       setRemoving(false);
       navigation.goBack();
@@ -39,28 +41,31 @@ export default function YourStoryRemoveConfirmScreen() {
     <Modal transparent animationType="fade" onRequestClose={() => navigation.goBack()}>
       <View style={styles.backdrop}>
         <View style={styles.card}>
-          <Text style={styles.title}>Remove your note?</Text>
-          <Text style={styles.body}>
-            Only your note will be removed. Diary&apos;s summary and media stay unchanged. Any unsaved
-            edits will also be discarded.
-          </Text>
           {removing ? (
-            <View style={styles.removingBlock}>
-              <ActivityIndicator color={colors.accent} style={styles.spinner} />
-              <Text style={styles.removingTitle}>Removing note…</Text>
-              <Text style={styles.removingBody}>
+            <>
+              <Text style={styles.title}>Removing note…</Text>
+              <Text style={styles.body}>
                 Please wait. Diary&apos;s summary and media will not be changed.
               </Text>
-            </View>
+              <ActivityIndicator color={colors.ink} style={styles.spinner} />
+              <Text style={styles.wait}>Please wait…</Text>
+            </>
           ) : (
-            <View style={styles.actions}>
-              <Pressable onPress={() => navigation.goBack()}>
-                <Text style={styles.cancel}>Keep note</Text>
-              </Pressable>
-              <Pressable onPress={confirm}>
-                <Text style={styles.remove}>Remove note</Text>
-              </Pressable>
-            </View>
+            <>
+              <Text style={styles.title}>Remove your note?</Text>
+              <Text style={styles.body}>
+                Only your note will be removed. Diary&apos;s summary and media stay unchanged. Any
+                unsaved edits will also be discarded.
+              </Text>
+              <View style={styles.actions}>
+                <Pressable style={styles.secondaryBtn} onPress={() => navigation.goBack()}>
+                  <Text style={styles.secondaryLabel}>Keep note</Text>
+                </Pressable>
+                <Pressable style={styles.primaryBtn} onPress={confirm}>
+                  <Text style={styles.primaryLabel}>Remove note</Text>
+                </Pressable>
+              </View>
+            </>
           )}
         </View>
       </View>
@@ -71,18 +76,50 @@ export default function YourStoryRemoveConfirmScreen() {
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    justifyContent: 'center',
-    padding: layout.gutterDiary,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    justifyContent: 'flex-end',
+    paddingHorizontal: layout.gutterDiary,
+    paddingBottom: spacing.xxxl,
   },
-  card: { backgroundColor: colors.paper, borderRadius: 16, padding: spacing.lg },
-  title: { fontSize: font.body, fontWeight: '700', color: colors.ink, marginBottom: spacing.sm },
-  body: { fontSize: font.small, color: colors.secondary, lineHeight: 20, marginBottom: spacing.lg },
-  removingBlock: { alignItems: 'center', gap: spacing.sm, marginBottom: spacing.md },
-  removingTitle: { fontSize: font.body, fontWeight: '600', color: colors.ink },
-  removingBody: { fontSize: font.small, color: colors.secondary, textAlign: 'center', lineHeight: 20 },
-  spinner: { marginVertical: spacing.xs },
-  actions: { flexDirection: 'row', justifyContent: 'flex-end', gap: spacing.lg },
-  cancel: { fontSize: font.body, color: colors.secondary, fontWeight: '600' },
-  remove: { fontSize: font.body, color: colors.accent, fontWeight: '700' },
+  card: {
+    backgroundColor: colors.paper,
+    borderRadius: 12,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 18,
+    gap: 14,
+  },
+  title: {
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: '600',
+    color: colors.ink,
+  },
+  body: {
+    fontSize: 17,
+    lineHeight: 24,
+    color: colors.secondary,
+  },
+  spinner: { marginTop: spacing.sm },
+  wait: { fontSize: 13, lineHeight: 18, color: colors.secondary },
+  actions: { flexDirection: 'row', gap: 10, marginTop: spacing.xs },
+  secondaryBtn: {
+    flex: 1,
+    maxWidth: 145,
+    minHeight: 44,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  secondaryLabel: { fontSize: 15, lineHeight: 20, fontWeight: '600', color: colors.secondary },
+  primaryBtn: {
+    flex: 1,
+    maxWidth: 145,
+    minHeight: 44,
+    borderRadius: 12,
+    backgroundColor: colors.ink,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 'auto',
+  },
+  primaryLabel: { fontSize: 15, lineHeight: 20, fontWeight: '600', color: colors.paper },
 });

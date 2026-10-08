@@ -6,7 +6,7 @@ export type CloudProcessingTarget = 'research' | 'production';
 
 export type DeviceSyncOutcome =
   | { ok: true; lastSyncedAt: string }
-  | { ok: false; reason: 'not_connected' | 'nothing_to_sync' | 'cancelled' };
+  | { ok: false; reason: 'not_connected' | 'nothing_to_sync' | 'cancelled' | 'sync_failed'; detail?: string };
 
 export type AuthOutcome =
   | { ok: true }

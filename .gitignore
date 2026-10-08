@@ -36,3 +36,6 @@
 **/*.log
 **/.metro-health-check*
 **/expo-env.d.ts
+
+.figma_pixel/
+

@@ -10,5 +10,5 @@ def require_bearer(authorization: str | None = Header(default=None)) -> None:
         authorization,
         settings.api_token,
         session_store(),
-        invalid_status=403,
+        invalid_status=401,
     )

@@ -21,12 +21,17 @@ async function copyFrame(sourceUri: string, destPath: string): Promise<void> {
   });
 }
 
+export type NativeRecapEncodeResult = {
+  videoUri: string;
+  hasAudio: boolean;
+};
+
 /** iOS Dev Client / production — AVFoundation H.264 MP4. */
 export async function encodeDailyRecapNative(
   slideUris: string[],
   outputUri: string,
   audioUri?: string,
-): Promise<string> {
+): Promise<NativeRecapEncodeResult> {
   if (Platform.OS !== 'ios') {
     throw new Error('native_encoder_ios_only');
   }
@@ -55,11 +60,11 @@ export async function encodeDailyRecapNative(
     outputPath: stripFileScheme(silentPath),
   });
 
+  const asFileUri = (p: string) => (p.startsWith('file://') ? p : `file://${p}`);
+
   if (audioUri && audioUri.startsWith('file://')) {
     const mixedPath = silentPath.replace(/\.mp4$/i, '_mixed.mp4');
-    const totalDurationMs = Math.round(
-      (frameIndex / RECAP_FPS) * 1000,
-    );
+    const totalDurationMs = Math.round((frameIndex / RECAP_FPS) * 1000);
     try {
       await mixAudio({
         videoPath: stripFileScheme(silentPath),
@@ -75,11 +80,11 @@ export async function encodeDailyRecapNative(
         ],
       });
       await FileSystem.deleteAsync(silentPath, { idempotent: true });
-      return mixedPath.startsWith('file://') ? mixedPath : `file://${mixedPath}`;
+      return { videoUri: asFileUri(mixedPath), hasAudio: true };
     } catch {
-      return silentPath.startsWith('file://') ? silentPath : `file://${silentPath}`;
+      return { videoUri: asFileUri(silentPath), hasAudio: false };
     }
   }
 
-  return silentPath.startsWith('file://') ? silentPath : `file://${silentPath}`;
+  return { videoUri: asFileUri(silentPath), hasAudio: false };
 }

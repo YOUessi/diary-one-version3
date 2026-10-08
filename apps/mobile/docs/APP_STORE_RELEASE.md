@@ -39,8 +39,8 @@
 |------|------|
 | Sign In（Store） | 无 Apple/Google 按钮（审核策略）；与画板 127:1179 略有不同 |
 | Motion / Short clip | 播放态 UI 有，非真实 motion 资源 |
-| Share | Cancel/间距可再抠像素 |
-| 全局 Design Token | 未做全稿逐帧截图 diff |
+| Share / Device / Auth / Account 子页 | 已按本地 Figma 节点收紧字号/圆角/CTA（见 `FIGMA_04_COVERAGE` 像素结论） |
+| 全局 Design Token | Token 已锁 `#FAF9F6`/`#C98245`；全稿逐帧截图 diff 仍待 |
 
 验收方式：对 `FIGMA_04_COVERAGE.md` 中 ⚠️ 项做 **Store 构建** 截图对比。
 
@@ -49,12 +49,14 @@
 ## D. 构建命令
 
 ```bash
-cd diary-one-app
-npm install -g eas-cli
-eas login
-eas build --platform ios --profile production
-eas submit --platform ios --profile production
+cd apps/mobile
+npx eas-cli login
+npx eas-cli init
+npx eas-cli build --platform ios --profile preview
+npx eas-cli submit --platform ios --profile preview
 ```
+
+Windows 上同样可在 `E:\AI耳机\diary-one\apps\mobile` 跑上述命令。preview 包 **包含 Apple Vision**。
 
 **内测（Figma 完整 UI，无 Lab）：** `eas build --profile preview`（`EXPO_PUBLIC_INTERNAL_BETA=1`）— 见 `INTERNAL_BETA_FIGMA.md`
 

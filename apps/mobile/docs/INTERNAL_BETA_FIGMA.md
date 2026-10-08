@@ -27,7 +27,7 @@ eas build --platform ios --profile preview
 
 1. **四 Tab** 与 PRD 纪律：Tag 不可点、Small Memory 无详情、Sync ≠ 云端处理、未连接设备不造假电量。
 2. **Onboarding / Sign In（127:1179）**：preview 包为 Apple → Google → or → Email → 底栏 **Continue with Email**（`SignInScreen` + `OnboardingScaffold`）。
-3. **Share（R6-S4）**：准备态与预览态顶栏 **Cancel**（`ShareFlowCancelHeader`），透明 modal 下章节仍可见。
+3. **Share（R6-S4）**：**Preparing** 顶栏有 **Cancel**；**Preview** 无 Cancel（与 Figma / `FIGMA_04_COVERAGE` 一致）。透明 modal 下章节仍可见。
 4. **Diary 日历 / Today 各状态**：含 Calendar Preparing、History load、Empty past day。
 5. **Device**：断开态诚实；Automatic Capture 选中态为描边/✓，无画板外的 “Selected” 文案。
 6. **Account**：内测包顶区 **Internal beta** 说明（`isInternalBetaBuild`）；About 版本与 `app.json` 一致。

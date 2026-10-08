@@ -6,7 +6,7 @@ import { useAppStore } from '../store/useAppStore';
 
 const OPTIONS: { id: CloudProcessingTarget; label: string; hint: string }[] = [
   { id: 'research', label: 'Research (X02)', hint: 'PC handoff server on LAN' },
-  { id: 'production', label: 'Production BFF', hint: 'Future /v1/day-revisions + jobs' },
+  { id: 'production', label: 'Production BFF', hint: 'Dev Lite / Docker :8790 day-revisions + jobs' },
 ];
 
 export function CloudProcessingTargetPicker() {

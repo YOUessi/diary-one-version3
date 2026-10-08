@@ -4,7 +4,12 @@ from shared.config import settings
 
 
 def redis_client() -> redis.Redis:
-    return redis.from_url(settings.redis_url, decode_responses=True)
+    return redis.from_url(
+        settings.redis_url,
+        decode_responses=True,
+        socket_connect_timeout=10,
+        socket_timeout=None,
+    )
 
 
 def enqueue_job(job_id: str) -> None:

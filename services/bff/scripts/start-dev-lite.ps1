@@ -55,9 +55,8 @@ if (-not $AlgoRoot) {
   Write-Error "Algorithm path not found. Expected diary_one_ci under services/algorithm/algorithm"
 }
 
-$lan = Get-NetIPAddress -AddressFamily IPv4 |
-  Where-Object { $_.IPAddress -notmatch '^(127\.|169\.254\.)' } |
-  Select-Object -First 1 -ExpandProperty IPAddress
+. (Join-Path $PSScriptRoot "_lan-ip.ps1")
+$lan = $DiaryLanIPv4
 
 # Prefer User-level DASHSCOPE if process env empty
 if (-not $env:DASHSCOPE_API_KEY) {
@@ -75,15 +74,21 @@ Write-Host "Adapter: $Adapter"
 if ($Adapter -eq "qwen") {
   if (-not $env:DASHSCOPE_API_KEY) {
     Write-Host ""
-    Write-Host "MISSING DASHSCOPE_API_KEY — cannot run real V1.75." -ForegroundColor Red
-    Write-Host "1) Open https://bailian.console.aliyun.com/ (华北2 北京) → API Key → 创建"
-    Write-Host "2) Run:  .\scripts\set-dashscope-key.ps1 -Key 'sk-...'"
-    Write-Host "3) Re-run this script."
-    exit 1
+    Write-Host "MISSING DASHSCOPE_API_KEY — falling back to fixture + mock (Expo Go path)." -ForegroundColor Yellow
+    Write-Host "For real V1.75: .\scripts\set-dashscope-key.ps1 -Key 'sk-...' then re-run with -Adapter qwen." -ForegroundColor DarkYellow
+    $Adapter = "fixture"
+    if (-not $PSBoundParameters.ContainsKey('AllowMockPreview')) {
+      $AllowMockPreview = $true
+    }
+  } else {
+    Write-Host "DashScope key: present ($($env:DASHSCOPE_API_KEY.Substring(0,[Math]::Min(6,$env:DASHSCOPE_API_KEY.Length)))…)" -ForegroundColor Green
   }
-  Write-Host "DashScope key: present ($($env:DASHSCOPE_API_KEY.Substring(0,[Math]::Min(6,$env:DASHSCOPE_API_KEY.Length)))…)" -ForegroundColor Green
 } else {
   Write-Host "Fixture mode: NOT real algorithm — UI/pipeline only." -ForegroundColor Yellow
+  # Expo Go 无 Key 内测：默认允许 mock 回写 Diary（真 qwen 勿开）
+  if (-not $PSBoundParameters.ContainsKey('AllowMockPreview')) {
+    $AllowMockPreview = $true
+  }
 }
 
 $allowMock = if ($AllowMockPreview) { "true" } else { "false" }
@@ -129,14 +134,66 @@ Write-Host 'Starting X02 on 127.0.0.1:$X02Port adapter=$Adapter'
 '$PythonExeEsc' -m diary_one_ci.x01_server --adapter $Adapter --host 127.0.0.1 --port $X02Port
 "@
 
+# MobileCLIP reference package (Windows local light semantic analyze)
+$EvidenceRouterRoot = $null
+foreach ($er in @(
+  (Join-Path $ServerRoot "..\..\diary_one_app_evidence_v0_2_dev8_mobileclip_router"),
+  "E:\AI耳机\diary_one_app_evidence_v0_2_dev8_mobileclip_router"
+)) {
+  try {
+    $erResolved = Resolve-Path $er -ErrorAction Stop
+    if (Test-Path (Join-Path $erResolved "src\diary_one_app\engine\semantic.py")) {
+      $EvidenceRouterRoot = $erResolved.Path
+      break
+    }
+  } catch { continue }
+}
+if (-not $env:DIARY_ONE_EVIDENCE_ROUTER_ROOT -and $EvidenceRouterRoot) {
+  $env:DIARY_ONE_EVIDENCE_ROUTER_ROOT = $EvidenceRouterRoot
+}
+# Default checkpoint locations (user must place Apple research weight here)
+if (-not $env:DIARY_ONE_MOBILECLIP_CHECKPOINT) {
+  $userCkpt = [Environment]::GetEnvironmentVariable("DIARY_ONE_MOBILECLIP_CHECKPOINT", "User")
+  if ($userCkpt) { $env:DIARY_ONE_MOBILECLIP_CHECKPOINT = $userCkpt }
+}
+if (-not $env:DIARY_ONE_MOBILECLIP_CHECKPOINT -and $EvidenceRouterRoot) {
+  foreach ($rel in @(
+    "local_experiments\mobileclip_s0.pt",
+    "checkpoints\mobileclip_s0.pt",
+    "mobileclip_s0.pt"
+  )) {
+    $cand = Join-Path $EvidenceRouterRoot $rel
+    if (Test-Path -LiteralPath $cand) {
+      $env:DIARY_ONE_MOBILECLIP_CHECKPOINT = $cand
+      break
+    }
+  }
+}
+$EvidenceSrc = if ($env:DIARY_ONE_EVIDENCE_ROUTER_ROOT) {
+  Join-Path $env:DIARY_ONE_EVIDENCE_ROUTER_ROOT "src"
+} else { "" }
+$BffPythonPath = if ($EvidenceSrc -and (Test-Path $EvidenceSrc)) {
+  "$ServerRoot;$EvidenceSrc"
+} else { $ServerRoot }
+
+Write-Host "MobileCLIP checkpoint: $(if ($env:DIARY_ONE_MOBILECLIP_CHECKPOINT) { $env:DIARY_ONE_MOBILECLIP_CHECKPOINT } else { '(not set — semantic-analyze returns 501)' })" -ForegroundColor $(if ($env:DIARY_ONE_MOBILECLIP_CHECKPOINT) { 'Green' } else { 'Yellow' })
+
+$ckptEsc = ($env:DIARY_ONE_MOBILECLIP_CHECKPOINT -replace "'", "''")
+$erEsc = ($env:DIARY_ONE_EVIDENCE_ROUTER_ROOT -replace "'", "''")
+$pyPathEsc = $BffPythonPath -replace "'", "''"
+
 $bffCmd = @"
 Set-Location '$ServerRoot'
-`$env:PYTHONPATH = '$ServerRoot'
+`$env:PYTHONPATH = '$pyPathEsc'
 `$env:API_TOKEN = 'dev-token'
 `$env:X02_BASE_URL = 'http://127.0.0.1:$X02Port'
 `$env:DEV_LITE_PORT = '$BffPort'
 `$env:ALLOW_MOCK_PREVIEW = '$allowMock'
 `$env:EXPOSE_OTP_IN_RESPONSE = '$exposeOtp'
+`$env:DIARY_ONE_EVIDENCE_ROUTER_ROOT = '$erEsc'
+`$env:DIARY_ONE_MOBILECLIP_CHECKPOINT = '$ckptEsc'
+`$env:DIARY_ONE_MOBILECLIP_DEVICE = '$(if ($env:DIARY_ONE_MOBILECLIP_DEVICE) { $env:DIARY_ONE_MOBILECLIP_DEVICE } else { 'auto' })'
+`$env:DIARY_ONE_MOBILECLIP_PROMPTS = '$(if ($env:DIARY_ONE_MOBILECLIP_PROMPTS) { $env:DIARY_ONE_MOBILECLIP_PROMPTS } else { '1' })'
 `$env:SMTP_HOST = '$($env:SMTP_HOST)'
 `$env:SMTP_PORT = '$($env:SMTP_PORT)'
 `$env:SMTP_USER = '$($env:SMTP_USER)'
@@ -145,6 +202,7 @@ Set-Location '$ServerRoot'
 `$env:SMTP_SECURITY = '$($env:SMTP_SECURITY)'
 if (`$env:SMTP_HOST) { Write-Host "SMTP OTP enabled via `$env:SMTP_HOST" } else { Write-Host "OTP: no SMTP — set via .\scripts\set-smtp.ps1 (see docs/REAL_CLOUD_SETUP.md)" }
 Write-Host 'Starting Dev Lite BFF on 0.0.0.0:$BffPort (allow_mock=$allowMock)'
+Write-Host "MobileCLIP ckpt=`$env:DIARY_ONE_MOBILECLIP_CHECKPOINT"
 '$PythonExeEsc' -m uvicorn dev_lite.app:app --host 0.0.0.0 --port $BffPort
 "@
 

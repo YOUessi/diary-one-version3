@@ -5,13 +5,18 @@ export type DiaryFeedItem =
   | { kind: 'chapter'; chapter: Chapter }
   | { kind: 'small'; memory: SmallMemory };
 
-function dayHeaderLabel(dateKey: string, todayKey: string): { label: string; sub?: string } {
-  if (dateKey === todayKey) return { label: 'Today' };
+function shortDay(dateKey: string): string {
   const [y, m, d] = dateKey.split('-').map(Number);
   const dt = new Date(y, m - 1, d);
-  const weekday = dt.toLocaleDateString('en-US', { weekday: 'long' });
-  const sub = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function dayHeaderLabel(dateKey: string, todayKey: string): { label: string; sub?: string } {
+  const sub = shortDay(dateKey);
+  if (dateKey === todayKey) return { label: 'Today', sub };
   if (dateKey === offsetDay(todayKey, -1)) return { label: 'Yesterday', sub };
+  const [y, m, d] = dateKey.split('-').map(Number);
+  const weekday = new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'long' });
   return { label: weekday, sub };
 }
 

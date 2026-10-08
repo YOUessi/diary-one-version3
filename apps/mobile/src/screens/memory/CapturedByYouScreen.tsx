@@ -5,7 +5,8 @@ import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { MemoryStackParamList } from '../../navigation/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font, layout, radius, spacing } from '../../theme';
+import { FigmaBackHeader } from '../../components/FigmaBackHeader';
+import { colors, layout, spacing, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import type { CapturedOriginal } from '../../model';
 import { CapturedGridCell } from '../../components/CapturedGridCell';
@@ -26,6 +27,7 @@ function groupByDate(items: CapturedOriginal[]) {
   return [...map.entries()].sort((a, b) => b[0].localeCompare(a[0]));
 }
 
+/** Figma 65:913 — text filters (not pills), scalloped grid cells. */
 export default function CapturedByYouScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<CapturedRoute>();
@@ -46,33 +48,39 @@ export default function CapturedByYouScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <Pressable onPress={() => navigation.goBack()} style={styles.back}>
-        <Text style={styles.backText}>‹</Text>
-      </Pressable>
+      <FigmaBackHeader />
       <Text style={styles.title}>Captured by You</Text>
-      <Text style={styles.sub}>Photos and videos you chose to capture.</Text>
+      {captured.length > 0 ? (
+        <Text style={styles.sub}>Photos and videos you chose to capture.</Text>
+      ) : null}
 
       <View style={styles.filters}>
-        {(['all', 'photo', 'video'] as Filter[]).map((f) => (
-          <Pressable
-            key={f}
-            onPress={() => setFilter(f)}
-            style={[styles.chip, filter === f && styles.chipOn]}
-          >
-            <Text style={[styles.chipText, filter === f && styles.chipTextOn]}>
-              {f === 'all' ? 'All' : f === 'photo' ? 'Photos' : 'Videos'}
-            </Text>
-          </Pressable>
-        ))}
+        {(['all', 'photo', 'video'] as Filter[]).map((f) => {
+          const on = filter === f;
+          return (
+            <Pressable key={f} onPress={() => setFilter(f)} style={styles.filterHit} hitSlop={8}>
+              <Text style={[styles.filterText, on && styles.filterTextOn]}>
+                {f === 'all' ? 'All' : f === 'photo' ? 'Photos' : 'Videos'}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
 
       {captured.length === 0 ? (
         <View style={styles.emptyWrap}>
           <Text style={styles.emptyTitle}>No photos or videos yet.</Text>
-          <Text style={styles.emptyBody}>Photos and videos you choose to capture will appear here.</Text>
+          <Text style={styles.emptyBody}>
+            Photos and videos you choose to capture will appear here.
+          </Text>
         </View>
       ) : sections.length === 0 ? (
-        <Text style={styles.emptyFilter}>No originals in this filter.</Text>
+        <View style={styles.emptyWrap}>
+          <Text style={styles.emptyTitle}>No photos or videos yet.</Text>
+          <Text style={styles.emptyBody}>
+            Photos and videos you choose to capture will appear here.
+          </Text>
+        </View>
       ) : (
         <FlatList
           data={sections}
@@ -100,55 +108,45 @@ export default function CapturedByYouScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
-  back: {
-    paddingHorizontal: layout.gutterDiary,
-    minHeight: layout.minTouch,
-    justifyContent: 'center',
-    width: 48,
-  },
-  backText: { fontSize: 28, color: colors.ink, fontWeight: '300' },
   title: {
-    fontSize: font.title,
-    fontWeight: '700',
+    ...type.titleLarge,
     color: colors.ink,
     paddingHorizontal: layout.gutterDiary,
   },
   sub: {
-    fontSize: font.small,
+    ...type.caption,
     color: colors.secondary,
     paddingHorizontal: layout.gutterDiary,
     marginTop: spacing.xs,
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
+  /** Figma 65:913 — filter row h44 gap16; date 13 secondary; grid gap10 */
   filters: {
     flexDirection: 'row',
-    gap: spacing.sm,
+    alignItems: 'center',
+    gap: 16,
+    minHeight: 44,
     paddingHorizontal: layout.gutterDiary,
     marginBottom: spacing.md,
   },
-  chip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: colors.divider,
-    minHeight: 36,
-    justifyContent: 'center',
-  },
-  chipOn: { backgroundColor: colors.ink, borderColor: colors.ink },
-  chipText: { fontSize: font.small, color: colors.secondary, fontWeight: '600' },
-  chipTextOn: { color: colors.paper },
+  filterHit: { minHeight: 44, justifyContent: 'center' },
+  filterText: { fontSize: 13, lineHeight: 18, color: colors.secondary, fontWeight: '400' },
+  filterTextOn: { color: colors.ink, fontWeight: '500' },
   list: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
-  section: { marginBottom: spacing.lg },
-  sectionTitle: { fontSize: font.small, fontWeight: '600', color: colors.secondary, marginBottom: spacing.sm },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  section: { marginBottom: 18 },
+  sectionTitle: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.secondary,
+    marginBottom: spacing.sm,
+  },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   emptyWrap: {
     flex: 1,
     paddingHorizontal: layout.gutterDiary,
     paddingTop: spacing.xl,
     alignItems: 'center',
   },
-  emptyTitle: { fontSize: font.body, fontWeight: '600', color: colors.ink, marginBottom: spacing.sm },
-  emptyBody: { fontSize: font.small, color: colors.secondary, textAlign: 'center', lineHeight: 20 },
-  emptyFilter: { padding: layout.gutterDiary, color: colors.tertiary, fontSize: font.body },
+  emptyTitle: { ...type.bodyStory, fontWeight: '600', color: colors.ink, marginBottom: spacing.sm },
+  emptyBody: { ...type.caption, color: colors.secondary, textAlign: 'center', lineHeight: 20 },
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, font, radius } from '../theme';
+import { colors, layout, radius, type } from '../theme';
 import { MomentPlayer } from './MomentPlayer';
 
 function isVideoUri(uri: string) {
@@ -8,64 +8,72 @@ function isVideoUri(uri: string) {
 }
 
 type Props = {
+  /** Idle poster / still frame (JPG preferred for Motion). */
   uri: string;
+  /** Local or remote MP4 when this moment is Motion; falls back to `uri`. */
+  playbackUri?: string;
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
 };
 
-export function MomentMedia({ uri, playing, onPlay, onStop }: Props) {
+/** Figma 176:1966 / 176:2021 — idle poster; playing = accent stroke + Playing badge; tap to stop. */
+export function MomentMedia({ uri, playbackUri, playing, onPlay, onStop }: Props) {
+  const playSource = playbackUri ?? uri;
+  const isMotion = isVideoUri(playSource);
+
   if (!playing) {
     return (
-      <Pressable onPress={onPlay} style={styles.poster}>
+      <Pressable onPress={onPlay} style={styles.poster} accessibilityLabel="Play moment">
         <Image source={{ uri }} style={styles.posterImage} resizeMode="cover" />
         <View style={styles.posterOverlay}>
-          {isVideoUri(uri) ? <Text style={styles.playGlyph}>▶</Text> : null}
-          <Text style={styles.hint}>Tap to play</Text>
+          {isMotion ? <Text style={styles.playGlyph}>▶</Text> : null}
         </View>
       </Pressable>
     );
   }
 
-  if (isVideoUri(uri)) {
-    return <MomentPlayer uri={uri} playing onStop={onStop} />;
+  if (isMotion) {
+    return <MomentPlayer uri={playSource} playing onStop={onStop} />;
   }
 
   return (
-    <View style={styles.stillPlaying}>
+    <Pressable
+      onPress={onStop}
+      style={styles.stillPlaying}
+      accessibilityLabel="Stop playback"
+      accessibilityState={{ selected: true }}
+    >
       <Image source={{ uri }} style={styles.stillImage} resizeMode="cover" />
       <View style={styles.playingBadge}>
         <Text style={styles.playingText}>Playing</Text>
       </View>
-      <Pressable onPress={onStop} style={styles.stop} accessibilityLabel="Stop playback">
-        <Text style={styles.stopText}>Stop</Text>
-      </Pressable>
-    </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   poster: {
-    height: 200,
-    borderRadius: radius.control,
+    height: layout.heroHome,
+    borderRadius: radius.media,
     overflow: 'hidden',
     backgroundColor: colors.surface,
   },
   posterImage: { width: '100%', height: '100%' },
   posterOverlay: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.12)',
+    backgroundColor: 'rgba(0,0,0,0.08)',
   },
-  playGlyph: { fontSize: 28, color: colors.paper, marginBottom: 4 },
-  hint: { fontSize: font.small, color: colors.paper, fontWeight: '600' },
+  playGlyph: { fontSize: 28, color: colors.paper },
   stillPlaying: {
-    height: 200,
-    borderRadius: radius.control,
+    height: layout.heroHome,
+    borderRadius: radius.media,
     overflow: 'hidden',
     borderWidth: 2,
     borderColor: colors.accent,
+    backgroundColor: colors.surface,
   },
   playingBadge: {
     position: 'absolute',
@@ -76,16 +84,6 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 6,
   },
-  playingText: { color: colors.paper, fontSize: font.micro, fontWeight: '700' },
+  playingText: { ...type.metadata, color: colors.paper, fontWeight: '700' },
   stillImage: { width: '100%', height: '100%' },
-  stop: {
-    position: 'absolute',
-    right: 8,
-    bottom: 8,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-  },
-  stopText: { color: '#fff', fontSize: font.micro, fontWeight: '600' },
 });

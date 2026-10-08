@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
-import { Linking, StyleSheet, Text } from 'react-native';
+import { Alert, Linking, StyleSheet, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { OnboardingScaffold } from '../../components/OnboardingScaffold';
-import { colors, font } from '../../theme';
+import { OnboardingHeroArt } from '../../components/OnboardingHeroArt';
+import { colors, type } from '../../theme';
 import type { OnboardingStackParamList } from '../../navigation/types';
+import { useAppStore } from '../../store/useAppStore';
 
 type Nav = NativeStackNavigationProp<OnboardingStackParamList>;
 
@@ -17,11 +19,12 @@ export function PairingStartScreen() {
       eyebrow={PAIR_EYEBROW}
       title="Pair your Diary One"
       lead="Power on Diary One and keep it near your iPhone. No pairing button is required."
+      visual={<OnboardingHeroArt kind="pair" />}
       visualHint="Diary One nearby · abstract hardware placeholder"
       primaryLabel="Find Diary One"
       onPrimary={() => navigation.navigate('PairingBluetoothPermission')}
       secondaryLabel="Continue without a device"
-      onSecondary={() => navigation.navigate('PreferenceSurvey', { step: 0 })}
+      onSecondary={() => navigation.navigate('PermissionBluetoothRequest')}
     />
   );
 }
@@ -36,14 +39,17 @@ export function PairingBluetoothPermissionScreen() {
       calloutBody="System permission appears after Continue"
       primaryLabel="Continue"
       onPrimary={() => navigation.navigate('PairingSearching')}
-      secondaryLabel="Simulate denied"
-      onSecondary={() => navigation.navigate('PairingBluetoothDenied')}
+      {...(__DEV__
+        ? {
+            secondaryLabel: 'Simulate denied' as const,
+            onSecondary: () => navigation.navigate('PairingBluetoothDenied'),
+          }
+        : {})}
     />
   );
 }
 
 export function PairingBluetoothDeniedScreen() {
-  const navigation = useNavigation<Nav>();
   return (
     <OnboardingScaffold
       eyebrow={PAIR_EYEBROW}
@@ -52,8 +58,6 @@ export function PairingBluetoothDeniedScreen() {
       calloutTitle="Pairing unavailable"
       primaryLabel="Open Settings"
       onPrimary={() => Linking.openSettings()}
-      secondaryLabel="Back"
-      onSecondary={() => navigation.goBack()}
     >
       <Text style={styles.note}>
         You can come back and try Find Diary One again after changing the permission.
@@ -65,7 +69,13 @@ export function PairingBluetoothDeniedScreen() {
 export function PairingSearchingScreen() {
   const navigation = useNavigation<Nav>();
   useEffect(() => {
-    const t = setTimeout(() => navigation.replace('PairingFound'), 2200);
+    const t = setTimeout(() => {
+      Alert.alert(
+        'No Diary One found',
+        'This build has no hardware BLE module yet. Use Continue without a device, or enable Internal lab link under Device settings for sync UI tests.',
+        [{ text: 'OK', onPress: () => navigation.navigate('PairingStart') }],
+      );
+    }, 2800);
     return () => clearTimeout(t);
   }, [navigation]);
   return (
@@ -74,7 +84,8 @@ export function PairingSearchingScreen() {
       showBack={false}
       title="Looking for Diary One…"
       lead="Keep Diary One powered on and nearby while your iPhone searches."
-      visualHint="Searching…"
+      visual={<OnboardingHeroArt kind="searching" />}
+      calloutTitle="Searching…"
       secondaryLabel="Cancel"
       onSecondary={() => navigation.navigate('PairingStart')}
     />
@@ -88,7 +99,8 @@ export function PairingFoundScreen() {
       eyebrow={PAIR_EYEBROW}
       title="Diary One found"
       lead="Your Diary One is nearby and ready to connect."
-      visualHint="Diary One · Found"
+      visual={<OnboardingHeroArt kind="found" />}
+      calloutTitle="Diary One · Found"
       primaryLabel="Connect"
       onPrimary={() => navigation.navigate('PairingConnecting')}
     />
@@ -107,7 +119,8 @@ export function PairingConnectingScreen() {
       showBack={false}
       title="Connecting…"
       lead="Keep Diary One nearby. This usually takes only a moment."
-      visualHint="Connecting…"
+      visual={<OnboardingHeroArt kind="connecting" />}
+      calloutTitle="Connecting…"
       secondaryLabel="Cancel"
       onSecondary={() => navigation.navigate('PairingFound')}
     />
@@ -116,13 +129,17 @@ export function PairingConnectingScreen() {
 
 export function PairingConnectedScreen() {
   const navigation = useNavigation<Nav>();
+  useEffect(() => {
+    useAppStore.getState().setDeviceLinkState('hardware_linked');
+  }, []);
   return (
     <OnboardingScaffold
       eyebrow={PAIR_EYEBROW}
       showBack={false}
       title="Diary One connected"
       lead="Bluetooth pairing is complete. Wi-Fi Sync is a separate step used later when recordings are transferred."
-      visualHint="Connected · battery reported when hardware is available"
+      visual={<OnboardingHeroArt kind="connected" />}
+      calloutTitle="Connected"
       primaryLabel="Continue"
       onPrimary={() => navigation.navigate('PermissionBluetoothRequest')}
     />
@@ -130,5 +147,5 @@ export function PairingConnectedScreen() {
 }
 
 const styles = StyleSheet.create({
-  note: { fontSize: font.small, color: colors.secondary, lineHeight: 20 },
+  note: { ...type.caption, color: colors.secondary, lineHeight: 20 },
 });

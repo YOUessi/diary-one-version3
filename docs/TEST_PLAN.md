@@ -70,7 +70,7 @@
 | # | 用例 | 通过标准 |
 |---|------|----------|
 | T5.1 | Memory / Day selector | 透明 modal，底层可见 |
-| T5.2 | Collage / Illustrated / Recap | Cancel；失败可重试 |
+| T5.2 | Collage / Illustrated / Recap | Preparing 可 Cancel；Preview 无；失败可重试 |
 | T5.3 | Recap readiness changed | 横幅/sheet，不假成功 |
 
 ---

@@ -11,7 +11,9 @@
         "simulator": false
       },
       "env": {
-        "EXPO_PUBLIC_DEFAULT_BUNDLE_EXPORT": "V04"
+        "EXPO_PUBLIC_DEFAULT_BUNDLE_EXPORT": "V04",
+        "EXPO_PUBLIC_INCLUDE_VISION": "1",
+        "EXPO_PUBLIC_DEV_CLIENT": "1"
       }
     },
     "development-simulator": {
@@ -19,6 +21,10 @@
       "distribution": "internal",
       "ios": {
         "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_INCLUDE_VISION": "1",
+        "EXPO_PUBLIC_DEV_CLIENT": "1"
       }
     },
     "preview": {
@@ -29,7 +35,8 @@
       "env": {
         "EXPO_PUBLIC_DEFAULT_BUNDLE_EXPORT": "V04",
         "EXPO_PUBLIC_STORE_RELEASE": "0",
-        "EXPO_PUBLIC_INTERNAL_BETA": "1"
+        "EXPO_PUBLIC_INTERNAL_BETA": "1",
+        "EXPO_PUBLIC_INCLUDE_VISION": "1"
       }
     },
     "production": {
@@ -39,11 +46,21 @@
       },
       "env": {
         "EXPO_PUBLIC_DEFAULT_BUNDLE_EXPORT": "V04",
-        "EXPO_PUBLIC_STORE_RELEASE": "1"
+        "EXPO_PUBLIC_STORE_RELEASE": "1",
+        "EXPO_PUBLIC_INCLUDE_VISION": "1"
       }
     }
   },
   "submit": {
-    "production": {}
+    "preview": {
+      "ios": {
+        "ascAppId": "REPLACE_WITH_APP_STORE_CONNECT_APP_ID"
+      }
+    },
+    "production": {
+      "ios": {
+        "ascAppId": "REPLACE_WITH_APP_STORE_CONNECT_APP_ID"
+      }
+    }
   }
 }

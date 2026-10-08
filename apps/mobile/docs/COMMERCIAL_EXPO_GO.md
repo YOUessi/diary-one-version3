@@ -20,7 +20,7 @@ Expo Go = 用商店里的壳跑你的 JS。**商用级产品代码可以在 Go �
 | **Expo Go**（手机） | App Store / 应用商店，Client **57.x**，Supported SDKs **57** | 你已有 |
 | **Node.js 20+**（电脑） | https://nodejs.org | 工程已用 |
 | **Python 3.10+**（电脑） | https://www.python.org | 已能跑 BFF/X02 |
-| **本仓库三件套** | `diary-one-app` / `diary-one-server` / `nexleap-diary-one` | 已在 `E:\AI耳机` |
+| **本仓库 monorepo** | `diary-one/apps/mobile` + `services/bff` + `services/algorithm` | `E:\AI耳机\diary-one` |
 
 ### B. 真算法质量（强烈建议，商用记忆生成）
 
@@ -55,6 +55,7 @@ Expo Go = 用商店里的壳跑你的 JS。**商用级产品代码可以在 Go �
 一键自检：
 
 ```powershell
-cd E:\AI耳机\diary-one-server
+cd E:\AI耳机\diary-one\services\bff
 .\scripts\setup-commercial-dev.ps1
+.\scripts\start-dev-lite-background.ps1
 ```

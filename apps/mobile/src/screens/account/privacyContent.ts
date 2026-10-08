@@ -27,11 +27,25 @@ export const PRIVACY_SECTION_COPY: Record<
   privacy_policy: {
     title: 'Privacy Policy',
     body:
-      'Diary One processes recordings to create memories you can revisit. Signing in is not cloud-upload consent: uploading selected evidence requires a separate agreement (recorded with a version). Policy details will be published with the App Store release. This build stores research API settings only on device.',
+      'Diary One processes recordings to create memories you can revisit. Signing in is not cloud-upload consent: uploading selected evidence requires a separate agreement (recorded with a version).',
   },
   terms: {
     title: 'Terms',
-    body:
-      'Terms of use will be published with the App Store release. By continuing setup you acknowledged that policies apply when the service is live.',
+    body: 'Terms of use apply when you use Diary One and related cloud services.',
   },
 };
+
+/** Shown when the published URL env is not set (dev / pre-launch builds). */
+export const PRIVACY_URL_PENDING_NOTE =
+  'The full published page is not linked in this build yet. Cloud evidence upload still uses the in-app consent on Privacy & Data.';
+
+export const TERMS_URL_PENDING_NOTE =
+  'The full published page is not linked in this build yet. By continuing in Sign in you acknowledge these terms will apply when the service is live.';
+
+export function privacyPolicyUrl(): string {
+  return (process.env.EXPO_PUBLIC_PRIVACY_POLICY_URL ?? '').trim();
+}
+
+export function termsUrl(): string {
+  return (process.env.EXPO_PUBLIC_TERMS_URL ?? '').trim();
+}

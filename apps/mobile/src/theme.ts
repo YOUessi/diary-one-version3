@@ -1,34 +1,72 @@
-// Diary One — D1 设计令牌（来源：Figma「02 Foundations」）
-// 语义色优先，禁止在组件里写死十六进制；新颜色须先在令牌里登记。
+// Diary One — D1 tokens locked to Figma Foundations (file 7NSDFSkyxO38CaELtAtayL)
 export const colors = {
-  paper: '#FAF9F6', // 背景（暖白）
-  surface: '#F3F1EC', // 次级面 / 卡片内块
-  card: '#FFFFFF', // 卡片
-  ink: '#171717', // 主文字
-  secondary: '#6B6B6B', // 次级文字
-  tertiary: '#999999', // 三级 / 提示文字
-  divider: '#E8E5DF', // 分隔线
-  accent: '#C98245', // Warm Accent（强调，遵循 60/30/10）
-  accentSoft: '#F1E4D6', // 强调色浅底
-  headerBg: '#171717', // 顶部（品牌反白）
+  paper: '#FAF9F6', // --d1-color-background-base
+  surface: '#ECE9E3', // --d1-color-background-subtle / media-placeholder
+  card: '#FFFFFF', // --d1-color-background-elevated
+  ink: '#171717', // --d1-color-text-primary / icon-primary
+  secondary: '#6B6B6B', // --d1-color-text-secondary / icon-secondary
+  tertiary: '#999999', // --d1-color-text-tertiary
+  divider: '#E8E5DF',
+  accent: '#C98245', // --d1-color-accent-fill
+  accentSoft: '#F3E6D8', // --d1-color-accent-subtle
+  headerBg: '#171717',
   ok: '#4C8C6A',
   warn: '#C98245',
+  shadow: '#00000014',
 } as const;
 
-export const spacing = { xs: 4, sm: 8, md: 16, lg: 20, xl: 32 } as const;
+export const spacing = {
+  xs: 4, // micro-gap
+  sm: 8, // compact-gap
+  md: 16, // content-gap
+  lg: 20, // screen gutter
+  xl: 24, // section gap (Today block)
+  xxl: 28, // feed column gap
+  xxxl: 32,
+} as const;
 
 export const layout = {
   gutterDiary: 20,
+  contentWidth: 353,
   minTouch: 44,
   buttonHeight: 48,
+  tabBarHeight: 64,
+  heroHome: 198,
+  heroDetail: 224,
 } as const;
 
-export const radius = { control: 8, card: 12, sheet: 16, pill: 999 } as const;
+export const radius = {
+  control: 8,
+  media: 12, // --d1-radius-media
+  card: 12,
+  sheet: 20,
+  pill: 999,
+} as const;
 
+/** Type ramp — sizes match Figma text styles */
 export const font = {
-  title: 26,
-  h2: 19,
-  body: 15,
+  titleLarge: 34, // Title/Large — Diary header
+  titleSection: 28, // Title/Section — Today / Chapter title on detail
+  titleChapter: 22, // Title/Chapter — chapter card + section headers
+  bodyStory: 17, // Body/Story
+  bodyFragment: 16, // Body/Fragment — small memory
+  caption: 13, // Caption/Primary + Emphasis
+  metadata: 11, // Metadata/Small
+  // aliases kept for existing screens
+  title: 34,
+  h2: 22,
+  body: 17,
   small: 13,
   micro: 11,
+} as const;
+
+export const type = {
+  titleLarge: { fontSize: 34, lineHeight: 40, fontWeight: '700' as const, letterSpacing: -0.3 },
+  titleSection: { fontSize: 28, lineHeight: 34, fontWeight: '600' as const, letterSpacing: -0.2 },
+  titleChapter: { fontSize: 22, lineHeight: 28, fontWeight: '600' as const, letterSpacing: -0.1 },
+  bodyStory: { fontSize: 17, lineHeight: 24, fontWeight: '400' as const },
+  bodyFragment: { fontSize: 16, lineHeight: 23, fontWeight: '400' as const },
+  caption: { fontSize: 13, lineHeight: 18, fontWeight: '400' as const },
+  captionEmphasis: { fontSize: 13, lineHeight: 18, fontWeight: '500' as const },
+  metadata: { fontSize: 11, lineHeight: 14, fontWeight: '400' as const, letterSpacing: 0.1 },
 } as const;

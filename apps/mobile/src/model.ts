@@ -70,11 +70,18 @@ export const seedChapters: Chapter[] = [
     detailTags: ['Lakeside', 'Weekend', 'Quiet morning'],
     yourStory:
       'I almost went home early, but staying for another half hour made the morning feel completely different.',
+    /** Seed stills for Expo Go Share (collage / illustrated / recap) without import. */
+    heroUri: 'https://picsum.photos/seed/diary-fish/1080/1350',
     moments: [
-      { id: 'm1', label: '7:42 AM' },
+      {
+        id: 'm1',
+        label: '7:42 AM',
+        posterUri: 'https://picsum.photos/seed/diary-fish-m1/800/1000',
+      },
       {
         id: 'm2',
         label: '8:06 AM · Motion',
+        posterUri: 'https://picsum.photos/seed/diary-fish-m2/800/1000',
         playbackUri:
           'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
       },
@@ -82,6 +89,7 @@ export const seedChapters: Chapter[] = [
         id: 'm3',
         label: '8:31 AM · 4s short clip',
         capturedByYou: true,
+        posterUri: 'https://picsum.photos/seed/diary-fish-m3/800/1000',
         playbackUri:
           'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
       },
@@ -95,7 +103,14 @@ export const seedChapters: Chapter[] = [
     weakTime: 'Afternoon',
     aiStory: 'The city slowed down for a walk with no destination.',
     tags: ['Citywalk', 'Dog walk'],
-    moments: [{ id: 'm-city-1', label: '3:12 PM' }],
+    heroUri: 'https://picsum.photos/seed/diary-city/1080/1350',
+    moments: [
+      {
+        id: 'm-city-1',
+        label: '3:12 PM',
+        posterUri: 'https://picsum.photos/seed/diary-city-m1/800/1000',
+      },
+    ],
   },
   {
     id: 'ch-dinner-friends',
@@ -105,7 +120,14 @@ export const seedChapters: Chapter[] = [
     weakTime: 'Evening',
     aiStory: 'Dinner ran long, and nobody seemed in a hurry to leave.',
     tags: ['Friends', 'Dinner'],
-    moments: [{ id: 'm-dinner-1', label: '7:45 PM' }],
+    heroUri: 'https://picsum.photos/seed/diary-dinner/1080/1350',
+    moments: [
+      {
+        id: 'm-dinner-1',
+        label: '7:45 PM',
+        posterUri: 'https://picsum.photos/seed/diary-dinner-m1/800/1000',
+      },
+    ],
   },
   {
     id: 'ch-studio-morning',
@@ -115,7 +137,14 @@ export const seedChapters: Chapter[] = [
     weakTime: 'Morning',
     aiStory: 'Coffee, sketches, and an unhurried start to the day.',
     tags: ['Studio', 'Coffee'],
-    moments: [{ id: 'm-studio-1', label: '9:10 AM' }],
+    heroUri: 'https://picsum.photos/seed/diary-studio/1080/1350',
+    moments: [
+      {
+        id: 'm-studio-1',
+        label: '9:10 AM',
+        posterUri: 'https://picsum.photos/seed/diary-studio-m1/800/1000',
+      },
+    ],
   },
   {
     id: 'ch-fishing-before-rain',
@@ -125,7 +154,14 @@ export const seedChapters: Chapter[] = [
     weakTime: 'Afternoon',
     aiStory: 'Packed up just as the wind picked up.',
     tags: ['Fishing', 'Weekend'],
-    moments: [{ id: 'm-rain-1', label: '4:12 PM' }],
+    heroUri: 'https://picsum.photos/seed/diary-rain/1080/1350',
+    moments: [
+      {
+        id: 'm-rain-1',
+        label: '4:12 PM',
+        posterUri: 'https://picsum.photos/seed/diary-rain-m1/800/1000',
+      },
+    ],
   },
   {
     id: 'ch-fishing-river-calm',
@@ -135,7 +171,14 @@ export const seedChapters: Chapter[] = [
     weakTime: 'Morning',
     aiStory: 'Nothing much happened, which was exactly the point.',
     tags: ['Fishing', 'Solo'],
-    moments: [{ id: 'm-river-1', label: '8:05 AM' }],
+    heroUri: 'https://picsum.photos/seed/diary-river/1080/1350',
+    moments: [
+      {
+        id: 'm-river-1',
+        label: '8:05 AM',
+        posterUri: 'https://picsum.photos/seed/diary-river-m1/800/1000',
+      },
+    ],
   },
   {
     id: 'ch-late-afternoon-water',
@@ -145,7 +188,14 @@ export const seedChapters: Chapter[] = [
     weakTime: 'Afternoon',
     aiStory: 'Stayed by the water until the light softened.',
     tags: ['Lakeside', 'Weekend'],
-    moments: [{ id: 'm-water-1', label: '5:40 PM' }],
+    heroUri: 'https://picsum.photos/seed/diary-water/1080/1350',
+    moments: [
+      {
+        id: 'm-water-1',
+        label: '5:40 PM',
+        posterUri: 'https://picsum.photos/seed/diary-water-m1/800/1000',
+      },
+    ],
   },
 ];
 
@@ -208,24 +258,30 @@ export const seedPreferences: MemoryPreference[] = [
 function seedCapturedBatch(): CapturedOriginal[] {
   const items: CapturedOriginal[] = [];
   for (let i = 0; i < 12; i++) {
+    const seed = `diary-cap-photo-${i}`;
+    const posterUri = `https://picsum.photos/seed/${seed}/800/1000`;
     items.push({
       id: `cap-photo-${i}`,
       dateKey: i < 8 ? '2026-08-16' : '2026-08-15',
       kind: 'photo',
       capturedAtLabel: i < 8 ? 'Aug 16, 2026 · 8:31 AM' : 'Aug 15, 2026 · 6:02 PM',
+      posterUri,
+      playbackUri: posterUri,
     });
   }
+  const sampleMp4 =
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
   for (let i = 0; i < 3; i++) {
+    const seed = `diary-cap-video-${i}`;
+    const posterUri = `https://picsum.photos/seed/${seed}/800/1000`;
     items.push({
       id: `cap-video-${i}`,
       dateKey: i === 0 ? '2026-08-16' : '2026-08-15',
       kind: 'video',
       durationSec: i === 0 ? 15 : 60,
       capturedAtLabel: i === 0 ? 'Aug 16, 2026 · 8:31 AM' : 'Aug 15, 2026 · 7:10 PM',
-      playbackUri:
-        i === 0
-          ? 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'
-          : undefined,
+      posterUri,
+      playbackUri: sampleMp4,
     });
   }
   return items;

@@ -1,13 +1,14 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, font, layout } from '../theme';
+import { colors, layout, type } from '../theme';
 
-/** Figma R6-S4 — preparing / preview flows use top-left Cancel. */
+/**
+ * Figma R6-S4 Cancel — call sites already wrap SafeAreaView edges=['top'].
+ * Do not add safe-area inset here (avoids double top padding).
+ */
 export function ShareFlowCancelHeader({ onCancel }: { onCancel: () => void }) {
-  const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.wrap, { paddingTop: Math.max(insets.top, 8) }]}>
+    <View style={styles.wrap}>
       <Pressable onPress={onCancel} style={styles.btn} hitSlop={12} accessibilityRole="button">
         <Text style={styles.label}>Cancel</Text>
       </Pressable>
@@ -18,5 +19,6 @@ export function ShareFlowCancelHeader({ onCancel }: { onCancel: () => void }) {
 const styles = StyleSheet.create({
   wrap: { paddingHorizontal: layout.gutterDiary },
   btn: { minHeight: 44, justifyContent: 'center', alignSelf: 'flex-start' },
-  label: { fontSize: font.body, color: colors.accent, fontWeight: '600' },
+  /** Figma Cancel — iOS secondary gray #8E8E93 */
+  label: { ...type.bodyStory, color: '#8E8E93', fontWeight: '400' },
 });

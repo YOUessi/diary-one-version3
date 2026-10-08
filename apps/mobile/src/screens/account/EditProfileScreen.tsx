@@ -8,17 +8,21 @@ import {
   Image,
   View,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
-import { colors, font, layout, radius, spacing } from '../../theme';
+import { colors, layout, spacing, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import { PROFILE_DISCARD_ALERT } from '../../domain/discardCopy';
+import { DiscardConfirmCard } from '../../components/DiscardConfirmCard';
+import { isDevFailSimulationEnabled } from '../../config/devFailSimulation';
 
 type SaveState = 'idle' | 'saving' | 'failed';
 
+/** Figma 127:1117 — centered avatar, white name field, muted email field. */
 export default function EditProfileScreen() {
   const navigation = useNavigation();
   const saved = useAppStore((s) => s.localProfile);
@@ -27,6 +31,7 @@ export default function EditProfileScreen() {
   const [avatarUri, setAvatarUri] = useState(saved.avatarUri);
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [avatarPreparing, setAvatarPreparing] = useState(false);
+  const [discardOpen, setDiscardOpen] = useState(false);
   const saveFailAlternate = useRef(false);
 
   const dirty =
@@ -37,10 +42,7 @@ export default function EditProfileScreen() {
       navigation.goBack();
       return;
     }
-    Alert.alert(PROFILE_DISCARD_ALERT.title, PROFILE_DISCARD_ALERT.message, [
-      { text: PROFILE_DISCARD_ALERT.keepEditing, style: 'cancel' },
-      { text: PROFILE_DISCARD_ALERT.discard, style: 'destructive', onPress: () => navigation.goBack() },
-    ]);
+    setDiscardOpen(true);
   };
 
   const pickAvatar = async () => {
@@ -71,12 +73,12 @@ export default function EditProfileScreen() {
     if (!trimmed) return;
     setSaveState('saving');
     setTimeout(() => {
-      if (saveFailAlternate.current) {
+      if (isDevFailSimulationEnabled() && saveFailAlternate.current) {
         saveFailAlternate.current = false;
         setSaveState('failed');
         return;
       }
-      saveFailAlternate.current = true;
+      if (isDevFailSimulationEnabled()) saveFailAlternate.current = true;
       setLocalProfile({
         ...saved,
         nickname: trimmed,
@@ -92,116 +94,146 @@ export default function EditProfileScreen() {
   const failed = saveState === 'failed';
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       <FigmaBackHeader onBack={goBack} />
-      <Text style={styles.title}>Edit Profile</Text>
+      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+        <Text style={styles.title}>Edit Profile</Text>
 
-      <Pressable
-        onPress={() => void pickAvatar()}
-        style={styles.avatarWrap}
-        disabled={saving || avatarPreparing}
-      >
-        {avatarUri ? (
-          <Image source={{ uri: avatarUri }} style={styles.avatarImage} />
-        ) : (
-          <View style={styles.avatar}>
-            <Text style={styles.avatarLetter}>{initial}</Text>
+        <Pressable
+          onPress={() => void pickAvatar()}
+          style={styles.avatarWrap}
+          disabled={saving || avatarPreparing}
+        >
+          {avatarUri ? (
+            <Image source={{ uri: avatarUri }} style={styles.avatarImage} />
+          ) : (
+            <View style={styles.avatar}>
+              <Text style={styles.avatarLetter}>{initial}</Text>
+            </View>
+          )}
+        </Pressable>
+        <Text style={styles.avatarHint}>
+          Tap your avatar to choose a photo using the system Photos picker.
+        </Text>
+
+        <Text style={styles.label}>Display Name</Text>
+        <TextInput
+          value={nickname}
+          onChangeText={setNickname}
+          style={styles.input}
+          placeholderTextColor={colors.tertiary}
+          editable={!saving}
+        />
+
+        <Text style={styles.label}>Email / Sign-in</Text>
+        <View style={styles.readOnlyBox}>
+          <Text style={styles.readOnlyText}>{saved.email ?? 'Local test profile'}</Text>
+        </View>
+        <Text style={styles.emailNote}>
+          Email and sign-in method are managed by your account and cannot be edited here.
+        </Text>
+
+        {avatarPreparing ? (
+          <View style={styles.savingRow}>
+            <ActivityIndicator color={colors.accent} />
+            <Text style={styles.savingText}>Preparing photo…</Text>
           </View>
-        )}
-      </Pressable>
-      <Text style={styles.avatarHint}>
-        Tap your avatar to choose a photo using the system Photos picker.
-      </Text>
+        ) : null}
+        {failed ? (
+          <Text style={styles.error}>Couldn&apos;t save. Your changes are still here.</Text>
+        ) : null}
+        {saving ? (
+          <View style={styles.savingRow}>
+            <ActivityIndicator color={colors.accent} />
+            <Text style={styles.savingText}>Saving…</Text>
+          </View>
+        ) : null}
+      </ScrollView>
 
-      <Text style={styles.label}>Display Name</Text>
-      <TextInput
-        value={nickname}
-        onChangeText={setNickname}
-        style={styles.input}
-        placeholder="Display name"
-        placeholderTextColor={colors.tertiary}
-        editable={!saving}
+      <View style={styles.footer}>
+        <Pressable
+          onPress={save}
+          style={[styles.saveBtn, !nickname.trim() && styles.saveDisabled]}
+          disabled={!nickname.trim() || saving || avatarPreparing}
+        >
+          <Text style={styles.saveLabel}>{failed ? 'Try Again' : 'Save'}</Text>
+        </Pressable>
+      </View>
+
+      <DiscardConfirmCard
+        visible={discardOpen}
+        title={PROFILE_DISCARD_ALERT.title}
+        message={PROFILE_DISCARD_ALERT.message}
+        keepLabel={PROFILE_DISCARD_ALERT.keepEditing}
+        discardLabel={PROFILE_DISCARD_ALERT.discard}
+        onKeepEditing={() => setDiscardOpen(false)}
+        onDiscard={() => {
+          setDiscardOpen(false);
+          navigation.goBack();
+        }}
       />
-
-      <Text style={styles.label}>Email / Sign-in</Text>
-      <Text style={styles.readOnly}>{saved.email ?? 'Local test profile'}</Text>
-      <Text style={styles.emailNote}>
-        Email and sign-in method are managed by your account and cannot be edited here.
-      </Text>
-
-      <Text style={styles.localNote}>Your profile is saved on this iPhone only.</Text>
-
-      {avatarPreparing ? (
-        <View style={styles.savingRow}>
-          <ActivityIndicator color={colors.accent} />
-          <Text style={styles.savingText}>Preparing photo…</Text>
-        </View>
-      ) : null}
-      {failed ? (
-        <Text style={styles.error}>Couldn&apos;t save. Your changes are still here.</Text>
-      ) : null}
-      {saving ? (
-        <View style={styles.savingRow}>
-          <ActivityIndicator color={colors.accent} />
-          <Text style={styles.savingText}>Saving…</Text>
-        </View>
-      ) : null}
-
-      <Pressable
-        onPress={save}
-        style={[styles.saveBtn, !nickname.trim() && styles.saveDisabled]}
-        disabled={!nickname.trim() || saving || avatarPreparing}
-      >
-        <Text style={styles.saveLabel}>{failed ? 'Try Again' : 'Save'}</Text>
-      </Pressable>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.paper, paddingHorizontal: layout.gutterDiary },
-  title: { fontSize: 28, fontWeight: '600', color: colors.ink, marginBottom: spacing.md },
-  avatarWrap: { alignSelf: 'flex-start', marginBottom: spacing.xs },
+  safe: { flex: 1, backgroundColor: colors.paper },
+  scroll: {
+    paddingHorizontal: layout.gutterDiary,
+    paddingBottom: spacing.xl,
+  },
+  title: { ...type.titleLarge, color: colors.ink, marginBottom: spacing.xl },
+  avatarWrap: { alignSelf: 'center', marginBottom: spacing.md },
+  /** Figma 127:1117 — avatar 88 */
   avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarImage: { width: 72, height: 72, borderRadius: 36 },
+  avatarImage: { width: 88, height: 88, borderRadius: 44 },
   avatarLetter: { fontSize: 28, fontWeight: '600', color: colors.ink },
-  avatarHint: { fontSize: font.small, color: colors.secondary, marginBottom: spacing.lg, lineHeight: 20 },
-  label: { fontSize: font.small, color: colors.secondary, marginBottom: spacing.xs },
+  avatarHint: {
+    ...type.caption,
+    color: colors.secondary,
+    textAlign: 'center',
+    marginBottom: spacing.xxxl,
+    paddingHorizontal: spacing.md,
+  },
+  label: { ...type.caption, color: colors.secondary, marginBottom: spacing.sm },
+  /** Figma 127:1117 — fields/CTA 52×r12 */
   input: {
-    borderWidth: 1,
-    borderColor: colors.divider,
-    borderRadius: radius.control,
-    padding: spacing.md,
-    fontSize: font.body,
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    minHeight: 52,
+    paddingHorizontal: spacing.md,
+    ...type.bodyStory,
     color: colors.ink,
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
-  readOnly: {
-    fontSize: font.body,
-    color: colors.ink,
-    paddingVertical: spacing.sm,
-    marginBottom: spacing.xs,
+  readOnlyBox: {
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    minHeight: 52,
+    paddingHorizontal: spacing.md,
+    justifyContent: 'center',
+    marginBottom: spacing.sm,
   },
-  emailNote: { fontSize: font.micro, color: colors.tertiary, lineHeight: 18, marginBottom: spacing.md },
-  localNote: { fontSize: font.small, color: colors.secondary, marginBottom: spacing.md },
-  error: { fontSize: font.small, color: colors.accent, marginBottom: spacing.sm },
+  readOnlyText: { ...type.bodyStory, color: colors.secondary },
+  emailNote: { ...type.caption, color: colors.tertiary, lineHeight: 18, marginBottom: spacing.md },
+  error: { ...type.caption, color: colors.accent, marginBottom: spacing.sm },
   savingRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm },
-  savingText: { fontSize: font.small, color: colors.secondary },
+  savingText: { ...type.caption, color: colors.secondary },
+  footer: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.md },
   saveBtn: {
-    marginTop: spacing.sm,
     backgroundColor: colors.ink,
-    borderRadius: radius.pill,
-    minHeight: layout.buttonHeight,
+    borderRadius: 12,
+    minHeight: 52,
     alignItems: 'center',
     justifyContent: 'center',
   },
   saveDisabled: { opacity: 0.4 },
-  saveLabel: { color: colors.paper, fontWeight: '700' },
+  saveLabel: { fontSize: 15, lineHeight: 20, color: colors.paper, fontWeight: '600' },
 });
