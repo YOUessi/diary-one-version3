@@ -1,0 +1,737 @@
+{
+  "scope": "Exact recorded Writer outputs with projected validation fields; neither fabricated prose nor semantic quality gold. Historical retry replies are replay inputs, not authorization for new retries.",
+  "source_sha256": {
+    "var/codex_content_handoff_ab_v1_47/codex_v1_48_person1/candidate/codex_attempt_02/codex_stage_calls/codex_011_request.json": "c7deb22190d8284f544b1335176af52f71ccb9ef5ce4149fb1189c06b1007f5f",
+    "var/codex_content_handoff_ab_v1_47/codex_v1_48_person1/candidate/codex_attempt_02/codex_stage_calls/codex_011_response.json": "7687c48846726a00b7bce8dde4d19f060213848951882d8f34f62bc3ed0406de",
+    "var/codex_content_handoff_ab_v1_47/codex_v1_48_person1/candidate/codex_attempt_02/codex_stage_calls/codex_012_request.json": "eed2b44cac102acb5fa5f72d114e4d4d8708b7fd01347efb138963e4fd3eb508",
+    "var/codex_content_handoff_ab_v1_47/codex_v1_48_person1/candidate/codex_attempt_02/codex_stage_calls/codex_012_response.json": "9c92be9c64c8239ca53616d6efaf3dd41728b1c13471ce21a867ca857f6d3298",
+    "var/codex_writer_checks/codex_v1_51_writer_model_only/report.json": "c288cd9d80d9e00ef7d044c485d8293c481286ddcbbd1333753348d17ae1abd2"
+  },
+  "contexts": {
+    "v148_attempt_1": {
+      "locale": "zh-Hans",
+      "writer_grounding_policy": "MODEL_GROUNDED_NATURAL_LANGUAGE_V02",
+      "memories": [
+        {
+          "candidate_id": "ee127167-b73c-52c5-8276-2403d8cec1cd",
+          "memory_type": "CHAPTER",
+          "facts": [
+            {
+              "fact_id": "0f634a38-cd07-570e-91c8-9c6236b5adce",
+              "text": "视频帧显示一座中式传统牌坊，横匾书有“種山巔秀”字样，两侧立柱挂有竖幅对联，下方为湿滑石板路及多个摊位、行人与电动车，背景可见灰瓦白墙建筑。"
+            },
+            {
+              "fact_id": "fb09c82c-ea03-5bd7-86fd-f25df51e2ae8",
+              "text": "一名穿灰色短袖上衣的男性背对镜头，沿湿滑石板路向画面深处行走，路旁停放多辆三轮车及电动车，其中一辆蓝色三轮车上载有白色泡沫箱与绿色网笼。"
+            },
+            {
+              "fact_id": "14747127-4d09-55e9-bf8d-5428bb7b56f8",
+              "text": "摊位上陈列多种蔬菜水果，包括成捆的绿色豆角、红番茄、黄瓜、竹笋、白芦笋、青苹果、桃子及橙色包装水果，部分置于白色泡沫箱内，地面湿润。"
+            },
+            {
+              "fact_id": "6579ec1e-d236-5bfb-a86d-3370dff7a7c5",
+              "text": "一名穿灰色衬衫的男子站在摆满蔬菜的摊位前，手部靠近嘴部；背景可见其他顾客及摊位。"
+            },
+            {
+              "fact_id": "8fb3f0e4-7be6-5f8b-a446-efbce4ebab9f",
+              "text": "一名男子坐在地上整理蔬菜，周围摆放着大量蔬菜，包括葱、萝卜、花生、胡萝卜等；地面为石板路。"
+            },
+            {
+              "fact_id": "61027112-9124-556e-91bb-2a0ea4a34d6b",
+              "text": "一名穿红蓝拼色上衣的男子蹲在木门旁，前方有蓝色桶装黑豆、白色泡沫箱装青瓜及红色立式广告牌。"
+            },
+            {
+              "fact_id": "03b337cf-51d6-5e1a-982a-e6c9a68cad00",
+              "text": "视频窗口早期帧显示白色帐篷摊位，前方有橙色灯笼悬挂，背景可见彩灯装饰与人群；中段帧展示摊位内操作台、桌布覆盖的桌面及一名穿深色上衣人员坐于后方；末段帧特写摊位前挡板上的“运汤 瑞阳宴集”字样，右侧陈列多支冰激凌甜筒，左侧可见标有“衢州烤饼”的发光招牌。"
+            },
+            {
+              "fact_id": "fa170b03-4c8c-5833-b096-d117cca6e9e9",
+              "text": "前景可见一个红色塑料盆盛满黄红相间的桃子，旁边白色篮中装有青色瓜类；背景为室内市场环境，地面为灰色地砖，远处货架陈列商品。"
+            },
+            {
+              "fact_id": "6465e429-e79a-587f-9482-ebda46f328a2",
+              "text": "画面展示市场内部通道，右侧台面堆满黄色柑橘类水果，后方货架整齐排列各类包装食品；左下角可见一张黄色促销地垫。"
+            },
+            {
+              "fact_id": "b305dcf0-e125-5191-9c6d-fb2e14de308c",
+              "text": "近景有两个白色椭圆盆，内装红黄混合的圆形水果；背景中有两名蹲姿人员正在处理绿色蔬菜，周围散落菜叶。"
+            }
+          ]
+        },
+        {
+          "candidate_id": "f07c3c4a-cdcf-5385-a178-0fa9df8d2eda",
+          "memory_type": "CHAPTER",
+          "facts": [
+            {
+              "fact_id": "8949c6fc-e636-5880-8456-2662380331d5",
+              "text": "视频帧显示一处悬挂大量红色祈福牌的木质结构，牌上附有红色流苏；另一帧显示一座石质阶梯桥，桥下有水道，旁置一石槽；最后一帧为一棵挂有红灯笼与祈福牌的树，树干下半部被涂白，背景有白墙黑瓦建筑。"
+            },
+            {
+              "fact_id": "dd91db3d-28a1-52a7-ba6a-e99f091b20b6",
+              "text": "一条由不规则石板铺成的蜿蜒小径穿过林地，两侧为密集树木，地面覆盖枯叶。"
+            },
+            {
+              "fact_id": "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+              "text": "一只棕白相间的狗背对镜头沿石板路向前行走，身披浅色背带。"
+            },
+            {
+              "fact_id": "f2467e7d-2d51-58d3-b9fd-cedff630111d",
+              "text": "林间铺有青石板台阶，两侧覆盖落叶与低矮灌木，远处可见延伸的步道及树木。"
+            }
+          ]
+        },
+        {
+          "candidate_id": "7f1d4d69-e287-5551-8c83-4b935de9c673",
+          "memory_type": "CHAPTER",
+          "facts": [
+            {
+              "fact_id": "9e75ecaf-42fe-5006-8151-c0065cd28963",
+              "text": "一条铺有石板的巷道通向一座中式牌坊，牌坊上有“禹贡古村”字样，两侧挂有红灯笼，周围绿树环绕。"
+            },
+            {
+              "fact_id": "ca84b156-b02e-59a0-9731-fef2acd61cff",
+              "text": "牌坊右侧设有一个小摊位，白色柜体上写有“臭豆腐”字样，旁边立有彩色花束装饰及宣传画板。"
+            },
+            {
+              "fact_id": "8c6fe5ef-b4a5-5e8c-a9b0-7a71a76250a2",
+              "text": "视频窗口早期帧显示石板庭院、白墙灰瓦建筑及红色祈福牌，中段帧可见正门上方黑底金字牌匾，末段帧视角转向另一侧带红灯笼的入口，整体为传统中式院落场景。"
+            },
+            {
+              "fact_id": "f67f91d2-a826-51f7-993c-b40e61edf441",
+              "text": "一只棕白相间的长毛犬身穿浅蓝色背心，正沿着铺有青石板的街道向前奔跑；街道两侧为白墙灰瓦建筑，墙上覆盖大量绿植。"
+            },
+            {
+              "fact_id": "b4c59a46-c720-559c-b2a0-a14d272b22e2",
+              "text": "同一街道场景中，一只同款犬只在镜头前转向移动，画面右下角可见一人手臂及黑色腕带；背景为店铺门面与盆栽植物。"
+            },
+            {
+              "fact_id": "45a87c7f-6cec-599e-b1fb-7815f7b81e66",
+              "text": "一辆白色四座电动观光车停靠于街边，车体印有黑色汉字；车内坐有一名穿深绿色上衣者，车辆位于石板路面上。"
+            },
+            {
+              "fact_id": "f65d1532-1479-51b7-9981-ee93c994a44a",
+              "text": "画面呈现一家店铺门面，灰墙黑瓦，双开玻璃门上贴有红色“福”字装饰，门旁立有黑色石雕与盆栽；门前地面为不规则石板铺就。"
+            }
+          ]
+        },
+        {
+          "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+          "memory_type": "AHA",
+          "facts": [
+            {
+              "fact_id": "8949c6fc-e636-5880-8456-2662380331d5",
+              "text": "视频帧显示一处悬挂大量红色祈福牌的木质结构，牌上附有红色流苏；另一帧显示一座石质阶梯桥，桥下有水道，旁置一石槽；最后一帧为一棵挂有红灯笼与祈福牌的树，树干下半部被涂白，背景有白墙黑瓦建筑。"
+            }
+          ],
+          "event_fact_ids": [
+            "8949c6fc-e636-5880-8456-2662380331d5"
+          ]
+        },
+        {
+          "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+          "memory_type": "AHA",
+          "facts": [
+            {
+              "fact_id": "dd91db3d-28a1-52a7-ba6a-e99f091b20b6",
+              "text": "一条由不规则石板铺成的蜿蜒小径穿过林地，两侧为密集树木，地面覆盖枯叶。"
+            },
+            {
+              "fact_id": "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+              "text": "一只棕白相间的狗背对镜头沿石板路向前行走，身披浅色背带。"
+            }
+          ],
+          "event_fact_ids": [
+            "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+            "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+          ]
+        },
+        {
+          "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+          "memory_type": "AHA",
+          "facts": [
+            {
+              "fact_id": "fd600078-c56b-5261-9993-5d10993322f8",
+              "text": "石碑上刻有红色汉字‘古越龍山’，立于绿树环绕的石阶旁。"
+            }
+          ],
+          "event_fact_ids": [
+            "fd600078-c56b-5261-9993-5d10993322f8"
+          ]
+        }
+      ]
+    },
+    "v148_attempt_2": {
+      "locale": "zh-Hans",
+      "writer_grounding_policy": "MODEL_GROUNDED_NATURAL_LANGUAGE_V02",
+      "memories": [
+        {
+          "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+          "memory_type": "AHA",
+          "facts": [
+            {
+              "fact_id": "8949c6fc-e636-5880-8456-2662380331d5",
+              "text": "视频帧显示一处悬挂大量红色祈福牌的木质结构，牌上附有红色流苏；另一帧显示一座石质阶梯桥，桥下有水道，旁置一石槽；最后一帧为一棵挂有红灯笼与祈福牌的树，树干下半部被涂白，背景有白墙黑瓦建筑。"
+            }
+          ],
+          "event_fact_ids": [
+            "8949c6fc-e636-5880-8456-2662380331d5"
+          ]
+        },
+        {
+          "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+          "memory_type": "AHA",
+          "facts": [
+            {
+              "fact_id": "dd91db3d-28a1-52a7-ba6a-e99f091b20b6",
+              "text": "一条由不规则石板铺成的蜿蜒小径穿过林地，两侧为密集树木，地面覆盖枯叶。"
+            },
+            {
+              "fact_id": "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+              "text": "一只棕白相间的狗背对镜头沿石板路向前行走，身披浅色背带。"
+            }
+          ],
+          "event_fact_ids": [
+            "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+            "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+          ]
+        },
+        {
+          "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+          "memory_type": "AHA",
+          "facts": [
+            {
+              "fact_id": "fd600078-c56b-5261-9993-5d10993322f8",
+              "text": "石碑上刻有红色汉字‘古越龍山’，立于绿树环绕的石阶旁。"
+            }
+          ],
+          "event_fact_ids": [
+            "fd600078-c56b-5261-9993-5d10993322f8"
+          ]
+        }
+      ]
+    },
+    "v151": {
+      "locale": "zh-Hans",
+      "writer_grounding_policy": "MODEL_GROUNDED_NATURAL_LANGUAGE_V02",
+      "memories": [
+        {
+          "candidate_id": "ee127167-b73c-52c5-8276-2403d8cec1cd",
+          "memory_type": "CHAPTER",
+          "facts": [
+            {
+              "fact_id": "0f634a38-cd07-570e-91c8-9c6236b5adce",
+              "text": "视频帧显示一座中式传统牌坊，横匾书有“種山巔秀”字样，两侧立柱挂有竖幅对联，下方为湿滑石板路及多个摊位、行人与电动车，背景可见灰瓦白墙建筑。",
+              "evidence_frame_ids": [
+                "frame_3c580d3e-79d4-4b7c-8282-4e5dd5951615_w00_1500",
+                "frame_3c580d3e-79d4-4b7c-8282-4e5dd5951615_w00_7500",
+                "frame_3c580d3e-79d4-4b7c-8282-4e5dd5951615_w01_1500",
+                "frame_3c580d3e-79d4-4b7c-8282-4e5dd5951615_w01_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "fb09c82c-ea03-5bd7-86fd-f25df51e2ae8",
+              "text": "一名穿灰色短袖上衣的男性背对镜头，沿湿滑石板路向画面深处行走，路旁停放多辆三轮车及电动车，其中一辆蓝色三轮车上载有白色泡沫箱与绿色网笼。",
+              "evidence_frame_ids": [
+                "frame_09b55a58-2bdd-4309-8ba5-376c095cf058_w00_1500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "14747127-4d09-55e9-bf8d-5428bb7b56f8",
+              "text": "摊位上陈列多种蔬菜水果，包括成捆的绿色豆角、红番茄、黄瓜、竹笋、白芦笋、青苹果、桃子及橙色包装水果，部分置于白色泡沫箱内，地面湿润。",
+              "evidence_frame_ids": [
+                "frame_09b55a58-2bdd-4309-8ba5-376c095cf058_w00_4500",
+                "frame_09b55a58-2bdd-4309-8ba5-376c095cf058_w00_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "6579ec1e-d236-5bfb-a86d-3370dff7a7c5",
+              "text": "一名穿灰色衬衫的男子站在摆满蔬菜的摊位前，手部靠近嘴部；背景可见其他顾客及摊位。",
+              "evidence_frame_ids": [
+                "frame_89268a3d-d40f-4673-85c0-aafad5ad1cb9_w00_1500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "8fb3f0e4-7be6-5f8b-a446-efbce4ebab9f",
+              "text": "一名男子坐在地上整理蔬菜，周围摆放着大量蔬菜，包括葱、萝卜、花生、胡萝卜等；地面为石板路。",
+              "evidence_frame_ids": [
+                "frame_89268a3d-d40f-4673-85c0-aafad5ad1cb9_w00_7500",
+                "frame_89268a3d-d40f-4673-85c0-aafad5ad1cb9_w01_1500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "61027112-9124-556e-91bb-2a0ea4a34d6b",
+              "text": "一名穿红蓝拼色上衣的男子蹲在木门旁，前方有蓝色桶装黑豆、白色泡沫箱装青瓜及红色立式广告牌。",
+              "evidence_frame_ids": [
+                "frame_89268a3d-d40f-4673-85c0-aafad5ad1cb9_w01_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "03b337cf-51d6-5e1a-982a-e6c9a68cad00",
+              "text": "视频窗口早期帧显示白色帐篷摊位，前方有橙色灯笼悬挂，背景可见彩灯装饰与人群；中段帧展示摊位内操作台、桌布覆盖的桌面及一名穿深色上衣人员坐于后方；末段帧特写摊位前挡板上的“运汤 瑞阳宴集”字样，右侧陈列多支冰激凌甜筒，左侧可见标有“衢州烤饼”的发光招牌。",
+              "evidence_frame_ids": [
+                "frame_9c0a663b-dd6e-42f5-84f2-e030fc50dbf4_w00_1500",
+                "frame_9c0a663b-dd6e-42f5-84f2-e030fc50dbf4_w00_7500",
+                "frame_9c0a663b-dd6e-42f5-84f2-e030fc50dbf4_w01_1500",
+                "frame_9c0a663b-dd6e-42f5-84f2-e030fc50dbf4_w01_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "fa170b03-4c8c-5833-b096-d117cca6e9e9",
+              "text": "前景可见一个红色塑料盆盛满黄红相间的桃子，旁边白色篮中装有青色瓜类；背景为室内市场环境，地面为灰色地砖，远处货架陈列商品。",
+              "evidence_frame_ids": [
+                "frame_e18ac5d7-f97d-45f3-8c5d-1738f0086ca9_w00_1500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "6465e429-e79a-587f-9482-ebda46f328a2",
+              "text": "画面展示市场内部通道，右侧台面堆满黄色柑橘类水果，后方货架整齐排列各类包装食品；左下角可见一张黄色促销地垫。",
+              "evidence_frame_ids": [
+                "frame_e18ac5d7-f97d-45f3-8c5d-1738f0086ca9_w00_7500",
+                "frame_e18ac5d7-f97d-45f3-8c5d-1738f0086ca9_w01_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "b305dcf0-e125-5191-9c6d-fb2e14de308c",
+              "text": "近景有两个白色椭圆盆，内装红黄混合的圆形水果；背景中有两名蹲姿人员正在处理绿色蔬菜，周围散落菜叶。",
+              "evidence_frame_ids": [
+                "frame_e18ac5d7-f97d-45f3-8c5d-1738f0086ca9_w01_1500"
+              ],
+              "support_grade": "STRONG"
+            }
+          ]
+        },
+        {
+          "candidate_id": "f07c3c4a-cdcf-5385-a178-0fa9df8d2eda",
+          "memory_type": "CHAPTER",
+          "facts": [
+            {
+              "fact_id": "8949c6fc-e636-5880-8456-2662380331d5",
+              "text": "视频帧显示一处悬挂大量红色祈福牌的木质结构，牌上附有红色流苏；另一帧显示一座石质阶梯桥，桥下有水道，旁置一石槽；最后一帧为一棵挂有红灯笼与祈福牌的树，树干下半部被涂白，背景有白墙黑瓦建筑。",
+              "evidence_frame_ids": [
+                "frame_13a140ce-fe6b-48d5-813b-77031ecbebd8_w00_1500",
+                "frame_13a140ce-fe6b-48d5-813b-77031ecbebd8_w00_7500",
+                "frame_13a140ce-fe6b-48d5-813b-77031ecbebd8_w01_1500",
+                "frame_13a140ce-fe6b-48d5-813b-77031ecbebd8_w01_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "dd91db3d-28a1-52a7-ba6a-e99f091b20b6",
+              "text": "一条由不规则石板铺成的蜿蜒小径穿过林地，两侧为密集树木，地面覆盖枯叶。",
+              "evidence_frame_ids": [
+                "frame_6522750f-ce02-4ede-8a12-a195e05012ee_w00_1500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+              "text": "一只棕白相间的狗背对镜头沿石板路向前行走，身披浅色背带。",
+              "evidence_frame_ids": [
+                "frame_6522750f-ce02-4ede-8a12-a195e05012ee_w00_4500",
+                "frame_6522750f-ce02-4ede-8a12-a195e05012ee_w00_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "f2467e7d-2d51-58d3-b9fd-cedff630111d",
+              "text": "林间铺有青石板台阶，两侧覆盖落叶与低矮灌木，远处可见延伸的步道及树木。",
+              "evidence_frame_ids": [
+                "frame_342021e1-340b-4ec9-8ef0-3d80e19612bc_w00_1500",
+                "frame_342021e1-340b-4ec9-8ef0-3d80e19612bc_w00_7500",
+                "frame_342021e1-340b-4ec9-8ef0-3d80e19612bc_w01_1500",
+                "frame_342021e1-340b-4ec9-8ef0-3d80e19612bc_w01_7500"
+              ],
+              "support_grade": "STRONG"
+            }
+          ]
+        },
+        {
+          "candidate_id": "7f1d4d69-e287-5551-8c83-4b935de9c673",
+          "memory_type": "CHAPTER",
+          "facts": [
+            {
+              "fact_id": "9e75ecaf-42fe-5006-8151-c0065cd28963",
+              "text": "一条铺有石板的巷道通向一座中式牌坊，牌坊上有“禹贡古村”字样，两侧挂有红灯笼，周围绿树环绕。",
+              "evidence_frame_ids": [
+                "frame_e59c9bd4-d59f-433f-87d5-1e11ed9ad1dd_w00_1500",
+                "frame_e59c9bd4-d59f-433f-87d5-1e11ed9ad1dd_w00_7500",
+                "frame_e59c9bd4-d59f-433f-87d5-1e11ed9ad1dd_w01_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "ca84b156-b02e-59a0-9731-fef2acd61cff",
+              "text": "牌坊右侧设有一个小摊位，白色柜体上写有“臭豆腐”字样，旁边立有彩色花束装饰及宣传画板。",
+              "evidence_frame_ids": [
+                "frame_e59c9bd4-d59f-433f-87d5-1e11ed9ad1dd_w01_1500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "8c6fe5ef-b4a5-5e8c-a9b0-7a71a76250a2",
+              "text": "视频窗口早期帧显示石板庭院、白墙灰瓦建筑及红色祈福牌，中段帧可见正门上方黑底金字牌匾，末段帧视角转向另一侧带红灯笼的入口，整体为传统中式院落场景。",
+              "evidence_frame_ids": [
+                "frame_bec8a5dd-76b0-4c98-8019-818e3d403378_w00_1500",
+                "frame_bec8a5dd-76b0-4c98-8019-818e3d403378_w00_4500",
+                "frame_bec8a5dd-76b0-4c98-8019-818e3d403378_w00_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "f67f91d2-a826-51f7-993c-b40e61edf441",
+              "text": "一只棕白相间的长毛犬身穿浅蓝色背心，正沿着铺有青石板的街道向前奔跑；街道两侧为白墙灰瓦建筑，墙上覆盖大量绿植。",
+              "evidence_frame_ids": [
+                "frame_db700757-e55b-42c2-844e-ce363310a578_w00_1500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "b4c59a46-c720-559c-b2a0-a14d272b22e2",
+              "text": "同一街道场景中，一只同款犬只在镜头前转向移动，画面右下角可见一人手臂及黑色腕带；背景为店铺门面与盆栽植物。",
+              "evidence_frame_ids": [
+                "frame_db700757-e55b-42c2-844e-ce363310a578_w00_7500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "45a87c7f-6cec-599e-b1fb-7815f7b81e66",
+              "text": "一辆白色四座电动观光车停靠于街边，车体印有黑色汉字；车内坐有一名穿深绿色上衣者，车辆位于石板路面上。",
+              "evidence_frame_ids": [
+                "frame_db700757-e55b-42c2-844e-ce363310a578_w01_1500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "f65d1532-1479-51b7-9981-ee93c994a44a",
+              "text": "画面呈现一家店铺门面，灰墙黑瓦，双开玻璃门上贴有红色“福”字装饰，门旁立有黑色石雕与盆栽；门前地面为不规则石板铺就。",
+              "evidence_frame_ids": [
+                "frame_db700757-e55b-42c2-844e-ce363310a578_w01_7500"
+              ],
+              "support_grade": "STRONG"
+            }
+          ]
+        },
+        {
+          "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+          "memory_type": "AHA",
+          "facts": [
+            {
+              "fact_id": "8949c6fc-e636-5880-8456-2662380331d5",
+              "text": "视频帧显示一处悬挂大量红色祈福牌的木质结构，牌上附有红色流苏；另一帧显示一座石质阶梯桥，桥下有水道，旁置一石槽；最后一帧为一棵挂有红灯笼与祈福牌的树，树干下半部被涂白，背景有白墙黑瓦建筑。",
+              "evidence_frame_ids": [
+                "frame_13a140ce-fe6b-48d5-813b-77031ecbebd8_w00_1500",
+                "frame_13a140ce-fe6b-48d5-813b-77031ecbebd8_w00_7500",
+                "frame_13a140ce-fe6b-48d5-813b-77031ecbebd8_w01_1500",
+                "frame_13a140ce-fe6b-48d5-813b-77031ecbebd8_w01_7500"
+              ],
+              "support_grade": "STRONG"
+            }
+          ],
+          "event_fact_ids": [
+            "8949c6fc-e636-5880-8456-2662380331d5"
+          ]
+        },
+        {
+          "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+          "memory_type": "AHA",
+          "facts": [
+            {
+              "fact_id": "dd91db3d-28a1-52a7-ba6a-e99f091b20b6",
+              "text": "一条由不规则石板铺成的蜿蜒小径穿过林地，两侧为密集树木，地面覆盖枯叶。",
+              "evidence_frame_ids": [
+                "frame_6522750f-ce02-4ede-8a12-a195e05012ee_w00_1500"
+              ],
+              "support_grade": "STRONG"
+            },
+            {
+              "fact_id": "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+              "text": "一只棕白相间的狗背对镜头沿石板路向前行走，身披浅色背带。",
+              "evidence_frame_ids": [
+                "frame_6522750f-ce02-4ede-8a12-a195e05012ee_w00_4500",
+                "frame_6522750f-ce02-4ede-8a12-a195e05012ee_w00_7500"
+              ],
+              "support_grade": "STRONG"
+            }
+          ],
+          "event_fact_ids": [
+            "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+            "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+          ]
+        },
+        {
+          "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+          "memory_type": "AHA",
+          "facts": [
+            {
+              "fact_id": "fd600078-c56b-5261-9993-5d10993322f8",
+              "text": "石碑上刻有红色汉字‘古越龍山’，立于绿树环绕的石阶旁。",
+              "evidence_frame_ids": [
+                "frame_b4731ca8-3d6c-4cb3-81cd-32fd1fa43774_w00_1500",
+                "frame_b4731ca8-3d6c-4cb3-81cd-32fd1fa43774_w00_4500",
+                "frame_b4731ca8-3d6c-4cb3-81cd-32fd1fa43774_w00_7500"
+              ],
+              "support_grade": "STRONG"
+            }
+          ],
+          "event_fact_ids": [
+            "fd600078-c56b-5261-9993-5d10993322f8"
+          ]
+        }
+      ]
+    }
+  },
+  "cases": [
+    {
+      "case_id": "v148_attempt_1",
+      "context_key": "v148_attempt_1",
+      "original_attempt": 1,
+      "output": {
+        "chapters": [
+          {
+            "candidate_id": "ee127167-b73c-52c5-8276-2403d8cec1cd",
+            "title": "古街市集的湿石与烟火",
+            "text": "牌坊下湿滑石板路上，摊贩陈列着豆角、番茄与青瓜，一旁“运汤 瑞阳宴集”摊位挂起橙灯，冰激凌甜筒在阳光下格外醒目。",
+            "claim_ids": [
+              "0f634a38-cd07-570e-91c8-9c6236b5adce",
+              "fb09c82c-ea03-5bd7-86fd-f25df51e2ae8",
+              "14747127-4d09-55e9-bf8d-5428bb7b56f8",
+              "6579ec1e-d236-5bfb-a86d-3370dff7a7c5",
+              "8fb3f0e4-7be6-5f8b-a446-efbce4ebab9f",
+              "61027112-9124-556e-91bb-2a0ea4a34d6b",
+              "03b337cf-51d6-5e1a-982a-e6c9a68cad00"
+            ]
+          },
+          {
+            "candidate_id": "f07c3c4a-cdcf-5385-a178-0fa9df8d2eda",
+            "title": "林径上的红灯笼与石阶",
+            "text": "石板小径蜿蜒于林间，枯叶铺地；红灯笼树与祈福牌悬垂木构，石桥横跨水道，静默勾勒出山野间的信仰轮廓。",
+            "claim_ids": [
+              "8949c6fc-e636-5880-8456-2662380331d5",
+              "dd91db3d-28a1-52a7-ba6a-e99f091b20b6",
+              "f2467e7d-2d51-58d3-b9fd-cedff630111d"
+            ]
+          },
+          {
+            "candidate_id": "7f1d4d69-e287-5551-8c83-4b935de9c673",
+            "title": "禹贡古村的巷陌回响",
+            "text": "石板巷通向“禹贡古村”牌坊，红灯笼高悬；白墙院落中祈福牌错落，长毛犬奔过街面，电动观光车悄然停驻石阶旁。",
+            "claim_ids": [
+              "9e75ecaf-42fe-5006-8151-c0065cd28963",
+              "ca84b156-b02e-59a0-9731-fef2acd61cff",
+              "8c6fe5ef-b4a5-5e8c-a9b0-7a71a76250a2",
+              "f67f91d2-a826-51f7-993c-b40e61edf441",
+              "b4c59a46-c720-559c-b2a0-a14d272b22e2",
+              "45a87c7f-6cec-599e-b1fb-7815f7b81e66",
+              "f65d1532-1479-51b7-9981-ee93c994a44a"
+            ]
+          }
+        ],
+        "ahas": [
+          {
+            "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+            "title": "红牌与灯笼的静默",
+            "text": "悬挂红流苏的木质结构前，石桥与涂白树干静立，白墙黑瓦在背景里低语着古老仪式。",
+            "claim_ids": [
+              "8949c6fc-e636-5880-8456-2662380331d5"
+            ]
+          },
+          {
+            "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+            "title": "背带狗踏过石径",
+            "text": "棕白相间的狗披着浅色背带，沿不规则石板路向前走去，身后是密林与枯叶铺就的幽深路径。",
+            "claim_ids": [
+              "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+              "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+            ]
+          },
+          {
+            "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+            "title": "古越龙山的朱砂刻痕",
+            "text": "石阶旁绿树环抱，一方石碑上‘古越龍山’四字朱红如血，无声标记着此地曾有的岁月重量。",
+            "claim_ids": [
+              "fd600078-c56b-5261-9993-5d10993322f8"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "v148_attempt_2",
+      "context_key": "v148_attempt_2",
+      "original_attempt": 2,
+      "output": {
+        "chapters": [
+          {
+            "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+            "title": "红牌、石桥与涂白树",
+            "text": "悬挂红流苏的木构下，石桥横卧水道旁，一株挂灯笼与祈福牌的树干被涂白，背景是白墙黑瓦。",
+            "claim_ids": [
+              "8949c6fc-e636-5880-8456-2662380331d5"
+            ]
+          },
+          {
+            "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+            "title": "背带狗走石径",
+            "text": "棕白相间的狗披着浅色背带，沿不规则石板路向前走去，两侧是密林与枯叶。",
+            "claim_ids": [
+              "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+              "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+            ]
+          },
+          {
+            "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+            "title": "古越龙山石碑",
+            "text": "绿树环抱的石阶旁，一方石碑上‘古越龍山’四字朱红醒目，静立于林间。",
+            "claim_ids": [
+              "fd600078-c56b-5261-9993-5d10993322f8"
+            ]
+          }
+        ],
+        "ahas": [
+          {
+            "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+            "title": "红祈福的静默",
+            "text": "红流苏垂落，石桥与涂白树在白墙黑瓦前无声伫立。",
+            "claim_ids": [
+              "8949c6fc-e636-5880-8456-2662380331d5"
+            ]
+          },
+          {
+            "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+            "title": "背带狗的步履",
+            "text": "棕白小狗披着背带，踏过石板路，身影没入林间枯叶深处。",
+            "claim_ids": [
+              "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+              "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+            ]
+          },
+          {
+            "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+            "title": "朱砂刻痕",
+            "text": "石碑上‘古越龍山’四字朱红如血，嵌在绿树与石阶之间。",
+            "claim_ids": [
+              "fd600078-c56b-5261-9993-5d10993322f8"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "v151_attempt_1",
+      "context_key": "v151",
+      "original_attempt": 1,
+      "output": {
+        "chapters": [
+          {
+            "candidate_id": "ee127167-b73c-52c5-8276-2403d8cec1cd",
+            "title": "湿石板路上的烟火气",
+            "text": "穿过“種山巔秀”牌坊，湿润的石板路上摆满了豆角、番茄和青瓜。转角处，“运汤 瑞阳宴集”的招牌旁立着冰激凌甜筒。"
+          },
+          {
+            "candidate_id": "f07c3c4a-cdcf-5385-a178-0fa9df8d2eda",
+            "title": "林间小径与祈福树",
+            "text": "挂满红灯笼与祈福牌的树静立在白墙黑瓦旁，蜿蜒的石板路穿过落叶覆盖的林地。"
+          },
+          {
+            "candidate_id": "7f1d4d69-e287-5551-8c83-4b935de9c673",
+            "title": "禹贡古村的斑驳岁月",
+            "text": "石板巷通向挂着红灯笼的“禹贡古村”牌坊，白墙灰瓦间点缀着红色祈福牌。穿蓝背心的小狗在街角奔跑，一辆观光车停在路边。"
+          }
+        ],
+        "ahas": [
+          {
+            "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+            "title": "祈福红牌",
+            "text": "木质结构上悬挂着大量带流苏的红色祈福牌。"
+          },
+          {
+            "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+            "title": "犬伴石径",
+            "text": "棕白相间的狗披着浅色背带走在落叶小径上。"
+          },
+          {
+            "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+            "title": "古越龙山碑",
+            "text": "绿树环绕的石阶旁立着刻有“古越龍山”的红字石碑。"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "v151_attempt_2",
+      "context_key": "v151",
+      "original_attempt": 2,
+      "output": {
+        "chapters": [
+          {
+            "candidate_id": "ee127167-b73c-52c5-8276-2403d8cec1cd",
+            "title": "湿石板上的市井烟火",
+            "text": "穿过“種山巔秀”牌坊，湿润的石板路上摆满了豆角、番茄和青瓜。转角处，“运汤 瑞阳宴集”的招牌旁立着冰激凌甜筒。",
+            "claim_ids": [
+              "0f634a38-cd07-570e-91c8-9c6236b5adce",
+              "fb09c82c-ea03-5bd7-86fd-f25df51e2ae8",
+              "14747127-4d09-55e9-bf8d-5428bb7b56f8",
+              "03b337cf-51d6-5e1a-982a-e6c9a68cad00"
+            ]
+          },
+          {
+            "candidate_id": "f07c3c4a-cdcf-5385-a178-0fa9df8d2eda",
+            "title": "林间小径与祈福树",
+            "text": "挂满红灯笼与祈福牌的树静立在白墙黑瓦旁，蜿蜒的石板路穿过落叶覆盖的林地。",
+            "claim_ids": [
+              "8949c6fc-e636-5880-8456-2662380331d5",
+              "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+            ]
+          },
+          {
+            "candidate_id": "7f1d4d69-e287-5551-8c83-4b935de9c673",
+            "title": "禹贡古村的斑驳岁月",
+            "text": "石板巷通向挂着红灯笼的“禹贡古村”牌坊，白墙灰瓦间点缀着红色祈福牌。穿蓝背心的小狗在街角奔跑，一辆观光车停在路边。",
+            "claim_ids": [
+              "9e75ecaf-42fe-5006-8151-c0065cd28963",
+              "8c6fe5ef-b4a5-5e8c-a9b0-7a71a76250a2",
+              "f67f91d2-a826-51f7-993c-b40e61edf441",
+              "45a87c7f-6cec-599e-b1fb-7815f7b81e66"
+            ]
+          }
+        ],
+        "ahas": [
+          {
+            "candidate_id": "839d3042-2696-5df9-9acc-31942adb2e5a",
+            "title": "祈福红牌",
+            "text": "木质结构上悬挂着大量带流苏的红色祈福牌。",
+            "claim_ids": [
+              "8949c6fc-e636-5880-8456-2662380331d5"
+            ]
+          },
+          {
+            "candidate_id": "12fc4276-8f95-5f5d-a8bd-ceb445b3aae2",
+            "title": "犬伴石径",
+            "text": "棕白相间的狗披着浅色背带走在落叶小径上。",
+            "claim_ids": [
+              "9593f8e4-47af-5369-81c5-e0c6c62382dc",
+              "dd91db3d-28a1-52a7-ba6a-e99f091b20b6"
+            ]
+          },
+          {
+            "candidate_id": "b6204cab-229a-5a7e-8fdf-c6dc790f754c",
+            "title": "古越龙山碑",
+            "text": "绿树环绕的石阶旁立着刻有“古越龍山”的红字石碑。",
+            "claim_ids": [
+              "fd600078-c56b-5261-9993-5d10993322f8"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

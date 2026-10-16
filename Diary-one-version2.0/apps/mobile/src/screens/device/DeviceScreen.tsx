@@ -1,0 +1,472 @@
+import React from 'react';
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  Switch,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { FigmaScreenHeader } from '../../components/FigmaScreenHeader';
+import { DeviceHeroMark } from '../../components/DeviceHeroMark';
+import { colors, spacing, radius, layout, type } from '../../theme';
+import { useAppStore } from '../../store/useAppStore';
+import { PipelineTaskList } from '../../components/PipelineTaskList';
+import { performDeviceSync } from '../../device/deviceSync';
+import type { DeviceStackParamList } from '../../navigation/types';
+import { showInternalLabTools } from '../../config/buildProfile';
+
+type Nav = NativeStackNavigationProp<DeviceStackParamList, 'DeviceHome'>;
+
+function BatteryGlyph({ muted }: { muted?: boolean }) {
+  const stroke = muted ? colors.secondary : colors.ink;
+  return (
+    <View style={styles.battGlyph} accessibilityElementsHidden>
+      <View style={[styles.battOutline, { borderColor: stroke }]}>
+        <View
+          style={[
+            styles.battFill,
+            { backgroundColor: stroke, width: muted ? 10 : 16.5 },
+          ]}
+        />
+      </View>
+      <View style={[styles.battTip, { backgroundColor: stroke }]} />
+    </View>
+  );
+}
+
+function ProgressTrack({
+  ratio,
+  fill,
+}: {
+  ratio: number;
+  fill: string;
+}) {
+  const clamped = Math.max(0, Math.min(1, ratio));
+  return (
+    <View style={styles.track}>
+      <View style={[styles.trackFill, { width: `${clamped * 100}%`, backgroundColor: fill }]} />
+    </View>
+  );
+}
+
+/** Figma 44:1347 Connected · 269:2102 Disconnected — editorial Device home. */
+export default function DeviceHomeScreen() {
+  const navigation = useNavigation<Nav>();
+  const pipelineTasks = useAppStore((s) => s.pipelineTasks);
+  const deviceLinkState = useAppStore((s) => s.deviceLinkState);
+  const devicePendingRecordings = useAppStore((s) => s.devicePendingRecordings);
+  const lastSyncedAt = useAppStore((s) => s.lastSyncedAt);
+  const setAutomaticCaptureMode = useAppStore((s) => s.setAutomaticCaptureMode);
+  const setDeviceLinkState = useAppStore((s) => s.setDeviceLinkState);
+  const deviceBatteryPercent = useAppStore((s) => s.deviceBatteryPercent);
+  const linked =
+    deviceLinkState === 'hardware_linked' || deviceLinkState === 'lab_linked';
+
+  /**
+   * Figma 269:2102 Disconnected uses placeholder telemetry copy (72% last known, Camera On).
+   * When linked + real transport reports %, prefer live telemetry; otherwise match board copy.
+   */
+  const batteryLabel =
+    linked && deviceBatteryPercent != null
+      ? `${deviceBatteryPercent}%`
+      : linked
+        ? '—'
+        : deviceBatteryPercent != null
+          ? `${deviceBatteryPercent}% last known`
+          : '72% last known';
+  /** Figma shows switch thumb On for both Connected & Disconnected (latter disabled). */
+  const autoSwitchOn = true;
+  /** Figma 2382:2611 Connected · Pending Sync — pending but not mid-upload. */
+  const pendingSync = linked && devicePendingRecordings;
+
+  const syncProgress = pendingSync ? 0 : linked ? 1 : 0;
+  /** Figma 269:2102 Sync trailing = Not uploaded when disconnected. */
+  const syncRight = !linked || pendingSync ? 'Not uploaded' : 'Up to date';
+  const syncSub = !linked
+    ? '38 recordings waiting for connection'
+    : pendingSync
+      ? '38 recordings on device · updated 2 min ago'
+      : lastSyncedAt
+        ? `Updated ${formatRelative(lastSyncedAt)}`
+        : 'Ready when new recordings arrive';
+
+  const onConnect = () => {
+    if (showInternalLabTools) {
+      setDeviceLinkState('lab_linked');
+      return;
+    }
+    Alert.alert(
+      'Connect Diary One',
+      'Turn on Bluetooth and open pairing from onboarding, or use Device Settings when hardware is available.',
+    );
+  };
+
+  const onImportPhotos = () => {
+    void import('../../pipeline/launchEvidenceImport').then((m) =>
+      m.launchEvidenceImportFromLibrary(),
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.safe} edges={['top']}>
+      <View style={styles.gutter}>
+        <FigmaScreenHeader title="Device" />
+      </View>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        {/* Status card — Figma white r12 */}
+        <View style={[styles.statusCard, !linked && styles.statusCardDisconnected]}>
+          <DeviceHeroMark connected={linked} compact />
+          <View style={styles.nameRow}>
+            <Text style={styles.deviceName}>Diary One</Text>
+            <View style={[styles.dot, linked ? styles.dotOn : styles.dotOff]} />
+            <Text style={styles.linkLabel}>{linked ? 'Connected' : 'Disconnected'}</Text>
+          </View>
+          <View style={styles.cardDivider} />
+          <View style={styles.cardRow}>
+            <Text style={styles.cardRowLabel}>Battery</Text>
+            <View style={styles.batteryTrailing}>
+              {linked && deviceBatteryPercent != null ? <BatteryGlyph /> : null}
+              <Text style={[styles.cardRowValue, !linked && styles.cardRowValueMuted]}>
+                {batteryLabel}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.cardDividerInset} />
+          <View style={styles.cardRow}>
+            <Text style={styles.cardRowTitle}>Camera</Text>
+            <Text style={[styles.cardRowValue, !linked && styles.cardRowValueMuted]}>
+              {linked ? 'On' : 'On'}
+            </Text>
+          </View>
+          <View style={styles.cardDividerInset} />
+          <View style={[styles.cardRow, styles.cardRowLast]}>
+            <Text style={styles.cardRowTitle}>Desktop mode</Text>
+            <Text style={[styles.cardRowValue, !linked && styles.cardRowValueMuted]}>Off</Text>
+          </View>
+        </View>
+
+        {!linked ? (
+          <View style={styles.alertRow}>
+            <View style={styles.alertMark} />
+            <View style={styles.alertCopy}>
+              <Text style={styles.alertTitle}>Connection lost</Text>
+              <Text style={styles.alertSub}>Uploads paused · updated 12 min ago</Text>
+            </View>
+            <Pressable style={styles.connectBtn} onPress={onConnect} accessibilityRole="button">
+              <Text style={styles.connectLabel}>Connect</Text>
+            </Pressable>
+          </View>
+        ) : null}
+
+        {/* Hardware-free test path: local photos & videos → Evidence → cloud → Diary */}
+        <View style={styles.uploadCard}>
+          <Text style={styles.uploadEyebrow}>WITHOUT HARDWARE</Text>
+          <Text style={styles.uploadTitle}>Upload photos & videos</Text>
+          <Text style={styles.uploadLead}>
+            Pick from this iPhone’s library. Selected media become Evidence for today’s Diary
+            cloud run — no Diary One device required.
+          </Text>
+          <Pressable
+            style={styles.uploadBtn}
+            onPress={onImportPhotos}
+            accessibilityRole="button"
+            accessibilityLabel="Upload photos and videos from library"
+          >
+            <Text style={styles.uploadBtnLabel}>Choose from Photos</Text>
+          </Pressable>
+          <PipelineTaskList tasks={pipelineTasks} />
+        </View>
+
+        {/* Sync */}
+        <View style={styles.sectionHead}>
+          <Text style={styles.sectionTitle}>Sync</Text>
+          <Text
+            style={[
+              styles.sectionRight,
+              (!linked || pendingSync) && styles.sectionRightAccent,
+            ]}
+          >
+            {syncRight}
+          </Text>
+        </View>
+        <Text style={styles.sectionSub}>{syncSub}</Text>
+        {pendingSync ? (
+          <Pressable
+            onPress={() => void performDeviceSync()}
+            style={styles.syncNowBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Sync now"
+          >
+            <Text style={styles.syncNowLabel}>Sync now</Text>
+          </Pressable>
+        ) : linked ? (
+          <Pressable onPress={() => void performDeviceSync()} style={styles.syncHit}>
+            <ProgressTrack ratio={syncProgress} fill={colors.ink} />
+          </Pressable>
+        ) : null}
+        <View style={styles.hairline} />
+
+        {/* Storage */}
+        <View style={styles.sectionHead}>
+          <Text style={styles.sectionTitle}>Storage</Text>
+          {!linked ? <Text style={styles.lastKnown}>Last known</Text> : null}
+        </View>
+        <View style={styles.storageRow}>
+          <Text style={styles.storageLabel}>On device</Text>
+          <Text style={styles.storageValue}>18.4 GB left / 32 GB</Text>
+        </View>
+        <ProgressTrack
+          ratio={18.4 / 32}
+          fill={linked ? colors.ink : colors.secondary}
+        />
+        <View style={[styles.storageRow, styles.storageRowNext]}>
+          <Text style={styles.storageLabel}>Cloud</Text>
+          <Text style={styles.storageValue}>72 GB left / 100 GB</Text>
+        </View>
+        <ProgressTrack
+          ratio={72 / 100}
+          fill={linked ? colors.ink : colors.secondary}
+        />
+        <View style={styles.hairline} />
+
+        {/* Automatic Capture */}
+        <View style={styles.switchRow}>
+          <Text style={styles.switchLabel}>Automatic Capture</Text>
+          <Switch
+            value={autoSwitchOn}
+            onValueChange={(v) => {
+              if (!linked) return;
+              setAutomaticCaptureMode(v ? 'high' : 'standard');
+              if (!v) navigation.navigate('AutomaticCapture');
+            }}
+            disabled={!linked}
+            trackColor={{ false: '#C8C5BF', true: linked ? colors.ink : '#C8C5BF' }}
+            thumbColor={colors.card}
+            ios_backgroundColor="#C8C5BF"
+          />
+        </View>
+        <View style={styles.hairline} />
+
+        <Pressable style={styles.linkRow} onPress={() => navigation.navigate('DeviceSettings')}>
+          <Text style={styles.linkRowLabel}>Device Settings</Text>
+          <Text style={styles.linkChevron}>›</Text>
+        </Pressable>
+        <View style={styles.hairline} />
+        <Pressable
+          style={styles.linkRow}
+          onPress={() =>
+            Alert.alert(
+              'How to Use',
+              'Hardware basics are covered in onboarding. The full device guide ships with the Diary One kit.',
+            )
+          }
+        >
+          <Text style={styles.linkRowLabel}>How to Use</Text>
+          <Text style={styles.linkChevron}>›</Text>
+        </Pressable>
+
+        {showInternalLabTools && linked ? (
+          <Pressable
+            style={styles.labDisconnect}
+            onPress={() => setDeviceLinkState('disconnected')}
+          >
+            <Text style={styles.labDisconnectText}>Lab · Disconnect</Text>
+          </Pressable>
+        ) : null}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function formatRelative(iso: string): string {
+  const ms = Date.now() - new Date(iso).getTime();
+  const min = Math.max(1, Math.round(ms / 60000));
+  if (min < 60) return `${min} min ago`;
+  return `${Math.round(min / 60)} h ago`;
+}
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.paper },
+  gutter: { paddingHorizontal: layout.gutterDiary },
+  scroll: {
+    paddingHorizontal: layout.gutterDiary,
+    paddingBottom: layout.tabBarHeight + spacing.xxxl,
+  },
+  statusCard: {
+    backgroundColor: colors.card,
+    borderRadius: radius.card,
+    paddingBottom: spacing.md,
+    marginBottom: spacing.xl,
+    overflow: 'hidden',
+    minHeight: 263,
+  },
+  statusCardDisconnected: { minHeight: 236 },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    gap: 8,
+    marginTop: 4,
+  },
+  deviceName: { ...type.titleChapter, color: colors.ink, flexShrink: 1 },
+  dot: { width: 7, height: 7, borderRadius: 3.5 },
+  dotOn: { backgroundColor: colors.ok },
+  dotOff: { backgroundColor: colors.tertiary },
+  linkLabel: {
+    ...type.captionEmphasis,
+    color: colors.secondary,
+    marginLeft: 'auto',
+    textAlign: 'right',
+  },
+  cardDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.divider,
+    marginHorizontal: spacing.md,
+    marginTop: spacing.md,
+  },
+  cardDividerInset: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.divider,
+    marginHorizontal: spacing.md,
+  },
+  cardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.md,
+    minHeight: 32,
+    paddingVertical: 6,
+  },
+  cardRowLast: { paddingBottom: 4 },
+  cardRowLabel: { fontSize: 15, lineHeight: 20, color: colors.secondary },
+  cardRowTitle: { fontSize: 16, lineHeight: 22, color: colors.ink },
+  cardRowValue: { fontSize: 15, lineHeight: 20, color: colors.secondary, fontWeight: '500' },
+  cardRowValueMuted: { color: colors.tertiary, fontWeight: '400' },
+  batteryTrailing: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  battGlyph: { flexDirection: 'row', alignItems: 'center', width: 36, height: 20 },
+  battOutline: {
+    width: 29,
+    height: 16,
+    borderRadius: 4,
+    borderWidth: 1.5,
+    padding: 2,
+    justifyContent: 'center',
+  },
+  battFill: { height: 10, borderRadius: 2 },
+  battTip: { width: 3, height: 6, borderRadius: 1, marginLeft: 1 },
+  alertRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.xl,
+    minHeight: 48,
+    gap: 10,
+  },
+  alertMark: {
+    width: 3,
+    height: 43,
+    borderRadius: 1,
+    backgroundColor: colors.accent,
+  },
+  alertCopy: { flex: 1 },
+  alertTitle: { fontSize: 15, fontWeight: '600', color: colors.ink },
+  alertSub: { fontSize: 12, color: colors.secondary, marginTop: 2 },
+  connectBtn: {
+    width: 85,
+    height: 44,
+    borderRadius: radius.control,
+    backgroundColor: colors.ink,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  connectLabel: { fontSize: 14, fontWeight: '500', color: colors.paper },
+  sectionHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 4,
+  },
+  sectionTitle: { fontSize: 20, fontWeight: '600', color: colors.ink },
+  sectionRight: { fontSize: 14, fontWeight: '500', color: colors.ink },
+  sectionRightMuted: { color: colors.secondary },
+  sectionRightAccent: { color: colors.accent },
+  sectionSub: { ...type.caption, color: colors.secondary, marginTop: 4, marginBottom: 8 },
+  syncHit: { marginBottom: 4 },
+  syncNowBtn: {
+    height: 44,
+    borderRadius: radius.control,
+    backgroundColor: colors.ink,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  syncNowLabel: { fontSize: 15, fontWeight: '500', color: colors.paper },
+  track: {
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.divider,
+    width: '100%',
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  trackFill: { height: 4, borderRadius: 2 },
+  hairline: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.divider,
+    marginVertical: spacing.sm,
+  },
+  lastKnown: { fontSize: 11, color: colors.tertiary },
+  storageRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  storageRowNext: { marginTop: 12 },
+  storageLabel: { fontSize: 15, color: colors.secondary },
+  storageValue: { fontSize: 14, fontWeight: '500', color: colors.ink },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 44,
+  },
+  switchLabel: { fontSize: 16, color: colors.ink },
+  linkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 44,
+  },
+  linkRowLabel: { fontSize: 16, color: colors.ink, flex: 1 },
+  linkChevron: { fontSize: 24, color: colors.tertiary, lineHeight: 28 },
+  uploadCard: {
+    backgroundColor: colors.card,
+    borderRadius: radius.card,
+    padding: spacing.md,
+    marginBottom: spacing.xl,
+    gap: 8,
+  },
+  uploadEyebrow: {
+    ...type.captionEmphasis,
+    color: colors.tertiary,
+    letterSpacing: 0.6,
+  },
+  uploadTitle: { ...type.titleChapter, color: colors.ink },
+  uploadLead: { ...type.caption, color: colors.secondary, lineHeight: 20 },
+  uploadBtn: {
+    marginTop: 4,
+    height: 52,
+    borderRadius: 12,
+    backgroundColor: colors.ink,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  uploadBtnLabel: { fontSize: 15, lineHeight: 20, fontWeight: '600', color: colors.paper },
+  labDisconnect: { marginTop: spacing.xl, alignItems: 'center', minHeight: 44, justifyContent: 'center' },
+  labDisconnectText: { ...type.captionEmphasis, color: colors.accent },
+});

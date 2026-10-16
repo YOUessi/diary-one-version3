@@ -1,0 +1,618 @@
+{
+  "provenance": {
+    "kind": "RECORDED_REAL_RUN_WRITER_FAILURES_NOT_SEMANTIC_GROUND_TRUTH",
+    "run_id": "670b2417-d3a5-424b-a3c0-a1df6eb031cd",
+    "recorded_at": "2026-09-03T03:07:45.500768Z"
+  },
+  "observations": [
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "37c49486-4c0d-4572-a707-0f9fb598840a",
+      "degraded_fields": [
+        {
+          "action": "DROP_ONLY_INVALID_LIST_ENTRY",
+          "json_field_path": "$.observations[*].subject_codes[0]",
+          "original_value_sentinel": "<OUTSIDE_CLOSED_VOCABULARY>",
+          "validation_rule_id": "X02V03_ENUM_LIST_VALUE_DROPPED"
+        },
+        {
+          "action": "USE_UNKNOWN_WITHOUT_INFERRING_REPLACEMENT_EPISODE",
+          "json_field_path": "$.observations[*].episode_code",
+          "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+          "validation_rule_id": "X02V02_EPISODE_URBAN_WALK"
+        }
+      ],
+      "episode_code": "UNKNOWN",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "frame_37c49486-4c0d-4572-a707-0f9fb598840a_w00_4500"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "frame_37c49486-4c0d-4572-a707-0f9fb598840a_w00_4500"
+          ],
+          "fact_id": "521ca5ab-91e8-5506-aae3-8d763775ee57",
+          "support_grade": "STRONG",
+          "text": "一只鹿形动物正穿过铺装路面，背景有白色建筑、黄色工程车、黑色越野车及绿化灌木，前景可见木质围栏与分类垃圾桶。"
+        }
+      ],
+      "id": "1f87db65-c9a9-5c4f-beb0-9e3e8d6c4e16",
+      "limitations": [],
+      "media_kind": "PHOTO",
+      "motifs": [
+        "animal",
+        "street_scene",
+        "vehicle"
+      ],
+      "quality_score": 0.9,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset_37c49486-4c0d-4572-a707-0f9fb598840a",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "PEOPLE",
+        "STREET_SCENE"
+      ]
+    },
+    {
+      "activity_code": "EATING_DRINKING",
+      "asset_id": "50fa9c1b-5f7f-4ee8-aa0d-6d49b96c0862",
+      "degraded_fields": [],
+      "episode_code": "MARKET_VISIT",
+      "event_kind": "FOOD_MOMENT",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "frame_50fa9c1b-5f7f-4ee8-aa0d-6d49b96c0862_w00_4500"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "frame_50fa9c1b-5f7f-4ee8-aa0d-6d49b96c0862_w00_4500"
+          ],
+          "fact_id": "63da5ff4-9386-5957-9c43-f35043117c44",
+          "support_grade": "STRONG",
+          "text": "前景为铝箔纸包裹的串状食物，表面覆盖红色酱料，置于金属桌面上；背景为夜间街景，可见模糊的摊位、车辆及红蓝灯光。"
+        }
+      ],
+      "id": "da3d7ce5-ecc4-558d-94b7-425969ee1cb5",
+      "limitations": [],
+      "media_kind": "PHOTO",
+      "motifs": [
+        "food",
+        "street",
+        "night"
+      ],
+      "quality_score": 0.85,
+      "setting_code": "COMMERCIAL_MARKET",
+      "source_asset_id": "asset_50fa9c1b-5f7f-4ee8-aa0d-6d49b96c0862",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "FOOD_DESSERT",
+        "STREET_SCENE",
+        "PEOPLE"
+      ]
+    },
+    {
+      "activity_code": "BROWSING",
+      "asset_id": "d87abc64-b879-421e-a7aa-9ccb83f97156",
+      "degraded_fields": [],
+      "episode_code": "MARKET_VISIT",
+      "event_kind": "INTERACTION",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "frame_d87abc64-b879-421e-a7aa-9ccb83f97156_w00_4500"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "frame_d87abc64-b879-421e-a7aa-9ccb83f97156_w00_4500"
+          ],
+          "fact_id": "96f36e97-0f97-59ca-8644-0a1dc3a26b6e",
+          "support_grade": "STRONG",
+          "text": "一辆蓝橙双色餐车，车体侧面打开形成售卖窗口，内部有穿围裙人员正在操作；窗口前站立两人背影，其中一人戴白色帽子；墙上挂有写有“和风炙味集”及菜品名的招牌。"
+        }
+      ],
+      "id": "db3cf0dd-e9c7-5aaa-bb81-2aa8122c10f8",
+      "limitations": [],
+      "media_kind": "PHOTO",
+      "motifs": [
+        "food_truck",
+        "signage",
+        "customer"
+      ],
+      "quality_score": 0.88,
+      "setting_code": "COMMERCIAL_MARKET",
+      "source_asset_id": "asset_d87abc64-b879-421e-a7aa-9ccb83f97156",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "PEOPLE",
+        "CRAFT_OBJECT",
+        "STREET_SCENE"
+      ]
+    }
+  ],
+  "selected_ahas": [
+    {
+      "candidate_id": "2b36a61c-106f-556c-8ed3-29f09405262a",
+      "candidate_key": "event_asset_37c49486-4c0d-4572-a707-0f9fb598840a",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "observation_id": "1f87db65-c9a9-5c4f-beb0-9e3e8d6c4e16",
+      "proposal_aliases": [],
+      "proposal_source": "DETERMINISTIC_EVENT_PEAK",
+      "rank_inputs": {
+        "event_salience": 0.65,
+        "event_specificity": 1,
+        "fact_support": 1,
+        "novelty": 0.777778,
+        "presentation_quality_tiebreak": 0.9
+      },
+      "reason_codes": [
+        "INDEPENDENT_LOCAL_EVENT_PEAK_SUPPORTED",
+        "VALUE_RANKED_INDEPENDENT_AHA_SELECTED"
+      ],
+      "selection_status": "SELECTED",
+      "source_asset_id": "asset_37c49486-4c0d-4572-a707-0f9fb598840a",
+      "source_index": 2,
+      "validation_status": "PASSED"
+    },
+    {
+      "candidate_id": "d43ab62f-4aac-5916-87e4-ae15ce6e24fb",
+      "candidate_key": "event_asset_50fa9c1b-5f7f-4ee8-aa0d-6d49b96c0862",
+      "event_kind": "FOOD_MOMENT",
+      "event_salience": "MEDIUM",
+      "observation_id": "da3d7ce5-ecc4-558d-94b7-425969ee1cb5",
+      "proposal_aliases": [],
+      "proposal_source": "DETERMINISTIC_EVENT_PEAK",
+      "rank_inputs": {
+        "event_salience": 0.65,
+        "event_specificity": 1,
+        "fact_support": 1,
+        "novelty": 1,
+        "presentation_quality_tiebreak": 0.85
+      },
+      "reason_codes": [
+        "INDEPENDENT_LOCAL_EVENT_PEAK_SUPPORTED",
+        "VALUE_RANKED_INDEPENDENT_AHA_SELECTED"
+      ],
+      "selection_status": "SELECTED",
+      "source_asset_id": "asset_50fa9c1b-5f7f-4ee8-aa0d-6d49b96c0862",
+      "source_index": 8,
+      "validation_status": "PASSED"
+    },
+    {
+      "candidate_id": "b316441b-1ddf-512c-a28d-aac89bd88c23",
+      "candidate_key": "event_asset_d87abc64-b879-421e-a7aa-9ccb83f97156",
+      "event_kind": "INTERACTION",
+      "event_salience": "MEDIUM",
+      "observation_id": "db3cf0dd-e9c7-5aaa-bb81-2aa8122c10f8",
+      "proposal_aliases": [],
+      "proposal_source": "DETERMINISTIC_EVENT_PEAK",
+      "rank_inputs": {
+        "event_salience": 0.65,
+        "event_specificity": 1,
+        "fact_support": 1,
+        "novelty": 1,
+        "presentation_quality_tiebreak": 0.88
+      },
+      "reason_codes": [
+        "INDEPENDENT_LOCAL_EVENT_PEAK_SUPPORTED",
+        "VALUE_RANKED_INDEPENDENT_AHA_SELECTED"
+      ],
+      "selection_status": "SELECTED",
+      "source_asset_id": "asset_d87abc64-b879-421e-a7aa-9ccb83f97156",
+      "source_index": 9,
+      "validation_status": "PASSED"
+    }
+  ],
+  "media": [
+    {
+      "candidate_id": "2b36a61c-106f-556c-8ed3-29f09405262a",
+      "final_media_count": 1,
+      "media": [
+        {
+          "asset_id": "37c49486-4c0d-4572-a707-0f9fb598840a",
+          "evidence_frame_ids": [
+            "frame_37c49486-4c0d-4572-a707-0f9fb598840a_w00_4500"
+          ],
+          "media_kind": "PHOTO",
+          "motifs": [
+            "animal",
+            "street_scene",
+            "vehicle"
+          ],
+          "observation_id": "1f87db65-c9a9-5c4f-beb0-9e3e8d6c4e16",
+          "preview_format": "PHOTO_EVIDENCE",
+          "quality_score": 0.9,
+          "role": "CORE",
+          "source_asset_id": "asset_37c49486-4c0d-4572-a707-0f9fb598840a"
+        }
+      ],
+      "reason_codes": [
+        "SINGLE_EVENT_PEAK_MEDIA"
+      ]
+    },
+    {
+      "candidate_id": "d43ab62f-4aac-5916-87e4-ae15ce6e24fb",
+      "final_media_count": 1,
+      "media": [
+        {
+          "asset_id": "50fa9c1b-5f7f-4ee8-aa0d-6d49b96c0862",
+          "evidence_frame_ids": [
+            "frame_50fa9c1b-5f7f-4ee8-aa0d-6d49b96c0862_w00_4500"
+          ],
+          "media_kind": "PHOTO",
+          "motifs": [
+            "food",
+            "street",
+            "night"
+          ],
+          "observation_id": "da3d7ce5-ecc4-558d-94b7-425969ee1cb5",
+          "preview_format": "PHOTO_EVIDENCE",
+          "quality_score": 0.85,
+          "role": "CORE",
+          "source_asset_id": "asset_50fa9c1b-5f7f-4ee8-aa0d-6d49b96c0862"
+        }
+      ],
+      "reason_codes": [
+        "SINGLE_EVENT_PEAK_MEDIA"
+      ]
+    },
+    {
+      "candidate_id": "b316441b-1ddf-512c-a28d-aac89bd88c23",
+      "final_media_count": 1,
+      "media": [
+        {
+          "asset_id": "d87abc64-b879-421e-a7aa-9ccb83f97156",
+          "evidence_frame_ids": [
+            "frame_d87abc64-b879-421e-a7aa-9ccb83f97156_w00_4500"
+          ],
+          "media_kind": "PHOTO",
+          "motifs": [
+            "food_truck",
+            "signage",
+            "customer"
+          ],
+          "observation_id": "db3cf0dd-e9c7-5aaa-bb81-2aa8122c10f8",
+          "preview_format": "PHOTO_EVIDENCE",
+          "quality_score": 0.88,
+          "role": "CORE",
+          "source_asset_id": "asset_d87abc64-b879-421e-a7aa-9ccb83f97156"
+        }
+      ],
+      "reason_codes": [
+        "SINGLE_EVENT_PEAK_MEDIA"
+      ]
+    }
+  ],
+  "writer_audit": [
+    {
+      "attempt": 1,
+      "candidate_id": "2b36a61c-106f-556c-8ed3-29f09405262a",
+      "draft_text": "一只鹿形动物正穿过铺装路面，背景有白色建筑与工程车。",
+      "draft_title": "初遇野鹿",
+      "memory_type": "AHA",
+      "reason_codes": [
+        "AHA_MOMENT_LINE_INVALID"
+      ],
+      "required_sentence_count_max": 1,
+      "required_sentence_count_min": 1,
+      "required_text_visible_max": 20,
+      "sentence_count": 1,
+      "surface_policy_version": "DIARY_ONE_X02_WRITER_SURFACE_V02",
+      "surface_source": "MODEL_WRITER",
+      "text_visible_characters": 26,
+      "title_visible_characters": 4,
+      "validation_status": "REJECTED"
+    },
+    {
+      "attempt": 1,
+      "candidate_id": "d43ab62f-4aac-5916-87e4-ae15ce6e24fb",
+      "draft_text": "铝箔纸包裹的串状食物覆红色酱料，置于金属桌，背景是夜市灯光。",
+      "draft_title": "红酱串香",
+      "memory_type": "AHA",
+      "reason_codes": [
+        "AHA_MOMENT_LINE_INVALID"
+      ],
+      "required_sentence_count_max": 1,
+      "required_sentence_count_min": 1,
+      "required_text_visible_max": 20,
+      "sentence_count": 1,
+      "surface_policy_version": "DIARY_ONE_X02_WRITER_SURFACE_V02",
+      "surface_source": "MODEL_WRITER",
+      "text_visible_characters": 30,
+      "title_visible_characters": 4,
+      "validation_status": "REJECTED"
+    },
+    {
+      "attempt": 1,
+      "candidate_id": "b316441b-1ddf-512c-a28d-aac89bd88c23",
+      "draft_text": "蓝橙餐车窗口前两人背影伫立，墙上挂有‘和风炙味集’招牌。",
+      "draft_title": "和风炙味",
+      "memory_type": "AHA",
+      "reason_codes": [
+        "AHA_MOMENT_LINE_INVALID"
+      ],
+      "required_sentence_count_max": 1,
+      "required_sentence_count_min": 1,
+      "required_text_visible_max": 20,
+      "sentence_count": 1,
+      "surface_policy_version": "DIARY_ONE_X02_WRITER_SURFACE_V02",
+      "surface_source": "MODEL_WRITER",
+      "text_visible_characters": 28,
+      "title_visible_characters": 4,
+      "validation_status": "REJECTED"
+    },
+    {
+      "attempt": 2,
+      "candidate_id": "2b36a61c-106f-556c-8ed3-29f09405262a",
+      "draft_text": "一只鹿形动物穿过铺装路面，背景有白墙、黄车、黑车与灌木，前景是木围栏和分类垃圾桶。",
+      "draft_title": "野鹿穿街",
+      "memory_type": "AHA",
+      "reason_codes": [
+        "AHA_MOMENT_LINE_INVALID"
+      ],
+      "required_sentence_count_max": 1,
+      "required_sentence_count_min": 1,
+      "required_text_visible_max": 20,
+      "sentence_count": 1,
+      "surface_policy_version": "DIARY_ONE_X02_WRITER_SURFACE_V02",
+      "surface_source": "MODEL_WRITER",
+      "text_visible_characters": 41,
+      "title_visible_characters": 4,
+      "validation_status": "REJECTED"
+    },
+    {
+      "attempt": 2,
+      "candidate_id": "d43ab62f-4aac-5916-87e4-ae15ce6e24fb",
+      "draft_text": "铝箔纸包的串食覆红酱，置于金属桌，背景是夜市摊位与红蓝灯光。",
+      "draft_title": "红酱串食",
+      "memory_type": "AHA",
+      "reason_codes": [
+        "AHA_MOMENT_LINE_INVALID"
+      ],
+      "required_sentence_count_max": 1,
+      "required_sentence_count_min": 1,
+      "required_text_visible_max": 20,
+      "sentence_count": 1,
+      "surface_policy_version": "DIARY_ONE_X02_WRITER_SURFACE_V02",
+      "surface_source": "MODEL_WRITER",
+      "text_visible_characters": 30,
+      "title_visible_characters": 4,
+      "validation_status": "REJECTED"
+    },
+    {
+      "attempt": 2,
+      "candidate_id": "b316441b-1ddf-512c-a28d-aac89bd88c23",
+      "draft_text": "蓝橙餐车窗口开启，一人操作，两人背影站立，墙上挂有‘和风炙味集’招牌。",
+      "draft_title": "和风餐车",
+      "memory_type": "AHA",
+      "reason_codes": [
+        "AHA_MOMENT_LINE_INVALID"
+      ],
+      "required_sentence_count_max": 1,
+      "required_sentence_count_min": 1,
+      "required_text_visible_max": 20,
+      "sentence_count": 1,
+      "surface_policy_version": "DIARY_ONE_X02_WRITER_SURFACE_V02",
+      "surface_source": "MODEL_WRITER",
+      "text_visible_characters": 35,
+      "title_visible_characters": 4,
+      "validation_status": "REJECTED"
+    }
+  ],
+  "model": "qwen3-vl-flash-2026-01-22",
+  "chapter_memory": {
+    "candidate_id": "95eacf32-9b6e-5b27-a4de-8679de21e258",
+    "memory_type": "CHAPTER",
+    "episode_code": "NATURE_WALK",
+    "storyline_identity": {
+      "beat_map": [
+        {
+          "beat_role": "ENTRY",
+          "contribution": "Introduces the first camel group with directional movement and background infrastructure (power lines, mountains).",
+          "fact_ids": [
+            "be60740f-79fb-58cf-91c7-e1552371810a"
+          ],
+          "observation_id": "acb1f05b-c94c-524e-84c3-04948647cd7f"
+        },
+        {
+          "beat_role": "PROGRESSION",
+          "contribution": "Deepens the scene with a specific camel bearing saddles, reinforcing the 'trail' context and scale.",
+          "fact_ids": [
+            "f6dec0f6-4c31-542f-8dc0-70ba71e13ef1"
+          ],
+          "observation_id": "6cec6778-64de-5bb8-be87-8b086181be77"
+        },
+        {
+          "beat_role": "ATMOSPHERE_SUPPORT",
+          "contribution": "Broadens to a herd view, emphasizing environmental continuity (grassland + distant peaks + wires).",
+          "fact_ids": [
+            "e08ecd65-2070-564e-97da-472e7c7d5ec6"
+          ],
+          "observation_id": "af014621-9f2a-50d7-871d-8d3758edf97a"
+        },
+        {
+          "beat_role": "PEAK",
+          "contribution": "Adds behavioral detail—some camels feeding, others walking—creating dynamic variation within the same setting.",
+          "fact_ids": [
+            "75991fa7-b2c9-5c03-a8f3-f1b35ca066e4"
+          ],
+          "observation_id": "1c0e6009-2c78-50d7-a10b-f00842791b01"
+        }
+      ],
+      "boundary_evidence": [],
+      "continuity_evidence": [],
+      "contract_version": "DIARY_ONE_X02_STORYLINE_V03",
+      "episode_codes": [
+        "NATURE_WALK"
+      ],
+      "focus_code": "",
+      "interruption_observation_ids": [],
+      "one_story_gate": {
+        "checks": {
+          "compact_eligible": false,
+          "interruption_count": 0,
+          "interruption_ratio": 0,
+          "member_count": 4,
+          "temporal_segment_count": 1,
+          "total_span_in_source_order": 3
+        },
+        "decision": "PASS",
+        "interruption_count": 0,
+        "interruption_ratio": 0,
+        "member_count": 4,
+        "reason_codes": [
+          "MODEL_GROUPING_NOT_OVERRIDDEN_BY_TAGS_OR_IMPORT_ORDER",
+          "MEMBER_COUNT_AND_BEAT_COVERAGE_PASSED"
+        ],
+        "split_challenge": {
+          "decision": "NOT_PROGRAMMATICALLY_EVALUATED",
+          "partition_alternatives": [],
+          "reason_codes": [
+            "GROUPING_AND_SPLITTING_ASSIGNED_TO_STRUCTURE_MODEL"
+          ],
+          "trigger_reason_codes": [],
+          "triggered": false,
+          "whole_candidate_summary": {
+            "interruption_count": 0,
+            "interruption_ratio": 0,
+            "member_count": 4,
+            "temporal_segment_count": 1,
+            "total_span_in_source_order": 3
+          }
+        },
+        "temporal_segment_count": 1,
+        "total_span_in_source_order": 3,
+        "validation_scope": "STRUCTURE_AND_REFERENCES_ONLY_NOT_SEMANTIC_VERIFICATION"
+      },
+      "storyline_basis": "DISCOVERY_SERIES",
+      "storyline_form": "SINGLE",
+      "temporal_segments": [
+        {
+          "observation_ids": [
+            "acb1f05b-c94c-524e-84c3-04948647cd7f",
+            "6cec6778-64de-5bb8-be87-8b086181be77",
+            "af014621-9f2a-50d7-871d-8d3758edf97a",
+            "1c0e6009-2c78-50d7-a10b-f00842791b01"
+          ],
+          "source_asset_ids": [
+            "asset_4e990c55-7206-4e0f-b7bb-dc7eeca64a70",
+            "asset_bfebce3d-1f0e-4060-bcd6-790c84378984",
+            "asset_df1b67be-5ff2-4b29-a3e8-0efe5d9dce94",
+            "asset_7d24524c-5a4c-4c1c-aaeb-dcc2eebe04eb"
+          ],
+          "time_label": "第2–5项"
+        }
+      ],
+      "thesis": "A sustained observation of multiple double-humped camels in a grassland trail setting, with consistent motifs of mountains, power lines, and open landscape."
+    },
+    "selected_media": [
+      {
+        "asset_id": "4e990c55-7206-4e0f-b7bb-dc7eeca64a70",
+        "evidence_frame_ids": [
+          "frame_4e990c55-7206-4e0f-b7bb-dc7eeca64a70_w00_4500"
+        ],
+        "media_kind": "PHOTO",
+        "motifs": [
+          "camel",
+          "grassland",
+          "power_lines",
+          "mountains"
+        ],
+        "observation_id": "acb1f05b-c94c-524e-84c3-04948647cd7f",
+        "preview_format": "PHOTO_EVIDENCE",
+        "quality_score": 0.85,
+        "role": "HERO",
+        "source_asset_id": "asset_4e990c55-7206-4e0f-b7bb-dc7eeca64a70"
+      },
+      {
+        "asset_id": "bfebce3d-1f0e-4060-bcd6-790c84378984",
+        "evidence_frame_ids": [
+          "frame_bfebce3d-1f0e-4060-bcd6-790c84378984_w00_4500"
+        ],
+        "media_kind": "PHOTO",
+        "motifs": [
+          "camel",
+          "grassland",
+          "mountains",
+          "power_lines"
+        ],
+        "observation_id": "6cec6778-64de-5bb8-be87-8b086181be77",
+        "preview_format": "PHOTO_EVIDENCE",
+        "quality_score": 0.8,
+        "role": "SUPPORT",
+        "source_asset_id": "asset_bfebce3d-1f0e-4060-bcd6-790c84378984"
+      },
+      {
+        "asset_id": "df1b67be-5ff2-4b29-a3e8-0efe5d9dce94",
+        "evidence_frame_ids": [
+          "frame_df1b67be-5ff2-4b29-a3e8-0efe5d9dce94_w00_4500"
+        ],
+        "media_kind": "PHOTO",
+        "motifs": [
+          "animal",
+          "landscape",
+          "electrical_lines"
+        ],
+        "observation_id": "af014621-9f2a-50d7-871d-8d3758edf97a",
+        "preview_format": "PHOTO_EVIDENCE",
+        "quality_score": 0.85,
+        "role": "SUPPORT",
+        "source_asset_id": "asset_df1b67be-5ff2-4b29-a3e8-0efe5d9dce94"
+      },
+      {
+        "asset_id": "7d24524c-5a4c-4c1c-aaeb-dcc2eebe04eb",
+        "evidence_frame_ids": [
+          "frame_7d24524c-5a4c-4c1c-aaeb-dcc2eebe04eb_w00_4500"
+        ],
+        "media_kind": "PHOTO",
+        "motifs": [
+          "animal",
+          "landscape",
+          "electrical_lines"
+        ],
+        "observation_id": "1c0e6009-2c78-50d7-a10b-f00842791b01",
+        "preview_format": "PHOTO_EVIDENCE",
+        "quality_score": 0.8,
+        "role": "SUPPORT",
+        "source_asset_id": "asset_7d24524c-5a4c-4c1c-aaeb-dcc2eebe04eb"
+      }
+    ],
+    "facts": [
+      {
+        "evidence_frame_ids": [
+          "frame_4e990c55-7206-4e0f-b7bb-dc7eeca64a70_w00_4500"
+        ],
+        "fact_id": "be60740f-79fb-58cf-91c7-e1552371810a",
+        "support_grade": "STRONG",
+        "text": "数只双峰骆驼在草坡上活动，其中一只正向左行走，其余几只静立或背对镜头，背景可见电线横贯天空及远山轮廓。"
+      },
+      {
+        "evidence_frame_ids": [
+          "frame_bfebce3d-1f0e-4060-bcd6-790c84378984_w00_4500"
+        ],
+        "fact_id": "f6dec0f6-4c31-542f-8dc0-70ba71e13ef1",
+        "support_grade": "STRONG",
+        "text": "一只双峰骆驼背负两个鞍具，站立于草地上，周围散布多只骆驼或卧或立，背景为连绵山脉与稀疏云层，上方有多条架空电线。"
+      },
+      {
+        "evidence_frame_ids": [
+          "frame_df1b67be-5ff2-4b29-a3e8-0efe5d9dce94_w00_4500"
+        ],
+        "fact_id": "e08ecd65-2070-564e-97da-472e7c7d5ec6",
+        "support_grade": "STRONG",
+        "text": "一群双峰骆驼在开阔草地上，背景为远山与架空电线，天空有少量云。"
+      },
+      {
+        "evidence_frame_ids": [
+          "frame_7d24524c-5a4c-4c1c-aaeb-dcc2eebe04eb_w00_4500"
+        ],
+        "fact_id": "75991fa7-b2c9-5c03-a8f3-f1b35ca066e4",
+        "support_grade": "STRONG",
+        "text": "多只双峰骆驼在丘陵地带活动，其中一只低头觅食，另一只侧身行走，背景可见电线杆与远山。"
+      }
+    ]
+  }
+}

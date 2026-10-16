@@ -1,0 +1,39 @@
+{
+  "fixture_type": "EXACT_REAL_MODEL_OBSERVATION_NOT_SEMANTIC_GOLD",
+  "source_response_sha256": "d67b445d51eb4d33cdfbc120e5288dcc905e16f4ed47487d8743720da6d943d5",
+  "source_stage": "S04_PERCEPTION_BATCH_002",
+  "source_material": "M04",
+  "observation": {
+    "asset_id": "asset_82575557-6628-4715-82e5-73f3f761fcc4",
+    "status": "OBSERVED",
+    "facts": [
+      {
+        "text": "Frame w00_1500 shows a pruned evergreen tree beside stone steps, with multiple dark ceramic jars arranged at its base and a red lantern hanging above; frame w00_7500 shows a narrow stone-paved alley with white-walled buildings, red lanterns, and a low stone wall; frame w01_1500 shows a longer view of the same alley with red lanterns strung along both sides; frame w01_7500 shows a close-up of stone pavement and a partial view of a dog’s head at the right edge.",
+        "evidence_frame_ids": [
+          "frame_82575557-6628-4715-82e5-73f3f761fcc4_w00_1500",
+          "frame_82575557-6628-4715-82e5-73f3f761fcc4_w00_7500",
+          "frame_82575557-6628-4715-82e5-73f3f761fcc4_w01_1500",
+          "frame_82575557-6628-4715-82e5-73f3f761fcc4_w01_7500"
+        ],
+        "support_grade": "STRONG"
+      }
+    ],
+    "setting_code": "HISTORIC_STREET",
+    "activity_code": "WALKING",
+    "episode_code": "HISTORIC_TOWN_WALK",
+    "subject_codes": [
+      "HISTORIC_ARCHITECTURE",
+      "STREET_SCENE"
+    ],
+    "motifs": [
+      "red_lantern",
+      "stone_pavement",
+      "ceramic_jar"
+    ],
+    "event_kind": "NONE",
+    "event_salience": "NONE",
+    "quality_score": 0.9,
+    "limitations": []
+  }
+}
+

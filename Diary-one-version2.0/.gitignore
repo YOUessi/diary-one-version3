@@ -1,0 +1,43 @@
+# Dependencies
+**/node_modules/
+**/.expo/
+**/dist/
+**/web-build/
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+
+# Secrets & local
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.p8
+**/*.p12
+**/*.jks
+**/*secret*
+**/DASHSCOPE*
+
+# Native / IDE
+**/ios/Pods/
+**/android/.gradle/
+**/.idea/
+**/.vscode/
+**/.DS_Store
+**/Thumbs.db
+
+# Dev lite runtime
+**/services/bff/dev_lite/data/
+**/services/bff/data/
+**/services/bff/.local/
+
+# Logs & caches
+**/*.log
+**/.metro-health-check*
+**/expo-env.d.ts
+
+.figma_pixel/
+.figma_audit/
+

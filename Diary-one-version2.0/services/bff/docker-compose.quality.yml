@@ -1,0 +1,19 @@
+# Overlay for multi-user internal beta / quality gate.
+# Usage (from services/bff):
+#   docker compose -f docker-compose.yml -f docker-compose.quality.yml --env-file .env up -d --build
+#
+# Requires: DASHSCOPE on host X02, SMTP for OTP, API_TOKEN != dev-token recommended.
+
+services:
+  bff:
+    environment:
+      ALLOW_MOCK_PREVIEW: "false"
+      EXPOSE_OTP_IN_RESPONSE: ${EXPOSE_OTP_IN_RESPONSE:-false}
+      DAY_REVISION_DAILY_LIMIT: ${DAY_REVISION_DAILY_LIMIT:-8}
+      DAY_REVISION_MAX_INFLIGHT: ${DAY_REVISION_MAX_INFLIGHT:-2}
+      DAY_REVISION_QUOTA_PATH: /app/data/day_revision_quota.json
+
+  worker:
+    environment:
+      ALLOW_MOCK_PREVIEW: "false"
+      WORKER_MAX_CONCURRENT: ${WORKER_MAX_CONCURRENT:-1}

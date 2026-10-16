@@ -1,0 +1,30 @@
+{
+  "source_run_id": "670b2417-d3a5-424b-a3c0-a1df6eb031cd",
+  "scope": "Recorded IDs and quality fields only; ranking in tests is plumbing, not model quality gold.",
+  "members": [
+    {
+      "id": "acb1f05b-c94c-524e-84c3-04948647cd7f",
+      "source_asset_id": "asset_4e990c55-7206-4e0f-b7bb-dc7eeca64a70",
+      "file": "13.jpg",
+      "quality_score": 0.85
+    },
+    {
+      "id": "6cec6778-64de-5bb8-be87-8b086181be77",
+      "source_asset_id": "asset_bfebce3d-1f0e-4060-bcd6-790c84378984",
+      "file": "12.jpg",
+      "quality_score": 0.8
+    },
+    {
+      "id": "af014621-9f2a-50d7-871d-8d3758edf97a",
+      "source_asset_id": "asset_df1b67be-5ff2-4b29-a3e8-0efe5d9dce94",
+      "file": "11.jpg",
+      "quality_score": 0.85
+    },
+    {
+      "id": "1c0e6009-2c78-50d7-a10b-f00842791b01",
+      "source_asset_id": "asset_7d24524c-5a4c-4c1c-aaeb-dcc2eebe04eb",
+      "file": "10.jpg",
+      "quality_score": 0.8
+    }
+  ]
+}

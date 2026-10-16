@@ -1,0 +1,229 @@
+{
+  "source_run_id": "60645614-2249-46f1-9dcc-af455e53e73f",
+  "source_type": "NORMALIZED_OBSERVATION_SNAPSHOT_NOT_RAW_MODEL_OUTPUT",
+  "snapshots": [
+    {
+      "source_display_name": "13.jpg",
+      "observation": {
+        "activity_code": "OBSERVING",
+        "asset_id": "293f4411-bb13-4af1-b802-17e36b87fb2c",
+        "degraded_fields": [],
+        "episode_code": "NATURE_WALK",
+        "event_kind": "DISCOVERY",
+        "event_salience": "MEDIUM",
+        "evidence_frame_ids": [
+          "frame_293f4411-bb13-4af1-b802-17e36b87fb2c_w00_4500"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "frame_293f4411-bb13-4af1-b802-17e36b87fb2c_w00_4500"
+            ],
+            "fact_id": "81348336-640a-519f-8884-fb98ac0bebf2",
+            "support_grade": "STRONG",
+            "text": "数峰双峰骆驼在草坡上活动，背景可见电线、远山及少量云朵，画面中无明显人类活动。"
+          }
+        ],
+        "id": "94b7d967-c8d0-5905-839c-fcaca234767f",
+        "limitations": [],
+        "media_kind": "PHOTO",
+        "motifs": [
+          "camel",
+          "grassland",
+          "power_lines",
+          "mountains"
+        ],
+        "quality_score": 0.85,
+        "setting_code": "NATURE_TRAIL",
+        "source_asset_id": "asset_293f4411-bb13-4af1-b802-17e36b87fb2c",
+        "status": "OBSERVED",
+        "subject_codes": [
+          "CAT",
+          "DOG",
+          "PEOPLE",
+          "STREET_SCENE",
+          "UNKNOWN"
+        ]
+      }
+    },
+    {
+      "source_display_name": "12.jpg",
+      "observation": {
+        "activity_code": "OBSERVING",
+        "asset_id": "deb6fea0-4832-4681-a0ed-3022c0c6f495",
+        "degraded_fields": [],
+        "episode_code": "NATURE_WALK",
+        "event_kind": "DISCOVERY",
+        "event_salience": "MEDIUM",
+        "evidence_frame_ids": [
+          "frame_deb6fea0-4832-4681-a0ed-3022c0c6f495_w00_4500"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "frame_deb6fea0-4832-4681-a0ed-3022c0c6f495_w00_4500"
+            ],
+            "fact_id": "e0cbf535-fca1-5235-813f-45eb4ea7893c",
+            "support_grade": "STRONG",
+            "text": "多峰骆驼散布于草坡，其中一只背负双鞍具，远处有连绵山脉与电线横贯天空，场景为开阔野外。"
+          }
+        ],
+        "id": "1626cd51-22b8-58ad-9cb2-6ae116d10b1e",
+        "limitations": [],
+        "media_kind": "PHOTO",
+        "motifs": [
+          "camel",
+          "grassland",
+          "mountains",
+          "power_lines"
+        ],
+        "quality_score": 0.85,
+        "setting_code": "NATURE_TRAIL",
+        "source_asset_id": "asset_deb6fea0-4832-4681-a0ed-3022c0c6f495",
+        "status": "OBSERVED",
+        "subject_codes": [
+          "CAT",
+          "DOG",
+          "PEOPLE",
+          "STREET_SCENE",
+          "UNKNOWN"
+        ]
+      }
+    },
+    {
+      "source_display_name": "08.jpg",
+      "observation": {
+        "activity_code": "OBSERVING",
+        "asset_id": "de0840c0-cd47-4650-bdfa-68679f1c1a43",
+        "degraded_fields": [
+          {
+            "action": "DROP_ONLY_INVALID_LIST_ENTRY",
+            "json_field_path": "$.observations[*].subject_codes[1]",
+            "original_value_sentinel": "<OUTSIDE_CLOSED_VOCABULARY>",
+            "validation_rule_id": "X02V03_ENUM_LIST_VALUE_DROPPED"
+          }
+        ],
+        "episode_code": "NATURE_WALK",
+        "event_kind": "DISCOVERY",
+        "event_salience": "MEDIUM",
+        "evidence_frame_ids": [
+          "frame_de0840c0-cd47-4650-bdfa-68679f1c1a43_w00_4500"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "frame_de0840c0-cd47-4650-bdfa-68679f1c1a43_w00_4500"
+            ],
+            "fact_id": "38e38996-0735-5329-ab5a-b3a7938170db",
+            "support_grade": "STRONG",
+            "text": "一只长有分叉鹿角的雄性鹿正低头啃食路边灌木丛，背景可见绿色山坡、树木及一辆白色汽车。"
+          }
+        ],
+        "id": "21d01389-db2d-50ae-8961-21cb6d667c95",
+        "limitations": [],
+        "media_kind": "PHOTO",
+        "motifs": [
+          "wildlife",
+          "grassland"
+        ],
+        "quality_score": 0.85,
+        "setting_code": "NATURE_TRAIL",
+        "source_asset_id": "asset_de0840c0-cd47-4650-bdfa-68679f1c1a43",
+        "status": "PARTIAL",
+        "subject_codes": [
+          "DOG"
+        ]
+      }
+    },
+    {
+      "source_display_name": "07.jpg",
+      "observation": {
+        "activity_code": "OBSERVING",
+        "asset_id": "d98808c9-1160-4e63-bfff-436f80e1e9c5",
+        "degraded_fields": [
+          {
+            "action": "DROP_ONLY_INVALID_LIST_ENTRY",
+            "json_field_path": "$.observations[*].subject_codes[1]",
+            "original_value_sentinel": "<OUTSIDE_CLOSED_VOCABULARY>",
+            "validation_rule_id": "X02V03_ENUM_LIST_VALUE_DROPPED"
+          }
+        ],
+        "episode_code": "NATURE_WALK",
+        "event_kind": "DISCOVERY",
+        "event_salience": "MEDIUM",
+        "evidence_frame_ids": [
+          "frame_d98808c9-1160-4e63-bfff-436f80e1e9c5_w00_4500"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "frame_d98808c9-1160-4e63-bfff-436f80e1e9c5_w00_4500"
+            ],
+            "fact_id": "c5dc4a38-7b67-504f-a0c2-bafdec5cc6f6",
+            "support_grade": "STRONG",
+            "text": "同一只雄鹿在铺砖路面旁的草地上继续低头进食，前景可见黄色停车线标记及另一辆白色汽车车顶。"
+          }
+        ],
+        "id": "2523e093-69eb-5ef4-b587-f07e2b0d0b23",
+        "limitations": [],
+        "media_kind": "PHOTO",
+        "motifs": [
+          "wildlife",
+          "park"
+        ],
+        "quality_score": 0.82,
+        "setting_code": "NATURE_TRAIL",
+        "source_asset_id": "asset_d98808c9-1160-4e63-bfff-436f80e1e9c5",
+        "status": "PARTIAL",
+        "subject_codes": [
+          "DOG"
+        ]
+      }
+    },
+    {
+      "source_display_name": "06.jpg",
+      "observation": {
+        "activity_code": "WALKING",
+        "asset_id": "f2e7a034-6f32-47de-a784-ab6a3e8ca0cf",
+        "degraded_fields": [
+          {
+            "action": "DROP_ONLY_INVALID_LIST_ENTRY",
+            "json_field_path": "$.observations[*].subject_codes[1]",
+            "original_value_sentinel": "<OUTSIDE_CLOSED_VOCABULARY>",
+            "validation_rule_id": "X02V03_ENUM_LIST_VALUE_DROPPED"
+          }
+        ],
+        "episode_code": "URBAN_WALK",
+        "event_kind": "ACTION",
+        "event_salience": "HIGH",
+        "evidence_frame_ids": [
+          "frame_f2e7a034-6f32-47de-a784-ab6a3e8ca0cf_w00_4500"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "frame_f2e7a034-6f32-47de-a784-ab6a3e8ca0cf_w00_4500"
+            ],
+            "fact_id": "27137862-149f-5a8c-9735-ce0b84814058",
+            "support_grade": "STRONG",
+            "text": "该雄鹿正在铺装路面上行走，背景为红墙白窗建筑、橙色门柱、蓝色垃圾桶及一台黄色工程车，远处可见传统屋顶。"
+          }
+        ],
+        "id": "ea83a853-1967-5b1b-9179-cd502d29e0fd",
+        "limitations": [],
+        "media_kind": "PHOTO",
+        "motifs": [
+          "wildlife",
+          "urban"
+        ],
+        "quality_score": 0.88,
+        "setting_code": "URBAN_STREET",
+        "source_asset_id": "asset_f2e7a034-6f32-47de-a784-ab6a3e8ca0cf",
+        "status": "PARTIAL",
+        "subject_codes": [
+          "DOG"
+        ]
+      }
+    }
+  ]
+}
