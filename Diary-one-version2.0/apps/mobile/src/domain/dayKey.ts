@@ -14,7 +14,7 @@ export function dateKeyFromLocalDate(d: Date): string {
  * IMP02 — prefer earliest known capture time for Diary day attribution.
  * Returns null when no asset has capture metadata (caller must not silently invent).
  */
-export function dayKeyFromCaptureTimes(timesMs: Array<number | undefined | null>): string | null {
+export function dayKeyFromCaptureTimes(timesMs: (number | undefined | null)[]): string | null {
   const known = timesMs.filter((t): t is number => typeof t === 'number' && Number.isFinite(t) && t > 0);
   if (!known.length) return null;
   const earliest = Math.min(...known);

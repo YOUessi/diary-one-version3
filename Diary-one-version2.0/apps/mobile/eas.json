@@ -28,7 +28,7 @@
       }
     },
     "preview": {
-      "distribution": "internal",
+      "distribution": "store",
       "ios": {
         "simulator": false
       },
@@ -39,7 +39,8 @@
         "EXPO_PUBLIC_INCLUDE_VISION": "1",
         "EXPO_PUBLIC_DEV_BFF_URL": "https://bff.diary.luxe",
         "EXPO_PUBLIC_DEV_BFF_TOKEN": ""
-      }
+      },
+      "autoIncrement": true
     },
     "production": {
       "autoIncrement": true,

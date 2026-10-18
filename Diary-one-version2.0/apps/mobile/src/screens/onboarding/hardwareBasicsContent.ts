@@ -3,7 +3,7 @@ import type { OnboardingHeroArt } from '../../components/OnboardingHeroArt';
 
 type ArtKind = ComponentProps<typeof OnboardingHeroArt>['kind'];
 
-export const HARDWARE_BASICS: Array<{
+export const HARDWARE_BASICS: {
   index: number;
   eyebrow: string;
   title: string;
@@ -12,7 +12,7 @@ export const HARDWARE_BASICS: Array<{
   calloutTitle: string;
   calloutBody: string;
   primary: string;
-}> = [
+}[] = [
   {
     index: 1,
     eyebrow: 'DEVICE BASICS · 1 OF 7',

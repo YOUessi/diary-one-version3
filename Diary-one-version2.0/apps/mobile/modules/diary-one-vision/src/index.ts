@@ -3,7 +3,7 @@ import { requireNativeModule } from 'expo-modules-core';
 export type DiaryOneVisionResult = {
   modelId: string;
   vectors: number[][];
-  classifications: Array<Array<{ identifier: string; confidence: number }>>;
+  classifications: { identifier: string; confidence: number }[][];
 };
 
 export type DiaryOneExtractedFrame = {

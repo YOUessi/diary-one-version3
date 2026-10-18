@@ -2613,8 +2613,8 @@ def _run_x02_impl(
         "moments": moments,
         "chapters": chapters,
         "ahas": ahas,
-        "client_profile_audit": client_profile_audit,
         "decision_trace": {
+            "client_profile_audit": client_profile_audit,
             "trace_type": "AUDITABLE_STAGE_DECISION_EVIDENCE",
             "contains_hidden_reasoning": False,
             "scope_note": (

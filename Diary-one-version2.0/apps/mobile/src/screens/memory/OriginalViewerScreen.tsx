@@ -57,7 +57,7 @@ export default function OriginalViewerScreen() {
   };
 
   const videoUri = item?.kind === 'video' ? item.playbackUri : undefined;
-  const imageUri = item?.posterUri ?? (item?.kind === 'photo' ? item.playbackUri : undefined);
+  const imageUri = item?.kind === 'photo' ? item.playbackUri ?? item.posterUri : item?.posterUri;
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>

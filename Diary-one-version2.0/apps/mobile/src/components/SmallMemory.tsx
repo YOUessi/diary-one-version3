@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors, spacing, type } from '../theme';
+import { colors, type } from '../theme';
 
 /** Figma D1/Small Memory — orange punctation + fragment body; not tappable. */
 export function SmallMemory({ text }: { text: string }) {

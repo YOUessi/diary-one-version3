@@ -1,6 +1,11 @@
 import * as Crypto from 'expo-crypto';
 import * as FileSystem from 'expo-file-system/legacy';
 
+/** Multipart sends compact JSON, rather than the pretty-printed local bundle file. */
+export async function sha256SubmittedManifest(manifest: unknown): Promise<string> {
+  return Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, JSON.stringify(manifest));
+}
+
 function base64ToUint8Array(base64: string): Uint8Array {
   const atobFn = globalThis.atob;
   if (!atobFn) {

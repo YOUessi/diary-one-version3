@@ -23,7 +23,7 @@ export function createRemoteSemanticAnalyzer(
       const posted = await postMultipartText(`${root}/v1/evidence/semantic-analyze`, form, headers);
       type SemanticBody = {
         modelId?: string;
-        results?: Array<{ vector: number[]; classifications: Array<{ identifier: string; confidence: number }> }>;
+        results?: { vector: number[]; classifications: { identifier: string; confidence: number }[] }[];
         detail?: string;
         degraded?: boolean;
       };

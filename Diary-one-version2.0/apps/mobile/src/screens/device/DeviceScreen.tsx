@@ -39,21 +39,6 @@ function BatteryGlyph({ muted }: { muted?: boolean }) {
   );
 }
 
-function ProgressTrack({
-  ratio,
-  fill,
-}: {
-  ratio: number;
-  fill: string;
-}) {
-  const clamped = Math.max(0, Math.min(1, ratio));
-  return (
-    <View style={styles.track}>
-      <View style={[styles.trackFill, { width: `${clamped * 100}%`, backgroundColor: fill }]} />
-    </View>
-  );
-}
-
 /** Figma 44:1347 Connected · 269:2102 Disconnected — editorial Device home. */
 export default function DeviceHomeScreen() {
   const navigation = useNavigation<Nav>();
@@ -61,39 +46,21 @@ export default function DeviceHomeScreen() {
   const deviceLinkState = useAppStore((s) => s.deviceLinkState);
   const devicePendingRecordings = useAppStore((s) => s.devicePendingRecordings);
   const lastSyncedAt = useAppStore((s) => s.lastSyncedAt);
-  const setAutomaticCaptureMode = useAppStore((s) => s.setAutomaticCaptureMode);
   const setDeviceLinkState = useAppStore((s) => s.setDeviceLinkState);
   const deviceBatteryPercent = useAppStore((s) => s.deviceBatteryPercent);
   const linked =
     deviceLinkState === 'hardware_linked' || deviceLinkState === 'lab_linked';
 
-  /**
-   * Figma 269:2102 Disconnected uses placeholder telemetry copy (72% last known, Camera On).
-   * When linked + real transport reports %, prefer live telemetry; otherwise match board copy.
-   */
-  const batteryLabel =
-    linked && deviceBatteryPercent != null
-      ? `${deviceBatteryPercent}%`
-      : linked
-        ? '—'
-        : deviceBatteryPercent != null
-          ? `${deviceBatteryPercent}% last known`
-          : '72% last known';
-  /** Figma shows switch thumb On for both Connected & Disconnected (latter disabled). */
-  const autoSwitchOn = true;
-  /** Figma 2382:2611 Connected · Pending Sync — pending but not mid-upload. */
+  // Design samples are fixtures, never substitute for missing device telemetry.
+  const batteryLabel = deviceBatteryPercent != null
+    ? `${deviceBatteryPercent}%${linked ? '' : ' last known'}`
+    : 'Unavailable';
   const pendingSync = linked && devicePendingRecordings;
-
-  const syncProgress = pendingSync ? 0 : linked ? 1 : 0;
-  /** Figma 269:2102 Sync trailing = Not uploaded when disconnected. */
-  const syncRight = !linked || pendingSync ? 'Not uploaded' : 'Up to date';
-  const syncSub = !linked
-    ? '38 recordings waiting for connection'
-    : pendingSync
-      ? '38 recordings on device · updated 2 min ago'
-      : lastSyncedAt
-        ? `Updated ${formatRelative(lastSyncedAt)}`
-        : 'Ready when new recordings arrive';
+  const syncRight = !linked ? 'Unavailable' : pendingSync ? 'Not uploaded' :
+    lastSyncedAt ? 'Up to date' : 'Unavailable';
+  const syncSub = !linked ? 'Connect Diary One to read sync status' : pendingSync
+    ? 'New recordings on Diary One'
+    : lastSyncedAt ? `Updated ${formatRelative(lastSyncedAt)}` : 'Sync status unavailable';
 
   const onConnect = () => {
     if (showInternalLabTools) {
@@ -140,13 +107,13 @@ export default function DeviceHomeScreen() {
           <View style={styles.cardRow}>
             <Text style={styles.cardRowTitle}>Camera</Text>
             <Text style={[styles.cardRowValue, !linked && styles.cardRowValueMuted]}>
-              {linked ? 'On' : 'On'}
+              Unavailable
             </Text>
           </View>
           <View style={styles.cardDividerInset} />
           <View style={[styles.cardRow, styles.cardRowLast]}>
             <Text style={styles.cardRowTitle}>Desktop mode</Text>
-            <Text style={[styles.cardRowValue, !linked && styles.cardRowValueMuted]}>Off</Text>
+            <Text style={[styles.cardRowValue, !linked && styles.cardRowValueMuted]}>Unavailable</Text>
           </View>
         </View>
 
@@ -155,7 +122,7 @@ export default function DeviceHomeScreen() {
             <View style={styles.alertMark} />
             <View style={styles.alertCopy}>
               <Text style={styles.alertTitle}>Connection lost</Text>
-              <Text style={styles.alertSub}>Uploads paused · updated 12 min ago</Text>
+              <Text style={styles.alertSub}>Device status is unavailable while disconnected</Text>
             </View>
             <Pressable style={styles.connectBtn} onPress={onConnect} accessibilityRole="button">
               <Text style={styles.connectLabel}>Connect</Text>
@@ -168,7 +135,7 @@ export default function DeviceHomeScreen() {
           <Text style={styles.uploadEyebrow}>WITHOUT HARDWARE</Text>
           <Text style={styles.uploadTitle}>Upload photos & videos</Text>
           <Text style={styles.uploadLead}>
-            Pick from this iPhone’s library. Selected media become Evidence for today’s Diary
+            Pick from this iPhone’s library. Selected media become memories for their capture dates in Diary
             cloud run — no Diary One device required.
           </Text>
           <Pressable
@@ -204,48 +171,32 @@ export default function DeviceHomeScreen() {
           >
             <Text style={styles.syncNowLabel}>Sync now</Text>
           </Pressable>
-        ) : linked ? (
-          <Pressable onPress={() => void performDeviceSync()} style={styles.syncHit}>
-            <ProgressTrack ratio={syncProgress} fill={colors.ink} />
-          </Pressable>
         ) : null}
         <View style={styles.hairline} />
 
         {/* Storage */}
         <View style={styles.sectionHead}>
           <Text style={styles.sectionTitle}>Storage</Text>
-          {!linked ? <Text style={styles.lastKnown}>Last known</Text> : null}
         </View>
         <View style={styles.storageRow}>
           <Text style={styles.storageLabel}>On device</Text>
-          <Text style={styles.storageValue}>18.4 GB left / 32 GB</Text>
+          <Text style={styles.storageValue}>Unavailable</Text>
         </View>
-        <ProgressTrack
-          ratio={18.4 / 32}
-          fill={linked ? colors.ink : colors.secondary}
-        />
         <View style={[styles.storageRow, styles.storageRowNext]}>
           <Text style={styles.storageLabel}>Cloud</Text>
-          <Text style={styles.storageValue}>72 GB left / 100 GB</Text>
+          <Text style={styles.storageValue}>Unavailable</Text>
         </View>
-        <ProgressTrack
-          ratio={72 / 100}
-          fill={linked ? colors.ink : colors.secondary}
-        />
         <View style={styles.hairline} />
 
         {/* Automatic Capture */}
         <View style={styles.switchRow}>
           <Text style={styles.switchLabel}>Automatic Capture</Text>
+          <Text style={styles.sectionRightMuted}>Unavailable</Text>
           <Switch
-            value={autoSwitchOn}
-            onValueChange={(v) => {
-              if (!linked) return;
-              setAutomaticCaptureMode(v ? 'high' : 'standard');
-              if (!v) navigation.navigate('AutomaticCapture');
-            }}
-            disabled={!linked}
-            trackColor={{ false: '#C8C5BF', true: linked ? colors.ink : '#C8C5BF' }}
+            value={false}
+            disabled
+            accessibilityLabel="Automatic Capture unavailable without device telemetry"
+            trackColor={{ false: '#C8C5BF', true: colors.ink }}
             thumbColor={colors.card}
             ios_backgroundColor="#C8C5BF"
           />

@@ -57,6 +57,7 @@ function frameUriForAsset(
       const i = entry.frameIds.indexOf(fid);
       if (i >= 0) return entry.uris[i];
     }
+    throw new Error(`Selected frame is missing for asset ${assetId}`);
   }
   return entry.uris[0];
 }
@@ -108,21 +109,15 @@ export function applyChapterMediaHints(
       return ch;
     }
 
-    const heroFrame =
-      (hints.heroAssetId
-        ? frameUriForAsset(assetIndex, hints.heroAssetId)
-        : undefined) ??
-      (hints.selectedMedia?.find((m) => m.role === 'HERO')
-        ? frameUriForAsset(
-            assetIndex,
-            hints.selectedMedia.find((m) => m.role === 'HERO')!.asset_id,
-            hints.selectedMedia.find((m) => m.role === 'HERO')!.evidence_frame_ids,
-          )
-        : undefined);
+    const selectedHero = hints.selectedMedia?.find((m) => m.role === 'HERO') ??
+      hints.selectedMedia?.find((m) => m.asset_id === hints.heroAssetId);
+    if (selectedHero && hints.heroAssetId && selectedHero.asset_id !== hints.heroAssetId) {
+      throw new Error('Hero asset does not match the selected hero.');
+    }
+    const heroFrame = selectedHero
+      ? frameUriForAsset(assetIndex, selectedHero.asset_id, selectedHero.evidence_frame_ids)
+      : hints.heroAssetId ? frameUriForAsset(assetIndex, hints.heroAssetId) : undefined;
 
-    const heroAssetId =
-      hints.heroAssetId ??
-      hints.selectedMedia?.find((m) => m.role === 'HERO')?.asset_id;
     const heroUri = heroFrame;
 
     // PRD AI02 — only cloud-selected media; never invent Moments from moment_ids
@@ -132,14 +127,14 @@ export function applyChapterMediaHints(
     const moments = selected
       .map((media, index) => {
         const frame =
-          frameUriForAsset(assetIndex, media.asset_id, media.evidence_frame_ids) ??
-          (media.role === 'HERO' || media.asset_id === heroAssetId ? heroFrame : undefined);
-        if (!frame && !sourceUris?.[media.asset_id]?.uri) {
-          return null;
-        }
+          frameUriForAsset(assetIndex, media.asset_id, media.evidence_frame_ids);
+        if (!frame) throw new Error('Selected evidence frame is unavailable.');
         const kind =
           sourceUris?.[media.asset_id]?.media_kind ??
           assetIndex.get(media.asset_id)?.mediaKind;
+        if (kind === 'VIDEO' && !sourceUris?.[media.asset_id]?.uri) {
+          throw new Error('Selected video source is unavailable.');
+        }
         const playback = playbackUriForAsset(media.asset_id, frame, kind, sourceUris);
         return {
           id: `${ch.id}-media-${media.asset_id}-${index}`,
@@ -196,5 +191,13 @@ export async function attachChapterMediaFromBundle(
   const index = buildBundleAssetUriIndex(bundleDir, assets);
   const sourceUris = await loadSourceUris(bundleDir);
   const hints = mediaHintsFromPreviewChapters(previewChapters);
-  return applyChapterMediaHints(chapters, hints, index, sourceUris);
+  const attached = applyChapterMediaHints(chapters, hints, index, sourceUris);
+  // Resolve the complete selected set before the diary/dedupe transaction commits.
+  const uris = new Set(attached.flatMap((chapter) => [chapter.heroUri,
+    ...chapter.moments.flatMap((moment) => [moment.posterUri, moment.playbackUri])])
+    .filter((uri): uri is string => Boolean(uri)));
+  for (const uri of uris) {
+    if (!(await FileSystem.getInfoAsync(uri)).exists) throw new Error('Selected media is unavailable. Retry the import.');
+  }
+  return attached;
 }

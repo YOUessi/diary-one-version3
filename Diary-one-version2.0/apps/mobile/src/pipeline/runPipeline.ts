@@ -9,22 +9,27 @@ import { submitProductionDayRevision, pollProductionCloudJob } from '../backend/
 import type { CloudProcessingTarget } from '../backend/types';
 import { mapPreviewToDiary } from '../cloud/mapPreviewResult';
 import { validatePreviewResult } from '../cloud/validatePreviewResult';
-import { applyDiaryDayUpdate, applyTodayStatus } from '../store/applyDiaryDay';
+import { commitDiaryBatch } from '../store/hydrate';
 import { mapTodayStatusFromPreview } from '../cloud/mapTodayStatus';
-import { dayKeyFromCaptureTimes, diaryTodayKey } from '../domain/dayKey';
+import { diaryTodayKey } from '../domain/dayKey';
 import {
   createStableDayRevisionId,
   selectionFingerprint,
 } from '../domain/dayRevision';
 import { PHOTO_LIBRARY_TEST_SOURCE, type MediaIntakeSource } from '../domain/mediaIntake';
 import { attachChapterMediaFromBundle } from './attachChapterMedia';
-import { rememberRawAssetsFromBundleAssets } from './dedupeMedia';
 import { rememberPipelineTask } from '../db/ledger';
 import { recordPipelineLedger } from '../db/assetLedger';
 import { requireProductionBearer, resolveProductionBearer } from '../backend/resolveProductionBearer';
 import { isFormalConsumerApp, isLabToolsEnabled } from '../config/buildProfile';
 
+import { groupMediaByDay } from '../domain/importDays';
+import { scopeImportedMemories } from '../domain/scopeImportedMemories';
+import { capturedImports } from '../domain/capturedImports';
+import { sha256SubmittedManifest } from './sha256File';
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const activeRunners = new Set<string>();
 
 function rejectMockBff(): boolean {
   // Formal consumer App (Expo Go default / beta / store) never accepts mock.
@@ -92,6 +97,9 @@ async function pollUntilDone(
   jobId: string,
 ) {
   for (let i = 0; i < 180; i++) {
+    if (!useAppStore.getState().pipelineTasks.some((task) => task.id === taskId)) {
+      throw new Error('Import cancelled.');
+    }
     const poll = await pollProductionCloudJob(endpoint, token, jobId);
     if (poll.state === 'succeeded') {
       if (!poll.result) {
@@ -100,7 +108,7 @@ async function pollUntilDone(
       return poll.result;
     }
     if (poll.state === 'failed') {
-      throw new Error(poll.message || 'Cloud job failed');
+      throw new Error(`CLOUD_JOB_FAILED:${poll.message || 'Cloud job failed'}`);
     }
     if (i % 2 === 0) {
       patchTask(taskId, {
@@ -206,10 +214,19 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
     return;
   }
 
+  const ownerToken = useAppStore.getState().sessionToken;
+  const assertOwner = () => {
+    if (useAppStore.getState().sessionToken !== ownerToken ||
+        !useAppStore.getState().pipelineTasks.some((t) => t.id === taskId)) {
+      throw new Error('Import cancelled because the signed-in account changed.');
+    }
+  };
+
   const taskDayKey =
     useAppStore.getState().pipelineTasks.find((t) => t.id === taskId)?.dayKey ?? diaryTodayKey();
   const isTodayPipeline = taskDayKey === diaryTodayKey();
-  const hadReadyForDay = useAppStore.getState().chapters.some((c) => c.dateKey === taskDayKey);
+  const hadReadyForDay = useAppStore.getState().chapters.some((c) => c.dateKey === taskDayKey) ||
+    Boolean(useAppStore.getState().smallMemoriesByDate[taskDayKey]?.length);
   if (isTodayPipeline) {
     useAppStore.setState({
       todayStatus: hadReadyForDay ? 'READY_PREPARING' : 'PREPARING',
@@ -217,6 +234,7 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
   }
 
   try {
+    activeRunners.add(taskId);
     patchTask(taskId, {
       status: 'building_evidence',
       message: `Deduping + normalizing ${items.length} asset(s) (compress / frames)…`,
@@ -227,8 +245,9 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
     if (!root) throw new Error('documentDirectory unavailable');
     const bundleDir = `${root}bundles/${sessionFolder}/`;
     const bundleVersion = useAppStore.getState().bundleExportVersion;
-    const { jsonPath, bundle } = await buildAppLibraryBundle(items, bundleDir, bundleVersion);
+    const { jsonPath, bundle, sourceUris } = await buildAppLibraryBundle(items, bundleDir, bundleVersion, assertOwner);
 
+    assertOwner();
     patchTask(taskId, {
       status: 'bundle_ready',
       bundleDir,
@@ -247,6 +266,12 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
 
     const { target, endpoint, token } = resolveCloudTarget();
     const task = useAppStore.getState().pipelineTasks.find((t) => t.id === taskId);
+    const sourceBatchId = task?.sourceBatchId ?? task?.dayRevisionId ?? taskId;
+    const originals = capturedImports(sourceBatchId, taskDayKey, bundleDir, sourceUris, bundle.assets, task?.intakeSource);
+    useAppStore.setState((state) => ({ capturedOriginals: [
+      ...state.capturedOriginals.filter((original) => !originals.some((item) => item.id === original.id)),
+      ...originals,
+    ] }));
 
     if (endpoint) {
       const consent = useAppStore.getState().cloudEvidenceConsent;
@@ -287,6 +312,8 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
             ? 'Cloud processing… (may take several minutes)'
             : 'X02 v0.4.1 preview running… (may take several minutes)',
       });
+      const manifestSha256 = await sha256SubmittedManifest(bundle);
+      assertOwner();
       const preview = await runCloudPreview(
         target,
         endpoint,
@@ -296,20 +323,12 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
         jsonPath,
         task?.dayRevisionId ?? taskId,
       );
-      const valid = validatePreviewResult(preview);
+      assertOwner();
+      const valid = validatePreviewResult(preview, { manifest: bundle, manifestSha256 });
       if (!valid.ok) {
         throw new Error(`Result validation failed: ${valid.reason}`);
       }
-      // REL01 — only after admitted cloud success; failed retries may re-select same bytes.
-      await rememberRawAssetsFromBundleAssets(
-        (bundle.assets ?? []) as Array<{
-          asset_id?: string;
-          original_sha256?: string;
-          media_kind?: string;
-          source_display_name?: string;
-          original_bytes?: number;
-        }>,
-      );
+      assertOwner();
       const dayKey =
         useAppStore.getState().pipelineTasks.find((t) => t.id === taskId)?.dayKey ?? diaryTodayKey();
       const mapped = mapPreviewToDiary(preview, dayKey);
@@ -319,20 +338,21 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
         bundleDir,
         jsonPath,
       );
+      assertOwner();
       const emptyIncoming =
         chaptersWithHero.length === 0 && mapped.smallMemories.length === 0;
-      const priorForDay = useAppStore.getState().chapters.some((c) => c.dateKey === dayKey);
+      const priorForDay = useAppStore.getState().chapters.some((c) => c.dateKey === dayKey) ||
+        Boolean(useAppStore.getState().smallMemoriesByDate[dayKey]?.length);
       const preserve = Boolean(valid.honestEmpty) || emptyIncoming;
       // PRD DIA04 / DAT01 — NO_GROUNDED / empty day must not erase prior Ready.
-      applyDiaryDayUpdate(dayKey, chaptersWithHero, mapped.smallMemories, {
-        preservePriorIfIncomingEmpty: preserve,
-      });
+      const scoped = scopeImportedMemories(sourceBatchId, chaptersWithHero, mapped.smallMemories);
       const preservedPriorReady = preserve && priorForDay;
-      if (dayKey === diaryTodayKey()) {
-        applyTodayStatus(
-          mapTodayStatusFromPreview(preview, { preservedPriorReady }),
-        );
-      }
+      await commitDiaryBatch({ taskId, dayKey, sourceBatchId, chapters: scoped.chapters,
+        smallMemories: scoped.smallMemories, preservePriorIfIncomingEmpty: preserve,
+        todayStatus: dayKey === diaryTodayKey()
+          ? mapTodayStatusFromPreview(preview, { preservedPriorReady }) : undefined,
+        assets: bundle.assets, assertCurrent: assertOwner });
+      assertOwner();
       if (emptyIncoming) {
         patchTask(taskId, {
           status: 'succeeded',
@@ -356,20 +376,31 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
       );
     }
   } catch (err) {
+    if (useAppStore.getState().sessionToken !== ownerToken ||
+        !useAppStore.getState().pipelineTasks.some((t) => t.id === taskId)) {
+      // Only this task's app-owned folder; a cancelled builder may have recreated it.
+      const root = FileSystem.documentDirectory;
+      if (root) await FileSystem.deleteAsync(`${root}bundles/bundle-${taskId}/`, { idempotent: true }).catch(() => {});
+      return;
+    }
     const message = err instanceof Error ? err.message : String(err);
     patchTask(taskId, {
       status: 'failed',
       message: 'Pipeline failed',
       error: message,
+      ...(message.startsWith('CLOUD_JOB_FAILED:') ? { productionJobId: undefined } : {}),
     });
     // PRD DIA04 / T05 — keep prior Ready if that day still has content; do not invent Empty Day.
     const failDay =
       useAppStore.getState().pipelineTasks.find((t) => t.id === taskId)?.dayKey ?? diaryTodayKey();
     if (failDay === diaryTodayKey()) {
-      const stillHas = useAppStore.getState().chapters.some((c) => c.dateKey === failDay);
+      const stillHas = useAppStore.getState().chapters.some((c) => c.dateKey === failDay) ||
+        Boolean(useAppStore.getState().smallMemoriesByDate[failDay]?.length);
       useAppStore.setState({ todayStatus: stillHas ? 'READY' : 'PARTIAL' });
     }
     Alert.alert('Pipeline failed', message.slice(0, 500));
+  } finally {
+    activeRunners.delete(taskId);
   }
 }
 
@@ -378,6 +409,9 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
  * mark stuck pre-upload states failed so enqueue is not blocked forever.
  */
 export function resumeInFlightCloudJobs(): void {
+  const ownerToken = useAppStore.getState().sessionToken;
+  const stillOwns = (id: string) => useAppStore.getState().sessionToken === ownerToken &&
+    useAppStore.getState().pipelineTasks.some((task) => task.id === id);
   const tasks = useAppStore.getState().pipelineTasks;
   const stuck = ['queued', 'building_evidence', 'bundle_ready'] as const;
   for (const t of tasks) {
@@ -396,29 +430,21 @@ export function resumeInFlightCloudJobs(): void {
       (t.status === 'cloud_processing' || t.status === 'uploading') &&
       t.bundleDir &&
       t.bundleJsonPath
+      && !activeRunners.has(t.id)
     ) {
       const { endpoint, token } = resolveCloudTarget();
       if (!endpoint) continue;
+      activeRunners.add(t.id);
       void (async () => {
         try {
           const preview = await pollUntilDone(endpoint, token || requireProductionBearer(), t.id, t.productionJobId!);
-          const valid = validatePreviewResult(preview);
+          if (!stillOwns(t.id)) return;
+          const raw = await FileSystem.readAsStringAsync(t.bundleJsonPath!);
+          const manifest = JSON.parse(raw) as import('./bundleTypes').AppLibraryBundle;
+          const manifestSha256 = await sha256SubmittedManifest(manifest);
+          if (!stillOwns(t.id)) return;
+          const valid = validatePreviewResult(preview, { manifest, manifestSha256 });
           if (!valid.ok) throw new Error(valid.reason);
-          try {
-            const raw = await FileSystem.readAsStringAsync(t.bundleJsonPath!);
-            const manifest = JSON.parse(raw) as { assets?: unknown[] };
-            await rememberRawAssetsFromBundleAssets(
-              (manifest.assets ?? []) as Array<{
-                asset_id?: string;
-                original_sha256?: string;
-                media_kind?: string;
-                source_display_name?: string;
-                original_bytes?: number;
-              }>,
-            );
-          } catch {
-            /* ledger best-effort on resume */
-          }
           const mapped = mapPreviewToDiary(preview, t.dayKey);
           const chaptersWithHero = await attachChapterMediaFromBundle(
             mapped.chapters,
@@ -426,20 +452,23 @@ export function resumeInFlightCloudJobs(): void {
             t.bundleDir!,
             t.bundleJsonPath!,
           );
+          if (!stillOwns(t.id)) return;
           const emptyIncoming =
             chaptersWithHero.length === 0 && mapped.smallMemories.length === 0;
-          const priorForDay = useAppStore.getState().chapters.some((c) => c.dateKey === t.dayKey);
+          const priorForDay = useAppStore.getState().chapters.some((c) => c.dateKey === t.dayKey) ||
+            Boolean(useAppStore.getState().smallMemoriesByDate[t.dayKey]?.length);
           const preserve = Boolean(valid.honestEmpty) || emptyIncoming;
-          applyDiaryDayUpdate(t.dayKey, chaptersWithHero, mapped.smallMemories, {
+          const scoped = scopeImportedMemories(t.sourceBatchId ?? t.dayRevisionId ?? t.id, chaptersWithHero, mapped.smallMemories);
+          await commitDiaryBatch({ taskId: t.id, dayKey: t.dayKey,
+            sourceBatchId: t.sourceBatchId ?? t.dayRevisionId ?? t.id,
+            chapters: scoped.chapters, smallMemories: scoped.smallMemories,
             preservePriorIfIncomingEmpty: preserve,
-          });
-          if (t.dayKey === diaryTodayKey()) {
-            applyTodayStatus(
-              mapTodayStatusFromPreview(preview, {
-                preservedPriorReady: preserve && priorForDay,
-              }),
-            );
-          }
+            todayStatus: t.dayKey === diaryTodayKey()
+              ? mapTodayStatusFromPreview(preview, { preservedPriorReady: preserve && priorForDay }) : undefined,
+            assets: manifest.assets, assertCurrent: () => {
+              if (!stillOwns(t.id)) throw new Error('Import cancelled because the account changed.');
+            } });
+          if (!stillOwns(t.id)) return;
           patchTask(t.id, {
             status: 'succeeded',
             message: emptyIncoming
@@ -447,6 +476,7 @@ export function resumeInFlightCloudJobs(): void {
               : `Resumed · Diary updated · ${chaptersWithHero.length} memories`,
           });
         } catch (e) {
+          if (!stillOwns(t.id)) return;
           const err = e instanceof Error ? e.message : String(e);
           patchTask(t.id, {
             status: 'failed',
@@ -454,63 +484,66 @@ export function resumeInFlightCloudJobs(): void {
               ? 'Cloud job gone — submit again'
               : 'Resume poll failed',
             error: err,
-            productionJobId: err.startsWith('JOB_NOT_FOUND') ? undefined : t.productionJobId,
+            productionJobId: err.startsWith('JOB_NOT_FOUND') || err.startsWith('CLOUD_JOB_FAILED:')
+              ? undefined : t.productionJobId,
           });
+        } finally {
+          activeRunners.delete(t.id);
         }
       })();
     }
   }
 }
 
+/** Retry local validation/materialization/save against the original billable cloud job. */
+export function retryStoredCloudResult(taskId: string): void {
+  const state = useAppStore.getState();
+  const task = state.pipelineTasks.find((item) => item.id === taskId);
+  if (!task || task.status !== 'failed' || !task.productionJobId || !task.bundleDir || !task.bundleJsonPath ||
+      activeRunners.has(taskId) || state.pipelineTasks.some((item) =>
+        item.status !== 'failed' && item.status !== 'succeeded')) return;
+  patchTask(taskId, { status: 'cloud_processing', error: undefined, message: 'Retrying saved cloud result…' });
+  resumeInFlightCloudJobs();
+}
+
 export function enqueuePipeline(
   items: PickedMedia[],
   intakeSource: MediaIntakeSource = PHOTO_LIBRARY_TEST_SOURCE,
 ): string | null {
-  const active = useAppStore.getState().pipelineTasks.some(
+  const state = useAppStore.getState();
+  if (!items.length || state.pipelineTasks.some(
     (t) => t.status !== 'succeeded' && t.status !== 'failed',
-  );
-  if (active) {
-    // Prefer resume over hard-busy when a job id already exists (REL01).
-    const inflight = useAppStore.getState().pipelineTasks.find(
-      (t) =>
-        t.productionJobId &&
-        (t.status === 'cloud_processing' || t.status === 'uploading'),
-    );
-    if (inflight) {
-      resumeInFlightCloudJobs();
-      return inflight.id;
-    }
-    return null;
-  }
+  )) return null;
 
-  const captureDay = dayKeyFromCaptureTimes(items.map((i) => i.creationTimeMs));
-  const dayKey = captureDay ?? diaryTodayKey();
-  const fp = selectionFingerprint(items);
-  const owner =
-    useAppStore.getState().localProfile.email?.trim() ||
-    useAppStore.getState().sessionToken.trim().slice(0, 12);
-  const dayRevisionId = createStableDayRevisionId(dayKey, fp, owner);
-
-  // REL01 — same selection keeps stable day_revision_id for BFF idempotency,
-  // but NEVER reuse a failed productionJobId (client would poll a dead job forever).
-  const id = `task-${Date.now()}`;
-  const task: PipelineTask = {
-    id,
-    createdAt: new Date().toISOString(),
-    dayKey,
-    dayRevisionId,
-    productionJobId: undefined,
-    intakeSource,
-    status: 'queued',
-    message: captureDay
-      ? `Queued · day from capture (${dayKey})`
-      : 'Queued · capture time unknown → today',
-    sourceCount: items.length,
-    dayKeyFromCapture: Boolean(captureDay),
-  };
-  useAppStore.setState((state) => ({
-    pipelineTasks: [task, ...state.pipelineTasks],
+  const ownerToken = state.sessionToken;
+  const owner = state.localProfile.email?.trim() || ownerToken.slice(0, 12);
+  const groups = groupMediaByDay(items, diaryTodayKey());
+  const queue = groups.map(([dayKey, media], index) => {
+    const dayRevisionId = createStableDayRevisionId(dayKey, selectionFingerprint(media), owner);
+    const task: PipelineTask = {
+      id: `task-${Date.now()}-${index}`,
+      createdAt: new Date().toISOString(),
+      dayKey,
+      dayRevisionId,
+      sourceBatchId: dayRevisionId,
+      intakeSource,
+      status: 'queued',
+      message: `Queued · ${dayKey}`,
+      sourceCount: media.length,
+      dayKeyFromCapture: media.every((item) => Boolean(item.captureDayKey || item.creationTimeMs)),
+    };
+    return { task, media };
+  });
+  useAppStore.setState((current) => ({
+    pipelineTasks: [...queue.map(({ task }) => task), ...current.pipelineTasks],
   }));
-  void runPipeline(id, items);
-  return id;
+  // One cloud run at a time, with a separate revision for every local capture day.
+  void (async () => {
+    for (const { task, media } of queue) {
+      if (useAppStore.getState().sessionToken !== ownerToken ||
+          !useAppStore.getState().pipelineTasks.some((t) => t.id === task.id)) break;
+      await runPipeline(task.id, media);
+    }
+  })();
+  return queue[0].task.id;
 }

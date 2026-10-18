@@ -101,6 +101,14 @@ class DailyQuotaStore:
             bucket = data.get(day) or {}
             return int(bucket.get(key, 0))
 
+    def delete_caller(self, key: str) -> None:
+        with self._lock:
+            data = self._load()
+            for bucket in data.values():
+                if isinstance(bucket, dict):
+                    bucket.pop(key, None)
+            self._save(data)
+
     def consume(self, key: str, *, limit: int | None = None) -> int:
         """Increment and return new count. Raises HTTP 429 if over limit."""
         lim = daily_limit() if limit is None else limit

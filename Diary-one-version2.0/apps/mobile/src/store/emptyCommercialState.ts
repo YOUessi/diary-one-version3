@@ -40,6 +40,7 @@ export type CommercialEmptySlice = {
   bundleExportVersion: 'V04';
   onboardingComplete: boolean;
   preferenceSurveyComplete: boolean;
+  preferenceSurveyResponse: null;
   cloudEvidenceConsent: null;
   cloudEvidenceConsentVersion: null;
   selectedDateKey: string;
@@ -66,6 +67,7 @@ export function commercialEmptySlice(opts?: { onboardingComplete?: boolean }): C
     bundleExportVersion: 'V04',
     onboardingComplete: opts?.onboardingComplete ?? false,
     preferenceSurveyComplete: false,
+    preferenceSurveyResponse: null,
     cloudEvidenceConsent: null,
     cloudEvidenceConsentVersion: null,
     selectedDateKey: diaryTodayKey(),

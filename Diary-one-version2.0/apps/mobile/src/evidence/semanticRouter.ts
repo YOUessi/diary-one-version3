@@ -427,7 +427,7 @@ export type RouteSemanticInput = {
   profile: SemanticRoutingProfile;
   modelId: string;
   analyzerDegraded: boolean;
-  probes: Array<{
+  probes: {
     requestedMs: number;
     actualPtsMs: number;
     embedding: SemanticEmbedding;
@@ -436,7 +436,7 @@ export type RouteSemanticInput = {
     sharpness: number | null;
     eligibleForSelection: boolean;
     qualityReasonCodes: string[];
-  }>;
+  }[];
 };
 
 const EMPTY_WITHIN: WithinClipSemanticRelations = {

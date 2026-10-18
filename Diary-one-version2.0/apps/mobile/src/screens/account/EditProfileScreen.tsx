@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Text,
   Pressable,
@@ -13,12 +13,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system/legacy';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
 import { colors, layout, spacing, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import { PROFILE_DISCARD_ALERT } from '../../domain/discardCopy';
 import { DiscardConfirmCard } from '../../components/DiscardConfirmCard';
 import { isDevFailSimulationEnabled } from '../../config/devFailSimulation';
+import { commitLocalProfile } from '../../store/hydrate';
 
 type SaveState = 'idle' | 'saving' | 'failed';
 
@@ -26,18 +28,28 @@ type SaveState = 'idle' | 'saving' | 'failed';
 export default function EditProfileScreen() {
   const navigation = useNavigation();
   const saved = useAppStore((s) => s.localProfile);
-  const setLocalProfile = useAppStore((s) => s.setLocalProfile);
   const [nickname, setNickname] = useState(saved.nickname);
   const [avatarUri, setAvatarUri] = useState(saved.avatarUri);
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [avatarPreparing, setAvatarPreparing] = useState(false);
   const [discardOpen, setDiscardOpen] = useState(false);
   const saveFailAlternate = useRef(false);
+  const mounted = useRef(true);
+  const saveInFlight = useRef(false);
+  const owner = useRef({ token: useAppStore.getState().sessionToken, email: saved.email });
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
+  const ownsScreen = () => mounted.current &&
+    useAppStore.getState().sessionToken === owner.current.token &&
+    useAppStore.getState().localProfile.email === owner.current.email;
 
   const dirty =
     nickname.trim() !== saved.nickname || (avatarUri ?? '') !== (saved.avatarUri ?? '');
 
   const goBack = () => {
+    if (saveInFlight.current) return;
     if (!dirty) {
       navigation.goBack();
       return;
@@ -48,6 +60,7 @@ export default function EditProfileScreen() {
   const pickAvatar = async () => {
     if (saving || avatarPreparing) return;
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!ownsScreen()) return;
     if (!perm.granted) {
       Alert.alert('Photos access needed', 'Allow Photos to choose a profile image.');
       return;
@@ -60,33 +73,58 @@ export default function EditProfileScreen() {
         aspect: [1, 1],
         quality: 0.9,
       });
-      if (!result.canceled && result.assets[0]?.uri) {
+      if (ownsScreen() && !result.canceled && result.assets[0]?.uri) {
         setAvatarUri(result.assets[0].uri);
       }
     } finally {
-      setAvatarPreparing(false);
+      if (ownsScreen()) setAvatarPreparing(false);
     }
   };
 
-  const save = () => {
+  const save = async () => {
     const trimmed = nickname.trim();
-    if (!trimmed) return;
+    if (!trimmed || saveInFlight.current || !ownsScreen()) return;
+    saveInFlight.current = true;
     setSaveState('saving');
-    setTimeout(() => {
+    let copiedAvatar: string | undefined;
+    let persistenceAttempted = false;
+    try {
       if (isDevFailSimulationEnabled() && saveFailAlternate.current) {
         saveFailAlternate.current = false;
-        setSaveState('failed');
-        return;
+        throw new Error('Simulated save failure');
       }
       if (isDevFailSimulationEnabled()) saveFailAlternate.current = true;
-      setLocalProfile({
+      const assertCurrent = () => {
+        if (!ownsScreen()) throw new Error('Profile editing was cancelled or the account changed.');
+      };
+      let durableAvatar = avatarUri;
+      if (avatarUri && avatarUri !== saved.avatarUri) {
+        if (!FileSystem.documentDirectory) throw new Error('Local storage is unavailable.');
+        const folder = `${FileSystem.documentDirectory}profile/`;
+        await FileSystem.makeDirectoryAsync(folder, { intermediates: true });
+        assertCurrent();
+        copiedAvatar = `${folder}avatar-${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+        await FileSystem.copyAsync({ from: avatarUri, to: copiedAvatar });
+        assertCurrent();
+        durableAvatar = copiedAvatar;
+      }
+      persistenceAttempted = true;
+      await commitLocalProfile({
         ...saved,
         nickname: trimmed,
-        avatarUri,
-      });
+        avatarUri: durableAvatar,
+      }, assertCurrent);
+      copiedAvatar = undefined; // The saved profile now owns this durable file.
       setSaveState('idle');
       navigation.goBack();
-    }, 550);
+    } catch {
+      if (copiedAvatar && !persistenceAttempted) {
+        await FileSystem.deleteAsync(copiedAvatar, { idempotent: true }).catch(() => {});
+      }
+      if (ownsScreen()) setSaveState('failed');
+    } finally {
+      saveInFlight.current = false;
+    }
   };
 
   const initial = nickname.trim().slice(0, 1).toUpperCase() || '?';
@@ -152,7 +190,7 @@ export default function EditProfileScreen() {
 
       <View style={styles.footer}>
         <Pressable
-          onPress={save}
+          onPress={() => void save()}
           style={[styles.saveBtn, !nickname.trim() && styles.saveDisabled]}
           disabled={!nickname.trim() || saving || avatarPreparing}
         >

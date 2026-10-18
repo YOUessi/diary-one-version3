@@ -16,7 +16,7 @@ import {
   termsUrl,
 } from './privacyContent';
 import { buildPersistedSlice, useAppStore } from '../../store/useAppStore';
-import { exportLocalDataService, wipeLocalDataService } from '../../backend/privacyService';
+import { exportLocalDataService, deleteAccountAndDataService } from '../../backend/privacyService';
 
 type Route = RouteProp<AccountStackParamList, 'PrivacyDetail'>;
 
@@ -39,15 +39,18 @@ export default function PrivacyDetailScreen() {
     }
   };
 
-  const confirmDeleteLocal = () => {
+  const confirmDelete = async () => {
     setDeleteOpen(false);
-    void wipeLocalDataService().then(() => {
-      Alert.alert(
-        'Done',
-        'Local memories, notes, and pipeline state were cleared. This device is empty — demo content is not restored (PRD PRI03).',
-      );
+    setBusy(true);
+    try {
+      await deleteAccountAndDataService();
+      Alert.alert('Done', 'Your cloud account data and data on this iPhone were deleted.');
       navigation.popToTop();
-    });
+    } catch (error) {
+      Alert.alert('Deletion not complete', error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -84,20 +87,20 @@ export default function PrivacyDetailScreen() {
           </Pressable>
         ) : null}
         {section === 'delete_account' ? (
-          <Pressable style={styles.btnDanger} onPress={() => setDeleteOpen(true)}>
-            <Text style={styles.btnDangerText}>Delete local data on this iPhone</Text>
+          <Pressable style={styles.btnDanger} onPress={() => setDeleteOpen(true)} disabled={busy}>
+            <Text style={styles.btnDangerText}>Delete Account & Data</Text>
           </Pressable>
         ) : null}
       </ScrollView>
 
       <DiscardConfirmCard
         visible={deleteOpen}
-        title="Delete local data?"
-        message="Removes memories, captured originals, profile, and settings from this iPhone. This cannot be undone."
+        title="Delete Account & Data?"
+        message="Deletes cloud processing data and sessions for this account, then clears memories, notes, profile and settings on this iPhone. This cannot be undone."
         keepLabel="Cancel"
         discardLabel="Delete"
         onKeepEditing={() => setDeleteOpen(false)}
-        onDiscard={confirmDeleteLocal}
+        onDiscard={() => void confirmDelete()}
       />
     </SafeAreaView>
   );

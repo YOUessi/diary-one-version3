@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
   },
   inlineWrap: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.18)',
     justifyContent: 'flex-end',
     paddingHorizontal: 16,

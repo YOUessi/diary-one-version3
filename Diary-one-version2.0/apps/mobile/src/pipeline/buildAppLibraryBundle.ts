@@ -13,6 +13,7 @@ import {
 } from './bundleTypes';
 import { buildSemanticVideoEvidence } from '../evidence/runSemanticVideoEvidence';
 import * as Crypto from 'expo-crypto';
+import type { ImportedSource } from '../domain/capturedImports';
 
 const DEVICE_STUB = {
   device_id: 'PHOTO_LIBRARY_TEST',
@@ -71,7 +72,8 @@ export async function buildAppLibraryBundle(
   items: PickedMedia[],
   bundleDir: string,
   exportVersion: BundleExportVersion = 'V04',
-): Promise<{ bundle: AppLibraryBundle; jsonPath: string }> {
+  assertCurrent: () => void = () => {},
+): Promise<{ bundle: AppLibraryBundle; jsonPath: string; sourceUris: Record<string, ImportedSource> }> {
   const spatial = spatialTransformFor(exportVersion);
   await FileSystem.makeDirectoryAsync(bundleDir, { intermediates: true });
   await FileSystem.makeDirectoryAsync(`${bundleDir}frames/`, { intermediates: true });
@@ -79,15 +81,33 @@ export async function buildAppLibraryBundle(
   const sessionId = newSessionId();
   const assets: Record<string, unknown>[] = [];
   /** Sidecar for App: map asset_id → local source URI (original not packed in bundle). */
-  const sourceUris: Record<string, { uri: string; media_kind: 'PHOTO' | 'VIDEO' }> = {};
+  const sourceUris: Record<string, ImportedSource> = {};
 
   for (let sequenceIndex = 0; sequenceIndex < items.length; sequenceIndex++) {
+    assertCurrent();
     const item = items[sequenceIndex];
     const assetId = `asset-${sequenceIndex}`;
-    const localUri = await ensureLocalFileUri(item.uri, assetId);
+    let localUri = await ensureLocalFileUri(item.uri, assetId);
+    {
+      // Picker file:// URLs may point into purgeable cache. Only this local copy is retained;
+      // originals remain excluded from the uploaded evidence manifest.
+      const sourceDir = `${bundleDir}sources/`;
+      await FileSystem.makeDirectoryAsync(sourceDir, { intermediates: true });
+      const target = `${sourceDir}${assetId}.${extFromName(item.fileName, item.mediaType === 'video' ? 'mp4' : 'jpg')}`;
+      await FileSystem.copyAsync({ from: localUri, to: target });
+      localUri = target;
+    }
+    assertCurrent();
     sourceUris[assetId] = {
       uri: localUri,
       media_kind: item.mediaType === 'video' ? 'VIDEO' : 'PHOTO',
+      creationTimeMs: item.creationTimeMs,
+      durationMs: item.durationMs,
+      captureDayKey: item.captureDayKey,
+      captureTimeRaw: item.captureTimeRaw,
+      captureTimeSource: item.captureTimeSource,
+      captureUtcOffset: item.captureUtcOffset,
+      confirmedDayKey: item.confirmedDayKey,
     };
     const isPhoto = item.mediaType !== 'video';
     const originalSha = await sha256File(localUri);
@@ -127,7 +147,7 @@ export async function buildAppLibraryBundle(
       continue;
     }
 
-    const durationMs = Math.max(1000, Math.min(item.durationMs ?? 9000, 120_000));
+    const durationMs = Math.max(1000, item.durationMs ?? 9000);
     let evidence_window_count: 1 | 2 | 4 | 6 | 10 = 1;
     let evidence_sampling_profile = 'VIDEO_SINGLE_WINDOW_THREE';
     let frames: FrameRow[] = [];
@@ -234,12 +254,15 @@ export async function buildAppLibraryBundle(
   // jobs can retry the same selection without "All duplicates".
 
   const jsonPath = `${bundleDir}bundle.json`;
+  assertCurrent();
   await FileSystem.writeAsStringAsync(jsonPath, JSON.stringify(bundle, null, 2));
+  assertCurrent();
   await FileSystem.writeAsStringAsync(
     `${bundleDir}source_uris.json`,
     JSON.stringify(sourceUris, null, 2),
   );
-  return { bundle, jsonPath };
+  assertCurrent();
+  return { bundle, jsonPath, sourceUris };
 }
 
 /** @deprecated Use buildAppLibraryBundle */

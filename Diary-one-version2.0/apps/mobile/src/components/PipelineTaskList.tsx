@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors, font, layout, radius, spacing } from '../theme';
 import type { PipelineTask, PipelineTaskStatus } from '../pipeline/types';
+import { retryStoredCloudResult } from '../pipeline/runPipeline';
 
 const LABEL: Record<PipelineTaskStatus, string> = {
   queued: 'Queued',
@@ -27,6 +28,11 @@ export function PipelineTaskList({ tasks }: { tasks: PipelineTask[] }) {
             {t.dayRevisionId ? `\n${t.dayRevisionId}` : ''}
           </Text>
           {t.error ? <Text style={styles.err}>{t.error}</Text> : null}
+          {t.status === 'failed' && t.productionJobId && t.bundleDir && t.bundleJsonPath ? (
+            <Pressable accessibilityRole="button" onPress={() => retryStoredCloudResult(t.id)}>
+              <Text style={styles.msg}>Try saving again</Text>
+            </Pressable>
+          ) : null}
         </View>
       ))}
     </View>

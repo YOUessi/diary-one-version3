@@ -25,10 +25,12 @@ class SessionStore:
         if not self._path:
             return
         self._path.parent.mkdir(parents=True, exist_ok=True)
-        self._path.write_text(
+        tmp = self._path.with_suffix('.tmp')
+        tmp.write_text(
             json.dumps(self._by_token, ensure_ascii=False, indent=2),
             encoding="utf-8",
         )
+        tmp.replace(self._path)
 
     def _prune(self) -> None:
         now = time.time()
@@ -60,3 +62,14 @@ class SessionStore:
             self._save()
             return None
         return str(entry.get("email") or "")
+
+    def revoke_email(self, email: str) -> None:
+        owner = email.strip().lower()
+        previous = self._by_token
+        self._by_token = {token: value for token, value in self._by_token.items()
+                          if str(value.get("email") or "").strip().lower() != owner}
+        try:
+            self._save()
+        except OSError:
+            self._by_token = previous
+            raise

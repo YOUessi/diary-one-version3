@@ -53,7 +53,7 @@ export function MemoryCalendar({
   dayPreparing?: boolean;
 }) {
   const anchor = parseDateKey(selectedDateKey);
-  const cells = useMemo(() => buildMonthCells(anchor), [anchor.getFullYear(), anchor.getMonth()]);
+  const cells = useMemo(() => buildMonthCells(parseDateKey(selectedDateKey)), [selectedDateKey]);
   const weeks: (typeof cells)[] = [];
   for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
 

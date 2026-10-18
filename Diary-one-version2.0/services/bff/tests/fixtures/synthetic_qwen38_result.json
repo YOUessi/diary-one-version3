@@ -1,0 +1,764 @@
+{
+  "ahas": [
+    {
+      "id": "ec0621b7-2a59-5024-a9f5-4199251db089",
+      "tags": [],
+      "story": "浅米色背景上，深青色文字写着DIARY ONE和DEPLOYMENT TEST。",
+      "title": "合成卡片发现",
+      "claims": [
+        {
+          "text": "图像显示一张带有深色边框的卡片，背景为浅米色。卡片中央有三行深青色文字：第一行为'DIARY ONE'，第二行为'DEPLOYMENT TEST'，第三行为'SYNTHETIC CARD'。",
+          "fact_id": "e78d5bdd-4827-5723-8b9e-3f0266f39303",
+          "support_grade": "STRONG",
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ]
+        }
+      ],
+      "moment_ids": [
+        "9d605908-791e-5bbc-bcef-a03f748d8cbd"
+      ],
+      "time_label": "第1项",
+      "candidate_id": "959aa78e-db17-5f39-abf6-966f306621ac",
+      "hero_asset_id": "asset-0",
+      "selected_media": [
+        {
+          "role": "CORE",
+          "motifs": [
+            "synthetic_card",
+            "deployment_test",
+            "typography"
+          ],
+          "asset_id": "asset-0",
+          "media_kind": "PHOTO",
+          "quality_score": 1.0,
+          "observation_id": "b41d73ab-456f-574e-ab07-d05bc9a84bfd",
+          "preview_format": "PHOTO_EVIDENCE",
+          "source_asset_id": "asset-0",
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ]
+        }
+      ],
+      "surface_source": "MODEL_WRITER",
+      "evidence_support": "STRONG",
+      "evidence_frame_ids": [
+        "asset-0-f0"
+      ],
+      "publication_status": "STAGED_PREVIEW_VALIDATED",
+      "surface_policy_version": "DIARY_ONE_X02_WRITER_SURFACE_V02"
+    }
+  ],
+  "trace": {
+    "model": "qwen3.8-flash",
+    "run_id": "d088d421-99a4-4e2b-a002-23265c139879",
+    "provider": "alibaba_model_studio",
+    "request_id": "46464686-0d01-9dfc-9b68-00516ea4d039",
+    "s13_status": "NOT_EXECUTED_IN_WEB_PREVIEW",
+    "asset_count": 1,
+    "model_calls": 3,
+    "request_ids": [
+      "c4c0a8bb-259e-9a09-8ff6-b35e4bd43507",
+      "8400da92-7220-9c18-adeb-b8860e39fcff",
+      "46464686-0d01-9dfc-9b68-00516ea4d039"
+    ],
+    "completed_at": "2026-10-18T14:30:35.575144Z",
+    "input_tokens": 7015,
+    "output_tokens": 342,
+    "stage_metrics": [
+      {
+        "stage": "S00_S02_BUNDLE_LOAD",
+        "duration_ms": 0.38,
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      },
+      {
+        "model": "qwen3.8-flash",
+        "stage": "S04_PERCEPTION_BATCH_001",
+        "provider": "alibaba_model_studio",
+        "request_id": "c4c0a8bb-259e-9a09-8ff6-b35e4bd43507",
+        "call_status": "COMPLETED",
+        "duration_ms": 2667.705,
+        "model_calls": 1,
+        "input_tokens": 3178,
+        "output_tokens": 181,
+        "pricing_basis": "unconfigured-model-rate-override-required",
+        "model_frame_count": 1,
+        "estimated_cost_usd": 0.0
+      },
+      {
+        "stage": "S04_DETERMINISTIC_VALIDATION",
+        "duration_ms": 0.243,
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      },
+      {
+        "model": "qwen3.8-flash",
+        "stage": "S05_S07_STRUCTURE_PROPOSAL",
+        "provider": "alibaba_model_studio",
+        "request_id": "8400da92-7220-9c18-adeb-b8860e39fcff",
+        "call_status": "COMPLETED",
+        "duration_ms": 796.076,
+        "model_calls": 1,
+        "input_tokens": 2474,
+        "output_tokens": 14,
+        "pricing_basis": "unconfigured-model-rate-override-required",
+        "model_frame_count": 0,
+        "estimated_cost_usd": 0.0
+      },
+      {
+        "stage": "S03_S07_DETERMINISTIC_STRUCTURE",
+        "duration_ms": 0.282,
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      },
+      {
+        "stage": "S08_S09_SET_SELECTION",
+        "duration_ms": 0.076,
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      },
+      {
+        "stage": "S10_MEDIA_EDITORIAL",
+        "duration_ms": 0.018,
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      },
+      {
+        "model": "qwen3.8-flash",
+        "stage": "S11_WRITER_ATTEMPT_1",
+        "provider": "alibaba_model_studio",
+        "request_id": "46464686-0d01-9dfc-9b68-00516ea4d039",
+        "call_status": "COMPLETED",
+        "duration_ms": 2802.719,
+        "model_calls": 1,
+        "input_tokens": 1363,
+        "output_tokens": 147,
+        "pricing_basis": "unconfigured-model-rate-override-required",
+        "model_frame_count": 0,
+        "estimated_cost_usd": 0.0
+      },
+      {
+        "stage": "S11_DETERMINISTIC_VALIDATION",
+        "duration_ms": 0.549,
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      },
+      {
+        "stage": "S12_FINAL_VALIDATION",
+        "duration_ms": 0.068,
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0
+      }
+    ],
+    "execution_mode": "STAGED_REAL_MEDIA_PREVIEW_NOT_PRODUCTION",
+    "server_metrics": [
+      {
+        "stage": "REQUEST_MULTIPART_MATERIALIZATION",
+        "duration_ms": 0.985,
+        "request_body_bytes": 33281
+      }
+    ],
+    "uploaded_bytes": 31359,
+    "latency_seconds": 6.2665,
+    "pipeline_version": "X02_STAGED_REAL_MEDIA_PREVIEW_V04_1",
+    "model_frame_count": 1,
+    "total_duration_ms": 6269.409,
+    "estimated_cost_usd": 0.0,
+    "originals_uploaded": 0,
+    "stage_metric_scope": "Measured staged-preview work. Tokens and cost are attributed to the exact model call that incurred them; deterministic stages report zero model usage.",
+    "evaluation_run_mode": "FRESH_FULL_RUN",
+    "evidence_frame_count": 1,
+    "input_bundle_version": "DIARY_ONE_APP_LIBRARY_BUNDLE_V04",
+    "model_evidence_bytes": 31359,
+    "model_call_failed_count": 0,
+    "evidence_profile_version": "PHONE_TEST_DURATION_WINDOWS_V01",
+    "model_call_attempted_count": 3,
+    "model_call_completed_count": 3,
+    "run_max_model_call_attempts": 96,
+    "server_total_before_audit_ms": 6271.209,
+    "cross_run_semantic_cache_used": false,
+    "model_call_circuit_breaker_tripped": false
+  },
+  "moments": [
+    {
+      "id": "9d605908-791e-5bbc-bcef-a03f748d8cbd",
+      "roles": [
+        "KEEP"
+      ],
+      "asset_ids": [
+        "asset-0"
+      ],
+      "time_label": "第1项",
+      "episode_codes": [
+        "UNKNOWN"
+      ],
+      "setting_codes": [
+        "UNKNOWN"
+      ],
+      "activity_codes": [
+        "OBSERVING"
+      ],
+      "sequence_index": 0,
+      "observation_ids": [
+        "b41d73ab-456f-574e-ab07-d05bc9a84bfd"
+      ],
+      "source_asset_ids": [
+        "asset-0"
+      ]
+    }
+  ],
+  "_publish": {
+    "fail_job": false,
+    "prd_refs": [
+      "SYS01",
+      "DAT01",
+      "AI03",
+      "DIA02"
+    ],
+    "experiment": "X02_STAGED_REAL_MEDIA_PREVIEW",
+    "admit_reason": "ok",
+    "publish_admit": true,
+    "bundle_version": "DIARY_ONE_APP_LIBRARY_BUNDLE_V04",
+    "delivery_state": "READY_PRIMARY_COPY",
+    "schema_version": "DIARY_ONE_X02_STAGED_PREVIEW_V04_1",
+    "is_mock_fallback": false,
+    "pipeline_version": "DIARY_ONE_X02_STAGED_PREVIEW_V04_1",
+    "production_ready": false,
+    "bundle_manifest_sha256": "525af737c540d3ce969215abc342de48ceee4b46f24b1267c308fdf9383076c1"
+  },
+  "chapters": [],
+  "experiment": "X02_STAGED_REAL_MEDIA_PREVIEW",
+  "session_id": "264ea6b7-124b-42dc-8bc1-29a442e36518",
+  "output_mode": "HIGHLIGHT_DAY",
+  "experimental": true,
+  "observations": [
+    {
+      "id": "b41d73ab-456f-574e-ab07-d05bc9a84bfd",
+      "facts": [
+        {
+          "text": "图像显示一张带有深色边框的卡片，背景为浅米色。卡片中央有三行深青色文字：第一行为'DIARY ONE'，第二行为'DEPLOYMENT TEST'，第三行为'SYNTHETIC CARD'。",
+          "fact_id": "e78d5bdd-4827-5723-8b9e-3f0266f39303",
+          "support_grade": "STRONG",
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ]
+        }
+      ],
+      "motifs": [
+        "synthetic_card",
+        "deployment_test",
+        "typography"
+      ],
+      "status": "OBSERVED",
+      "asset_id": "asset-0",
+      "event_kind": "DISCOVERY",
+      "media_kind": "PHOTO",
+      "limitations": [],
+      "episode_code": "UNKNOWN",
+      "setting_code": "UNKNOWN",
+      "activity_code": "OBSERVING",
+      "quality_score": 1.0,
+      "subject_codes": [
+        "OTHER"
+      ],
+      "event_salience": "MEDIUM",
+      "degraded_fields": [],
+      "source_asset_id": "asset-0",
+      "evidence_frame_ids": [
+        "asset-0-f0"
+      ]
+    }
+  ],
+  "timeline_date": null,
+  "decision_trace": {
+    "counts": {
+      "asset_count": 1,
+      "moment_count": 1,
+      "aha_candidate_count": 1,
+      "chapter_candidate_count": 0,
+      "failed_observation_count": 0,
+      "accepted_observation_count": 1,
+      "published_preview_aha_count": 1,
+      "published_preview_chapter_count": 0,
+      "field_degraded_observation_count": 0,
+      "selected_aha_count_before_writer": 1,
+      "selected_chapter_count_before_writer": 0,
+      "insufficient_evidence_observation_count": 0
+    },
+    "scope_note": "Shows supplied evidence, model-visible structured outputs, deterministic gates, lineage, and reason codes. It does not expose or invent model chain-of-thought.",
+    "trace_type": "AUDITABLE_STAGE_DECISION_EVIDENCE",
+    "writer_items": [
+      {
+        "attempt": 1,
+        "draft_text": "浅米色背景上，深青色文字写着DIARY ONE和DEPLOYMENT TEST。",
+        "draft_title": "合成卡片发现",
+        "memory_type": "AHA",
+        "candidate_id": "959aa78e-db17-5f39-abf6-966f306621ac",
+        "reason_codes": [
+          "WRITER_FORMAT_AND_REFERENCES_PASSED"
+        ],
+        "length_status": "OVER_TOLERANCE_REVIEW",
+        "quality_flags": [
+          "AHA_LENGTH_OVER_TOLERANCE_REVIEW"
+        ],
+        "sentence_count": 1,
+        "surface_source": "MODEL_WRITER",
+        "validation_scope": "FORMAT_AND_REFERENCES_ONLY_NOT_SEMANTIC_VERIFICATION",
+        "validation_status": "PASSED",
+        "length_review_label": "偏长，待评价",
+        "tolerance_visible_max": 24,
+        "length_review_required": true,
+        "surface_policy_version": "DIARY_ONE_X02_WRITER_SURFACE_V02",
+        "text_visible_characters": 38,
+        "title_visible_characters": 6,
+        "writer_exit_policy_version": "DIARY_ONE_X02_WRITER_EXIT_V02",
+        "writing_target_visible_max": 20,
+        "required_sentence_count_max": 1,
+        "required_sentence_count_min": 1
+      }
+    ],
+    "s10_aha_media": [
+      {
+        "media": [
+          {
+            "role": "CORE",
+            "motifs": [
+              "synthetic_card",
+              "deployment_test",
+              "typography"
+            ],
+            "asset_id": "asset-0",
+            "media_kind": "PHOTO",
+            "quality_score": 1.0,
+            "observation_id": "b41d73ab-456f-574e-ab07-d05bc9a84bfd",
+            "preview_format": "PHOTO_EVIDENCE",
+            "source_asset_id": "asset-0",
+            "evidence_frame_ids": [
+              "asset-0-f0"
+            ]
+          }
+        ],
+        "candidate_id": "959aa78e-db17-5f39-abf6-966f306621ac",
+        "reason_codes": [
+          "SINGLE_EVENT_PEAK_MEDIA"
+        ],
+        "final_media_count": 1
+      }
+    ],
+    "aha_candidates": [
+      {
+        "event_kind": "DISCOVERY",
+        "rank_inputs": {
+          "novelty": 1.0,
+          "fact_support": 1.0,
+          "event_salience": 0.65,
+          "event_specificity": 1.0,
+          "presentation_quality_tiebreak": 1.0
+        },
+        "candidate_id": "959aa78e-db17-5f39-abf6-966f306621ac",
+        "reason_codes": [
+          "INDEPENDENT_LOCAL_EVENT_PEAK_SUPPORTED",
+          "VALUE_RANKED_AHA_SELECTED_RELATION_STATUS_RECORDED"
+        ],
+        "source_index": 0,
+        "candidate_key": "event_asset-0",
+        "event_salience": "MEDIUM",
+        "observation_id": "b41d73ab-456f-574e-ab07-d05bc9a84bfd",
+        "proposal_source": "DETERMINISTIC_EVENT_PEAK",
+        "source_asset_id": "asset-0",
+        "proposal_aliases": [],
+        "selection_status": "SELECTED",
+        "validation_status": "PASSED",
+        "narrative_duty_field_audit": {
+          "supplied_text": "DISCOVERY",
+          "character_count": 9,
+          "semantic_status": "EDITORIAL_HINT_NOT_FACT_EVIDENCE",
+          "within_legacy_length_limit": true,
+          "candidate_eligibility_effect": "NONE"
+        }
+      }
+    ],
+    "boundary_edges": [],
+    "stage_statuses": [
+      {
+        "stage": "S00_S02_INTAKE",
+        "status": "COMPLETED",
+        "reason_codes": [
+          "APP_LIBRARY_BUNDLE_GATE_PASSED",
+          "SOURCE_ORDER_PRESERVED",
+          "ORIGINAL_MEDIA_NOT_UPLOADED"
+        ]
+      },
+      {
+        "stage": "S04_OBSERVATION_LITE",
+        "status": "COMPLETED",
+        "reason_codes": [
+          "ONE_TERMINAL_STATUS_PER_ASSET",
+          "PER_ASSET_FAILURE_ISOLATION",
+          "ONLY_EXPLICIT_ASSET_LOCAL_FAILURE_OR_HTTP_413_MAY_SPLIT",
+          "TIMEOUT_OR_HTTP_5XX_MAY_RETRY_ORIGINAL_BATCH_ONCE_WITHOUT_SPLIT",
+          "BOUNDED_SINGLE_ASSET_RETRY",
+          "V04_1_RUN_MODEL_CALL_CIRCUIT_BREAKER",
+          "VALID_GROUNDED_FACTS_SURVIVE_NONCRITICAL_FIELD_ERRORS",
+          "DIARY_ONE_X02_FACT_RETENTION_V01"
+        ]
+      },
+      {
+        "stage": "S03_S05_CONTINUITY_BOUNDARY",
+        "status": "COMPLETED",
+        "reason_codes": [
+          "ADJACENT_DUAL_EVIDENCE_LEDGER",
+          "JOIN_SPLIT_DEFER_DECISIONS"
+        ]
+      },
+      {
+        "stage": "S06_ROLE_ASSIGNMENT",
+        "status": "COMPLETED",
+        "reason_codes": [
+          "EXACTLY_ONE_ROLE_PER_OBSERVATION"
+        ]
+      },
+      {
+        "stage": "S07_CANDIDATE_GENERATION",
+        "status": "COMPLETED",
+        "reason_codes": [
+          "MODEL_OWNED_CONTENT_GROUPING",
+          "STRUCTURE_AND_REFERENCE_CHECKS_NOT_SEMANTIC_VERIFICATION",
+          "TAGS_AND_IMPORT_ORDER_DO_NOT_OVERRIDE_MEMBERSHIP",
+          "NO_DETERMINISTIC_TAG_GROUP_FALLBACK",
+          "EVENT_AND_DISCOVERY_AHA_PATHS_SEARCHED"
+        ]
+      },
+      {
+        "stage": "S08_S09_EDITORIAL_SET",
+        "status": "COMPLETED",
+        "reason_codes": [
+          "MODEL_GROUPS_WITH_EXISTING_VALUE_THRESHOLDS_NOT_QUALITY_VERIFIED",
+          "INVALID_CANDIDATES_EXCLUDED_BEFORE_OVERLAP",
+          "NO_OUTPUT_QUOTA",
+          "GROUNDED_AHA_SELECTED"
+        ]
+      },
+      {
+        "stage": "S10_MEDIA_EDITORIAL",
+        "status": "COMPLETED",
+        "reason_codes": [
+          "FINAL_CHAPTER_MEDIA_THREE_TO_FIVE_NO_FILL_QUOTA",
+          "ONE_STATIC_PREVIEW_HERO",
+          "HQ_MATERIALIZATION_NOT_EXECUTED"
+        ]
+      },
+      {
+        "stage": "S11_GROUNDED_NARRATIVE",
+        "status": "COMPLETED",
+        "reason_codes": [
+          "MODEL_NATURAL_COPY_WITH_FORMAT_AND_REFERENCE_CHECKS",
+          "DETERMINISTIC_ALLOWED_TITLE_GATE",
+          "WRITER_SINGLE_PASS_NO_MODEL_REWRITE",
+          "SAME_SELECTED_MEMORY_DETERMINISTIC_GROUNDED_FALLBACK",
+          "NO_WRITER_TIME_CANDIDATE_REPLACEMENT"
+        ]
+      },
+      {
+        "stage": "S12_FINAL_VALIDATION",
+        "status": "COMPLETED",
+        "reason_codes": [
+          "NO_SILENT_CROSS_STAGE_REPAIR",
+          "UNSUPPORTED_COPY_OR_TAG_BLOCKED"
+        ]
+      },
+      {
+        "stage": "S13_HQ_EXPORT",
+        "status": "NOT_EXECUTED",
+        "reason_codes": [
+          "OUTSIDE_STAGED_WEB_PREVIEW"
+        ]
+      }
+    ],
+    "structure_wire": {
+      "ahas": [],
+      "chapters": [],
+      "diagnostics": [],
+      "facts_created": 0,
+      "policy_version": "DIARY_ONE_X02_STRUCTURE_WIRE_V01",
+      "model_calls_added": 0,
+      "wire_output_sha256": "bdff90cf2ffa3a48c06c08e66de04999a5d4936882fa3529613eb4a67e3b9c0b",
+      "internal_output_sha256": "f92401b3c9a13cf69f4e75abfa64243a2248cc5fad569d5bca37ab6297fe58e0",
+      "flattened_relation_count": 0
+    },
+    "content_handoff": {
+      "guidance_scope": "EDITORIAL_HINTS_NOT_FACT_EVIDENCE",
+      "policy_version": "DIARY_ONE_X02_CONTENT_BRIEF_V01",
+      "additional_model_steps": 0,
+      "media_comparison_inputs": [],
+      "prepared_first_writer_scope": [
+        {
+          "fact_ids": [
+            "e78d5bdd-4827-5723-8b9e-3f0266f39303"
+          ],
+          "memory_type": "AHA",
+          "candidate_id": "959aa78e-db17-5f39-abf6-966f306621ac",
+          "material_fact_refs": [
+            {
+              "fact_ids": [
+                "e78d5bdd-4827-5723-8b9e-3f0266f39303"
+              ],
+              "observation_id": "b41d73ab-456f-574e-ab07-d05bc9a84bfd"
+            }
+          ]
+        }
+      ],
+      "fact_validation_scope_unchanged": true,
+      "prepared_first_writer_input_sha256": "b812f7659891e821331dcc5d0799e1a24efba08e69118152145d3eba99d9ccb8",
+      "prepared_first_writer_prompt_sha256": "6d7516c43ff887721a0504c742aac597842e59f43bace3a7a0c695154a8fcd5f"
+    },
+    "blocked_memories": [],
+    "runtime_policies": {
+      "writer_exit": "DIARY_ONE_X02_WRITER_EXIT_V02",
+      "content_brief": "DIARY_ONE_X02_CONTENT_BRIEF_V01",
+      "structure_wire": "DIARY_ONE_X02_STRUCTURE_WIRE_V01",
+      "aha_pair_conflict": "DIARY_ONE_X02_AHA_PAIR_CONFLICT_V02",
+      "chapter_coherence": "DIARY_ONE_X02_CHAPTER_COHERENCE_V01",
+      "subject_granularity": "DIARY_ONE_X02_SUBJECT_GRANULARITY_V02",
+      "editorial_allocation": "DIARY_ONE_X02_EDITORIAL_ALLOCATION_V01",
+      "structure_acceptance": "DIARY_ONE_X02_STRUCTURE_ACCEPTANCE_V01",
+      "chapter_selection_response": "DIARY_ONE_X02_CHAPTER_SELECTION_RESPONSE_V02"
+    },
+    "aha_set_selection": {
+      "algorithm": "V04_1_AHA_LEXICOGRAPHIC_RELATION_AWARE_SET_SELECTION",
+      "rejections": {},
+      "pair_ledger": [],
+      "rank_fields": [
+        "event_salience",
+        "fact_support",
+        "event_specificity",
+        "novelty",
+        "presentation_quality_tiebreak"
+      ],
+      "target_note": "One to two Ahas is the ordinary quality target and two to three is the rich-day target. Zero requires the explicit audited no-grounded-candidate outcome; no fabrication quota is enforced.",
+      "search_outcome": "GROUNDED_AHA_SELECTED",
+      "search_contract": "EVENT_AND_DISCOVERY_AHA_PATHS_V02",
+      "chapter_conflicts": [],
+      "chapter_relations": [],
+      "ranked_candidate_ids": [
+        "959aa78e-db17-5f39-abf6-966f306621ac"
+      ],
+      "candidate_rank_inputs": {
+        "959aa78e-db17-5f39-abf6-966f306621ac": {
+          "novelty": 1.0,
+          "fact_support": 1.0,
+          "event_salience": 0.65,
+          "event_specificity": 1.0,
+          "presentation_quality_tiebreak": 1.0
+        }
+      },
+      "event_candidate_count": 0,
+      "selected_candidate_ids": [
+        "959aa78e-db17-5f39-abf6-966f306621ac"
+      ],
+      "publication_order_basis": "IMPORT_SEQUENCE_INDEX_THEN_CANDIDATE_ID_NOT_CHRONOLOGY",
+      "eligible_candidate_count": 1,
+      "discovery_candidate_count": 1,
+      "suppressed_by_candidate_id": {},
+      "pair_conflict_policy_version": "DIARY_ONE_X02_AHA_PAIR_CONFLICT_V02",
+      "published_sequence_candidate_ids": [
+        "959aa78e-db17-5f39-abf6-966f306621ac"
+      ],
+      "editorial_allocation_policy_version": "DIARY_ONE_X02_EDITORIAL_ALLOCATION_V01",
+      "membership_order_separate_from_output_order": true
+    },
+    "observation_roles": [
+      {
+        "role": "KEEP",
+        "reason_code": "GROUNDED_CONTENT_OR_EVENT_EVIDENCE",
+        "observation_id": "b41d73ab-456f-574e-ab07-d05bc9a84bfd",
+        "source_asset_id": "asset-0"
+      }
+    ],
+    "s10_chapter_media": [],
+    "chapter_candidates": [],
+    "evidence_selection": {
+      "selected": [
+        {
+          "asset_id": "asset-0",
+          "frame_id": "asset-0-f0",
+          "media_kind": "PHOTO",
+          "reason_code": "PHOTO_SINGLE_MIDDLE_FRAME",
+          "sample_role": "PHOTO_REPRESENTATIVE",
+          "window_count": 1,
+          "window_index": 0,
+          "selection_order": 0,
+          "source_asset_id": "asset-0",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": null
+        }
+      ],
+      "strategy": "PHOTO_ONE_FRAME_VIDEO_DURATION_AWARE_WINDOWS_IN_BOUNDED_DYNAMIC_BATCHES",
+      "input_order_bias_prevention": true
+    },
+    "media_only_chapters": [],
+    "perception_batching": {
+      "policy": "V04_1_BOUNDED_ASSETS_FRAMES_BYTES_WITH_FAILURE_ISOLATION",
+      "attempts": [
+        {
+          "status": "VALIDATED",
+          "asset_ids": [
+            "asset-0"
+          ],
+          "attempt_id": "perception_attempt_001",
+          "asset_count": 1,
+          "frame_count": 1,
+          "reason_code": "PERCEPTION_BATCH_VALIDATED",
+          "attempt_kind": "ROOT",
+          "evidence_bytes": 31359,
+          "recovery_action": "NONE",
+          "parent_attempt_id": null,
+          "provider_call_attempted": true,
+          "terminal_unresolved_asset_ids": []
+        }
+      ],
+      "max_assets": 3,
+      "max_frames": 18,
+      "coverage_status": "COMPLETE",
+      "max_evidence_bytes": 4194304,
+      "planned_batch_count": 1,
+      "unresolved_asset_ids": [],
+      "circuit_breaker_tripped": false,
+      "model_call_attempt_count": 3,
+      "single_asset_retry_limit": 1,
+      "run_max_model_call_attempts": 96
+    },
+    "client_profile_audit": {
+      "present": false,
+      "boost_tags": [],
+      "avoid_topics": [],
+      "writing_style": null,
+      "soft_editorial": {
+        "mode": "SOFT_REORDER_ONLY",
+        "applied": false,
+        "present": false,
+        "reorder": [],
+        "app_client_profile_policy_version": "APP_CLIENT_PROFILE_V01"
+      },
+      "preferred_categories": [],
+      "memory_preference_count": 0,
+      "app_client_profile_policy_version": "APP_CLIENT_PROFILE_V01"
+    },
+    "editorial_allocation": {
+      "plan": {
+        "relations": [],
+        "diagnostics": [],
+        "guidance_scope": "EDITORIAL_HINTS_NOT_FACT_EVIDENCE",
+        "policy_version": "DIARY_ONE_X02_EDITORIAL_ALLOCATION_V01"
+      },
+      "scope": "RESEARCH_PREVIEW_NOT_FULL_CANONICAL_INDEPENDENCE_VERIFICATION",
+      "writer_projection": {
+        "relations": [],
+        "diagnostics": [],
+        "guidance_scope": "EDITORIAL_HINTS_NOT_FACT_EVIDENCE",
+        "policy_version": "DIARY_ONE_X02_EDITORIAL_ALLOCATION_V01"
+      },
+      "additional_model_steps": 0
+    },
+    "chapter_set_selection": {
+      "algorithm": "STORYLINE_V03_MODEL_GROUPS_BOUNDED_SET_SEARCH",
+      "objective": {
+        "quality_mean_sum": 0.0,
+        "beat_role_diversity": 0,
+        "marginal_storyline_value": 0.0,
+        "covered_asset_count_telemetry": 0
+      },
+      "pair_ledger": [],
+      "target_note": "Three to four Chapters is a quality target, never an output quota.",
+      "search_status": "EXACT_WITHIN_PREVIEW_POLICY",
+      "objective_order": [
+        "MODEL_PROPOSED_STRUCTURE_VALID_CANDIDATES_ONLY",
+        "MINIMUM_VALUE_AND_POSITION_THRESHOLDS",
+        "TOTAL_MARGINAL_STORYLINE_VALUE",
+        "TRUSTED_QUALITY_MEAN",
+        "BEAT_ROLE_DIVERSITY",
+        "ASSET_COVERAGE_TELEMETRY_ONLY",
+        "DETERMINISTIC_ORDER_TIEBREAK"
+      ],
+      "evaluated_set_count": 1,
+      "candidate_rank_inputs": {},
+      "selected_candidate_ids": [],
+      "eligible_candidate_count": 0,
+      "candidate_input_truncated": false,
+      "position_value_thresholds": [
+        0.52,
+        0.56,
+        0.6,
+        0.72
+      ]
+    },
+    "observation_candidates": [
+      {
+        "reason_codes": [
+          "PER_ASSET_CONTRACT_PASSED"
+        ],
+        "observation_id": "b41d73ab-456f-574e-ab07-d05bc9a84bfd",
+        "degraded_fields": [],
+        "source_asset_id": "asset-0",
+        "terminal_status": "OBSERVED",
+        "validation_status": "PASSED",
+        "compatibility_rule_id": "X02V02_GENERIC_EPISODE",
+        "semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+        "semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02",
+        "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+        "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01"
+      }
+    ],
+    "contains_hidden_reasoning": false
+  },
+  "delivery_state": "READY_PRIMARY_COPY",
+  "schema_version": "DIARY_ONE_X02_STAGED_PREVIEW_V04_1",
+  "timeline_basis": "SYNTHETIC_SEQUENCE_ONLY",
+  "coverage_status": "COMPLETE",
+  "production_ready": false,
+  "time_reliability": {
+    "interval_reliable": false,
+    "timezone_reliable": false,
+    "capture_time_reliable": false
+  },
+  "validation_scope": "STAGED_PREVIEW_ONLY",
+  "semantic_day_state": "HIGHLIGHT_DAY",
+  "evaluation_run_mode": "FRESH_FULL_RUN",
+  "leaderboard_eligible": false,
+  "unresolved_asset_ids": [],
+  "bundle_manifest_sha256": "525af737c540d3ce969215abc342de48ceee4b46f24b1267c308fdf9383076c1",
+  "selected_memory_outcomes": [
+    {
+      "memory_id": "ec0621b7-2a59-5024-a9f5-4199251db089",
+      "media_state": "S10_MEDIA_READY",
+      "memory_type": "AHA",
+      "surface_state": "MODEL_SURFACE_VERIFIED",
+      "selection_state": "S09_SELECTED",
+      "visibility_state": "VISIBLE_PREVIEW"
+    }
+  ],
+  "storyline_contract_sha256": "21b3d7e404bc0209cd99d062ecc493e769d13517603bae913c19eb7474d99cca",
+  "storyline_contract_version": "DIARY_ONE_X02_STORYLINE_V03",
+  "chapter_media_policy_version": "DIARY_ONE_X02_CHAPTER_MEDIA_V01",
+  "cross_run_semantic_cache_used": false,
+  "writer_surface_policy_version": "DIARY_ONE_X02_WRITER_SURFACE_V02",
+  "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+  "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01",
+  "observation_semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+  "observation_semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02"
+}

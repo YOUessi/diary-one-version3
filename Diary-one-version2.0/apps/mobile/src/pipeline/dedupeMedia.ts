@@ -57,13 +57,13 @@ export async function dedupePickedMedia(
 }
 
 export async function rememberRawAssetsFromBundleAssets(
-  assets: Array<{
+  assets: {
     asset_id?: string;
     original_sha256?: string;
     media_kind?: string;
     source_display_name?: string;
     original_bytes?: number;
-  }>,
+  }[],
 ): Promise<void> {
   for (const a of assets) {
     const sha = (a.original_sha256 ?? '').trim();

@@ -1,11 +1,13 @@
 import json
 import uuid
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from bff.auth import require_bearer
+from bff.account_guard import lock_account
 from shared.config import settings
 from shared.db import get_async_session
 from shared.form_fields import read_form_bytes, read_form_field
@@ -20,6 +22,15 @@ from shared.quota import (
 from shared.storage import minio_client, upload_bytes
 
 router = APIRouter(prefix="/v1", dependencies=[Depends(require_bearer)])
+logger = logging.getLogger(__name__)
+
+
+def notify_worker(job_id: str) -> None:
+    # Postgres pending rows are the durable delivery record; Redis is a wake-up hint.
+    try:
+        enqueue_job(job_id)
+    except Exception:
+        logger.exception("Worker notification failed for job %s; database recovery will retry", job_id)
 
 
 def idempotent_owner_decision(
@@ -50,6 +61,8 @@ async def create_day_revision(
     Same shape as X02 research preview.
     """
     form = await request.form()
+    if caller.email:
+        await lock_account(session, caller.email, request)
     manifest_part = form.get("manifest")
     if manifest_part is None:
         raise HTTPException(status_code=400, detail="manifest required")
@@ -85,6 +98,8 @@ async def create_day_revision(
                 status_code=409,
                 detail="day_revision_id already used by another account",
             )
+        if existing.status == JobStatus.pending:
+            notify_worker(str(existing.id))
         return {
             "job_id": str(existing.id),
             "day_revision_id": rev_id,
@@ -143,7 +158,7 @@ async def create_day_revision(
     session.add(job)
     await session.commit()
 
-    enqueue_job(str(job_id))
+    notify_worker(str(job_id))
 
     return {
         "job_id": str(job_id),

@@ -1626,8 +1626,11 @@ class X02V041ContractAndBehaviorTests(unittest.TestCase):
                 ScriptedGateway(plan, observation_overrides=overrides),
             )
         schema = json.loads(X02_V041_PREVIEW_SCHEMA_PATH.read_text(encoding="utf-8"))
+        self.assertNotIn("client_profile_audit", result)
+        self.assertIn("client_profile_audit", result["decision_trace"])
         assert_json_schema_instance(self, schema, result)
         assert_v041_cross_field_truth(self, result)
+
     def test_v041_schema_rejects_state_timeline_and_batching_contradictions(self):
         with tempfile.TemporaryDirectory() as temporary:
             result = self._run_v041(temporary, 3, ScriptedGateway())

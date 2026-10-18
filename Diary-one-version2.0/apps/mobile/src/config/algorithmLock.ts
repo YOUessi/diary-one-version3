@@ -9,6 +9,7 @@ export const ALGORITHM_LOCK = {
   candidate: 'V1.75',
   x02PreviewPath: '/x02/v0.4.1/preview',
   previewSchema: 'DIARY_ONE_X02_STAGED_PREVIEW_V04_1',
+  previewContractSha256: '10f8c36cc0548873cc7a1c88cd8216da167fbb6f05ac9bd83768f61729679b13',
   bundleV04: 'DIARY_ONE_APP_LIBRARY_BUNDLE_V04',
   spatial: 'ASPECT_FIT_LETTERBOX',
   researchOptInOnly: true,

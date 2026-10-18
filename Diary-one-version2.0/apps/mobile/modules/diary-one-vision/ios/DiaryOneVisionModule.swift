@@ -10,7 +10,13 @@ public class DiaryOneVisionModule: Module {
     Constant("isAvailable") { true }
 
     AsyncFunction("analyzeImages") { (uris: [String]) -> [String: Any] in
-      let modelId = "APPLE_VISION_FEATURE_PRINT_REVISION_\(VNGenerateImageFeaturePrintRequestRevision2)"
+      let revision: Int
+      if #available(iOS 17.0, *) {
+        revision = VNGenerateImageFeaturePrintRequestRevision2
+      } else {
+        revision = VNGenerateImageFeaturePrintRequestRevision1
+      }
+      let modelId = "APPLE_VISION_FEATURE_PRINT_REVISION_\(revision)"
       var vectors: [[Double]] = []
       var classifications: [[[String: Any]]] = []
 
@@ -22,7 +28,7 @@ public class DiaryOneVisionModule: Module {
         let orientation = Self.cgOrientation(uiImage.imageOrientation)
 
         let featureRequest = VNGenerateImageFeaturePrintRequest()
-        featureRequest.revision = VNGenerateImageFeaturePrintRequestRevision2
+        featureRequest.revision = revision
         let classifyRequest = VNClassifyImageRequest()
         let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
         try handler.perform([featureRequest, classifyRequest])

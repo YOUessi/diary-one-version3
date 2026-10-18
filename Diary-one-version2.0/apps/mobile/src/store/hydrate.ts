@@ -1,12 +1,16 @@
+import { Alert } from 'react-native';
 import {
   initDatabase,
   loadSnapshot,
   saveSnapshot,
   clearSnapshot,
+  setLocalCleanupPending,
+  hasLocalCleanupPending,
   type PersistedSnapshot,
+  type PublishedAsset,
 } from '../db/sqlite';
 import { clearAssetLedger, hydrateAssetLedger, serializeAssetLedger } from '../db/assetLedger';
-import { clearRawAssetLedger } from '../db/rawAssetLedger';
+import { clearLocalMediaFiles } from '../domain/localDataFiles';
 
 import { useAppStore, buildPersistedSlice } from './useAppStore';
 import { applyBundledMotion } from '../assets/motionAssets';
@@ -28,11 +32,13 @@ import {
 import { diaryTodayKey } from '../domain/dayKey';
 import { formatChapterDateLong } from '../domain/formatChapterDate';
 
-import { DEFAULT_LOCAL_PROFILE } from '../domain/localProfile';
+import { DEFAULT_LOCAL_PROFILE, type LocalProfile } from '../domain/localProfile';
 import { PHOTO_LIBRARY_TEST_SOURCE } from '../domain/mediaIntake';
 import type { PipelineTask } from '../pipeline/types';
 import { applyDevCloudDefaults } from '../config/applyDevCloudDefaults';
 import { commercialEmptySlice } from './emptyCommercialState';
+import { mergeDiaryDay } from '../domain/mergeDiaryDay';
+import type { Chapter, SmallMemory, TodayStatus } from '../model';
 
 import {
 
@@ -209,6 +215,7 @@ function applySnapshotToStore(snap: PersistedSnapshot) {
 
     // Missing field must not imply "survey done" for commercial / beta (PRI01).
     preferenceSurveyComplete: snap.preferenceSurveyComplete ?? false,
+    preferenceSurveyResponse: snap.preferenceSurveyResponse ?? null,
 
     cloudEvidenceConsent: snap.cloudEvidenceConsent ?? null,
 
@@ -274,6 +281,10 @@ export async function bootstrapStore(): Promise<void> {
 
   await initDatabase();
 
+  if (await hasLocalCleanupPending()) {
+    await resetLocalAppData();
+    return;
+  }
   const snap = await loadSnapshot();
 
   // Persist any prior snapshot (including empty commercial library). Only seed when no row.
@@ -348,76 +359,153 @@ export async function bootstrapStore(): Promise<void> {
 
 
 
-export async function resetLocalAppData(): Promise<void> {
+let resetting = false;
+let persistTail: Promise<void> = Promise.resolve();
+let persistWarningOpen = false;
 
-  await clearSnapshot();
-  clearAssetLedger();
+function reportPersistFailure(): void {
+  if (persistWarningOpen || resetting) return;
+  persistWarningOpen = true;
+  Alert.alert('Could not save data', 'Some recent changes are still only in memory. Keep the app open and try saving again.', [
+    { text: 'Close', onPress: () => { persistWarningOpen = false; } },
+    { text: 'Try Again', onPress: () => { persistWarningOpen = false; void flushPersist().catch(reportPersistFailure); } },
+  ]);
+}
+
+export async function resetLocalAppData(options?: { onboardingComplete?: boolean }): Promise<void> {
+  if (resetting) throw new Error('Local cleanup is already in progress.');
+  resetting = true;
   try {
-    await clearRawAssetLedger();
-  } catch {
-    /* ledger table may not exist yet */
+    if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+    // Cancel publication from old async jobs before the first disk await.
+    useAppStore.setState({ sessionToken: '', pipelineTasks: [] });
+    await persistTail;
+    await setLocalCleanupPending(true);
+    applyCommercialEmpty({ onboardingComplete: options?.onboardingComplete ?? false });
+    await clearSnapshot();
+    await clearLocalMediaFiles();
+    clearAssetLedger();
+
+    // PRI03 / multi-user — also drop cloud credentials so next tester cannot reuse prior session.
+    useAppStore.setState({
+      sessionToken: '',
+      productionApiToken: '',
+      researchToken: '',
+      researchEndpoint: '',
+      cloudProcessingTarget: 'production',
+      cloudEvidenceConsent: null,
+      cloudEvidenceConsentVersion: null,
+      deviceBatteryPercent: null,
+      deviceLinkState: 'disconnected',
+      devicePendingRecordings: false,
+      lastSyncedAt: null,
+    });
+
+    try {
+
+      const withMotion = await applyBundledMotion(useAppStore.getState().chapters);
+
+      useAppStore.setState({ chapters: withMotion });
+
+    } catch {
+
+      /* ignore */
+
+    }
+
+    const s = useAppStore.getState();
+
+    await saveSnapshot(buildPersistedSlice(s));
+    await setLocalCleanupPending(false);
+  } finally {
+    resetting = false;
   }
-
-  applyFreshSeed();
-
-  // PRI03 / multi-user — also drop cloud credentials so next tester cannot reuse prior session.
-  useAppStore.setState({
-    sessionToken: '',
-    productionApiToken: '',
-    researchToken: '',
-    researchEndpoint: '',
-    cloudProcessingTarget: 'production',
-    cloudEvidenceConsent: null,
-    cloudEvidenceConsentVersion: null,
-    deviceBatteryPercent: null,
-    deviceLinkState: 'disconnected',
-    devicePendingRecordings: false,
-    lastSyncedAt: null,
-  });
-
-  try {
-
-    const withMotion = await applyBundledMotion(useAppStore.getState().chapters);
-
-    useAppStore.setState({ chapters: withMotion });
-
-  } catch {
-
-    /* ignore */
-
-  }
-
-  const s = useAppStore.getState();
-
-  await saveSnapshot(buildPersistedSlice(s));
-
 }
 
 
 
 export function schedulePersist(): void {
+  if (resetting) return;
 
   if (saveTimer) clearTimeout(saveTimer);
 
   saveTimer = setTimeout(() => {
 
-    void flushPersist();
+    void flushPersist().catch(reportPersistFailure);
 
   }, 400);
 
 }
 
 /** REL01 / ACC03 — flush OTP session & consent immediately (do not wait debounce). */
-export async function flushPersist(): Promise<void> {
+export async function flushPersist(completion?: { preferenceSurveyComplete: true; onboardingComplete?: true }): Promise<void> {
+  if (resetting) {
+    if (completion) throw new Error('Account data is being reset. Please reopen preferences.');
+    return;
+  }
   if (saveTimer) {
     clearTimeout(saveTimer);
     saveTimer = null;
   }
-  const s = useAppStore.getState();
-  await saveSnapshot({
-    ...buildPersistedSlice(s),
-    pipelineAssetLedger: serializeAssetLedger(),
+  const write = persistTail.then(() => {
+    const s = useAppStore.getState();
+    const snapshot = { ...buildPersistedSlice(s), ...completion, pipelineAssetLedger: serializeAssetLedger() };
+    return saveSnapshot(snapshot);
   });
+  persistTail = write.catch(() => {});
+  await write;
+}
+
+/** Save before publishing profile changes; cancelled/account-switched writes roll back. */
+export async function commitLocalProfile(profile: LocalProfile, assertCurrent: () => void): Promise<void> {
+  if (resetting) throw new Error('Account data is being reset.');
+  if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+  const write = persistTail.then(async () => {
+    if (resetting) throw new Error('Account data is being reset.');
+    assertCurrent();
+    const snapshot = { ...buildPersistedSlice(useAppStore.getState()), localProfile: profile,
+      pipelineAssetLedger: serializeAssetLedger() };
+    await saveSnapshot(snapshot, assertCurrent);
+    assertCurrent();
+    useAppStore.setState({ localProfile: profile });
+  });
+  persistTail = write.catch(() => {});
+  await write;
+}
+
+/** Diary, successful task and dedupe hashes share a single SQLite transaction. */
+export async function commitDiaryBatch(input: {
+  taskId: string; dayKey: string; sourceBatchId: string;
+  chapters: Chapter[]; smallMemories: SmallMemory[]; preservePriorIfIncomingEmpty: boolean;
+  todayStatus?: TodayStatus; assets: PublishedAsset[]; assertCurrent: () => void;
+}): Promise<void> {
+  if (resetting) throw new Error('Account data is being reset.');
+  if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+  const write = persistTail.then(async () => {
+    input.assertCurrent();
+    const before = useAppStore.getState();
+    const update = mergeDiaryDay(before, input.dayKey, input.chapters, input.smallMemories, {
+      preservePriorIfIncomingEmpty: input.preservePriorIfIncomingEmpty,
+      sourceBatchId: input.sourceBatchId,
+    });
+    const patch = { ...update,
+      ...(input.todayStatus ? { todayStatus: input.todayStatus } : {}),
+      pipelineTasks: before.pipelineTasks.map((task) => task.id === input.taskId
+        ? { ...task, status: 'succeeded' as const, error: undefined, message: 'Diary saved' } : task),
+    };
+    const guard = () => {
+      input.assertCurrent();
+      if (resetting || useAppStore.getState().chapters !== before.chapters ||
+          useAppStore.getState().smallMemoriesByDate !== before.smallMemoriesByDate) {
+        throw new Error('Diary changed while saving. Please retry the import.');
+      }
+    };
+    const snapshot = { ...buildPersistedSlice(before), ...patch, pipelineAssetLedger: serializeAssetLedger() };
+    await saveSnapshot(snapshot, guard, input.assets);
+    useAppStore.setState(patch);
+  });
+  persistTail = write.catch(() => {});
+  await write;
 }
 
 
@@ -473,6 +561,7 @@ const PERSIST_KEYS: (keyof ReturnType<typeof buildPersistedSlice>)[] = [
   'onboardingComplete',
 
   'preferenceSurveyComplete',
+  'preferenceSurveyResponse',
 
   'cloudEvidenceConsent',
 
@@ -504,7 +593,7 @@ export function subscribePersist(): () => void {
 
     const critical = FLUSH_NOW_KEYS.some((k) => slice[k] !== prevSlice[k]);
     if (critical) {
-      void flushPersist();
+      void flushPersist().catch(reportPersistFailure);
       return;
     }
     schedulePersist();

@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
-import { colors, layout, type } from '../../theme';
+import { colors, layout, spacing, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import type { MemoryStackParamList } from '../../navigation/types';
 

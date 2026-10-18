@@ -115,6 +115,7 @@ type AppState = {
 
   /** Meeting 2026-09-23 preference survey finished or skipped. */
   preferenceSurveyComplete: boolean;
+  preferenceSurveyResponse: import('../model').PreferenceSurveyResponse | null;
 
   /** Explicit cloud evidence upload consent (separate from login). */
   cloudEvidenceConsent: boolean | null;
@@ -248,6 +249,7 @@ export const useAppStore = create<AppState>((set) => ({
   onboardingComplete: true,
 
   preferenceSurveyComplete: true,
+  preferenceSurveyResponse: null,
 
   cloudEvidenceConsent: null,
 
@@ -412,7 +414,7 @@ export const useAppStore = create<AppState>((set) => ({
 
       preferences: state.preferences.map((p) =>
 
-        p.id === id ? { ...p, title: title.trim(), text: text.trim() } : p,
+        p.id === id ? { ...p, title: title.trim(), text: text.trim(), survey: undefined } : p,
 
       ),
 
@@ -509,6 +511,7 @@ export function buildPersistedSlice(state: AppState) {
     onboardingComplete: state.onboardingComplete,
 
     preferenceSurveyComplete: state.preferenceSurveyComplete,
+    preferenceSurveyResponse: state.preferenceSurveyResponse,
 
     cloudEvidenceConsent: state.cloudEvidenceConsent,
 

@@ -553,6 +553,8 @@ async def _process_job_inner(job_id: str, job_dir: Path) -> None:
             result,
             bundle_version=job.get("bundle_version"),
             allow_mock=settings.allow_mock_preview,
+            manifest_bytes=(job_dir / "bundle.json").read_bytes(),
+            bundle_dir=job_dir,
         )
         (job_dir / "result.json").write_text(
             json.dumps(result, ensure_ascii=False), encoding="utf-8"

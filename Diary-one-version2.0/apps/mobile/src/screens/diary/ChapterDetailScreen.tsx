@@ -20,44 +20,31 @@ import { colors, layout, radius, spacing, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import type { DiaryStackParamList } from '../../navigation/types';
 import { formatChapterDateLong } from '../../domain/formatChapterDate';
+import { saveYourStory } from '../../backend/storyRepository';
 import { isDevFailSimulationEnabled } from '../../config/devFailSimulation';
 
 type Route = RouteProp<DiaryStackParamList, 'ChapterDetail'>;
 type Nav = NativeStackNavigationProp<DiaryStackParamList, 'ChapterDetail'>;
 
-let yourStoryLoadFailNext = false;
+
 
 export default function ChapterDetailScreen() {
   const { chapterId } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
   const chapter = useAppStore((s) => s.chapters.find((c) => c.id === chapterId));
-  const updateYourStory = useAppStore((s) => s.updateYourStory);
+  const editorRevision = React.useRef(0);
+  const saving = React.useRef(false);
 
   const [sheetOpen, setSheetOpen] = useState(false);
   const [draft, setDraft] = useState('');
   const [dirty, setDirty] = useState(false);
   const [playingMomentId, setPlayingMomentId] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<YourStorySaveState>('idle');
-  const [storyLoadFailed, setStoryLoadFailed] = useState(false);
   const storySaveFailAlternate = React.useRef(false); // used only when Lab fail-sim is on
 
   const stopPlayback = useCallback(() => setPlayingMomentId(null), []);
   useFocusEffect(useCallback(() => () => stopPlayback(), [stopPlayback]));
 
-  React.useEffect(() => {
-    if (!chapter?.yourStory) return;
-    if (!isDevFailSimulationEnabled()) {
-      setStoryLoadFailed(false);
-      return;
-    }
-    if (yourStoryLoadFailNext) {
-      yourStoryLoadFailNext = false;
-      setStoryLoadFailed(true);
-      return;
-    }
-    yourStoryLoadFailNext = true;
-    setStoryLoadFailed(false);
-  }, [chapterId, chapter?.yourStory]);
   useAppBackgroundPause(stopPlayback);
 
   if (!chapter) {
@@ -72,27 +59,33 @@ export default function ChapterDetailScreen() {
   }
 
   const openEditor = () => {
+    stopPlayback();
+    editorRevision.current = chapter.yourStoryRevision ?? 0;
     setDraft(chapter.yourStory ?? '');
     setDirty(false);
     setSheetOpen(true);
   };
 
-  const saveStory = () => {
+  const saveStory = async () => {
     const trimmed = draft.trim();
-    if (!trimmed) return;
+    if (!trimmed || saving.current) return;
+    saving.current = true;
     setSaveState('saving');
-    setTimeout(() => {
+    try {
       if (isDevFailSimulationEnabled() && storySaveFailAlternate.current) {
         storySaveFailAlternate.current = false;
-        setSaveState('failed');
-        return;
+        throw new Error('Simulated write failure');
       }
+      await saveYourStory(chapterId, trimmed, editorRevision.current);
       if (isDevFailSimulationEnabled()) storySaveFailAlternate.current = true;
-      updateYourStory(chapterId, trimmed);
       setDirty(false);
       setSaveState('idle');
       setSheetOpen(false);
-    }, 550);
+    } catch {
+      setSaveState('failed');
+    } finally {
+      saving.current = false;
+    }
   };
 
   /** Discard confirm lives in YourStorySheet (Figma card, not system Alert). */
@@ -119,7 +112,7 @@ export default function ChapterDetailScreen() {
           <Text style={styles.backChevron}>‹</Text>
         </Pressable>
         <Pressable
-          onPress={() => navigation.navigate('ShareMemorySelector', { chapterId })}
+          onPress={() => { stopPlayback(); navigation.navigate('ShareMemorySelector', { chapterId }); }}
           style={styles.navBtn}
           hitSlop={8}
           accessibilityRole="button"
@@ -129,8 +122,13 @@ export default function ChapterDetailScreen() {
         </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false} onScrollBeginDrag={stopPlayback}>
         <HeroLiveCarousel
+          key={chapterId}
+          playbackScope={chapterId}
+          activePlaybackId={playingMomentId}
+          onPlay={setPlayingMomentId}
+          onStop={stopPlayback}
           slides={[
             ...(chapter.heroUri || chapter.moments[0]?.posterUri
               ? [
@@ -172,15 +170,7 @@ export default function ChapterDetailScreen() {
         </View>
 
         <View style={styles.yourStoryBlock}>
-          {storyLoadFailed ? (
-            <View style={styles.storyLoadFailed}>
-              <Text style={styles.storyLoadTitle}>Your note couldn&apos;t be loaded</Text>
-              <Text style={styles.storyLoadBody}>Your saved note has not been changed.</Text>
-              <Pressable onPress={() => setStoryLoadFailed(false)} hitSlop={8}>
-                <Text style={styles.storyLoadRetry}>Try Again</Text>
-              </Pressable>
-            </View>
-          ) : chapter.yourStory ? (
+          { chapter.yourStory ? (
             <>
               <View style={styles.storyHeader}>
                 <Text style={styles.sectionTitle}>What you remember</Text>
@@ -275,8 +265,8 @@ export default function ChapterDetailScreen() {
           setDirty(true);
         }}
         onClose={closeSheet}
-        onSave={saveStory}
-        onRemove={() => navigation.navigate('YourStoryRemoveConfirm', { chapterId })}
+        onSave={() => void saveStory()}
+        onRemove={() => { setSheetOpen(false); stopPlayback(); navigation.navigate('YourStoryRemoveConfirm', { chapterId }); }}
       />
     </SafeAreaView>
   );

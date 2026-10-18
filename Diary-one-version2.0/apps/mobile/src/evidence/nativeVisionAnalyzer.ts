@@ -1,12 +1,12 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import { requireOptionalNativeModule } from 'expo-modules-core';
-import type { SemanticAnalyzer, SemanticAnalyzeResult } from './semanticAnalyzer';
+import type { SemanticAnalyzer } from './semanticAnalyzer';
 
 type NativeVisionPayload = {
   modelId: string;
   vectors: number[][];
-  classifications: Array<Array<{ identifier: string; confidence: number }>>;
+  classifications: { identifier: string; confidence: number }[][];
 };
 
 export type ExtractedVideoFrame = {
@@ -74,5 +74,3 @@ export async function extractVideoFramesAtTimes(
   }
   return rows;
 }
-
-export type { SemanticAnalyzeResult };

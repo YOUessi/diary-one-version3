@@ -17,18 +17,16 @@ function line(label: string, value: string, ok?: boolean) {
 
 export function BackendConnectivityCard() {
   const cloudTarget = useAppStore((s) => s.cloudProcessingTarget);
-  const [health, setHealth] = useState<BackendHealth | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const refresh = () => {
-    setLoading(true);
-    void collectBackendHealth()
-      .then(setHealth)
-      .finally(() => setLoading(false));
-  };
+  const [result, setResult] = useState<{ target: string; health: BackendHealth | null } | null>(null);
+  const health = result?.target === cloudTarget ? result.health : null;
+  const loading = result?.target !== cloudTarget;
 
   useEffect(() => {
-    refresh();
+    let active = true;
+    void collectBackendHealth().then((value) => {
+      if (active) setResult({ target: cloudTarget, health: value });
+    }).catch(() => { if (active) setResult({ target: cloudTarget, health: null }); });
+    return () => { active = false; };
   }, [cloudTarget]);
 
   return (

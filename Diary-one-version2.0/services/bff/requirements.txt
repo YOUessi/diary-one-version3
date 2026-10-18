@@ -13,3 +13,4 @@ numpy>=1.26.0
 pytest>=8.0.0
 PyJWT>=2.8.0
 cryptography>=43.0.0
+jsonschema>=4.23,<5

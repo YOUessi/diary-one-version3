@@ -2,13 +2,21 @@ import type { X02PreviewResult } from './types';
 import { ALGORITHM_LOCK } from '../config/algorithmLock';
 import { admitDeliveryState } from './deliveryAdmit';
 import { isFormalConsumerApp, isLabToolsEnabled } from '../config/buildProfile';
+import { validateResultBinding, type ResultInput } from './validateResultBinding';
 
 export type ValidateOutcome =
   | { ok: true; honestEmpty?: boolean }
   | { ok: false; reason: string };
 
 /** fail-closed：对齐 BFF result_admit + eval-web 消费门槛（PRD DAT01 / AI03）。 */
-export function validatePreviewResult(result: X02PreviewResult): ValidateOutcome {
+export function validatePreviewResult(result: X02PreviewResult, input?: ResultInput): ValidateOutcome {
+  if (!result || typeof result !== 'object') return { ok: false, reason: 'Invalid result object' };
+  try {
+    if (!input && isFormalConsumerApp) throw new Error('Missing submitted input for validation');
+    if (input) validateResultBinding(result, input, isFormalConsumerApp);
+  } catch (error) {
+    return { ok: false, reason: error instanceof Error ? error.message : 'Invalid result binding' };
+  }
   if (result.schema_version !== ALGORITHM_LOCK.previewSchema) {
     return { ok: false, reason: `Unexpected schema_version: ${result.schema_version}` };
   }

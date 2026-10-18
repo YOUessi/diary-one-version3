@@ -63,4 +63,5 @@ def test_apply_admission_attaches_envelope():
         allow_mock=False,
     )
     assert result["_publish"] == env
-    assert env["publish_admit"] is True
+    assert env["publish_admit"] is False
+    assert 'missing_input_manifest' in env['admit_reason']

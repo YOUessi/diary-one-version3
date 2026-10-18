@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -6,8 +6,11 @@ import {
   TextInput,
   View,
   ScrollView,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -24,27 +27,24 @@ import {
   nextQuestionnaireStep,
   showLessChipLabel,
   stageMeta,
-  stepIdToIndex,
   stepIndexToId,
   suggestLabelsFromCustom,
   SURVEY_OPEN_TEXT_MAX,
   togglePrefOption,
+  clearCustomAnswers,
+  surveyHasAnswers,
 } from '../../onboarding/preferenceSurvey';
 import {
   applyPreferenceSurveyAndFinish,
   applyPreferenceSurveyFromAccount,
-  skipPreferenceSurveyAndFinish,
-  skipPreferenceSurveyFromAccount,
 } from '../../onboarding/applyPreferenceSurvey';
-import { LIBRARY_TAGS } from '../../onboarding/tagLibrary';
+import { searchSurveyTags } from '../../onboarding/surveyTagLibrary';
+import { useAppStore } from '../../store/useAppStore';
 
 type SurveyParams = OnboardingStackParamList['PreferenceSurvey'];
 type Route = RouteProp<{ PreferenceSurvey: SurveyParams }, 'PreferenceSurvey'>;
 type Nav = NativeStackNavigationProp<{ PreferenceSurvey: SurveyParams }>;
 
-let sessionAnswers: SurveyAnswers = { ...EMPTY_SURVEY_ANSWERS };
-
-const MOMENT_CARD_W = (layout.contentWidth - 8) / 2;
 
 function resolveStepId(raw: SurveyParams['step']): QuestionnaireStepId {
   if (typeof raw === 'string' && raw.length) {
@@ -68,14 +68,12 @@ function OptionCard({
   selected,
   onPress,
   compact,
-  width,
 }: {
   label: string;
   description: string;
   selected: boolean;
   onPress: () => void;
   compact?: boolean;
-  width?: number;
 }) {
   return (
     <Pressable
@@ -83,14 +81,14 @@ function OptionCard({
       style={[
         styles.optionCard,
         compact && styles.optionCardCompact,
-        width != null ? { width } : null,
+        !compact && styles.gridCard,
         selected && styles.optionCardOn,
       ]}
       accessibilityRole="button"
       accessibilityState={{ selected }}
     >
       <View style={styles.optionCopy}>
-        <Text style={styles.optionLabel}>{label}</Text>
+        <Text style={[styles.optionLabel, !compact && styles.gridLabel]}>{label}</Text>
         <Text style={styles.optionDesc}>{description}</Text>
       </View>
       <View style={[styles.check, selected && styles.checkOn]}>
@@ -100,31 +98,49 @@ function OptionCard({
   );
 }
 
-function ChipRow({ labels }: { labels: string[] }) {
+function ChipRow({ labels, onRemove }: { labels: string[]; onRemove?: (label: string) => void }) {
   return (
     <View style={styles.chipRow}>
       {labels.map((label) => (
-        <View key={label} style={styles.chip}>
-          <Text style={styles.chipText}>{label}</Text>
-        </View>
+        onRemove ? (
+          <Pressable key={label} style={styles.chip} hitSlop={7} onPress={() => onRemove(label)}
+            accessibilityRole="button" accessibilityLabel={`Remove ${label}`}>
+            <Text style={styles.chipText}>{label} ×</Text>
+          </Pressable>
+        ) : (
+          <View key={label} style={styles.chip}><Text style={styles.chipText}>{label}</Text></View>
+        )
       ))}
     </View>
   );
 }
 
 export default function PreferenceSurveyScreen() {
-  const params = useRoute<Route>().params;
+  const route = useRoute<Route>();
+  const params = route.params;
   const stepId = resolveStepId(params?.step);
   const mode = params?.mode === 'account' ? 'account' : 'onboarding';
   const navigation = useNavigation<Nav>();
   const meta = stageMeta(stepId);
-  const [answers, setAnswers] = useState<SurveyAnswers>(() => ({
-    ...sessionAnswers,
-    momentIds: [...sessionAnswers.momentIds],
-    showLessIds: [...sessionAnswers.showLessIds],
-    suggestedLabels: [...sessionAnswers.suggestedLabels],
-  }));
+  const answers = params?.answers ?? EMPTY_SURVEY_ANSWERS;
   const [tagSearch, setTagSearch] = useState('');
+  const [saving, setSaving] = useState(false);
+  const saveLock = useRef(false);
+  const owner = useRef({ token: useAppStore.getState().sessionToken, email: useAppStore.getState().localProfile.email });
+  const emptySummary = !surveyHasAnswers(answers);
+
+  // Also preserve edits when the user uses the native back action.
+  useEffect(() => {
+    return navigation.addListener('beforeRemove', (event) => {
+      if (!['GO_BACK', 'POP'].includes(event.data.action.type)) return;
+      const state = navigation.getState();
+      if (state.routes[state.index]?.key !== route.key) return;
+      const previous = state.routes[state.index - 1];
+      if (previous?.name === 'PreferenceSurvey') {
+        navigation.dispatch({ ...CommonActions.setParams({ answers }), source: previous.key });
+      }
+    });
+  }, [answers, navigation, route.key]);
 
   const canContinue = useMemo(() => {
     switch (stepId) {
@@ -134,73 +150,81 @@ export default function PreferenceSurveyScreen() {
       case 'summary':
         return true;
       case 'moments':
-        return answers.momentIds.length > 0;
       case 'show_less':
-        return answers.showLessIds.length > 0;
+        return true;
       default:
         return false;
     }
-  }, [stepId, answers]);
+  }, [stepId]);
 
   const tagHits = useMemo(() => {
-    const q = tagSearch.trim().toLowerCase();
-    if (q.length < 2) return [];
-    return LIBRARY_TAGS.filter((t) => t.label.toLowerCase().includes(q)).slice(0, 8);
+    return searchSurveyTags(tagSearch);
   }, [tagSearch]);
 
-  const persist = (next: SurveyAnswers) => {
-    sessionAnswers = { ...next };
-    setAnswers(next);
-  };
+  const persist = (next: SurveyAnswers) => navigation.setParams({ answers: next });
 
   const leaveAccountSurvey = () => {
-    sessionAnswers = { ...EMPTY_SURVEY_ANSWERS };
-    if (navigation.canGoBack()) {
-      navigation.pop(Math.max(1, stepIdToIndex(stepId) + 1));
-    }
+    const state = navigation.getState();
+    let count = 0;
+    for (let i = state.index; i >= 0 && state.routes[i].name === 'PreferenceSurvey'; i--) count++;
+    if (navigation.canGoBack()) navigation.pop(Math.min(count, state.index));
   };
 
-  const go = (next: QuestionnaireStepId) => {
-    navigation.push('PreferenceSurvey', { step: next, mode });
+  const go = (next: QuestionnaireStepId, nextAnswers = answers) => {
+    navigation.push('PreferenceSurvey', { step: next, mode, answers: nextAnswers });
   };
 
-  const onPrimary = () => {
-    sessionAnswers = { ...answers };
-    if (stepId === 'custom') {
-      const fromWords = suggestLabelsFromCustom(answers.customText);
-      const merged = [...new Set([...answers.suggestedLabels, ...fromWords])];
-      const next = { ...answers, suggestedLabels: merged };
-      persist(next);
-      sessionAnswers = next;
-    }
-    const next = nextQuestionnaireStep(stepId, sessionAnswers);
-    if (next === 'done') {
-      if (mode === 'account') {
-        applyPreferenceSurveyFromAccount(sessionAnswers);
-        leaveAccountSurvey();
-      } else {
-        applyPreferenceSurveyAndFinish(sessionAnswers);
-        sessionAnswers = { ...EMPTY_SURVEY_ANSWERS };
+  const saveAndLeave = async (nextAnswers: SurveyAnswers) => {
+    if (saveLock.current) return;
+    saveLock.current = true;
+    setSaving(true);
+    try {
+      const current = useAppStore.getState();
+      if (current.sessionToken !== owner.current.token || current.localProfile.email !== owner.current.email) {
+        throw new Error('Account changed. Please reopen preferences.');
       }
+      if (mode === 'account') {
+        await applyPreferenceSurveyFromAccount(nextAnswers);
+        leaveAccountSurvey();
+      } else await applyPreferenceSurveyAndFinish(nextAnswers);
+    } catch (error) {
+      Alert.alert('Preferences not saved', error instanceof Error ? error.message : 'Please try again.');
+    } finally {
+      saveLock.current = false;
+      setSaving(false);
+    }
+  };
+
+  const onPrimary = async () => {
+    if (saveLock.current) return;
+    let nextAnswers = answers;
+    if (stepId === 'custom') {
+      const fromWords = answers.reviewedText === answers.customText ? [] : suggestLabelsFromCustom(answers.customText);
+      nextAnswers = { ...answers, reviewedText: answers.customText,
+        suggestedLabels: [...new Set([...answers.suggestedLabels, ...fromWords])] };
+      persist(nextAnswers);
+    }
+    const next = nextQuestionnaireStep(stepId, nextAnswers);
+    if (next === 'done') {
+      await saveAndLeave(nextAnswers);
       return;
     }
-    go(next);
+    go(next, nextAnswers);
   };
 
   const onSkipAll = () => {
-    sessionAnswers = { ...EMPTY_SURVEY_ANSWERS };
     if (mode === 'account') {
-      skipPreferenceSurveyFromAccount();
       leaveAccountSurvey();
       return;
     }
-    skipPreferenceSurveyAndFinish();
+    void saveAndLeave({ ...EMPTY_SURVEY_ANSWERS });
   };
 
   const onSkipStep = () => {
     if (stepId === 'custom' || stepId === 'custom_review') {
-      persist({ ...answers, customText: '', suggestedLabels: [] });
-      go('show_less');
+      const cleared = clearCustomAnswers(answers);
+      persist(cleared);
+      go('show_less', cleared);
       return;
     }
     onSkipAll();
@@ -215,19 +239,32 @@ export default function PreferenceSurveyScreen() {
       if (navigation.canGoBack()) navigation.goBack();
       return;
     }
-    if (navigation.canGoBack()) navigation.goBack();
+    if (navigation.canGoBack()) {
+      // Carry later edits back to the preceding step without a shared mutable draft.
+      const state = navigation.getState();
+      const previous = state.routes[state.index - 1];
+      if (previous?.name === 'PreferenceSurvey') navigation.dispatch({ ...CommonActions.setParams({ answers }), source: previous.key });
+      navigation.goBack();
+    }
   };
 
   /** Figma “Go back and edit” → return to Moments (stage 1). */
   const onEditFromSummary = () => {
-    navigation.navigate('PreferenceSurvey', { step: 'moments', mode });
+    const state = navigation.getState();
+    const index = state.routes.findLastIndex(r => r.name === 'PreferenceSurvey' &&
+      resolveStepId(r.params?.step) === 'moments');
+    if (index >= 0) {
+      const routes = state.routes.slice(0, index + 1).map((r, i) => i === index
+        ? { ...r, params: { ...r.params, answers } } : r);
+      navigation.dispatch(CommonActions.reset({ ...state, routes, index }));
+    } else go('moments');
   };
 
   const primaryLabel =
     stepId === 'welcome'
       ? 'Get started'
       : stepId === 'custom_review' || stepId === 'summary'
-        ? 'Confirm and continue'
+        ? stepId === 'summary' && emptySummary ? 'Continue without preferences' : 'Confirm and continue'
         : 'Continue';
 
   const secondaryLabel =
@@ -253,24 +290,29 @@ export default function PreferenceSurveyScreen() {
   }, [answers.momentIds]);
 
   const showLessChips = useMemo(() => {
-    if (answers.showLessIds.includes('nothing') || answers.showLessIds.length === 0) {
+    if (answers.showLessIds.includes('nothing')) {
       return ['Nothing for now'];
     }
     return answers.showLessIds.map((id) => showLessChipLabel(id));
   }, [answers.showLessIds]);
 
-  const specificChips = answers.suggestedLabels;
+  const specificChips = answers.momentIds.includes('something_else') ? answers.suggestedLabels : [];
+  const removeSuggested = (label: string) => persist({ ...answers,
+    suggestedLabels: answers.suggestedLabels.filter(l => l !== label),
+    searchedLabels: answers.searchedLabels?.filter(l => l !== label) });
 
   const addSuggested = (label: string) => {
     if (answers.suggestedLabels.includes(label)) return;
     persist({
       ...answers,
-      suggestedLabels: [...answers.suggestedLabels, label].slice(0, 8),
+      suggestedLabels: [...answers.suggestedLabels, label],
+      searchedLabels: [...new Set([...(answers.searchedLabels ?? []), label])],
     });
   };
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+      <KeyboardAvoidingView style={styles.safe} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       {stepId === 'welcome' ? (
         <>
           <View style={styles.welcomeNav} />
@@ -279,7 +321,7 @@ export default function PreferenceSurveyScreen() {
       ) : (
         <View style={styles.topNav}>
           <Text style={styles.stageLabel}>{meta.stageLabel}</Text>
-          <Pressable onPress={onBack} hitSlop={12} accessibilityLabel="Back">
+          <Pressable onPress={onBack} disabled={saving} hitSlop={12} accessibilityLabel="Back">
             <Text style={styles.backText}>BACK</Text>
           </Pressable>
         </View>
@@ -297,6 +339,7 @@ export default function PreferenceSurveyScreen() {
       ) : null}
 
       <ScrollView
+        style={styles.scrollViewport}
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
@@ -334,15 +377,14 @@ export default function PreferenceSurveyScreen() {
               {MOMENT_OPTIONS.map((opt) => (
                 <OptionCard
                   key={opt.id}
-                  width={MOMENT_CARD_W}
                   label={opt.label}
                   description={opt.description}
                   selected={answers.momentIds.includes(opt.id)}
                   onPress={() =>
-                    persist({
-                      ...answers,
-                      momentIds: togglePrefOption(answers.momentIds, opt, MOMENT_OPTIONS),
-                    })
+                    {
+                      const momentIds = togglePrefOption(answers.momentIds, opt, MOMENT_OPTIONS);
+                      persist({ ...(momentIds.includes('something_else') ? answers : clearCustomAnswers(answers)), momentIds });
+                    }
                   }
                 />
               ))}
@@ -363,13 +405,15 @@ export default function PreferenceSurveyScreen() {
               <TextInput
                 value={answers.customText}
                 onChangeText={(t) =>
-                  persist({ ...answers, customText: t.slice(0, SURVEY_OPEN_TEXT_MAX) })
+                  persist({ ...answers, customText: t.slice(0, SURVEY_OPEN_TEXT_MAX),
+                    suggestedLabels: answers.searchedLabels ?? [], reviewedText: undefined })
                 }
                 placeholder="e.g. fishing by the water, city walks, or model-building"
                 placeholderTextColor={colors.tertiary}
                 multiline
                 style={styles.noteInput}
                 maxLength={SURVEY_OPEN_TEXT_MAX}
+                accessibilityLabel="Your words (optional)"
               />
             </View>
             <Text style={styles.searchLabel}>OR SEARCH A TAG</Text>
@@ -379,6 +423,7 @@ export default function PreferenceSurveyScreen() {
               placeholder="Search an activity or place"
               placeholderTextColor={colors.tertiary}
               style={styles.searchInput}
+              accessibilityLabel="Search an activity or place"
             />
             {tagHits.length ? (
               <View style={[styles.chipRow, styles.tagHits]}>
@@ -399,7 +444,7 @@ export default function PreferenceSurveyScreen() {
             {answers.suggestedLabels.length ? (
               <>
                 <Text style={[styles.searchLabel, styles.tagHits]}>ADDED</Text>
-                <ChipRow labels={answers.suggestedLabels} />
+                <ChipRow labels={answers.suggestedLabels} onRemove={removeSuggested} />
               </>
             ) : null}
           </>
@@ -413,12 +458,15 @@ export default function PreferenceSurveyScreen() {
                 These are suggestions, not facts from your recordings. You can edit or skip them.
               </Text>
             </View>
-            <View style={[styles.noteCard, styles.noteCardReview]}>
+            {answers.customText.trim() ? <View style={[styles.noteCard, styles.noteCardReview]}>
               <Text style={styles.noteLabel}>YOUR WORDS</Text>
               <Text style={styles.noteBody}>{answers.customText.trim()}</Text>
-            </View>
+            </View> : null}
             <Text style={styles.searchLabel}>SUGGESTED PREFERENCES</Text>
-            <ChipRow labels={answers.suggestedLabels} />
+            <ChipRow labels={answers.suggestedLabels} onRemove={removeSuggested} />
+            <Pressable onPress={onBack} style={styles.editLink} accessibilityRole="button">
+              <Text style={styles.editLinkText}>Edit words or search tags</Text>
+            </Pressable>
           </>
         ) : null}
 
@@ -458,38 +506,35 @@ export default function PreferenceSurveyScreen() {
         {stepId === 'summary' ? (
           <>
             <View style={styles.headingBlock}>
-              <Text style={styles.title}>Here is what Diary will look out for</Text>
+              <Text style={styles.title}>{emptySummary ? 'Review your preferences' : 'Here is what Diary will look out for'}</Text>
               <Text style={styles.lead}>
-                You can change these preferences anytime in Settings.
+                {emptySummary ? 'Nothing is set yet. You can add preferences anytime in Settings.' : 'You can change these preferences anytime in Settings.'}
               </Text>
             </View>
             <View style={styles.summaryCard}>
               <Text style={styles.summaryEyebrow}>NOTICE MORE</Text>
-              <ChipRow
-                labels={
-                  noticeMoreChips.length ? noticeMoreChips : ['No preference — follow my day']
-                }
-              />
+              {noticeMoreChips.length ? <ChipRow labels={noticeMoreChips} /> : <Text style={styles.unset}>Not set yet</Text>}
             </View>
             <View style={[styles.summaryCard, styles.summaryCardGap]}>
               <Text style={[styles.summaryEyebrow, styles.summaryEyebrowMuted]}>
                 SHOW LESS OFTEN
               </Text>
-              <ChipRow labels={showLessChips} />
+              {showLessChips.length ? <ChipRow labels={showLessChips} /> : <Text style={styles.unset}>Not set yet</Text>}
             </View>
-            {specificChips.length ? (
+            {specificChips.length || (answers.momentIds.includes('something_else') && answers.customText.trim()) ? (
               <View style={[styles.summaryCard, styles.summaryCardGap]}>
                 <Text style={[styles.summaryEyebrow, styles.summaryEyebrowMuted]}>
                   SPECIFIC THINGS YOU ADDED
                 </Text>
                 <ChipRow labels={specificChips} />
+                {!specificChips.length && answers.customText.trim() ? <Text style={styles.noteBody}>{answers.customText.trim()}</Text> : null}
               </View>
             ) : null}
             <Text style={styles.promise}>
-              These preferences only affect how your content is selected and presented. Diary only
-              uses moments that were actually captured.
+              {emptySummary ? 'Diary will follow what was actually captured. You can set preferences later.' :
+                'These preferences only affect how your content is selected and presented. Diary only uses moments that were actually captured.'}
             </Text>
-            <Pressable onPress={onEditFromSummary} style={styles.editLink}>
+            <Pressable onPress={onEditFromSummary} disabled={saving} style={styles.editLink}>
               <Text style={styles.editLinkText}>Go back and edit</Text>
             </Pressable>
           </>
@@ -499,10 +544,12 @@ export default function PreferenceSurveyScreen() {
       <View style={styles.footer}>
         <Pressable
           onPress={onPrimary}
-          disabled={!canContinue}
+          disabled={!canContinue || saving}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: !canContinue || saving, busy: saving }}
           style={[styles.primary, !canContinue && styles.primaryDisabled]}
         >
-          <Text style={styles.primaryLabel}>{primaryLabel}</Text>
+          <Text style={styles.primaryLabel}>{saving ? 'Saving…' : primaryLabel}</Text>
         </Pressable>
         {secondaryLabel ? (
           <Pressable
@@ -510,6 +557,7 @@ export default function PreferenceSurveyScreen() {
               stepId === 'custom' || stepId === 'custom_review' ? onSkipStep : onSkipAll
             }
             style={styles.secondary}
+            disabled={saving}
           >
             <Text style={styles.secondaryLabel}>{secondaryLabel}</Text>
           </Pressable>
@@ -517,6 +565,7 @@ export default function PreferenceSurveyScreen() {
           <Text style={styles.footerHint}>You can change this anytime in Settings.</Text>
         )}
       </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -565,6 +614,7 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
     flexGrow: 1,
   },
+  scrollViewport: { flex: 1 },
   welcomeEyebrow: {
     ...type.metadata,
     color: colors.tertiary,
@@ -587,10 +637,10 @@ const styles = StyleSheet.create({
     color: colors.secondary,
   },
   /** Figma 2174:130 What to expect — gap 20 */
-  bullets: { gap: 20, marginTop: 0 },
+  bullets: { gap: 20, marginTop: 80 },
   bullet: { fontSize: 15, lineHeight: 18, color: colors.secondary },
   headingBlock: {
-    minHeight: 130,
+    minHeight: 122,
     marginBottom: spacing.sm,
     gap: 4,
   },
@@ -611,13 +661,15 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 8,
   },
+  gridCard: { flexBasis: '47%', flexGrow: 1 },
+  gridLabel: { maxWidth: 116 },
   listCol: { gap: 8 },
   /** Figma Preference Option Card — unselected 1px divider; selected 1.5 ink */
   optionCard: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    height: 112,
+    minHeight: 112,
     backgroundColor: colors.card,
     borderWidth: 1,
     borderColor: colors.divider,
@@ -625,7 +677,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
   },
-  optionCardCompact: { height: 54, width: '100%' },
+  optionCardCompact: { minHeight: 54, width: '100%' },
   optionCardOn: { borderWidth: 1.5, borderColor: colors.ink },
   optionCopy: { flex: 1, gap: 4 },
   optionLabel: {
@@ -685,7 +737,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     fontWeight: '500',
     color: colors.secondary,
-    marginBottom: 8,
+    marginBottom: 0,
   },
   searchInput: {
     height: 52,
@@ -713,6 +765,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.ink,
   },
+  unset: { fontSize: 15, lineHeight: 18, color: colors.secondary },
   summaryCard: {
     borderWidth: 1,
     borderColor: colors.divider,
@@ -733,7 +786,7 @@ const styles = StyleSheet.create({
     ...type.caption,
     color: colors.secondary,
     marginTop: 18,
-    marginBottom: 12,
+    marginBottom: 0,
   },
   editLink: { alignItems: 'center', minHeight: 44, justifyContent: 'center' },
   editLinkText: {
@@ -777,5 +830,7 @@ const styles = StyleSheet.create({
     ...type.metadata,
     color: colors.tertiary,
     textAlign: 'center',
+    minHeight: 26,
+    paddingVertical: 6,
   },
 });

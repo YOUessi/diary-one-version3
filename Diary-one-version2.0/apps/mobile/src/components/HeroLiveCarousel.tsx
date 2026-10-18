@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, layout, radius, spacing } from '../theme';
 import { MomentPlayer } from './MomentPlayer';
@@ -11,8 +11,11 @@ export type HeroSlide = {
 };
 
 type Props = {
+  playbackScope: string;
   slides: HeroSlide[];
-  intervalMs?: number;
+  activePlaybackId: string | null;
+  onPlay: (id: string) => void;
+  onStop: () => void;
 };
 
 function isVideoUri(uri?: string) {
@@ -22,27 +25,15 @@ function isVideoUri(uri?: string) {
 /**
  * Chapter hero: poster carousel + optional LIVE (video) for motion frames.
  */
-export function HeroLiveCarousel({ slides, intervalMs = 3800 }: Props) {
+export function HeroLiveCarousel({ slides, activePlaybackId, onPlay, onStop, playbackScope }: Props) {
   const safe = useMemo(
     () => slides.filter((s) => s.posterUri || s.playbackUri),
     [slides],
   );
   const [index, setIndex] = useState(0);
-  const [liveOn, setLiveOn] = useState(false);
-
-  useEffect(() => {
-    setIndex(0);
-    // Prefer starting in LIVE when first slide has video
-    setLiveOn(isVideoUri(safe[0]?.playbackUri));
-  }, [safe.map((s) => s.key).join('|')]);
-
-  useEffect(() => {
-    if (safe.length <= 1 || liveOn) return;
-    const t = setInterval(() => {
-      setIndex((i) => (i + 1) % safe.length);
-    }, intervalMs);
-    return () => clearInterval(t);
-  }, [safe.length, intervalMs, liveOn]);
+  const slideKey = safe[Math.min(index, Math.max(0, safe.length - 1))]?.key;
+  const liveId = `hero:${playbackScope}:${slideKey ?? ''}`;
+  const liveOn = activePlaybackId === liveId;
 
   if (safe.length === 0) {
     return (
@@ -60,7 +51,7 @@ export function HeroLiveCarousel({ slides, intervalMs = 3800 }: Props) {
   return (
     <View style={styles.hero}>
       {liveOn && canLive && playback ? (
-        <MomentPlayer uri={playback} playing onStop={() => setLiveOn(false)} />
+        <MomentPlayer uri={playback} playing fill onStop={onStop} />
       ) : (
         <Image
           source={{ uri: slide.posterUri ?? playback! }}
@@ -73,7 +64,8 @@ export function HeroLiveCarousel({ slides, intervalMs = 3800 }: Props) {
           {safe.map((s, i) => (
             <Pressable
               key={s.key}
-              onPress={() => setIndex(i)}
+              onPress={() => { onStop(); setIndex(i); }}
+              accessibilityLabel={`Show image ${i + 1}`}
               style={[styles.dot, i === index && styles.dotOn]}
               hitSlop={6}
             />
@@ -83,10 +75,12 @@ export function HeroLiveCarousel({ slides, intervalMs = 3800 }: Props) {
       {canLive ? (
         <Pressable
           style={styles.liveChip}
-          onPress={() => setLiveOn((v) => !v)}
+          onPress={() => liveOn ? onStop() : onPlay(liveId)}
+          accessibilityRole="button"
+          accessibilityLabel={liveOn ? 'Pause video' : 'Play video'}
           hitSlop={8}
         >
-          <Text style={styles.liveText}>{liveOn ? 'LIVE' : 'STILL'}</Text>
+          <Text style={styles.liveText}>{liveOn ? 'Pause' : 'Play'}</Text>
         </Pressable>
       ) : null}
       {slide.title && !liveOn ? (

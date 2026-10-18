@@ -33,7 +33,7 @@ export function createDayRevisionId(dayKey: string): string {
 }
 
 /** Cheap fingerprint of selected assets for retry / idempotency (not a crypto hash). */
-export function selectionFingerprint(items: Array<{ uri: string; fileSize?: number; durationMs?: number }>): string {
+export function selectionFingerprint(items: { uri: string; fileSize?: number; durationMs?: number }[]): string {
   const parts = items
     .map((i) => `${i.uri.split('/').pop() ?? i.uri}:${i.fileSize ?? 0}:${i.durationMs ?? 0}`)
     .sort();

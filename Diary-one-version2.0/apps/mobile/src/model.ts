@@ -12,6 +12,9 @@ export type TodayStatus =
 
 export type Chapter = {
   id: string;
+  /** Local ingestion provenance, not an AI/public payload field. */
+  sourceBatchId?: string;
+  yourStoryRevision?: number;
   title: string;
   dateKey: string;
   dateLabel: string;
@@ -32,6 +35,7 @@ export type Chapter = {
 
 export type SmallMemory = {
   id: string;
+  sourceBatchId?: string;
   text: string;
 };
 
@@ -50,10 +54,29 @@ export type MemoryPreference = {
   id: string;
   title: string;
   text: string;
+  /** Questionnaire provenance and scope, separate from captured-content tags. */
+  survey?: {
+    source: 'preference_survey';
+    polarity: 'like' | 'avoid';
+    theme_id?: string;
+    tag_id?: string;
+    preference_reason_id?: string;
+    target_scope: string;
+    strength: number;
+    updated_at: string;
+  };
+};
+
+export type PreferenceSurveyResponse = {
+  question_1_response: 'selected' | 'no_preference' | 'skipped';
+  question_2_response: 'selected' | 'nothing_for_now' | 'skipped';
+  updated_at: string;
 };
 
 export type CapturedOriginal = {
   id: string;
+  /** Only trusted device Manual capture may appear in Captured by You. */
+  intakeSource?: 'DEVICE_MANUAL' | import('./domain/mediaIntake').MediaIntakeSource;
   dateKey: string;
   kind: 'photo' | 'video';
   durationSec?: number;

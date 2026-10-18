@@ -1,7 +1,9 @@
 import { Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { fromPickerAssets } from './fromPicker';
-import { PHOTO_LIBRARY_TEST_SOURCE } from '../domain/mediaIntake';
+import { PHOTO_LIBRARY_TEST_SOURCE, PHOTO_LIBRARY_USER_SOURCE } from '../domain/mediaIntake';
+import { diaryTodayKey } from '../domain/dayKey';
+import { mediaDayKey } from '../domain/importDays';
 import { enqueuePipeline } from './runPipeline';
 import { createDemoPickedPhoto } from './createDemoPhoto';
 import { createSimulationPickedVideo } from './createSimulationVideo';
@@ -78,6 +80,7 @@ async function pickMediaBatch(): Promise<PickedMedia[] | null> {
 }
 
 async function enqueueValidated(picked: PickedMedia[]): Promise<void> {
+  const ownerToken = useAppStore.getState().sessionToken;
   const validated = await validatePickedMedia(picked);
   if (!validated.ok) {
     Alert.alert('Cannot import', validated.reason);
@@ -87,6 +90,7 @@ async function enqueueValidated(picked: PickedMedia[]): Promise<void> {
     validated.items,
   );
   const skipped = skippedSessionDupes + skippedLedgerDupes;
+  if (useAppStore.getState().sessionToken !== ownerToken) return;
   if (!unique.length) {
     Alert.alert(
       'Already imported',
@@ -99,7 +103,23 @@ async function enqueueValidated(picked: PickedMedia[]): Promise<void> {
   if (skipped) {
     Alert.alert('Skipped duplicates', `${skipped} already-processed file(s) skipped.`);
   }
-  await enqueuePipeline(unique, PHOTO_LIBRARY_TEST_SOURCE);
+  const unknown = unique.filter((item) => !mediaDayKey(item));
+  let ready = unique;
+  if (unknown.length) {
+    const day = diaryTodayKey();
+    const confirmed = await new Promise<boolean>((resolve) => Alert.alert(
+      'Capture date unavailable',
+      `${unknown.length} selected file(s) have no capture date. Add them to ${day}? This sets the diary date only; it does not invent a capture time.`,
+      [{ text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
+        { text: `Use ${day}`, onPress: () => resolve(true) }],
+      { cancelable: true, onDismiss: () => resolve(false) },
+    ));
+    if (!confirmed || useAppStore.getState().sessionToken !== ownerToken) return;
+    ready = unique.map((item) => mediaDayKey(item) ? item : { ...item, confirmedDayKey: day });
+  }
+  if (!enqueuePipeline(ready, PHOTO_LIBRARY_USER_SOURCE)) {
+    Alert.alert('Import in progress', 'Wait for the current import to finish, then choose these files again.');
+  }
 }
 
 /**
@@ -108,9 +128,11 @@ async function enqueueValidated(picked: PickedMedia[]): Promise<void> {
  */
 export async function launchEvidenceImport(): Promise<void> {
   if (!requireSignIn()) return;
+  const ownerToken = useAppStore.getState().sessionToken;
   if (!requireCloudConsent('try Upload again')) return;
   const picked = await pickMediaBatch();
   if (!picked?.length) return;
+  if (useAppStore.getState().sessionToken !== ownerToken) return;
   await enqueueValidated(picked);
 }
 
@@ -138,5 +160,5 @@ export async function launchSimulationVideoImport(): Promise<void> {
   }
   if (!requireCloudConsent('try again')) return;
   const media = [await createSimulationPickedVideo()];
-  await enqueuePipeline(media, PHOTO_LIBRARY_TEST_SOURCE);
+  await enqueuePipeline(media.map((item) => ({ ...item, confirmedDayKey: diaryTodayKey() })), PHOTO_LIBRARY_TEST_SOURCE);
 }

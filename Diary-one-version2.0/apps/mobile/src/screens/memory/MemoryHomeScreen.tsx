@@ -18,7 +18,8 @@ const PREVIEW_COUNT = 4;
 export default function MemoryHomeScreen() {
   const navigation = useNavigation<Nav>();
   const topics = useAppStore((s) => s.topics);
-  const captured = useAppStore((s) => s.capturedOriginals);
+  const originals = useAppStore((s) => s.capturedOriginals);
+  const captured = originals.filter((item) => item.intakeSource === 'DEVICE_MANUAL');
   const todayStatus = useAppStore((s) => s.todayStatus);
   const showTopics = topics.length > 0;
   const deviceLinkState = useAppStore((s) => s.deviceLinkState);

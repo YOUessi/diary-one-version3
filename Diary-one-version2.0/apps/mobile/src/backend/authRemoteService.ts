@@ -13,6 +13,28 @@ function authBase(): { url: string; token: string } {
   return { url, token: resolveProductionBearer() };
 }
 
+let activating = false;
+
+async function activateCloudSession(email: string, token: string, nickname: string | undefined, expectedToken: string) {
+  if (activating) throw new Error('Sign-in is already completing.');
+  if (!email.trim() || !token.trim()) throw new Error('The sign-in service returned an incomplete session.');
+  const before = useAppStore.getState();
+  if (before.sessionToken !== expectedToken) throw new Error('Account changed while signing in. Please try again.');
+  activating = true;
+  try {
+    const owner = email.trim().toLowerCase();
+    const { resetLocalAppData, flushPersist } = await import('../store/hydrate');
+    if (useAppStore.getState().sessionToken !== expectedToken) throw new Error('Account changed while signing in.');
+    if ((before.localProfile.email ?? '').trim().toLowerCase() !== owner) {
+      await resetLocalAppData({ onboardingComplete: before.onboardingComplete });
+    }
+    const profile = useAppStore.getState().localProfile;
+    useAppStore.setState({ sessionToken: token, localProfile: { ...profile, email: owner,
+      nickname: nickname?.trim() || profile.nickname || 'Guest' } });
+    await flushPersist();
+  } finally { activating = false; }
+}
+
 export type OtpRequestResult =
   | { ok: true; email: string; devCode?: string; message: string }
   | { ok: false; reason: string };
@@ -70,6 +92,7 @@ export async function requestEmailOtp(email: string): Promise<OtpRequestResult> 
 }
 
 export async function verifyEmailOtpRemote(email: string, code: string): Promise<OtpVerifyResult> {
+  const expectedToken = useAppStore.getState().sessionToken;
   const digits = code.replace(/\D/g, '');
   if (digits.length < 6) {
     return { ok: false, reason: 'invalid_code' };
@@ -104,22 +127,8 @@ export async function verifyEmailOtpRemote(email: string, code: string): Promise
     if (!res.ok) {
       return { ok: false, reason: body.detail ?? `otp_verify_failed_${res.status}` };
     }
-    const profile = useAppStore.getState().localProfile;
     const sessionToken = (body.session_token ?? '').trim();
-    if (!sessionToken && requireCloudAuth) {
-      return {
-        ok: false,
-        reason: 'BFF did not return session_token. Update BFF OTP verify / sessions store.',
-      };
-    }
-    useAppStore.getState().setLocalProfile({
-      ...profile,
-      email: body.profile?.email ?? email.trim(),
-      nickname: body.profile?.nickname ?? profile.nickname,
-    });
-    if (sessionToken) {
-      useAppStore.getState().setSessionToken(sessionToken);
-    }
+    await activateCloudSession(body.profile?.email ?? body.email ?? email, sessionToken, body.profile?.nickname, expectedToken);
     return {
       ok: true,
       email: body.email ?? email.trim(),
@@ -144,6 +153,7 @@ export async function completeOAuthLogin(
   provider: 'apple' | 'google',
   identityToken: string,
 ): Promise<OAuthResult> {
+  const expectedToken = useAppStore.getState().sessionToken;
   const { url } = authBase();
   if (!url) {
     return {
@@ -167,16 +177,8 @@ export async function completeOAuthLogin(
       return { ok: false, reason: body.detail ?? `oauth_failed_${res.status}` };
     }
     const email = (body.profile?.email ?? body.email ?? '').trim();
-    const profile = useAppStore.getState().localProfile;
-    useAppStore.getState().setLocalProfile({
-      ...profile,
-      email: email || profile.email,
-      nickname: body.profile?.nickname ?? profile.nickname,
-    });
     const sessionToken = (body.session_token ?? '').trim();
-    if (sessionToken) {
-      useAppStore.getState().setSessionToken(sessionToken);
-    }
+    await activateCloudSession(email, sessionToken, body.profile?.nickname, expectedToken);
     return { ok: true, email, sessionToken: sessionToken || undefined };
   } catch (e) {
     return { ok: false, reason: e instanceof Error ? e.message : String(e) };

@@ -74,15 +74,17 @@ export default function AccountHomeScreen() {
           text: 'Log out',
           style: 'destructive',
           onPress: () => {
-            const store = useAppStore.getState();
-            store.setSessionToken('');
-            store.setLocalProfile({
-              nickname: 'Guest',
-              email: undefined,
-            });
-            if (wipeLocal) {
-              void import('../../store/hydrate').then((m) => m.resetLocalAppData());
-            }
+            void (async () => {
+              try {
+                if (wipeLocal) {
+                  const { resetLocalAppData } = await import('../../store/hydrate');
+                  await resetLocalAppData();
+                } else useAppStore.getState().setSessionToken('');
+              } catch {
+                Alert.alert('Cleanup not complete', 'Please retry. Pending local cleanup also resumes when the app restarts.');
+              }
+            })();
+
           },
         },
       ],

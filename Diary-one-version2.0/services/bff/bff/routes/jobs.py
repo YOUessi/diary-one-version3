@@ -27,7 +27,7 @@ async def get_job(
         raise HTTPException(status_code=404, detail="Job not found")
 
     # Session users only see their own jobs (lab API token / open mode skip).
-    if caller.email and job.owner_email and job.owner_email != caller.email:
+    if caller.kind == 'session' and job.owner_email != caller.email:
         raise HTTPException(status_code=404, detail="Job not found")
 
     body: dict = {

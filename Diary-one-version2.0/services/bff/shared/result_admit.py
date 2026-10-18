@@ -9,6 +9,9 @@ Rules (PRD V0.1 §19–21):
 from __future__ import annotations
 
 from typing import Any
+from pathlib import Path
+
+from shared.result_contract import validate_result_contract, SCHEMA_SHA256
 
 
 # Delivery states that may surface to Diary (honest empty included separately).
@@ -92,11 +95,23 @@ def apply_admission(
     *,
     bundle_version: str | None,
     allow_mock: bool,
+    manifest_bytes: bytes | None = None,
+    bundle_dir: Path | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Attach `_publish` envelope; return (result, envelope)."""
     envelope = build_publish_envelope(
         result, bundle_version=bundle_version, allow_mock=allow_mock
     )
+    if envelope['publish_admit'] and not envelope['is_mock_fallback']:
+        try:
+            if manifest_bytes is None:
+                raise ValueError('missing_input_manifest')
+            validate_result_contract(result, manifest_bytes, bundle_dir)
+            envelope['result_contract_sha256'] = SCHEMA_SHA256
+            envelope['input_bound'] = True
+        except (ValueError, KeyError, TypeError, OSError) as error:
+            envelope.update(publish_admit=False, fail_job=True, input_bound=False,
+                            admit_reason='result_contract_rejected:' + str(error)[:180])
     out = dict(result)
     out["_publish"] = envelope
     return out, envelope

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Pressable, StyleSheet, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
@@ -31,17 +31,11 @@ function groupByDate(items: CapturedOriginal[]) {
 export default function CapturedByYouScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<CapturedRoute>();
-  const initial = route.params?.filter ?? 'all';
   const captured = useAppStore((s) => s.capturedOriginals);
-  const [filter, setFilter] = useState<Filter>(initial);
-
-  useEffect(() => {
-    if (route.params?.filter) setFilter(route.params.filter);
-  }, [route.params?.filter]);
+  const filter = route.params?.filter ?? 'all';
 
   const filtered = useMemo(() => {
-    if (filter === 'all') return captured;
-    return captured.filter((c) => c.kind === filter);
+    return captured.filter((c) => c.intakeSource === 'DEVICE_MANUAL' && (filter === 'all' || c.kind === filter));
   }, [captured, filter]);
 
   const sections = useMemo(() => groupByDate(filtered), [filtered]);
@@ -58,7 +52,7 @@ export default function CapturedByYouScreen() {
         {(['all', 'photo', 'video'] as Filter[]).map((f) => {
           const on = filter === f;
           return (
-            <Pressable key={f} onPress={() => setFilter(f)} style={styles.filterHit} hitSlop={8}>
+            <Pressable key={f} onPress={() => navigation.setParams({ filter: f })} style={styles.filterHit} hitSlop={8}>
               <Text style={[styles.filterText, on && styles.filterTextOn]}>
                 {f === 'all' ? 'All' : f === 'photo' ? 'Photos' : 'Videos'}
               </Text>

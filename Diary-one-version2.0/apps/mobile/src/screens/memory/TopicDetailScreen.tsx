@@ -67,10 +67,7 @@ export default function TopicDetailScreen() {
 
   const openChapter = (chapterId: string) => {
     navigation.dispatch(
-      CommonActions.navigate({
-        name: 'DiaryTab',
-        params: { screen: 'ChapterDetail', params: { chapterId } },
-      }),
+      CommonActions.navigate({ name: 'ChapterDetail', params: { chapterId } }),
     );
   };
 

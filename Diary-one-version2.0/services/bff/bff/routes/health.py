@@ -36,6 +36,7 @@ async def health():
         "status": "ok",
         "service": "diary-one-bff",
         "version": "0.1.0",
+        "deployment_revision": settings.deployment_revision,
         "mode": "production",
         "ffmpeg_available": ffmpeg_available(),
         "smtp_configured": smtp_configured,

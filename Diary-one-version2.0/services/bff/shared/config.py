@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     x02_base_url: str = "http://127.0.0.1:8787"
     x02_token: str = ""
     queue_key: str = "diary:cloud_jobs"
+    deployment_revision: str = "unversioned"
+    google_client_ids: str = ""
+    worker_recovery_grace_seconds: int = 120
     # Default false — OTP in JSON is a lab convenience only (PRI04).
     expose_otp_in_response: bool = False
     otp_ttl_seconds: int = 600

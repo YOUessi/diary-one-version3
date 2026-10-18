@@ -3,6 +3,7 @@ import json
 import shutil
 import tempfile
 import uuid
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from sqlalchemy import select
@@ -20,12 +21,26 @@ def process_job_sync(job_id: str) -> None:
     session = SyncSessionLocal()
     try:
         jid = uuid.UUID(job_id)
-        job = session.get(CloudJob, jid)
+        job = session.scalar(select(CloudJob).where(CloudJob.id == jid).with_for_update(skip_locked=True))
         if not job:
+            return
+        cutoff = datetime.now(timezone.utc) - timedelta(seconds=settings.worker_recovery_grace_seconds)
+        updated = job.updated_at
+        if updated is not None and updated.tzinfo is None:
+            updated = updated.replace(tzinfo=timezone.utc)
+        if job.status not in (JobStatus.pending, JobStatus.processing):
+            return
+        if job.status == JobStatus.processing and (updated is None or updated > cutoff):
             return
         job.status = JobStatus.processing
         job.message = "Running X02 preview…"
         session.commit()
+
+        # Hold a database row lock during execution. Recovery scans skip this row,
+        # regardless of model latency. A dead worker releases the lock automatically.
+        job = session.scalar(select(CloudJob).where(CloudJob.id == jid).with_for_update(skip_locked=True))
+        if not job or job.status != JobStatus.processing:
+            return
 
         tmp = Path(tempfile.mkdtemp(prefix="diary-job-"))
         try:
@@ -50,6 +65,8 @@ def process_job_sync(job_id: str) -> None:
                 result,
                 bundle_version=job.bundle_version,
                 allow_mock=settings.allow_mock_preview,
+                manifest_bytes=manifest_path.read_bytes(),
+                bundle_dir=tmp,
             )
             if envelope.get("fail_job"):
                 job.status = JobStatus.failed
@@ -94,12 +111,17 @@ def process_job_sync(job_id: str) -> None:
         session.close()
 
 
-def requeue_stale_processing() -> None:
+def recoverable_job_ids(limit: int) -> list[str]:
+    """Durable pending outbox plus crash recovery; never resets another live worker."""
     session = SyncSessionLocal()
     try:
-        rows = session.scalars(select(CloudJob).where(CloudJob.status == JobStatus.processing)).all()
-        for job in rows:
-            job.status = JobStatus.pending
-        session.commit()
+        cutoff = datetime.now(timezone.utc) - timedelta(seconds=settings.worker_recovery_grace_seconds)
+        rows = session.scalars(
+            select(CloudJob).where(
+                (CloudJob.status == JobStatus.pending) |
+                ((CloudJob.status == JobStatus.processing) & (CloudJob.updated_at <= cutoff))
+            ).order_by(CloudJob.created_at).limit(limit).with_for_update(skip_locked=True)
+        ).all()
+        return [str(job.id) for job in rows]
     finally:
         session.close()

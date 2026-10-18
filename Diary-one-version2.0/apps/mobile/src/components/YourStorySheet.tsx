@@ -39,16 +39,19 @@ export function YourStorySheet({
     if (open) {
       ref.current?.expand();
     } else {
-      setDiscardOpen(false);
       ref.current?.close();
     }
   }, [open]);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.18} />
+      <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.18}
+        pressBehavior="none" onPress={() => {
+          if (saveState === 'saving') return;
+          if (dirty) setDiscardOpen(true); else ref.current?.close();
+        }} />
     ),
-    [],
+    [dirty, saveState],
   );
 
   const handleSheetChange = (index: number) => {
@@ -107,7 +110,7 @@ export function YourStorySheet({
         ) : null}
         <View style={styles.actions}>
           {hasExistingStory && onRemove && !failed ? (
-            <Pressable onPress={onRemove} style={styles.btn}>
+            <Pressable onPress={onRemove} style={styles.btn} disabled={saving}>
               <Text style={styles.remove}>Remove note</Text>
             </Pressable>
           ) : null}

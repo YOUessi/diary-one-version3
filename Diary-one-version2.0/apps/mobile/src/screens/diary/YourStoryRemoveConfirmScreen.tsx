@@ -6,6 +6,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, layout, spacing } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import type { DiaryStackParamList } from '../../navigation/types';
+import { saveYourStory } from '../../backend/storyRepository';
 import { isDevFailSimulationEnabled } from '../../config/devFailSimulation';
 
 type Route = RouteProp<DiaryStackParamList, 'YourStoryRemoveConfirm'>;
@@ -18,27 +19,32 @@ let storyRemoveFailNext = false;
 export default function YourStoryRemoveConfirmScreen() {
   const { chapterId } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
-  const updateYourStory = useAppStore((s) => s.updateYourStory);
+  const expectedRevision = React.useRef(useAppStore.getState().chapters.find((c) => c.id === chapterId)?.yourStoryRevision ?? 0);
+  const writing = React.useRef(false);
   const [removing, setRemoving] = useState(false);
 
-  const confirm = () => {
+  const confirm = async () => {
+    if (writing.current) return;
+    writing.current = true;
     setRemoving(true);
-    setTimeout(() => {
+    try {
       if (isDevFailSimulationEnabled() && storyRemoveFailNext) {
         storyRemoveFailNext = false;
-        setRemoving(false);
-        navigation.replace('YourStoryRemoveFailed', { chapterId });
-        return;
+        throw new Error('Simulated remove failure');
       }
+      await saveYourStory(chapterId, undefined, expectedRevision.current);
       if (isDevFailSimulationEnabled()) storyRemoveFailNext = true;
-      updateYourStory(chapterId, undefined);
-      setRemoving(false);
       navigation.goBack();
-    }, 500);
+    } catch {
+      navigation.replace('YourStoryRemoveFailed', { chapterId });
+    } finally {
+      writing.current = false;
+      setRemoving(false);
+    }
   };
 
   return (
-    <Modal transparent animationType="fade" onRequestClose={() => navigation.goBack()}>
+    <Modal transparent animationType="fade" onRequestClose={() => { if (!writing.current) navigation.goBack(); }}>
       <View style={styles.backdrop}>
         <View style={styles.card}>
           {removing ? (
@@ -61,7 +67,7 @@ export default function YourStoryRemoveConfirmScreen() {
                 <Pressable style={styles.secondaryBtn} onPress={() => navigation.goBack()}>
                   <Text style={styles.secondaryLabel}>Keep note</Text>
                 </Pressable>
-                <Pressable style={styles.primaryBtn} onPress={confirm}>
+                <Pressable style={styles.primaryBtn} onPress={() => void confirm()}>
                   <Text style={styles.primaryLabel}>Remove note</Text>
                 </Pressable>
               </View>

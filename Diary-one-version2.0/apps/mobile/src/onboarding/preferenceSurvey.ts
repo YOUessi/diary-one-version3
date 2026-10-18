@@ -5,6 +5,8 @@
  * Never invents Topics or day content from preferences alone.
  */
 
+import { suggestSurveyTags } from './surveyTagLibrary';
+
 export type QuestionnaireStepId =
   | 'welcome'
   | 'moments'
@@ -121,6 +123,10 @@ export type SurveyAnswers = {
   customText: string;
   /** Local suggestions derived from customText (not claimed as facts) */
   suggestedLabels: string[];
+  /** Suggestions already shown for these words; prevents restoring removed chips on Back. */
+  reviewedText?: string;
+  /** Explicit search choices survive edits to the free-text field. */
+  searchedLabels?: string[];
 };
 
 export const EMPTY_SURVEY_ANSWERS: SurveyAnswers = {
@@ -159,34 +165,23 @@ export function showLessChipLabel(id: string): string {
  * Never invents diary content — only keyword chips for preference signals.
  */
 export function suggestLabelsFromCustom(text: string): string[] {
-  const lower = text.toLowerCase();
-  const rules: { test: RegExp; label: string }[] = [
-    { test: /fish/, label: 'Fishing' },
-    { test: /water|lake|river|sea/, label: 'Waterside' },
-    { test: /city\s*walk|citywalk/, label: 'City walks' },
-    { test: /model/, label: 'Model-building' },
-    { test: /pet|dog|cat/, label: 'Pets' },
-    { test: /hike|hiking/, label: 'Hiking' },
-    { test: /cook|kitchen/, label: 'Cooking' },
-    { test: /music/, label: 'Music' },
-  ];
-  const out: string[] = [];
-  for (const r of rules) {
-    if (r.test.test(lower) && !out.includes(r.label)) out.push(r.label);
-    if (out.length >= 4) break;
-  }
-  if (!out.length) {
-    const words = text
-      .split(/[\s,./]+/)
-      .map((w) => w.trim())
-      .filter((w) => w.length > 3)
-      .slice(0, 2);
-    for (const w of words) {
-      const label = w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-      if (!out.includes(label)) out.push(label);
-    }
-  }
-  return out;
+  return suggestSurveyTags(text);
+}
+
+export function clearCustomAnswers(answers: SurveyAnswers): SurveyAnswers {
+  return { ...answers, customText: '', suggestedLabels: [], searchedLabels: [], reviewedText: undefined };
+}
+
+/** Something else is an entry point, never a seventh theme. */
+export function questionOneResponse(answers: SurveyAnswers): 'selected' | 'no_preference' | 'skipped' {
+  if (answers.momentIds.includes('follow_day')) return 'no_preference';
+  if (answers.momentIds.some(id => MOMENT_OPTIONS.some(o => o.id === id && !o.opensCustom && !o.exclusive)) ||
+    (answers.momentIds.includes('something_else') && (answers.customText.trim() || answers.suggestedLabels.length))) return 'selected';
+  return 'skipped';
+}
+
+export function surveyHasAnswers(answers: SurveyAnswers): boolean {
+  return questionOneResponse(answers) !== 'skipped' || answers.showLessIds.length > 0;
 }
 
 export function togglePrefOption(
@@ -213,7 +208,7 @@ export function nextQuestionnaireStep(
     case 'moments':
       return answers.momentIds.includes('something_else') ? 'custom' : 'show_less';
     case 'custom':
-      return answers.customText.trim() ? 'custom_review' : 'show_less';
+      return answers.customText.trim() || answers.suggestedLabels.length ? 'custom_review' : 'show_less';
     case 'custom_review':
       return 'show_less';
     case 'show_less':

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, TextInput, Pressable, FlatList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
@@ -10,9 +10,8 @@ import { MemoryTag } from '../../components/MemoryTag';
 import { useAppStore } from '../../store/useAppStore';
 import { searchChapters } from '../../search/localSearch';
 import { formatChapterDateLong } from '../../domain/formatChapterDate';
-import type { DiaryStackParamList } from '../../navigation/types';
-import type { MemoryStackParamList } from '../../navigation/types';
-import { isDevFailSimulationEnabled } from '../../config/devFailSimulation';
+import type { DiaryStackParamList , MemoryStackParamList } from '../../navigation/types';
+
 
 type DiaryRoute = RouteProp<DiaryStackParamList, 'Search'>;
 type MemoryRoute = RouteProp<MemoryStackParamList, 'Search'>;
@@ -33,36 +32,16 @@ export default function SearchScreen() {
   const chapters = useAppStore((s) => s.chapters);
   const [query, setQuery] = useState(initial);
   const debounced = useDebounced(query, 280);
-  const [searchPhase, setSearchPhase] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
   const [retryNonce, setRetryNonce] = useState(0);
-  const searchFailAlternate = useRef(false);
-
-  useEffect(() => {
-    if (debounced.trim() === '') {
-      setSearchPhase('idle');
-      return;
-    }
-    setSearchPhase('loading');
-    const t = setTimeout(() => {
-      if (isDevFailSimulationEnabled() && searchFailAlternate.current) {
-        searchFailAlternate.current = false;
-        setSearchPhase('error');
-        return;
-      }
-      if (isDevFailSimulationEnabled()) searchFailAlternate.current = true;
-      setSearchPhase('done');
-    }, 280);
-    return () => clearTimeout(t);
-  }, [debounced, retryNonce]);
-
-  const results = useMemo(() => {
+  const search = useMemo(() => {
     try {
-      return searchChapters(chapters, debounced);
+      return { results: searchChapters(chapters, debounced), failed: false, attempt: retryNonce };
     } catch {
-      setSearchPhase('error');
-      return [];
+      return { results: [], failed: true, attempt: retryNonce };
     }
-  }, [chapters, debounced]);
+  }, [chapters, debounced, retryNonce]);
+  const results = search.results;
+  const searchPhase = !query.trim() ? 'idle' : query !== debounced ? 'loading' : search.failed ? 'error' : 'done';
 
   const openChapter = (chapterId: string) => {
     // PRD SEA03 — re-validate before opening; stale hits must not open another scope.
@@ -73,13 +52,7 @@ export default function SearchScreen() {
       return;
     }
     navigation.dispatch(
-      CommonActions.navigate({
-        name: 'DiaryTab',
-        params: {
-          screen: 'ChapterDetail',
-          params: { chapterId },
-        },
-      }),
+      CommonActions.navigate({ name: 'ChapterDetail', params: { chapterId } }),
     );
   };
 

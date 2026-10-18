@@ -61,7 +61,7 @@ export default function ShareDaySelectorScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'transparent' },
-  dim: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.18)' },
+  dim: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.18)' },
   sheet: {
     backgroundColor: colors.card,
     borderTopLeftRadius: 24,

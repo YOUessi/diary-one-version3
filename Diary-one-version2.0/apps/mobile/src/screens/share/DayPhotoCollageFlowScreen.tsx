@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { Alert, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -18,31 +18,32 @@ import { SharePreviewShell } from '../../components/SharePreviewShell';
 type Route = RouteProp<DiaryStackParamList, 'DayPhotoCollageFlow'>;
 type Nav = NativeStackNavigationProp<DiaryStackParamList, 'DayPhotoCollageFlow'>;
 
-const dayCollageCache = new Map<string, string>();
 
 export default function DayPhotoCollageFlowScreen() {
-  const { dateKey, phase } = useRoute<Route>().params;
+  const { dateKey, phase, previewUri } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
   const chapters = useAppStore((s) => chaptersForDate(s.chapters, dateKey));
-  const [uri, setUri] = useState<string | null>(dayCollageCache.get(dateKey) ?? null);
 
-  const runPrepare = useCallback(async () => {
+  const runPrepare = useCallback(async (isCurrent: () => boolean) => {
     try {
       const out = await buildDayPhotoCollage(chapters);
+      if (!isCurrent()) return;
       if (!out || shouldSimulateSharePrepareFailure()) {
         navigation.replace('DayPhotoCollageFlow', { dateKey, phase: 'failed' });
         return;
       }
-      dayCollageCache.set(dateKey, out);
-      setUri(out);
-      navigation.replace('DayPhotoCollageFlow', { dateKey, phase: 'preview' });
+      navigation.replace('DayPhotoCollageFlow', { dateKey, phase: 'preview', previewUri: out });
     } catch {
+      if (!isCurrent()) return;
       navigation.replace('DayPhotoCollageFlow', { dateKey, phase: 'failed' });
     }
   }, [chapters, dateKey, navigation]);
 
   useEffect(() => {
-    if (phase === 'preparing') void runPrepare();
+    let active = true;
+    const token = useAppStore.getState().sessionToken;
+    if (phase === 'preparing') void runPrepare(() => active && useAppStore.getState().sessionToken === token);
+    return () => { active = false; };
   }, [phase, runPrepare]);
 
   const back = () => navigation.goBack();
@@ -67,8 +68,6 @@ export default function DayPhotoCollageFlowScreen() {
       </SafeAreaView>
     );
   }
-
-  const previewUri = uri ?? dayCollageCache.get(dateKey);
 
   return (
     <SharePreviewShell

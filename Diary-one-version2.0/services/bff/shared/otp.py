@@ -128,6 +128,11 @@ class OtpStore:
             self._data[email] = {"code": code, "expires_at": expires_at, "attempts": 0}
             self._save()
 
+    async def forget(self, email: str) -> None:
+        async with self._lock:
+            self._data.pop(normalize_email(email), None)
+            self._save()
+
     async def verify(
         self,
         email: str,
