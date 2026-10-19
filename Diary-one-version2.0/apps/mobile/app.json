@@ -24,7 +24,6 @@
     },
     "android": {
       "package": "com.nexleap.diaryone.dev",
-      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",

@@ -91,7 +91,7 @@ for (const [mode, message] of [['outside', /outside/], ['decode-error', /corrupt
 test('an old native module cannot silently use its broken zero-time decoder', async () => {
   let oldCalls = 0;
   const decoder = load('src/evidence/nativeVideoDecoder.ts', {
-    'expo-file-system/legacy': {}, 'expo-modules-core': { requireOptionalNativeModule: () => ({ extractVideoFrames() { oldCalls++; } }) },
+    'expo-file-system/legacy': {}, 'expo': { requireOptionalNativeModule: () => ({ extractVideoFrames() { oldCalls++; } }) },
   });
   assert.equal(decoder.isNativeVideoDecoderAvailable(), false);
   await assert.rejects(() => decoder.extractVideoFramesAtTimes('file:///v', [0], 'file:///d', [0, 1]), /安装/);

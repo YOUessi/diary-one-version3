@@ -1,5 +1,5 @@
 import * as FileSystem from 'expo-file-system/legacy';
-import { requireOptionalNativeModule } from 'expo-modules-core';
+import { requireOptionalNativeModule } from 'expo';
 
 export type ExtractedVideoFrame = {
   uri: string;

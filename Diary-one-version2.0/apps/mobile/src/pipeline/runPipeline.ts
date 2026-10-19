@@ -29,7 +29,20 @@ import { capturedImports } from '../domain/capturedImports';
 import { sha256SubmittedManifest } from './sha256File';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const activeRunners = new Set<string>();
+const activeRunners = new Map<string, string>();
+const pendingSessionResumes = new Map<string, string>();
+
+function releaseRunner(taskId: string): void {
+  activeRunners.delete(taskId);
+  const token = pendingSessionResumes.get(taskId);
+  pendingSessionResumes.delete(taskId);
+  // Login has already persisted the renewed session. Wait for the old runner
+  // to stop before polling the same job with its replacement credentials.
+  if (token && useAppStore.getState().sessionToken === token &&
+      useAppStore.getState().pipelineTasks.some((task) => task.id === taskId)) {
+    resumeInFlightCloudJobs();
+  }
+}
 
 function rejectMockBff(): boolean {
   // Formal consumer App (Expo Go default / beta / store) never accepts mock.
@@ -216,7 +229,7 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
   }
 
   try {
-    activeRunners.add(taskId);
+    activeRunners.set(taskId, ownerToken);
     patchTask(taskId, {
       status: 'building_evidence',
       message: items.length ? `Deduping + normalizing ${items.length} asset(s) (compress / frames)…` : 'Reusing saved evidence…',
@@ -386,7 +399,7 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
     }
     Alert.alert('Pipeline failed', message.slice(0, 500));
   } finally {
-    activeRunners.delete(taskId);
+    releaseRunner(taskId);
   }
 }
 
@@ -401,6 +414,12 @@ export function resumeInFlightCloudJobs(): void {
   const tasks = useAppStore.getState().pipelineTasks;
   const stuck = ['queued', 'building_evidence', 'bundle_ready', 'uploading'] as const;
   for (const t of tasks) {
+    if (activeRunners.has(t.id)) {
+      if (ownerToken && activeRunners.get(t.id) !== ownerToken) {
+        pendingSessionResumes.set(t.id, ownerToken);
+      }
+      continue;
+    }
     if (stuck.includes(t.status as (typeof stuck)[number]) && !t.productionJobId) {
       patchTask(t.id, {
         status: 'failed',
@@ -420,7 +439,7 @@ export function resumeInFlightCloudJobs(): void {
     ) {
       const { endpoint, token } = resolveCloudTarget();
       if (!endpoint) continue;
-      activeRunners.add(t.id);
+      activeRunners.set(t.id, ownerToken);
       void (async () => {
         try {
           const preview = await pollUntilDone(endpoint, token || requireProductionBearer(), t.id, t.productionJobId!, () => {
@@ -477,7 +496,7 @@ export function resumeInFlightCloudJobs(): void {
               ? undefined : t.productionJobId,
           });
         } finally {
-          activeRunners.delete(t.id);
+          releaseRunner(t.id);
         }
       })();
     }

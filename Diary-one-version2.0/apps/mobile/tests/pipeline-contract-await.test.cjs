@@ -99,6 +99,21 @@ test('visible retry after lost submit acknowledgement uses saved evidence and th
 });
 
 for (const mode of ['new import', 'resume saved job']) {
+  test(`session renewal during ${mode} resumes after the old runner releases ownership`, async () => {
+    const h = harness();
+    const run = mode === 'new import' ? h.api.runPipeline('task', []) : h.api.resumeInFlightCloudJobs();
+    await h.entered;
+    h.state.sessionToken = 'renewed-account-a';
+    h.api.resumeInFlightCloudJobs();
+    h.api.resumeInFlightCloudJobs();
+    h.release({ ok: true });
+    await run; await new Promise(resolve => setImmediate(resolve));
+    assert.equal(h.calls.poll, 2);
+    assert.equal(h.calls.commit, 1);
+    assert.equal(h.calls.submit, 0);
+    assert.equal(h.state.pipelineTasks[0].status, 'succeeded');
+  });
+
   test(`account change during async contract verification stops ${mode} before mapping/attachment/persistence`, { timeout: 2000 }, async () => {
     const h = harness();
     const run = mode === 'new import' ? h.api.runPipeline('task', [{ uri: 'file:///fixture/source.mp4' }]) : h.api.resumeInFlightCloudJobs();
@@ -111,3 +126,28 @@ for (const mode of ['new import', 'resume saved job']) {
     assert.notEqual(h.state.pipelineTasks[0].status, 'succeeded');
   });
 }
+
+test('queued session renewal is discarded if the user signs out before the old runner stops', async () => {
+  const h = harness(); const run = h.api.runPipeline('task', []);
+  await h.entered;
+  h.state.sessionToken = 'renewed-account-a'; h.api.resumeInFlightCloudJobs();
+  h.state.sessionToken = ''; h.release({ ok: true });
+  await run; await new Promise(resolve => setImmediate(resolve));
+  assert.equal(h.calls.poll, 1); assert.equal(h.calls.commit, 0);
+});
+
+test('resume does not mark a currently running pre-upload task as interrupted', async () => {
+  const h = harness(); h.state.pipelineTasks[0].productionJobId = undefined;
+  const run = h.api.runPipeline('task', []);
+  h.api.resumeInFlightCloudJobs();
+  assert.equal(h.state.pipelineTasks[0].status, 'building_evidence');
+  h.release({ ok: true }); await run;
+  assert.equal(h.calls.commit, 1); assert.equal(h.calls.submit, 1);
+});
+
+test('resume request for the current session does not retry an active runner after a poll failure', async () => {
+  const h = harness({ diskFull: true }); const run = h.api.runPipeline('task', []);
+  await h.entered; h.api.resumeInFlightCloudJobs(); h.release({ ok: true });
+  await run; await new Promise(resolve => setImmediate(resolve));
+  assert.equal(h.calls.poll, 1); assert.equal(h.state.pipelineTasks[0].status, 'failed');
+});

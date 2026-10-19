@@ -1,24 +1,22 @@
-/** @type {import('expo/config').ExpoConfig} */
-const base = require('./app.json').expo;
+/** @param {import('expo/config').ConfigContext} context */
+module.exports = ({ config: base }) => {
+  const isStore = process.env.EXPO_PUBLIC_STORE_RELEASE === '1';
+  // Legacy module name retained for AVFoundation decoding; Expo Go cannot load this native module.
+  const includeVision =
+    process.env.EXPO_PUBLIC_INCLUDE_VISION === '1' ||
+    process.env.EAS_BUILD === 'true' ||
+    process.env.EXPO_PUBLIC_DEV_CLIENT === '1';
 
-const isStore = process.env.EXPO_PUBLIC_STORE_RELEASE === '1';
-// Legacy module name retained for AVFoundation decoding; Expo Go cannot load this native module.
-const includeVision =
-  process.env.EXPO_PUBLIC_INCLUDE_VISION === '1' ||
-  process.env.EAS_BUILD === 'true' ||
-  process.env.EXPO_PUBLIC_DEV_CLIENT === '1';
+  const plugins = (base.plugins ?? []).filter((p) => {
+    const name = Array.isArray(p) ? p[0] : p;
+    if (name === './modules/diary-one-vision' || name === './modules/diary-one-vision/app.plugin.js') return includeVision;
+    return true;
+  });
+  if (!plugins.some((p) => (Array.isArray(p) ? p[0] : p) === 'expo-asset')) {
+    plugins.push('expo-asset');
+  }
 
-const plugins = (base.plugins ?? []).filter((p) => {
-  const name = Array.isArray(p) ? p[0] : p;
-  if (name === './modules/diary-one-vision' || name === './modules/diary-one-vision/app.plugin.js') return includeVision;
-  return true;
-});
-if (!plugins.some((p) => (Array.isArray(p) ? p[0] : p) === 'expo-asset')) {
-  plugins.push('expo-asset');
-}
-
-module.exports = {
-  expo: {
+  return {
     ...base,
     name: isStore ? 'Diary One' : 'Diary One Dev',
     ios: {
@@ -43,5 +41,5 @@ module.exports = {
         '',
       termsUrl: process.env.EXPO_PUBLIC_TERMS_URL || '',
     },
-  },
+  };
 };

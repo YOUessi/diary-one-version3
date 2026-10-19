@@ -19,7 +19,7 @@ from . import narrative_focus, frame_selection, frame_observation
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_9'
+EDITOR_REVISION = 'SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_10'
 
 
 def obj(properties, required=None):
@@ -1653,6 +1653,17 @@ def repair_coverage_contract(raw, context, chapters, moments, facts, assets, *, 
     return merged
 
 
+def reconcile_published_capacity(ledger, moments, reviewed):
+    """A rejected candidate must not occupy a published standalone-memory slot."""
+    occupied = {m['id'] for m in moments if m['parent_chapter_id'] is None and m['id'] in reviewed}
+    result = deepcopy(ledger)
+    for row in result:
+        if row.get('status') == 'VALIDATED' and row.get('disposition') == 'CAPACITY_LIMIT' and len(occupied) < 3:
+            row.update(status='BLOCKED', original_reason=row.get('reason'),
+                reason='CAPACITY_OPEN_AFTER_FINAL_REVIEW', published_slots=len(occupied))
+    return result
+
+
 def recovery_relation_candidates(output, chapters):
     """Find incomplete relation records; absence never implies DISTINCT."""
     expected = {c['id'] for c in chapters}
@@ -1832,6 +1843,7 @@ FINAL_COPY_VERIFICATION_PROMPT = '''你是发布前独立的图像事实核验�
 待核文字本身不是事实。若关键关系与实际图像矛盾、看不清或没有足够图片证实，supported必须false；不能用文字复述为自己提供证据。
 逐条返回claim_id/supported/reason，覆盖全部claim且不增加其他claim，不改写文字、不生成替换事实。reason说明实际视觉依据或缺口，不重复结论充当依据。
 仅因事实/关系无依据或歧义而否定。一般文风、长短或未提其他细节不是否定理由；不设句数或字数配额。
+TITLE中的“A与B”可以概括各自有图像依据的并列主题，不要求所有主体出现在同一帧；只有文字确实声称接触、方位、互动或连续经历时才必须核验该关系。不能把并列标题自动解释为一个同框场景。
 '''
 
 
@@ -1850,6 +1862,7 @@ SUPPORTED_BY必须看到接触承托；同时support_surface=REFERENCE。若主�
 其余关系support_surface用NOT_APPLICABLE；遮挡看不清可用NOT_VISIBLE。description写观察到的主体与参照物，不复制期望结论。
 observations覆盖每个target_id恰好一次；claims仅处理另外给出的未解析复杂句，每项仍claim_id/supported/reason。两个数组都必须返回，可为空。
 不写改稿、不新增关系。这是模型复核，不是人工或客观真值。
+claims里的场景/活动表达仍独立看图核验，不把整个动物园、展厅或“行走”当作一个可画框的物体。一般场景类别可以由可见环境支持，但不能据此猜具体场馆名称或地理位置。
 '''
 
 
@@ -1874,7 +1887,9 @@ def spatial_relation_targets(claim):
             subject, reference = match['subject'].strip(), match['reference'].strip()
             # Abstract experience titles are not two localizable physical
             # entities. They retain the ordinary image-claim review instead.
-            if re.search(r'时刻|时光|世界|经历|旅程|日常|氛围', subject):
+            if (re.search(r'时刻|时光|世界|经历|旅程|日常|氛围|行走|漫步|骑行|参观|游览|闲逛|垂钓', subject)
+                    or (match['direction'] in ('里', '内')
+                        and re.search(r'动物园|博物馆|展厅|公园|庭院|街区|森林|树林', reference))):
                 continue
             direction = match['direction']
             expected = ['BELOW'] if direction == '下' else ['INSIDE'] if direction in ('里','内') else ['ABOVE','SUPPORTED_BY']
@@ -1936,7 +1951,7 @@ def compile_spatial_observation(target, row):
 
 
 def verify_spatial_claims(batch, stage, context, *, ask, evidence_scope, stage_runs):
-    """One independent bounded challenge; failed checks affect only these claims."""
+    """One challenge plus at most one format repair; no semantic reroll."""
     from . import x02, final_copy_images
     from jsonschema import Draft202012Validator
     from tempfile import TemporaryDirectory
@@ -1954,14 +1969,32 @@ def verify_spatial_claims(batch, stage, context, *, ask, evidence_scope, stage_r
             bound, image_audit = final_copy_images.prepare_final_copy_images(
                 batch['evidence'], artifact_dir, bundle_root=(evidence_scope or {}).get('bundle_root'))
             schema = spatial_observation_schema(targets, fallback)
-            record['raw_output'] = ask(stage, SPATIAL_RELATION_VERIFICATION_PROMPT, schema,
-                {'locale': 'zh-Hans', 'claims': deepcopy(fallback),
-                 'relation_targets': [{k:deepcopy(t[k]) for k in ('target_id','subject','reference','allowed_frame_refs')} for t in targets],
-                 'verification_mode': 'IMAGE_FIRST_SPATIAL_OBSERVATIONS_HIDDEN_EXPECTED_RELATION',
-                 'image_transform_audit': image_audit}, evidence=bound)
-        output = record['raw_output']
-        if next(Draft202012Validator(schema).iter_errors(output), None) is not None:
-            raise ValueError('Spatial verdict violates its exact claim schema')
+            request = {'locale': 'zh-Hans', 'claims': deepcopy(fallback),
+                'relation_targets': [{k:deepcopy(t[k]) for k in ('target_id','subject','reference','allowed_frame_refs')} for t in targets],
+                'verification_mode': 'IMAGE_FIRST_SPATIAL_OBSERVATIONS_HIDDEN_EXPECTED_RELATION',
+                'image_transform_audit': image_audit}
+            record['raw_output'] = ask(stage, SPATIAL_RELATION_VERIFICATION_PROMPT,
+                schema, request, evidence=bound)
+            output = record['raw_output']
+            validator = Draft202012Validator(schema)
+            errors = list(validator.iter_errors(output))
+            if errors:
+                repair = {'stage': stage + '_FORMAT_REPAIR', 'status': 'REQUESTED',
+                    'issues': [e.message[:600] for e in errors[:8]]}
+                record['format_repair'] = repair
+                # Keep the same image artifacts alive. Never guess a coordinate
+                # scale, fill a missing identity, or expose the expected relation.
+                repair['raw_output'] = ask(repair['stage'], SPATIAL_RELATION_VERIFICATION_PROMPT +
+                    '\n上次输出不符合格式合同。请重新核对同一批图像并完整返回。'
+                    '坐标必须是实际附图的0–1比例，不是像素或0–1000；不能沿用错误尺度。'
+                    '编号和frame_ref必须使用本次允许的精确值；无法确认时如实返回UNKNOWN/false/null。'
+                    '这不是要求改成肯定结论，实际关系不成立仍返回实际观察。', schema,
+                    {**request, 'format_issues': repair['issues'], 'previous_output': deepcopy(output)}, evidence=bound)
+                output = repair['raw_output']
+                if next(validator.iter_errors(output), None) is not None:
+                    repair['status'] = 'REJECTED_SCHEMA'
+                    raise ValueError('Repaired spatial verdict violates its exact schema')
+                repair['status'] = 'VALIDATED'
         rows = output['claims']
         if ({r['claim_id'] for r in rows} != {c['claim_id'] for c in fallback}
                 or len({r['claim_id'] for r in rows}) != len(rows)
@@ -1982,6 +2015,8 @@ def verify_spatial_claims(batch, stage, context, *, ask, evidence_scope, stage_r
         return verdicts, record, False
     except (KeyError, TypeError, ValueError, OSError, x02.X02Error) as exc:
         record.update(error_type=type(exc).__name__, reason=type(exc).__name__)
+        if record.get('format_repair', {}).get('status') == 'REQUESTED':
+            record['format_repair']['status'] = 'REQUEST_FAILED'
         if isinstance(exc, x02.X02StageCallError) and all(run is not exc.stage_run for run in stage_runs):
             stage_runs.append(exc.stage_run)
         return {c['claim_id']: {'supported': False, 'reason': 'SPATIAL_RELATION_NOT_VERIFIED'}
@@ -2844,6 +2879,7 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             recovery_ledger.append({'status': 'BLOCKED', 'reason': type(exc).__name__})
             if isinstance(exc, x02.X02StageCallError):
                 stage_runs.append(exc.stage_run)
+    recovery_ledger = reconcile_published_capacity(recovery_ledger, moments, reviewed)
     final_assets = visible_assets(chapters, moments, reviewed, facts)
     publication_coverage = []
     unverified_assets = {r['asset_id'] for r in visual_ledger + recovery_visual_ledger if r['status'] == 'UNVERIFIED'}

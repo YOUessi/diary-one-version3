@@ -144,3 +144,21 @@ def test_coverage_repair_failure_retains_original_valid_rows(failure):
     assert p.repair_coverage_contract(raw, dict(unrepresented_assets=['V001','V003'],reserved_ids=[]),
         canonical['chapters'][:1], [], facts, {}, ask=ask, audit=audit) is raw
     assert audit[0]['status']=='REQUEST_FAILED'
+
+
+@pytest.mark.parametrize('published', [0, 1, 2, 3])
+def test_rejected_recovery_copy_cannot_occupy_a_final_capacity_slot(published):
+    moments = [dict(id='M'+str(i), parent_chapter_id=None) for i in range(3)]
+    moments.append(dict(id='H01', parent_chapter_id='C01'))
+    reviewed = {**{m['id']: {} for m in moments[:published]}, 'H01': {}}
+    ledger = [dict(asset_id='V007', status='VALIDATED', disposition='CAPACITY_LIMIT', reason='Three proposed additions'),
+              dict(asset_id='V008', status='VALIDATED', disposition='INSUFFICIENT', reason='No detail')]
+    original = deepcopy(ledger)
+    result = p.reconcile_published_capacity(ledger, moments, reviewed)
+    assert ledger == original and result[1] == ledger[1]
+    if published == 3:
+        assert result == ledger
+    else:
+        assert result[0]['status'] == 'BLOCKED'
+        assert result[0]['reason'] == 'CAPACITY_OPEN_AFTER_FINAL_REVIEW'
+        assert result[0]['published_slots'] == published

@@ -45,7 +45,7 @@ def verify(mode='deny', *, title=False, primary=False):
     def ask(stage,prompt,schema,context,*,evidence):
         calls.append((stage,deepcopy(context),deepcopy(schema)))
         result=scripted_final_verdict(context)
-        if stage.endswith('_SPATIAL'):
+        if '_SPATIAL' in stage:
             assert evidence and context['verification_mode']=='IMAGE_FIRST_SPATIAL_OBSERVATIONS_HIDDEN_EXPECTED_RELATION'
             assert 'facts' not in context and 'previous_verdict' not in context
             assert all(p.requires_spatial_relation_review(c['text']) for c in context['claims'])
