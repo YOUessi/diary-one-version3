@@ -7,9 +7,11 @@ require.extensions['.ts'] = (module, filename) => module._compile(ts.transpileMo
   { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText, filename);
 let state;
 let resets;
+let resumes;
 const store = { getState: () => state, setState: patch => Object.assign(state, patch) };
 const originalLoad = Module._load;
 Module._load = function(name, ...args) {
+  if (name === '../pipeline/runPipeline') return { resumeInFlightCloudJobs() { resumes++; } };
   if (name === '../store/useAppStore') return { useAppStore: store };
   if (name === '../config/buildProfile') return { requireCloudAuth: true };
   if (name === './resolveProductionBearer') return { resolveProductionBearer: () => state.sessionToken };
@@ -25,6 +27,7 @@ const beforeFetch = global.fetch;
 test.after(() => { Module._load = originalLoad; global.fetch = beforeFetch; });
 test.beforeEach(() => {
   resets = 0;
+  resumes = 0;
   state = { sessionToken: '', localProfile: { email: 'a@example.com', nickname: 'A' }, chapters: [{ id: 'private-a' }],
     onboardingComplete: true, cloudEvidenceConsent: true };
 });
@@ -44,6 +47,7 @@ test('same verified email preserves its own library when renewing an expired ses
   assert.equal((await verifyEmailOtpRemote('a@example.com', '123456')).ok, true);
   assert.equal(resets, 0);
   assert.equal(state.chapters[0].id, 'private-a');
+  assert.equal(resumes, 1);
 });
 test('late authentication response cannot overwrite a newer account session', async () => {
   global.fetch = async () => { state.sessionToken = 'already-switched'; return respond('b@example.com'); };

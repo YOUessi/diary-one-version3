@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useAppBackgroundPause } from '../hooks/useAppBackgroundPause';
 import { colors, spacing } from '../theme';
@@ -28,8 +28,11 @@ export function VideoPlayback({ uri, autoPlay = false, durationSec, immersive = 
     p.timeUpdateEventInterval = 0.25;
   });
   const pause = useCallback(() => { player.pause(); setPaused(true); }, [player]);
+  const navigation = useNavigation();
   useAppBackgroundPause(pause);
-  useFocusEffect(useCallback(() => () => pause(), [pause]));
+  // Expo owns disposal. Unmount/source-change cleanup must only unsubscribe:
+  // useVideoPlayer may already have released the native handle at that point.
+  useEffect(() => navigation.addListener('blur', pause), [navigation, pause]);
   useEffect(() => {
     if (paused) player.pause(); else player.play();
   }, [paused, player]);

@@ -28,9 +28,9 @@ export function PipelineTaskList({ tasks }: { tasks: PipelineTask[] }) {
             {t.dayRevisionId ? `\n${t.dayRevisionId}` : ''}
           </Text>
           {t.error ? <Text style={styles.err}>{t.error}</Text> : null}
-          {t.status === 'failed' && t.productionJobId && t.bundleDir && t.bundleJsonPath ? (
+          {t.status === 'failed' && t.bundleDir && t.bundleJsonPath ? (
             <Pressable accessibilityRole="button" onPress={() => retryStoredCloudResult(t.id)}>
-              <Text style={styles.msg}>Try saving again</Text>
+              <Text style={styles.msg}>Try again</Text>
             </Pressable>
           ) : null}
         </View>

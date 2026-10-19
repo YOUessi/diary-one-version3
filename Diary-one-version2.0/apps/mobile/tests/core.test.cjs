@@ -111,6 +111,7 @@ const adapter = {
 };
 const originalLoad = Module._load;
 Module._load = function(name, ...args) {
+  if (name === 'expo-file-system/legacy') return {};
   return name === 'expo-sqlite' ? { openDatabaseAsync: async () => adapter } : originalLoad.call(this, name, ...args);
 };
 const db = require('../src/db/sqlite.ts');

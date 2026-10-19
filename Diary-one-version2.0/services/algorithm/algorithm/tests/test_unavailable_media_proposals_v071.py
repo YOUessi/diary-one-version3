@@ -108,7 +108,8 @@ def test_whole_editor_replays_real_r2_structure_then_reaches_and_publishes_canne
             output = {'items': [dict(id='C01', decision='PUBLISH', reason='Canned regression review', title='铁轨桥旁',
                 title_fact_ids=['F001'], sentences=[dict(text='前方是一座铁轨桥。', fact_ids=['F001'], source_index=0)])]}
         elif stage == 'S14_PRODUCT_COVERAGE_REVIEW':
-            output = {'decisions': [dict(asset_id=aid, disposition='REDUNDANT', reason='Canned coverage only', moment=None)
+            output = {'decisions': [dict(asset_id=aid, disposition='REDUNDANT', reason='Canned coverage only', moment=None,
+                covered_by_ids=[c['id'] for c in context['published_chapters']])
                 for aid in context['unrepresented_assets']]}
         else:
             raise AssertionError('Unexpected offline stage ' + stage)

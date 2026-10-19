@@ -6,7 +6,7 @@ import { buildBundleMultipartForm } from '../cloud/researchClient';
 import { postMultipartText } from '../cloud/rnFormData';
 import { requireProductionBearer, resolveProductionBearer } from './resolveProductionBearer';
 import { useAppStore } from '../store/useAppStore';
-import { buildAppClientProfile } from '../domain/memoryPreferencesCloud';
+import { buildAppClientProfile, type AppClientProfileV01 } from '../domain/memoryPreferencesCloud';
 
 function base(url: string) {
   return url.trim().replace(/\/+$/, '');
@@ -15,6 +15,36 @@ function base(url: string) {
 function auth(token: string): Record<string, string> {
   const t = token.trim();
   return t ? { Authorization: `Bearer ${t}` } : {};
+}
+
+function expireMatchingSession(bearer: string) {
+  const state = useAppStore.getState();
+  // A response from account A may arrive after account B has signed in.
+  if (state.sessionToken.trim() === bearer) state.setSessionToken('');
+}
+
+async function readResponse(url: string, headers?: Record<string, string>) {
+  const controller = new AbortController();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      (async () => {
+        const response = await fetch(url, { headers, signal: controller.signal });
+        return { ok: response.ok, status: response.status, text: await response.text() };
+      })(),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => { controller.abort(); reject(new Error('Cloud request timed out')); }, 30_000);
+      }),
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+export async function checkProductionHealth(apiBaseUrl: string) {
+  const response = await readResponse(`${base(apiBaseUrl)}/health`);
+  if (!response.ok) throw new Error(`Production health check failed (${response.status})`);
+  return JSON.parse(response.text) as { allow_mock_preview?: boolean };
 }
 
 /** Empty string must not skip fallback (`??` alone is wrong). */
@@ -50,9 +80,21 @@ export async function submitProductionDayRevision(
   // Opt-in only via EXPO_PUBLIC_UPLOAD_MEMORY_PREFERENCES=1 after product approval.
   const allowPrefsUpload =
     (process.env.EXPO_PUBLIC_UPLOAD_MEMORY_PREFERENCES ?? '').trim() === '1';
-  const profile = allowPrefsUpload
-    ? buildAppClientProfile(useAppStore.getState().preferences)
-    : undefined;
+  const profilePath = `${bundleDir}submission-profile.json`;
+  let profile: AppClientProfileV01 | undefined;
+  if ((await FileSystem.getInfoAsync(profilePath)).exists) {
+    const frozen = JSON.parse(await FileSystem.readAsStringAsync(profilePath)) as {
+      dayRevisionId: string; profile: AppClientProfileV01 | null;
+    };
+    if (frozen.dayRevisionId !== dayRevisionId || !Object.hasOwn(frozen, 'profile')) {
+      throw new Error('Saved submission context does not match this revision');
+    }
+    profile = frozen.profile ?? undefined;
+  } else {
+    profile = allowPrefsUpload ? buildAppClientProfile(useAppStore.getState().preferences) : undefined;
+    // A lost acknowledgement must retry identical input even if settings change.
+    await FileSystem.writeAsStringAsync(profilePath, JSON.stringify({ dayRevisionId, profile: profile ?? null }));
+  }
 
   const form = await buildBundleMultipartForm(bundleDir, manifest, profile, {
     day_revision_id: dayRevisionId,
@@ -66,7 +108,7 @@ export async function submitProductionDayRevision(
 
   if (!posted.ok) {
     if (posted.status === 401 || posted.status === 403) {
-      useAppStore.getState().setSessionToken('');
+      expireMatchingSession(bearer);
       throw new Error(
         'Cloud session expired or unauthorized. Open Account → Continue with Email and sign in again.',
       );
@@ -86,10 +128,10 @@ export async function submitProductionDayRevision(
 
   const body = JSON.parse(posted.text) as { job_id?: string; jobId?: string };
   const jobId = body.job_id ?? body.jobId;
-  if (!jobId) {
+  if (typeof jobId !== 'string' || !jobId.trim()) {
     throw new Error('Production API did not return job_id');
   }
-  return { jobId };
+  return { jobId: jobId.trim() };
 }
 
 export async function pollProductionCloudJob(
@@ -99,12 +141,11 @@ export async function pollProductionCloudJob(
 ): Promise<CloudJobPoll> {
   try {
     const bearer = resolveBearer(token);
-    const res = await fetch(`${base(apiBaseUrl)}/v1/jobs/${encodeURIComponent(jobId)}`, {
-      headers: { Accept: 'application/json', ...auth(bearer) },
-    });
+    const res = await readResponse(`${base(apiBaseUrl)}/v1/jobs/${encodeURIComponent(jobId)}`,
+      { Accept: 'application/json', ...auth(bearer) });
 
     if (res.status === 404) {
-      const detail = parseDetail(await res.text().catch(() => ''));
+      const detail = parseDetail(res.text);
       // BFF owner isolation also returns 404 "Job not found" — not "API undeployed".
       if (/not found|job/i.test(detail) || detail === '') {
         return {
@@ -120,37 +161,45 @@ export async function pollProductionCloudJob(
     }
 
     if (res.status === 401 || res.status === 403) {
-      useAppStore.getState().setSessionToken('');
+      expireMatchingSession(bearer);
       return {
-        state: 'failed',
+        state: 'paused',
         message:
           'Cloud session expired or unauthorized. Open Account → Continue with Email and sign in again.',
       };
     }
 
     if (!res.ok) {
-      return { state: 'failed', message: `Job poll failed (${res.status})` };
+      return { state: 'paused', message: `Job poll unavailable (${res.status}); original job retained` };
     }
 
-    const body = (await res.json()) as {
+    const body = JSON.parse(res.text) as {
+      job_id?: string;
       status?: string;
       result?: X02PreviewResult;
       message?: string;
     };
 
+    if (!body || body.job_id !== jobId) {
+      return { state: 'paused', message: 'Cloud response job identity mismatch; original job retained' };
+    }
+
     if (body.status === 'succeeded') {
       if (!body.result) {
-        return { state: 'failed', message: 'Cloud job succeeded without result payload' };
+        return { state: 'paused', message: 'Cloud job succeeded without result payload' };
       }
       return { state: 'succeeded', result: body.result };
     }
     if (body.status === 'failed') {
       return { state: 'failed', message: body.message ?? 'Cloud job failed' };
     }
-    return { state: 'pending', message: body.message ?? 'Processing…' };
+    if (body.status === 'queued' || body.status === 'running' || body.status === 'pending' || body.status === 'processing') {
+      return { state: 'pending', message: body.message ?? 'Processing…' };
+    }
+    return { state: 'paused', message: 'Cloud job returned an unknown state; original job retained' };
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    return { state: 'failed', message: `Job poll network error: ${msg}` };
+    return { state: 'paused', message: `Job poll interrupted: ${msg}; original job retained` };
   }
 }
 
@@ -160,9 +209,8 @@ export async function probeProductionSession(apiBaseUrl: string, token: string):
   if (!bearer || !apiBaseUrl.trim()) return false;
   try {
     // Non-existent job → 404 with auth OK; 401/403 means dead session.
-    const res = await fetch(`${base(apiBaseUrl)}/v1/jobs/__session_probe__`, {
-      headers: { Accept: 'application/json', ...auth(bearer) },
-    });
+    const res = await readResponse(`${base(apiBaseUrl)}/v1/jobs/__session_probe__`,
+      { Accept: 'application/json', ...auth(bearer) });
     if (res.status === 401 || res.status === 403) return false;
     return true;
   } catch {

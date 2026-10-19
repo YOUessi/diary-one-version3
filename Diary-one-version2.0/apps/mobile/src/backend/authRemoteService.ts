@@ -32,6 +32,10 @@ async function activateCloudSession(email: string, token: string, nickname: stri
     useAppStore.setState({ sessionToken: token, localProfile: { ...profile, email: owner,
       nickname: nickname?.trim() || profile.nickname || 'Guest' } });
     await flushPersist();
+    // A poll interrupted by session expiry retains its job. Renewing the same
+    // account can resume it without an app restart or another upload.
+    const { resumeInFlightCloudJobs } = await import('../pipeline/runPipeline');
+    resumeInFlightCloudJobs();
   } finally { activating = false; }
 }
 

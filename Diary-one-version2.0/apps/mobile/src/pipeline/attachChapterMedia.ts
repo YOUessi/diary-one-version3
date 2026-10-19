@@ -2,15 +2,19 @@ import * as FileSystem from 'expo-file-system/legacy';
 import type { Chapter } from '../model';
 import type { PreviewChapter, PreviewSelectedMedia } from '../cloud/types';
 import type { AppLibraryBundle } from './bundleTypes';
+import { resolveBundleSourceUri } from './localMediaPaths';
+import { sha256File } from './sha256File';
 
 type FrameRef = {
   relative_path?: string;
   frame_id?: string;
+  sha256?: string;
 };
 
 type BundleAsset = {
   asset_id?: string;
   media_kind?: string;
+  original_sha256?: string;
   frames?: FrameRef[];
 };
 
@@ -197,6 +201,11 @@ export async function attachChapterMediaFromBundle(
   const assets = (manifest.assets ?? []) as BundleAsset[];
   const index = buildBundleAssetUriIndex(bundleDir, assets);
   const sourceUris = await loadSourceUris(bundleDir);
+  for (const asset of assets) {
+    if (!asset.asset_id) continue;
+    const source = sourceUris[asset.asset_id];
+    if (source?.uri) source.uri = resolveBundleSourceUri(source.uri, bundleDir);
+  }
   const hints = mediaHintsFromPreviewChapters(previewChapters);
   const attached = applyChapterMediaHints(chapters, hints, index, sourceUris);
   // Resolve the complete selected set before the diary/dedupe transaction commits.
@@ -204,7 +213,14 @@ export async function attachChapterMediaFromBundle(
     ...chapter.moments.flatMap((moment) => [moment.posterUri, moment.playbackUri])])
     .filter((uri): uri is string => Boolean(uri)));
   for (const uri of uris) {
-    if (!(await FileSystem.getInfoAsync(uri)).exists) throw new Error('Selected media is unavailable. Retry the import.');
+    const info = await FileSystem.getInfoAsync(uri);
+    if (!info.exists || info.isDirectory) throw new Error('Selected media is unavailable. Retry the import.');
+    const sourceAsset = assets.find(asset => asset.asset_id && sourceUris[asset.asset_id]?.uri === uri);
+    const frame = assets.flatMap(asset => asset.frames ?? []).find(frame => `${bundleDir}${frame.relative_path}` === uri);
+    const expected = sourceAsset?.original_sha256 ?? frame?.sha256;
+    if (!expected || await sha256File(uri) !== expected) {
+      throw new Error('Selected media bytes changed. Restore the original media before retrying.');
+    }
   }
   return attached;
 }

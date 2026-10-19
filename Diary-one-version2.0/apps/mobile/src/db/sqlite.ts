@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import { persistSnapshotMediaPaths, restoreSnapshotMediaPaths } from '../pipeline/localMediaPaths';
 
 import type { Chapter, SmallMemory, Topic, MemoryPreference, CapturedOriginal, TodayStatus } from '../model';
 
@@ -179,7 +180,7 @@ export async function loadSnapshot(): Promise<PersistedSnapshot | null> {
       const note = latest.get(chapter.id);
       return note ? { ...chapter, yourStory: note.text ?? undefined, yourStoryRevision: note.revision } : chapter;
     });
-    return snapshot;
+    return restoreSnapshotMediaPaths(snapshot);
 
   } catch (error) {
     // A read failure must never be treated as a new empty library.
@@ -198,30 +199,42 @@ export async function saveSnapshot(snapshot: PersistedSnapshot, assertCurrent?: 
 
   const db = await getDb();
 
-  const json = JSON.stringify(snapshot);
+  const json = JSON.stringify(persistSnapshotMediaPaths(snapshot));
 
   if (assertCurrent || publishedAssets) {
-    await db.withExclusiveTransactionAsync(async (tx) => {
-      assertCurrent?.();
-      await tx.runAsync(
-        `INSERT INTO app_snapshot (id, json, updated_at) VALUES (1, ?, ?)
-         ON CONFLICT(id) DO UPDATE SET json = excluded.json, updated_at = excluded.updated_at`,
-        json, new Date().toISOString(),
-      );
-      const now = new Date().toISOString();
-      for (const asset of publishedAssets ?? []) {
-        const sha = asset.original_sha256?.trim();
-        if (!sha) throw new Error('Published asset is missing its content hash.');
-        await tx.runAsync(
-          `INSERT INTO raw_assets (original_sha256, asset_key, media_kind, file_name, byte_size,
-            first_seen_at, last_seen_at, use_count) VALUES (?, ?, ?, ?, ?, ?, ?, 1)
-           ON CONFLICT(original_sha256) DO UPDATE SET last_seen_at=excluded.last_seen_at`,
-          sha, asset.asset_id ?? sha.slice(0, 12), asset.media_kind ?? 'UNKNOWN',
-          asset.source_display_name ?? null, asset.original_bytes ?? null, now, now,
-        );
-      }
-      assertCurrent?.();
-    });
+    let writeFailure: unknown;
+    try {
+      await db.withExclusiveTransactionAsync(async (tx) => {
+        try {
+          assertCurrent?.();
+          await tx.runAsync(
+            `INSERT INTO app_snapshot (id, json, updated_at) VALUES (1, ?, ?)
+             ON CONFLICT(id) DO UPDATE SET json = excluded.json, updated_at = excluded.updated_at`,
+            json, new Date().toISOString(),
+          );
+          const now = new Date().toISOString();
+          for (const asset of publishedAssets ?? []) {
+            const sha = asset.original_sha256?.trim();
+            if (!sha) throw new Error('Published asset is missing its content hash.');
+            await tx.runAsync(
+              `INSERT INTO raw_assets (original_sha256, asset_key, media_kind, file_name, byte_size,
+                first_seen_at, last_seen_at, use_count) VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+               ON CONFLICT(original_sha256) DO UPDATE SET last_seen_at=excluded.last_seen_at`,
+              sha, asset.asset_id ?? sha.slice(0, 12), asset.media_kind ?? 'UNKNOWN',
+              asset.source_display_name ?? null, asset.original_bytes ?? null, now, now,
+            );
+          }
+          assertCurrent?.();
+        } catch (error) {
+          // SQLITE_FULL can roll back automatically. Preserve the write error
+          // if the SDK's subsequent ROLLBACK reports "no transaction is active".
+          writeFailure = error;
+          throw error;
+        }
+      });
+    } catch (error) {
+      throw writeFailure ?? error;
+    }
     return;
   }
 

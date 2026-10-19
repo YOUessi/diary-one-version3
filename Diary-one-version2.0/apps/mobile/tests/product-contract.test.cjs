@@ -15,10 +15,11 @@ const sql = { execAsync: async q => db.exec(q), getFirstAsync: async (q, ...a) =
   getAllAsync: async (q, ...a) => db.prepare(q).all(...a), runAsync: async (q, ...a) => db.prepare(q).run(...a) };
 const oldLoad = Module._load;
 Module._load = function(name, ...args) {
-  if (name === 'expo-crypto') return { CryptoDigestAlgorithm: { SHA1: 'sha1' },
+  if (name === 'expo-crypto') return { CryptoDigestAlgorithm: { SHA1: 'sha1', SHA256: 'sha256' },
     digest: async (algo, bytes) => Uint8Array.from(crypto.createHash(algo).update(bytes).digest()).buffer };
   if (name === 'expo-file-system/legacy') return {
-    readAsStringAsync: async uri => fs.readFileSync(new URL(uri), 'utf8'),
+    EncodingType: { Base64: 'base64' },
+    readAsStringAsync: async (uri, options) => fs.readFileSync(new URL(uri), options?.encoding ?? 'utf8'),
     getInfoAsync: async uri => ({ exists: fs.existsSync(new URL(uri)) }),
   };
   if (name === 'expo-sqlite') return { openDatabaseAsync: async () => sql };
@@ -84,12 +85,16 @@ test('exact representative and hero images use source aliases without changing r
   assert.equal((await validator.validatePreviewResult(result, input)).ok, true);
   const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'diary-product-map-')); t.after(() => fs.rmSync(folder, { force: true, recursive: true }));
   const bundleDir = `file://${folder}/`, sourceUris = {};
-  for (const asset of input.manifest.assets) {
-    for (const frame of asset.frames) { const file = path.join(folder, frame.relative_path); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, 'existence fixture only'); }
+  // Attachment-only synthetic bytes. The historical input binding assertion
+  // above retains its untouched fixture; this is not a real-media E2E test.
+  const attachmentManifest = structuredClone(input.manifest);
+  for (const asset of attachmentManifest.assets) {
+    for (const frame of asset.frames) { const file = path.join(folder, frame.relative_path); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, 'existence fixture only'); frame.sha256 = sha(fs.readFileSync(file)); }
     sourceUris[asset.asset_id] = { uri: `file://${folder}/${asset.asset_id}.mp4`, media_kind: asset.media_kind };
     fs.writeFileSync(new URL(sourceUris[asset.asset_id].uri), 'source existence fixture only');
+    asset.original_sha256 = sha(fs.readFileSync(new URL(sourceUris[asset.asset_id].uri)));
   }
-  fs.writeFileSync(path.join(folder, 'bundle.json'), JSON.stringify(input.manifest));
+  fs.writeFileSync(path.join(folder, 'bundle.json'), JSON.stringify(attachmentManifest));
   fs.writeFileSync(path.join(folder, 'source_uris.json'), JSON.stringify(sourceUris));
   const mapped = mapper.mapPreviewToDiary(result, '2026-10-19');
   const attached = await media.attachChapterMediaFromBundle(mapped.chapters, result.chapters, bundleDir, bundleDir + 'bundle.json');
@@ -106,7 +111,7 @@ test('exact representative and hero images use source aliases without changing r
   await assert.rejects(media.attachChapterMediaFromBundle(mapped.chapters, result.chapters, bundleDir, bundleDir + 'bundle.json'), /unavailable/);
 });
 
-test('Product metadata and Aha text survive the unchanged remote SQLite save/load implementation', async () => {
+test('Product metadata and Aha text survive SQLite save/load with relative media paths', async () => {
   await sqlite.initDatabase();
   const chapter = fixture(), aha = fixture('rural_r55');
   const mapped = mapper.mapPreviewToDiary(chapter.result, '2026-10-19');

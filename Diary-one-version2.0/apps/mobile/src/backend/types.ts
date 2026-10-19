@@ -14,6 +14,7 @@ export type AuthOutcome =
 export type CloudJobPoll =
   | { state: 'pending'; message?: string }
   | { state: 'succeeded'; result: X02PreviewResult }
+  | { state: 'paused'; message: string }
   | { state: 'failed'; message: string };
 
 export type BackendHealth = {

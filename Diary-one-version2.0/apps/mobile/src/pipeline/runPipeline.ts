@@ -5,11 +5,11 @@ import type { PickedMedia, PipelineTask } from './types';
 import { useAppStore } from '../store/useAppStore';
 import { checkResearchHealth } from '../cloud/researchClient';
 import { submitResearchPreview } from '../backend/researchCloudService';
-import { submitProductionDayRevision, pollProductionCloudJob } from '../backend/productionCloudService';
+import { submitProductionDayRevision, pollProductionCloudJob, checkProductionHealth } from '../backend/productionCloudService';
 import type { CloudProcessingTarget } from '../backend/types';
 import { mapPreviewToDiary } from '../cloud/mapPreviewResult';
 import { validatePreviewResult } from '../cloud/validatePreviewResult';
-import { commitDiaryBatch } from '../store/hydrate';
+import { commitDiaryBatch, flushPersist } from '../store/hydrate';
 import { mapTodayStatusFromPreview } from '../cloud/mapTodayStatus';
 import { diaryTodayKey } from '../domain/dayKey';
 import {
@@ -95,12 +95,16 @@ async function pollUntilDone(
   token: string,
   taskId: string,
   jobId: string,
+  assertOwner: () => void,
 ) {
   for (let i = 0; i < 180; i++) {
+    assertOwner();
     if (!useAppStore.getState().pipelineTasks.some((task) => task.id === taskId)) {
       throw new Error('Import cancelled.');
     }
     const poll = await pollProductionCloudJob(endpoint, token, jobId);
+    assertOwner();
+    if (poll.state === 'paused') throw new Error(`CLOUD_JOB_PAUSED:${poll.message}`);
     if (poll.state === 'succeeded') {
       if (!poll.result) {
         throw new Error('Cloud job succeeded but returned no result payload');
@@ -129,6 +133,7 @@ async function runCloudPreview(
   bundleDir: string,
   jsonPath: string,
   dayRevisionId: string,
+  assertOwner: () => void,
 ) {
   if (target === 'production') {
     const bearer = token || requireProductionBearer();
@@ -140,46 +145,22 @@ async function runCloudPreview(
         status: 'cloud_processing',
         message: `Resuming job ${existingJob.slice(0, 8)}…`,
       });
-      return pollUntilDone(endpoint, bearer, taskId, existingJob);
+      return pollUntilDone(endpoint, bearer, taskId, existingJob, assertOwner);
     }
-    let revId = dayRevisionId;
-    try {
-      const { jobId } = await submitProductionDayRevision(
-        endpoint,
-        bearer,
-        revId,
-        bundleDir,
-        jsonPath,
-      );
-      patchTask(taskId, {
-        status: 'cloud_processing',
-        productionJobId: jobId,
-        dayRevisionId: revId,
-        message: `Uploaded · job ${jobId.slice(0, 8)}…`,
-      });
-      return pollUntilDone(endpoint, bearer, taskId, jobId);
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      // Cross-account or stale succeeded revision → one forced new identity.
-      if (msg.startsWith('DAY_REVISION_CONFLICT:')) {
-        revId = `${dayRevisionId}_r${Date.now().toString(36)}`;
-        const { jobId } = await submitProductionDayRevision(
-          endpoint,
-          bearer,
-          revId,
-          bundleDir,
-          jsonPath,
-        );
-        patchTask(taskId, {
-          status: 'cloud_processing',
-          productionJobId: jobId,
-          dayRevisionId: revId,
-          message: `Uploaded (new revision) · job ${jobId.slice(0, 8)}…`,
-        });
-        return pollUntilDone(endpoint, bearer, taskId, jobId);
-      }
-      throw e;
-    }
+    assertOwner();
+    const { jobId } = await submitProductionDayRevision(
+      endpoint, bearer, dayRevisionId, bundleDir, jsonPath,
+    );
+    assertOwner();
+    patchTask(taskId, {
+      status: 'cloud_processing', productionJobId: jobId, dayRevisionId,
+      message: `Uploaded · job ${jobId.slice(0, 8)}…`,
+    });
+    // Persist the accepted job before waiting for its result. Lost acknowledgements
+    // retry the same frozen revision; a 409 is never silently given a new identity.
+    await flushPersist();
+    assertOwner();
+    return pollUntilDone(endpoint, bearer, taskId, jobId, assertOwner);
   }
   if (isFormalConsumerApp || !isLabToolsEnabled) {
     throw new Error('Research / X02 direct path is disabled in the consumer App (PRD SYS02).');
@@ -209,7 +190,8 @@ function patchTask(taskId: string, patch: Partial<PipelineTask>) {
 }
 
 export async function runPipeline(taskId: string, items: PickedMedia[]): Promise<void> {
-  if (!items.length) {
+  if (activeRunners.has(taskId)) return;
+  if (!items.length && !useAppStore.getState().pipelineTasks.find((t) => t.id === taskId)?.bundleJsonPath) {
     patchTask(taskId, { status: 'failed', message: 'No media selected', error: 'empty_selection' });
     return;
   }
@@ -237,15 +219,22 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
     activeRunners.add(taskId);
     patchTask(taskId, {
       status: 'building_evidence',
-      message: `Deduping + normalizing ${items.length} asset(s) (compress / frames)…`,
+      message: items.length ? `Deduping + normalizing ${items.length} asset(s) (compress / frames)…` : 'Reusing saved evidence…',
     });
 
     const sessionFolder = `bundle-${taskId}`;
     const root = FileSystem.documentDirectory;
     if (!root) throw new Error('documentDirectory unavailable');
-    const bundleDir = `${root}bundles/${sessionFolder}/`;
+    const saved = useAppStore.getState().pipelineTasks.find((t) => t.id === taskId);
+    const bundleDir = saved?.bundleDir ?? `${root}bundles/${sessionFolder}/`;
     const bundleVersion = useAppStore.getState().bundleExportVersion;
-    const { jsonPath, bundle, sourceUris } = await buildAppLibraryBundle(items, bundleDir, bundleVersion, assertOwner);
+    // Once ready, the manifest/session ID, original copies and chosen frames are
+    // immutable for this revision, including retries after a lost POST response.
+    const { jsonPath, bundle, sourceUris } = saved?.bundleJsonPath
+      ? { jsonPath: saved.bundleJsonPath,
+          bundle: JSON.parse(await FileSystem.readAsStringAsync(saved.bundleJsonPath)) as import('./bundleTypes').AppLibraryBundle,
+          sourceUris: JSON.parse(await FileSystem.readAsStringAsync(`${bundleDir}source_uris.json`)) as Record<string, import('../domain/capturedImports').ImportedSource> }
+      : await buildAppLibraryBundle(items, bundleDir, bundleVersion, assertOwner);
 
     assertOwner();
     patchTask(taskId, {
@@ -290,13 +279,8 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
         message: target === 'production' ? 'Connecting to production API…' : 'Connecting to research API…',
       });
       if (target === 'production') {
-        const healthRes = await fetch(`${endpoint.replace(/\/+$/, '')}/health`);
-        if (!healthRes.ok) {
-          throw new Error(`Production health check failed (${healthRes.status})`);
-        }
-        const health = (await healthRes.json().catch(() => ({}))) as {
-          allow_mock_preview?: boolean;
-        };
+        const health = await checkProductionHealth(endpoint);
+        assertOwner();
         if (health.allow_mock_preview === true && rejectMockBff()) {
           throw new Error(
             'BFF allow_mock_preview=true is forbidden for the consumer App (PRD AI03). Run start-quality-loop.ps1 (mock=false).',
@@ -312,6 +296,7 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
             ? 'Cloud processing… (may take several minutes)'
             : 'X02 v0.4.1 preview running… (may take several minutes)',
       });
+      await flushPersist();
       const manifestSha256 = await sha256SubmittedManifest(bundle);
       assertOwner();
       const preview = await runCloudPreview(
@@ -322,6 +307,7 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
         bundleDir,
         jsonPath,
         task?.dayRevisionId ?? taskId,
+        assertOwner,
       );
       assertOwner();
       const valid = await validatePreviewResult(preview, { manifest: bundle, manifestSha256 });
@@ -380,7 +366,7 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
         !useAppStore.getState().pipelineTasks.some((t) => t.id === taskId)) {
       // Only this task's app-owned folder; a cancelled builder may have recreated it.
       const root = FileSystem.documentDirectory;
-      if (root) await FileSystem.deleteAsync(`${root}bundles/bundle-${taskId}/`, { idempotent: true }).catch(() => {});
+      if (root && !useAppStore.getState().pipelineTasks.some((t) => t.id === taskId)) await FileSystem.deleteAsync(`${root}bundles/bundle-${taskId}/`, { idempotent: true }).catch(() => {});
       return;
     }
     const message = err instanceof Error ? err.message : String(err);
@@ -413,7 +399,7 @@ export function resumeInFlightCloudJobs(): void {
   const stillOwns = (id: string) => useAppStore.getState().sessionToken === ownerToken &&
     useAppStore.getState().pipelineTasks.some((task) => task.id === id);
   const tasks = useAppStore.getState().pipelineTasks;
-  const stuck = ['queued', 'building_evidence', 'bundle_ready'] as const;
+  const stuck = ['queued', 'building_evidence', 'bundle_ready', 'uploading'] as const;
   for (const t of tasks) {
     if (stuck.includes(t.status as (typeof stuck)[number]) && !t.productionJobId) {
       patchTask(t.id, {
@@ -437,7 +423,9 @@ export function resumeInFlightCloudJobs(): void {
       activeRunners.add(t.id);
       void (async () => {
         try {
-          const preview = await pollUntilDone(endpoint, token || requireProductionBearer(), t.id, t.productionJobId!);
+          const preview = await pollUntilDone(endpoint, token || requireProductionBearer(), t.id, t.productionJobId!, () => {
+            if (!stillOwns(t.id)) throw new Error('Import cancelled because the account changed.');
+          });
           if (!stillOwns(t.id)) return;
           const raw = await FileSystem.readAsStringAsync(t.bundleJsonPath!);
           const manifest = JSON.parse(raw) as import('./bundleTypes').AppLibraryBundle;
@@ -500,11 +488,12 @@ export function resumeInFlightCloudJobs(): void {
 export function retryStoredCloudResult(taskId: string): void {
   const state = useAppStore.getState();
   const task = state.pipelineTasks.find((item) => item.id === taskId);
-  if (!task || task.status !== 'failed' || !task.productionJobId || !task.bundleDir || !task.bundleJsonPath ||
+  if (!task || task.status !== 'failed' || !task.bundleDir || !task.bundleJsonPath ||
       activeRunners.has(taskId) || state.pipelineTasks.some((item) =>
         item.status !== 'failed' && item.status !== 'succeeded')) return;
-  patchTask(taskId, { status: 'cloud_processing', error: undefined, message: 'Retrying saved cloud result…' });
-  resumeInFlightCloudJobs();
+  patchTask(taskId, { status: 'cloud_processing', error: undefined, message: 'Retrying saved cloud request…' });
+  if (task.productionJobId) resumeInFlightCloudJobs();
+  else void runPipeline(taskId, []);
 }
 
 export function enqueuePipeline(
