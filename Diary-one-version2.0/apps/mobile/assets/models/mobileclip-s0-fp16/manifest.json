@@ -1,0 +1,121 @@
+{
+  "schema_version": "MOBILECLIP_IMAGE_PROMPTS_BUNDLE_V1",
+  "generation": "s0",
+  "model_id": "MOBILECLIP_S0_IMAGE_512_SCENE_PROMPTS_V01_FP16_INTERNAL",
+  "source_checkpoint_sha256": "809b408eff74f8058843e86a1f92967097d42ba782450e85b8f4867b7f0ca0b7",
+  "source_checkpoint_bytes": 215934653,
+  "embedding_dim": 512,
+  "labels": [
+    "outdoor",
+    "street",
+    "vegetation",
+    "water",
+    "people",
+    "crowd",
+    "portal",
+    "interior_shop",
+    "interior_room",
+    "building",
+    "conveyance",
+    "market"
+  ],
+  "prompts": [
+    "an outdoor open-air scene",
+    "an outdoor street or road",
+    "trees plants and outdoor vegetation",
+    "a beach sea lake or water scene",
+    "people standing or walking",
+    "a crowd of people in a public place",
+    "a doorway entrance gate or storefront threshold",
+    "inside a shop store or market",
+    "inside an indoor room",
+    "a building facade or urban structure",
+    "inside or near a car bus train boat or vehicle",
+    "food produce and stalls in a market"
+  ],
+  "prompt_storage": {
+    "dtype": "little_endian_float32",
+    "shape": [
+      12,
+      512
+    ],
+    "normalized": true
+  },
+  "logit_scale": 67.2255630493164,
+  "classification_limit": 3,
+  "score_semantics": "softmax over this fixed vocabulary; not calibrated independent label probabilities",
+  "preprocessing": {
+    "input_layout": "NCHW",
+    "input_dtype": "float32",
+    "input_color": "RGB",
+    "resize_short_edge": 269,
+    "interpolation": "bicubic",
+    "crop_size": 256,
+    "mean": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "std": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "pixel_scale": 255.0,
+    "crop_rounding": "python_round_ties_to_even",
+    "implementation": "PIL resize and center crop; match before native deployment"
+  },
+  "image_output_normalized": false,
+  "onnx_input_shape": [
+    1,
+    3,
+    256,
+    256
+  ],
+  "onnx_opset": 17,
+  "image_parameter_count": 11357504,
+  "files": {
+    "image_encoder.onnx": {
+      "bytes": 22857054,
+      "sha256": "7ea0ab32ddbbd1c51b6158f12ccb669968de37125dd7455f04b6e1988cb9a141"
+    },
+    "prompts.f32.bin": {
+      "bytes": 24576,
+      "sha256": "c70ffd4cd11c8ac42f8b36c0d15e352da92bffc3b83f60f5c0acae16e86bef45"
+    }
+  },
+  "versions": {
+    "torch": "2.8.0",
+    "torchvision": "0.23.0",
+    "timm": "1.0.30",
+    "open_clip_torch": "3.3.0",
+    "onnx": "1.23.1",
+    "onnxruntime": "1.30.0",
+    "numpy": "2.5.3",
+    "pillow": "12.3.0"
+  },
+  "deployment_status": "desktop FP16 conversion candidate; numerical parity and mobile profiling pending",
+  "precision": {
+    "source": "fp32",
+    "internal": "fp16",
+    "input": "fp32",
+    "output": "fp32",
+    "conversion": "onnxconverter_common.float16.convert_float_to_float16",
+    "keep_io_types": true,
+    "min_positive_val": 5.96e-08,
+    "max_finite_val": 65504.0,
+    "internal_casts_to_fp16": [
+      "/stages.3/blocks/blocks.0/token_mixer/Cast",
+      "/stages.3/blocks/blocks.0/token_mixer/Cast_1",
+      "/stages.3/blocks/blocks.1/token_mixer/Cast",
+      "/stages.3/blocks/blocks.1/token_mixer/Cast_1"
+    ],
+    "boundary_casts_kept_fp32": [
+      "/head/fc/Gemm_cast_to_embedding"
+    ]
+  },
+  "source_fp32_bundle": {
+    "manifest_sha256": "80674fd48f80eb5082fd574b43a0b6592e093bc58b4518cb6d18b5bfb260dbdd",
+    "image_encoder_sha256": "84752dd3763826e971bccc4e3e4eb646497a082a0b73842d62e9d391d05ad089"
+  }
+}

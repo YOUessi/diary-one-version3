@@ -1,0 +1,343 @@
+{
+  "schema_version": "DIARY_ONE_X02_PRODUCT_PREVIEW_V01",
+  "editor_policy": "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07",
+  "experimental": true,
+  "production_ready": false,
+  "session_id": "42cd74ac-979f-4b38-9643-8f4b5a6872db",
+  "bundle_manifest_sha256": "d7a7f33ef8a7d6a4759aa5d4a390db9ba1a2145977c423cfd4e27346ceda5b36",
+  "semantic_day_state": "CHAPTER_DAY",
+  "output_mode": "CHAPTER_DAY",
+  "delivery_state": "READY_PRIMARY_COPY",
+  "selected_memory_outcomes": [
+    {
+      "memory_type": "CHAPTER",
+      "memory_id": "8c1d6165-b192-5c9a-bf56-90f350d684ab",
+      "visibility_state": "VISIBLE_PREVIEW"
+    }
+  ],
+  "coverage_status": "COMPLETE",
+  "unresolved_asset_ids": [],
+  "timeline_basis": "IMPORT_SEQUENCE_ONLY",
+  "timeline_date": null,
+  "time_reliability": {
+    "capture_time_reliable": false,
+    "interval_reliable": false,
+    "timezone_reliable": false
+  },
+  "observations": [
+    {
+      "id": "554339b2-12a4-591e-9a9d-86f93e4fbbec",
+      "asset_id": "3ae655d4-2d3c-5a27-a968-075348ba07fa",
+      "source_asset_id": "asset_3ae655d4-2d3c-5a27-a968-075348ba07fa",
+      "media_kind": "PHOTO",
+      "status": "OBSERVED",
+      "facts": [
+        {
+          "fact_id": "d770d094-555a-52e5-b114-81c2a1ba7db7",
+          "text": "第1项可见historic_town_walk。",
+          "evidence_frame_ids": [
+            "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00"
+          ],
+          "support_grade": "STRONG"
+        }
+      ],
+      "setting_code": "HISTORIC_STREET",
+      "activity_code": "WALKING",
+      "episode_code": "HISTORIC_TOWN_WALK",
+      "subject_codes": [
+        "HISTORIC_ARCHITECTURE"
+      ],
+      "motifs": [
+        "historic_lane"
+      ],
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "quality_score": 0.7,
+      "limitations": [],
+      "degraded_fields": [],
+      "evidence_frame_ids": [
+        "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00"
+      ]
+    }
+  ],
+  "moments": [],
+  "chapters": [
+    {
+      "id": "8c1d6165-b192-5c9a-bf56-90f350d684ab",
+      "title": "街边散步",
+      "story": "街边有人散步。",
+      "preview_story": "街边有人散步。",
+      "title_claim_ids": [
+        "F001"
+      ],
+      "time_label": "",
+      "tags": [
+        "ACTIVITY.WALKING",
+        "SETTING.TRADITIONAL_HISTORIC_DISTRICT",
+        "CENTRAL_SUBJECT.HISTORIC_ARCHITECTURE"
+      ],
+      "moment_ids": [
+        "fd53667c-6a8d-5983-8f11-191a0565c0ea"
+      ],
+      "hero_asset_id": "3ae655d4-2d3c-5a27-a968-075348ba07fa",
+      "selection_focus": {
+        "experience_kind": "CITYWALK",
+        "focus": "街边散步",
+        "fact_ids": [
+          "F001"
+        ]
+      },
+      "hero_frame_id": "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00",
+      "hero_reason": "Fixture explicit choice supporting the experience",
+      "selected_media": [
+        {
+          "asset_id": "3ae655d4-2d3c-5a27-a968-075348ba07fa",
+          "source_asset_id": "asset_3ae655d4-2d3c-5a27-a968-075348ba07fa",
+          "media_kind": "PHOTO",
+          "role": "HERO",
+          "evidence_frame_ids": [
+            "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00"
+          ],
+          "start_ms": null,
+          "end_ms": null,
+          "range_basis": "STILL_IMAGE",
+          "focus_pts_ms": null,
+          "source_sequence_index": 0,
+          "representative_frame_id": "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00",
+          "selection_fact_ids": [
+            "F001"
+          ],
+          "selection_reason": "Fixture explicit choice supporting the experience",
+          "selection_role": "PRIMARY"
+        }
+      ],
+      "claims": [
+        {
+          "fact_id": "d770d094-555a-52e5-b114-81c2a1ba7db7",
+          "text": "第1项可见historic_town_walk。",
+          "evidence_frame_ids": [
+            "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00"
+          ],
+          "support_grade": "STRONG",
+          "id": "F001",
+          "asset_id": "V001",
+          "source_asset_id": "asset_3ae655d4-2d3c-5a27-a968-075348ba07fa",
+          "observation_id": "554339b2-12a4-591e-9a9d-86f93e4fbbec",
+          "frame_pts_ms": [
+            null
+          ],
+          "temporal_support": "STATE",
+          "visual_reviewed": true,
+          "original_text": "第1项可见historic_town_walk。"
+        }
+      ],
+      "sentence_claims": [
+        {
+          "text": "街边有人散步。",
+          "fact_ids": [
+            "F001"
+          ]
+        }
+      ],
+      "copy_review_flags": [],
+      "highlights": [
+        {
+          "id": "f68827fe-1981-561d-a1d2-f0fc4b1f81f6",
+          "parent_chapter_id": "8c1d6165-b192-5c9a-bf56-90f350d684ab",
+          "story": "街边有人散步。",
+          "claims": [
+            {
+              "fact_id": "d770d094-555a-52e5-b114-81c2a1ba7db7",
+              "text": "第1项可见historic_town_walk。",
+              "evidence_frame_ids": [
+                "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00"
+              ],
+              "support_grade": "STRONG",
+              "id": "F001",
+              "asset_id": "V001",
+              "source_asset_id": "asset_3ae655d4-2d3c-5a27-a968-075348ba07fa",
+              "observation_id": "554339b2-12a4-591e-9a9d-86f93e4fbbec",
+              "frame_pts_ms": [
+                null
+              ],
+              "temporal_support": "STATE",
+              "visual_reviewed": true,
+              "original_text": "第1项可见historic_town_walk。"
+            }
+          ],
+          "value_type": "DISTINCT_DETAIL",
+          "revisit_reason": "Fixture value check",
+          "selected_media": [
+            {
+              "asset_id": "3ae655d4-2d3c-5a27-a968-075348ba07fa",
+              "source_asset_id": "asset_3ae655d4-2d3c-5a27-a968-075348ba07fa",
+              "media_kind": "PHOTO",
+              "role": "CORE",
+              "evidence_frame_ids": [
+                "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00"
+              ],
+              "start_ms": null,
+              "end_ms": null,
+              "range_basis": "STILL_IMAGE",
+              "focus_pts_ms": null,
+              "source_sequence_index": 0
+            }
+          ]
+        }
+      ],
+      "publication_status": "STAGED_PREVIEW_VALIDATED"
+    }
+  ],
+  "ahas": [],
+  "decision_trace": {
+    "fact_coverage": [
+      {
+        "fact_id": "F001",
+        "status": "SELECTED",
+        "reason": null,
+        "review_missing": false
+      }
+    ],
+    "semantic_review": [
+      {
+        "id": "C01",
+        "status": "ACCEPTED",
+        "reason": "Fixture",
+        "reviewed": true,
+        "style_flags": []
+      },
+      {
+        "id": "M01",
+        "status": "ACCEPTED",
+        "reason": "Fixture",
+        "reviewed": true,
+        "style_flags": []
+      }
+    ],
+    "prompt_sha256": {
+      "independent_scene": "1687d661d47edf5c9f7e4d6c415530d46d559aba1418946b6313d7bf77393e5c",
+      "visual_review": "a3efa193b1dd249e3f4586060f2168acb666beff9a1c4769939157223f2ea955",
+      "moment_value": "65492008b803fdcb7d460aebf86e97fad5b7cccbc0b9efdf3803007eb1f83c8f",
+      "editor": "f78ba652505ffa9f4f7791ad35b46b797fc640abd248b1190e89066e27f9d801",
+      "structure_review": "72673a7d1a3b2438f4305008367fbdd1fb1c906b579af42628fff290cee7a939",
+      "media_selection": "03f458ec72c2f103ae32d4a57b1d55c1586615c5361debbd2a58da643beddca7",
+      "narrative_brief": "e9a9b968648be458de6c16dd8b35ac559d8294d34a1b6867594bf8366e0a797f",
+      "writer": "70f005af2d89abb1bbc921448c1d0dd209f61225a69ea4c8dba485caee30830a",
+      "review": "46d61dc78157bef2599b49fbdbccf051a0562435b511cf9c158770114ffbc820",
+      "copy_repair": "6dadad820b0368b460b17f125c97b4e79eaf6df3db71eabe129929261d16caf5",
+      "coverage_review": "fb4604528364016e6b861d051dcbb402f17b1b3c5b299bd66c9192f3f6c41028",
+      "relation_review": "64da6f12eba4685f5e13a9a17599940de6520dbbb41f77f3f3adfcff306a76d4"
+    },
+    "verified_facts": {
+      "F001": {
+        "fact_id": "d770d094-555a-52e5-b114-81c2a1ba7db7",
+        "text": "第1项可见historic_town_walk。",
+        "evidence_frame_ids": [
+          "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00"
+        ],
+        "support_grade": "STRONG",
+        "id": "F001",
+        "asset_id": "V001",
+        "source_asset_id": "asset_3ae655d4-2d3c-5a27-a968-075348ba07fa",
+        "observation_id": "554339b2-12a4-591e-9a9d-86f93e4fbbec",
+        "frame_pts_ms": [
+          null
+        ],
+        "temporal_support": "STATE",
+        "visual_reviewed": true,
+        "original_text": "第1项可见historic_town_walk。"
+      }
+    },
+    "selected_structure": {
+      "chapters": [
+        {
+          "id": "C01",
+          "theme": "街边散步",
+          "fact_ids": [
+            "F001"
+          ],
+          "grouping_reason": "A complete activity, fixture only",
+          "selection_focus": {
+            "experience_kind": "CITYWALK",
+            "focus": "街边散步",
+            "fact_ids": [
+              "F001"
+            ]
+          },
+          "selected_asset_ids": [
+            "V001"
+          ],
+          "hero_asset_id": "V001",
+          "hero_frame_id": "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00",
+          "media_choices": [
+            {
+              "asset_id": "V001",
+              "frame_id": "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00",
+              "fact_ids": [
+                "F001"
+              ],
+              "role": "PRIMARY",
+              "reason": "Fixture explicit choice supporting the experience"
+            }
+          ],
+          "candidate_selection_audit": {
+            "rule": "ONE_PER_ASSET_EXPLICIT_HERO_ELSE_MODEL_PREFERENCE_ORDER",
+            "capacity_rule": "EXPLICIT_HERO_PLUS_FIRST_RANKED_OTHER_ASSETS",
+            "max_selected_assets": 5,
+            "ranked_candidate_ids": [
+              "P001"
+            ],
+            "hero_candidate_id": "P001",
+            "selected_candidate_ids": [
+              "P001"
+            ],
+            "capacity_omitted_asset_ids": [],
+            "capacity_omitted_candidates": [],
+            "deduplicated_candidates": []
+          }
+        }
+      ],
+      "moments": [
+        {
+          "id": "M01",
+          "parent_chapter_id": "C01",
+          "fact_id": "F001",
+          "focus": "骑行者回头",
+          "revisit_reason": "Fixture value check",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ],
+          "event_group_id": "M01",
+          "comparison_reason": "Fixture unique event among candidates",
+          "value_type": "DISTINCT_DETAIL",
+          "focus_frame_ids": [
+            "frame_3ae655d4-2d3c-5a27-a968-075348ba07fa_00"
+          ]
+        }
+      ]
+    },
+    "visual_fact_ledger": [
+      {
+        "fact_id": "F001",
+        "asset_id": "V001",
+        "status": "VERIFIED",
+        "decision": "KEEP",
+        "corrections": [],
+        "changed": false,
+        "reason": "Fixture visual check",
+        "text_source": "ORIGINAL",
+        "model_text_matches_applied": true
+      }
+    ],
+    "recovery_visual_ledger": []
+  },
+  "trace": {
+    "pipeline_version": "X02_PRODUCT_EDITOR_V07",
+    "provider": "test",
+    "model": "scripted-stages",
+    "stage_metrics": []
+  }
+}

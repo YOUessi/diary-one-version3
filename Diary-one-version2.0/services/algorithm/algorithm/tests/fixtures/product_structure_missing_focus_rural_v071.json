@@ -1,0 +1,1271 @@
+{
+  "provenance": {
+    "source_session_id": "0f3205ad-3ccc-4a29-9754-4c666f95ce04",
+    "recorded_at": "2026-10-19T08:42:44.396065Z",
+    "purpose": "Recorded malformed provider structure; no human semantic quality labels"
+  },
+  "output": {
+    "chapter_boundaries": [],
+    "chapters": [
+      {
+        "experience_kind": "CYCLING",
+        "fact_ids": [
+          "F001",
+          "F002",
+          "F003",
+          "F004",
+          "F005",
+          "F006",
+          "F007",
+          "F008",
+          "F009",
+          "F010"
+        ],
+        "focus": "记录从城市专用道、路口到乡间公路及林间土路的多种路面骑行过程。",
+        "grouping_reason": "所有事实均支持第一人称视角的骑行活动（可见车把、手臂或明确描述）。尽管背景从城市高架变为乡村输电塔和红瓦房，但活动性质一致且无明显中断证据，视为同一类持续骑行经历的不同路段。",
+        "hero_candidate_id": "P001",
+        "id": "C01",
+        "theme": "多路段骑行经历"
+      }
+    ],
+    "frame_assessments": [
+      {
+        "candidate_id": "P001",
+        "fact_ids": [
+          "F001"
+        ],
+        "occlusion": "NONE",
+        "prominence": "DOMINANT",
+        "scene_observation_id": "FO:P001",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "visible_detail": "画面展示了一条铺有蓝色涂层的自行车道，左侧设有金属护栏，右侧紧邻机动车道。背景中可见高架轨道结构及带有绿色标识的建筑物。"
+      },
+      {
+        "candidate_id": "P002",
+        "fact_ids": [
+          "F002"
+        ],
+        "occlusion": "NONE",
+        "prominence": "READABLE",
+        "scene_observation_id": "FO:P002",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "visible_detail": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，穿过一座混凝土桥梁底部。"
+      },
+      {
+        "candidate_id": "P003",
+        "fact_ids": [
+          "F003"
+        ],
+        "occlusion": "NONE",
+        "prominence": "READABLE",
+        "scene_observation_id": "FO:P003",
+        "theme_fit": "BACKGROUND_ONLY",
+        "visibility": "CLEAR",
+        "visible_detail": "画面显示一条狭窄的乡村碎石道路，左侧是茂密的竹林和杂草，右侧有电线杆。远处有一栋房屋。画面极底部隐约可见黑色物体边缘（疑似车把），暗示移动视角。"
+      },
+      {
+        "candidate_id": "P004",
+        "fact_ids": [
+          "F004"
+        ],
+        "occlusion": "NONE",
+        "prominence": "READABLE",
+        "scene_observation_id": "FO:P004",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "visible_detail": "第一人称视角显示骑行者双手握住装有码表的自行车车把，沿着一条有白色护栏的专用道行驶。右侧机动车道上有一辆黑色轿车驶过，远处可见高架桥结构。"
+      },
+      {
+        "candidate_id": "P005",
+        "fact_ids": [
+          "F005"
+        ],
+        "occlusion": "NONE",
+        "prominence": "READABLE",
+        "scene_observation_id": "FO:P005",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "visible_detail": "画面呈现骑行者在路口前的视角，前方地面有明显的斑马线标线，左侧立柱上挂有交通信号灯。街道两旁分布着民居建筑、电线杆及蓝色路牌。"
+      },
+      {
+        "candidate_id": "P006",
+        "fact_ids": [
+          "F006"
+        ],
+        "occlusion": "NONE",
+        "prominence": "READABLE",
+        "scene_observation_id": "FO:P006",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "visible_detail": "视频记录骑行过程，环境为两侧植被茂密的乡间公路。沿途依次可见巨大的高压输电塔。"
+      },
+      {
+        "candidate_id": "P007",
+        "fact_ids": [
+          "F007",
+          "F008"
+        ],
+        "occlusion": "NONE",
+        "prominence": "READABLE",
+        "scene_observation_id": "FO:P007",
+        "theme_fit": "BACKGROUND_ONLY",
+        "visibility": "CLEAR",
+        "visible_detail": "画面显示一条狭窄的铺装道路，左侧有一座红瓦屋顶的建筑和茂密的植被。右侧可见电线杆和现代建筑的一角。"
+      },
+      {
+        "candidate_id": "P008",
+        "fact_ids": [
+          "F009",
+          "F010"
+        ],
+        "occlusion": "NONE",
+        "prominence": "READABLE",
+        "scene_observation_id": "FO:P008",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "visible_detail": "第一人称视角展示双手握着自行车车把，正在林间土路上骑行。前方是蜿蜒的泥土小径，两侧被高大的树木包围。"
+      },
+      {
+        "candidate_id": "P009",
+        "fact_ids": [
+          "F002"
+        ],
+        "occlusion": "NONE",
+        "prominence": "READABLE",
+        "scene_observation_id": "FO:P009",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "visible_detail": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，接近一个路口，路边停放着车辆。"
+      },
+      {
+        "candidate_id": "P010",
+        "fact_ids": [],
+        "occlusion": "NONE",
+        "prominence": "TINY_OR_UNCLEAR",
+        "scene_observation_id": null,
+        "theme_fit": "UNSUPPORTED",
+        "visibility": "NOT_VISIBLE",
+        "visible_detail": ""
+      },
+      {
+        "candidate_id": "P011",
+        "fact_ids": [
+          "F002"
+        ],
+        "occlusion": "NONE",
+        "prominence": "READABLE",
+        "scene_observation_id": "FO:P011",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "visible_detail": "画面展示了与主干道交汇处的蓝色自行车道入口，旁边有停放的车辆。"
+      },
+      {
+        "candidate_id": "P012",
+        "fact_ids": [],
+        "occlusion": "NONE",
+        "prominence": "TINY_OR_UNCLEAR",
+        "scene_observation_id": null,
+        "theme_fit": "UNSUPPORTED",
+        "visibility": "NOT_VISIBLE",
+        "visible_detail": ""
+      }
+    ],
+    "media_choices": [
+      {
+        "candidate_id": "P001",
+        "chapter_id": "C01",
+        "reason": "画面清晰展示蓝色自行车专用道与高架桥环境，主体道路特征明显，最能代表城市骑行路段。"
+      },
+      {
+        "candidate_id": "P008",
+        "chapter_id": "C01",
+        "reason": "呈现林间土路骑行视角，突出非铺装路面和植被包围的环境差异，补充了不同路况的体验。"
+      },
+      {
+        "candidate_id": "P006",
+        "chapter_id": "C01",
+        "reason": "显示乡间公路沿途的高压输电塔，记录了开阔视野下的特定地标景观，丰富了沿途发现。"
+      },
+      {
+        "candidate_id": "P007",
+        "chapter_id": "C01",
+        "reason": "捕捉到路边红瓦屋顶建筑与现代建筑的对比，展现了经过居民区时的具体视觉细节。"
+      },
+      {
+        "candidate_id": "P004",
+        "chapter_id": "C01",
+        "reason": "包含车把、码表及右侧驶过的车辆，真实还原了紧邻机动车道的骑行第一人称视角。"
+      }
+    ],
+    "moments": [
+      {
+        "chapter_relations": [
+          {
+            "chapter_id": "C01",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ],
+        "fact_id": "F002",
+        "focus": "穿过混凝土桥梁底部的瞬间",
+        "id": "M01",
+        "parent_chapter_id": "C01",
+        "revisit_reason": "展示了骑行路线中具有辨识度的地形变化节点，区别于普通路面。"
+      },
+      {
+        "chapter_relations": [
+          {
+            "chapter_id": "C01",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ],
+        "fact_id": "F009",
+        "focus": "双手握把在林间土路骑行的状态",
+        "id": "M02",
+        "parent_chapter_id": "C01",
+        "revisit_reason": "体现了非铺装路面的具体骑行操作与环境细节，是本次经历中的特色路段。"
+      }
+    ],
+    "unselected_facts": []
+  },
+  "facts": {
+    "F001": {
+      "asset_id": "V001",
+      "evidence_frame_ids": [
+        "asset-0-f0"
+      ],
+      "fact_id": "723b674f-e87a-5bff-b667-489f8649826b",
+      "frame_pts_ms": [
+        4000
+      ],
+      "id": "F001",
+      "observation_id": "45b21e8f-8b0e-5421-b8d2-de39b35c7a5f",
+      "original_text": "画面显示一条铺有蓝色涂层的自行车道，左侧为金属护栏，右侧紧邻机动车道。背景可见高架轨道结构及带有绿色标识的建筑物。",
+      "source_asset_id": "asset-0",
+      "support_grade": "STRONG",
+      "temporal_support": "STATE",
+      "text": "画面显示一条铺有蓝色涂层的自行车道，左侧为金属护栏，右侧紧邻机动车道。背景可见高架轨道结构及带有绿色标识的建筑物。",
+      "visual_reviewed": true
+    },
+    "F002": {
+      "asset_id": "V002",
+      "evidence_frame_ids": [
+        "asset-1-f0",
+        "asset-1-f1",
+        "asset-1-f2"
+      ],
+      "fact_id": "966cb962-9a69-5c30-87e4-9224873b91aa",
+      "frame_pts_ms": [
+        0,
+        3000,
+        5000
+      ],
+      "id": "F002",
+      "observation_id": "2db17213-8834-5a33-be84-469230eb3f13",
+      "original_text": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，穿过一座混凝土桥梁底部（f0）。随后驶出绿植区域，接近一个路口，路边停放着车辆（f1），最终到达与主干道交汇处的蓝色自行车道入口（f2）。",
+      "source_asset_id": "asset-1",
+      "support_grade": "STRONG",
+      "temporal_support": "CHANGE",
+      "text": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，穿过一座混凝土桥梁底部（f0）。随后驶出绿植区域，接近一个路口，路边停放着车辆（f1），最终到达与主干道交汇处的蓝色自行车道入口（f2）。",
+      "visual_reviewed": true
+    },
+    "F003": {
+      "asset_id": "V003",
+      "evidence_frame_ids": [
+        "asset-2-f0"
+      ],
+      "fact_id": "7579a4c3-03c4-5e2f-b0ac-20c052a26f09",
+      "frame_pts_ms": [
+        5000
+      ],
+      "id": "F003",
+      "observation_id": "f66355a3-0f2a-5616-8a6b-5391825370e6",
+      "original_text": "画面显示一条狭窄的乡村铺装道路，左侧是茂密的竹林和杂草，右侧有电线杆。远处有一栋房屋。画面极底部隐约可见黑色物体边缘（疑似车把），暗示移动视角。",
+      "source_asset_id": "asset-2",
+      "support_grade": "MODERATE",
+      "temporal_support": "STATE",
+      "text": "画面显示一条狭窄的乡村碎石道路，左侧是茂密的竹林和杂草，右侧有电线杆。远处有一栋房屋。画面极底部隐约可见黑色物体边缘（疑似车把），暗示移动视角。",
+      "visual_reviewed": true
+    },
+    "F004": {
+      "asset_id": "V004",
+      "evidence_frame_ids": [
+        "asset-3-f0"
+      ],
+      "fact_id": "c9f611b5-dbfe-50d0-a835-7674b9ac7011",
+      "frame_pts_ms": [
+        8000
+      ],
+      "id": "F004",
+      "observation_id": "430f52e2-bea7-559d-b03e-d5b42344d051",
+      "original_text": "第一人称视角显示骑行者双手握住装有码表的自行车车把，沿着一条有白色护栏的专用道行驶。右侧机动车道上有一辆黑色轿车驶过，远处可见高架桥结构。",
+      "source_asset_id": "asset-3",
+      "support_grade": "STRONG",
+      "temporal_support": "STATE",
+      "text": "第一人称视角显示骑行者双手握住装有码表的自行车车把，沿着一条有白色护栏的专用道行驶。右侧机动车道上有一辆黑色轿车驶过，远处可见高架桥结构。",
+      "visual_reviewed": true
+    },
+    "F005": {
+      "asset_id": "V005",
+      "evidence_frame_ids": [
+        "asset-4-f0"
+      ],
+      "fact_id": "d7be8304-3487-537e-86ed-6b5870ca540c",
+      "frame_pts_ms": [
+        1000
+      ],
+      "id": "F005",
+      "observation_id": "2b5e625c-7df2-54bc-b1df-b32de1146204",
+      "original_text": "画面呈现骑行者在路口前的视角，前方地面有明显的斑马线标线，左侧立柱上挂有交通信号灯。街道两旁分布着民居建筑、电线杆及蓝色路牌。",
+      "source_asset_id": "asset-4",
+      "support_grade": "STRONG",
+      "temporal_support": "STATE",
+      "text": "画面呈现骑行者在路口前的视角，前方地面有明显的斑马线标线，左侧立柱上挂有交通信号灯。街道两旁分布着民居建筑、电线杆及蓝色路牌。",
+      "visual_reviewed": true
+    },
+    "F006": {
+      "asset_id": "V006",
+      "evidence_frame_ids": [
+        "asset-5-f0",
+        "asset-5-f1",
+        "asset-5-f2"
+      ],
+      "fact_id": "cae55479-b696-54ab-bd49-ced74d5c7de9",
+      "frame_pts_ms": [
+        1000,
+        5000,
+        9000
+      ],
+      "id": "F006",
+      "observation_id": "e3365043-723f-5cb8-acc6-43d02d617ff8",
+      "original_text": "视频记录骑行过程，环境由开阔路段逐渐变为两侧植被茂密的乡间公路。沿途依次可见巨大的高压输电塔、路边竖立的黄色警示旗以及一辆停在路边的白色轻型卡车。",
+      "source_asset_id": "asset-5",
+      "support_grade": "STRONG",
+      "temporal_support": "STATE",
+      "text": "视频记录骑行过程，环境为两侧植被茂密的乡间公路。沿途依次可见巨大的高压输电塔、路边竖立的黄色警示牌以及一辆停在路边的白色轻型卡车。",
+      "visual_reviewed": true
+    },
+    "F007": {
+      "asset_id": "V007",
+      "evidence_frame_ids": [
+        "asset-6-f0"
+      ],
+      "fact_id": "a02f54ce-4a76-51b6-b0fc-400edf9172e6",
+      "frame_pts_ms": [
+        4000
+      ],
+      "id": "F007",
+      "observation_id": "24bb5263-19f5-5c19-9b24-78bba21614b2",
+      "original_text": "画面显示一条狭窄的铺装道路，左侧有一座红瓦屋顶的建筑和茂密的植被。",
+      "source_asset_id": "asset-6",
+      "support_grade": "STRONG",
+      "temporal_support": "STATE",
+      "text": "画面显示一条狭窄的铺装道路，左侧有一座红瓦屋顶的建筑和茂密的植被。",
+      "visual_reviewed": true
+    },
+    "F008": {
+      "asset_id": "V007",
+      "evidence_frame_ids": [
+        "asset-6-f0"
+      ],
+      "fact_id": "a5194ba4-78d5-5dea-97fe-f30886cb38e9",
+      "frame_pts_ms": [
+        4000
+      ],
+      "id": "F008",
+      "observation_id": "24bb5263-19f5-5c19-9b24-78bba21614b2",
+      "original_text": "右侧可见电线杆和现代建筑的一角。",
+      "source_asset_id": "asset-6",
+      "support_grade": "MODERATE",
+      "temporal_support": "STATE",
+      "text": "右侧可见电线杆和现代建筑的一角。",
+      "visual_reviewed": true
+    },
+    "F009": {
+      "asset_id": "V008",
+      "evidence_frame_ids": [
+        "asset-7-f0"
+      ],
+      "fact_id": "d3a2b5bd-d251-5cc5-9f2b-57ff994bdfc8",
+      "frame_pts_ms": [
+        8000
+      ],
+      "id": "F009",
+      "observation_id": "60d459f0-dad7-5a2e-9a62-25040622880e",
+      "original_text": "第一人称视角展示双手握着自行车车把，正在林间土路上骑行。",
+      "source_asset_id": "asset-7",
+      "support_grade": "STRONG",
+      "temporal_support": "STATE",
+      "text": "第一人称视角展示双手握着自行车车把，正在林间土路上骑行。",
+      "visual_reviewed": true
+    },
+    "F010": {
+      "asset_id": "V008",
+      "evidence_frame_ids": [
+        "asset-7-f0"
+      ],
+      "fact_id": "a6cdc79f-8124-5b7b-9526-3520983386a8",
+      "frame_pts_ms": [
+        8000
+      ],
+      "id": "F010",
+      "observation_id": "60d459f0-dad7-5a2e-9a62-25040622880e",
+      "original_text": "前方是蜿蜒的泥土小径，两侧被高大的树木包围。",
+      "source_asset_id": "asset-7",
+      "support_grade": "STRONG",
+      "temporal_support": "STATE",
+      "text": "前方是蜿蜒的泥土小径，两侧被高大的树木包围。",
+      "visual_reviewed": true
+    }
+  },
+  "assets": {
+    "V001": {
+      "asset_id": "asset-0",
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "canonical_offset_ms": 4500,
+          "frame_id": "asset-0-f0",
+          "height": 1024,
+          "relative_path": "frames/asset-0-f0.jpg",
+          "sample_role": "WINDOW_MIDDLE",
+          "sha256": "17593cd3b6e98608c6baa33fa2fd9d4b698bf717c996edb071510550a5082cd9",
+          "source_timestamp_ms": 4000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        }
+      ],
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_bytes": 8727802,
+      "original_duration_ms": 10000,
+      "original_file_extension": "mp4",
+      "original_height": 1440,
+      "original_included": false,
+      "original_sha256": "a6df49cb6be9af9cca7cabfa508733ff0c4afee15b5c5940b3d2c128a93e6721",
+      "original_width": 2560,
+      "sequence_index": 0,
+      "source_display_name": "rural_cycling_t000240_10s.mp4"
+    },
+    "V002": {
+      "asset_id": "asset-1",
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "canonical_offset_ms": 1500,
+          "frame_id": "asset-1-f0",
+          "height": 1024,
+          "relative_path": "frames/asset-1-f0.jpg",
+          "sample_role": "WINDOW_EARLY",
+          "sha256": "1d2fd7c49e6a6cae70554ce984b606a6322989b1c7854288be5fc6d813b67d11",
+          "source_timestamp_ms": 0,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        },
+        {
+          "canonical_offset_ms": 4500,
+          "frame_id": "asset-1-f1",
+          "height": 1024,
+          "relative_path": "frames/asset-1-f1.jpg",
+          "sample_role": "WINDOW_MIDDLE",
+          "sha256": "b81768705a85e67517e3ec864c92a9fefc7d3597aca7975543e5d8094909fb17",
+          "source_timestamp_ms": 3000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        },
+        {
+          "canonical_offset_ms": 7500,
+          "frame_id": "asset-1-f2",
+          "height": 1024,
+          "relative_path": "frames/asset-1-f2.jpg",
+          "sample_role": "WINDOW_LATE",
+          "sha256": "b074304fbc3feec67753adb0224b14b5b6e9e6d1eac596bafee7ff055c148a96",
+          "source_timestamp_ms": 5000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        }
+      ],
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_bytes": 8726297,
+      "original_duration_ms": 10000,
+      "original_file_extension": "mp4",
+      "original_height": 1440,
+      "original_included": false,
+      "original_sha256": "06fc721ee6a8cb8d55dc761c8d651186730e4809830e0da427496eabca3dcd96",
+      "original_width": 2560,
+      "sequence_index": 1,
+      "source_display_name": "rural_cycling_t000480_10s.mp4"
+    },
+    "V003": {
+      "asset_id": "asset-2",
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "canonical_offset_ms": 4500,
+          "frame_id": "asset-2-f0",
+          "height": 1024,
+          "relative_path": "frames/asset-2-f0.jpg",
+          "sample_role": "WINDOW_MIDDLE",
+          "sha256": "0d6a86b978c7661a46385746a2f084c23c546791cf93133207b749fb24e32160",
+          "source_timestamp_ms": 5000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        }
+      ],
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_bytes": 8736969,
+      "original_duration_ms": 10000,
+      "original_file_extension": "mp4",
+      "original_height": 1440,
+      "original_included": false,
+      "original_sha256": "fe737487b19d8aaca906f3748c1a800b1fbd80b6e5dd8de7f1b862c3abda40ed",
+      "original_width": 2560,
+      "sequence_index": 2,
+      "source_display_name": "rural_cycling_t000960_10s.mp4"
+    },
+    "V004": {
+      "asset_id": "asset-3",
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "canonical_offset_ms": 4500,
+          "frame_id": "asset-3-f0",
+          "height": 1024,
+          "relative_path": "frames/asset-3-f0.jpg",
+          "sample_role": "WINDOW_MIDDLE",
+          "sha256": "851782242eaaba6dbf413fffba36b06094884a7fad6a1a980f025bc93df47342",
+          "source_timestamp_ms": 8000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        }
+      ],
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_bytes": 8725874,
+      "original_duration_ms": 10000,
+      "original_file_extension": "mp4",
+      "original_height": 1440,
+      "original_included": false,
+      "original_sha256": "82a519e5b4a650bc19c82d2b8a1ee6cd6b1e114dab825dc9dd87f111512d1ad2",
+      "original_width": 2560,
+      "sequence_index": 3,
+      "source_display_name": "rural_cycling_t001200_10s.mp4"
+    },
+    "V005": {
+      "asset_id": "asset-4",
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "canonical_offset_ms": 4500,
+          "frame_id": "asset-4-f0",
+          "height": 1024,
+          "relative_path": "frames/asset-4-f0.jpg",
+          "sample_role": "WINDOW_MIDDLE",
+          "sha256": "c880eb177aef820377e5f06afd17feb97100618776d37e863fdf6c47a7a853e8",
+          "source_timestamp_ms": 1000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        }
+      ],
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_bytes": 8725054,
+      "original_duration_ms": 10000,
+      "original_file_extension": "mp4",
+      "original_height": 1440,
+      "original_included": false,
+      "original_sha256": "a45aaaf6e9affe7ae40d3b93766164b975b10e44bcab9ab8336886a5b1cc6806",
+      "original_width": 2560,
+      "sequence_index": 4,
+      "source_display_name": "rural_cycling_t001440_10s.mp4"
+    },
+    "V006": {
+      "asset_id": "asset-5",
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "canonical_offset_ms": 1500,
+          "frame_id": "asset-5-f0",
+          "height": 1024,
+          "relative_path": "frames/asset-5-f0.jpg",
+          "sample_role": "WINDOW_EARLY",
+          "sha256": "da337b6cbb0dcbdb98d2ac11419cdb189e680e189b3fe910f2cea3c5ee3a38c5",
+          "source_timestamp_ms": 1000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        },
+        {
+          "canonical_offset_ms": 4500,
+          "frame_id": "asset-5-f1",
+          "height": 1024,
+          "relative_path": "frames/asset-5-f1.jpg",
+          "sample_role": "WINDOW_MIDDLE",
+          "sha256": "7cbf7820497ee84601e5c57f7b61398b191b002693367894b5807de728a143b0",
+          "source_timestamp_ms": 5000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        },
+        {
+          "canonical_offset_ms": 7500,
+          "frame_id": "asset-5-f2",
+          "height": 1024,
+          "relative_path": "frames/asset-5-f2.jpg",
+          "sample_role": "WINDOW_LATE",
+          "sha256": "5c89ad78220b602ca5643d22f8623c821a1c58a91265d3534925831e8b0b1c8f",
+          "source_timestamp_ms": 9000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        }
+      ],
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_bytes": 8731964,
+      "original_duration_ms": 10000,
+      "original_file_extension": "mp4",
+      "original_height": 1440,
+      "original_included": false,
+      "original_sha256": "9cef67db8ce99dc3baa651344869675a97facf8d266c087d6533dc8e6b7d384e",
+      "original_width": 2560,
+      "sequence_index": 5,
+      "source_display_name": "rural_cycling_t001680_10s.mp4"
+    },
+    "V007": {
+      "asset_id": "asset-6",
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "canonical_offset_ms": 4500,
+          "frame_id": "asset-6-f0",
+          "height": 1024,
+          "relative_path": "frames/asset-6-f0.jpg",
+          "sample_role": "WINDOW_MIDDLE",
+          "sha256": "325d4dbbf6a6d56acd9c484c89990f994600d1fe44370ee7a865ab7d0d77d926",
+          "source_timestamp_ms": 4000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        }
+      ],
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_bytes": 8737120,
+      "original_duration_ms": 10000,
+      "original_file_extension": "mp4",
+      "original_height": 1440,
+      "original_included": false,
+      "original_sha256": "407c9a59de386c98ba8792ea0c8846ea4d93fa33e0d6cf2bd06895f91abbec5f",
+      "original_width": 2560,
+      "sequence_index": 6,
+      "source_display_name": "rural_cycling_t001920_10s.mp4"
+    },
+    "V008": {
+      "asset_id": "asset-7",
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "canonical_offset_ms": 4500,
+          "frame_id": "asset-7-f0",
+          "height": 1024,
+          "relative_path": "frames/asset-7-f0.jpg",
+          "sample_role": "WINDOW_MIDDLE",
+          "sha256": "bef5e4f69048322a5757ad9bf745ac08aa8c828a2455845936567951cbfffbd9",
+          "source_timestamp_ms": 8000,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "width": 768,
+          "window_count": 1,
+          "window_index": 0
+        }
+      ],
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_bytes": 8742932,
+      "original_duration_ms": 10000,
+      "original_file_extension": "mp4",
+      "original_height": 1440,
+      "original_included": false,
+      "original_sha256": "4e7eaf4388c2b42ca5df1635a511dfefd0114d10c241ed15876557d6c4226d26",
+      "original_width": 2560,
+      "sequence_index": 7,
+      "source_display_name": "rural_cycling_t002400_10s.mp4"
+    }
+  },
+  "candidates": [
+    {
+      "asset_id": "V001",
+      "candidate_id": "P001",
+      "fact_ids": [
+        "F001"
+      ],
+      "frame_id": "asset-0-f0",
+      "pts_ms": 4000
+    },
+    {
+      "asset_id": "V002",
+      "candidate_id": "P002",
+      "fact_ids": [
+        "F002"
+      ],
+      "frame_id": "asset-1-f0",
+      "pts_ms": 0
+    },
+    {
+      "asset_id": "V003",
+      "candidate_id": "P003",
+      "fact_ids": [
+        "F003"
+      ],
+      "frame_id": "asset-2-f0",
+      "pts_ms": 5000
+    },
+    {
+      "asset_id": "V004",
+      "candidate_id": "P004",
+      "fact_ids": [
+        "F004"
+      ],
+      "frame_id": "asset-3-f0",
+      "pts_ms": 8000
+    },
+    {
+      "asset_id": "V005",
+      "candidate_id": "P005",
+      "fact_ids": [
+        "F005"
+      ],
+      "frame_id": "asset-4-f0",
+      "pts_ms": 1000
+    },
+    {
+      "asset_id": "V006",
+      "candidate_id": "P006",
+      "fact_ids": [
+        "F006"
+      ],
+      "frame_id": "asset-5-f0",
+      "pts_ms": 1000
+    },
+    {
+      "asset_id": "V007",
+      "candidate_id": "P007",
+      "fact_ids": [
+        "F007",
+        "F008"
+      ],
+      "frame_id": "asset-6-f0",
+      "pts_ms": 4000
+    },
+    {
+      "asset_id": "V008",
+      "candidate_id": "P008",
+      "fact_ids": [
+        "F009",
+        "F010"
+      ],
+      "frame_id": "asset-7-f0",
+      "pts_ms": 8000
+    },
+    {
+      "asset_id": "V002",
+      "candidate_id": "P009",
+      "fact_ids": [
+        "F002"
+      ],
+      "frame_id": "asset-1-f1",
+      "pts_ms": 3000
+    },
+    {
+      "asset_id": "V006",
+      "candidate_id": "P010",
+      "fact_ids": [
+        "F006"
+      ],
+      "frame_id": "asset-5-f1",
+      "pts_ms": 5000
+    },
+    {
+      "asset_id": "V002",
+      "candidate_id": "P011",
+      "fact_ids": [
+        "F002"
+      ],
+      "frame_id": "asset-1-f2",
+      "pts_ms": 5000
+    },
+    {
+      "asset_id": "V006",
+      "candidate_id": "P012",
+      "fact_ids": [
+        "F006"
+      ],
+      "frame_id": "asset-5-f2",
+      "pts_ms": 9000
+    }
+  ],
+  "shown": {
+    "V001": [
+      "asset-0-f0"
+    ],
+    "V002": [
+      "asset-1-f0",
+      "asset-1-f1",
+      "asset-1-f2"
+    ],
+    "V003": [
+      "asset-2-f0"
+    ],
+    "V004": [
+      "asset-3-f0"
+    ],
+    "V005": [
+      "asset-4-f0"
+    ],
+    "V006": [
+      "asset-5-f0",
+      "asset-5-f1",
+      "asset-5-f2"
+    ],
+    "V007": [
+      "asset-6-f0"
+    ],
+    "V008": [
+      "asset-7-f0"
+    ]
+  },
+  "scene_clues": {
+    "candidate_scene_clues": {
+      "P001": [
+        {
+          "asset_id": "V001",
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F001",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "画面显示一条铺有蓝色涂层的自行车道，左侧为金属护栏，右侧紧邻机动车道。背景可见高架轨道结构及带有绿色标识的建筑物。"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "DOMINANT",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F001",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "画面显示一条铺有蓝色涂层的自行车道，左侧为金属护栏，右侧紧邻机动车道。背景可见高架轨道结构及带有绿色标识的建筑物。"
+            }
+          ],
+          "scene_observation_id": "FO:P001",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "supported_fact_ids": [
+            "F001"
+          ],
+          "text": "画面展示了一条铺有蓝色涂层的自行车道，左侧设有金属护栏，右侧紧邻机动车道。背景中可见高架轨道结构及带有绿色标识的建筑物。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P002": [
+        {
+          "asset_id": "V002",
+          "evidence_frame_ids": [
+            "asset-1-f0"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F002",
+              "not_visible_quote": "随后驶出绿植区域，接近一个路口，路边停放着车辆（f1），最终到达与主干道交汇处的蓝色自行车道入口（f2）。",
+              "support": "PARTIAL",
+              "visible_quote": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，穿过一座混凝土桥梁底部（f0）。"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "READABLE",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F002",
+              "not_visible_quote": "随后驶出绿植区域，接近一个路口，路边停放着车辆（f1），最终到达与主干道交汇处的蓝色自行车道入口（f2）。",
+              "support": "PARTIAL",
+              "visible_quote": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，穿过一座混凝土桥梁底部（f0）。"
+            }
+          ],
+          "scene_observation_id": "FO:P002",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "supported_fact_ids": [
+            "F002"
+          ],
+          "text": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，穿过一座混凝土桥梁底部。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P003": [
+        {
+          "asset_id": "V003",
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F003",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "画面显示一条狭窄的乡村碎石道路，左侧是茂密的竹林和杂草，右侧有电线杆。远处有一栋房屋。画面极底部隐约可见黑色物体边缘（疑似车把），暗示移动视角。"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "READABLE",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F003",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "画面显示一条狭窄的乡村碎石道路，左侧是茂密的竹林和杂草，右侧有电线杆。远处有一栋房屋。画面极底部隐约可见黑色物体边缘（疑似车把），暗示移动视角。"
+            }
+          ],
+          "scene_observation_id": "FO:P003",
+          "subject_role": "BACKGROUND",
+          "supported_fact_ids": [
+            "F003"
+          ],
+          "text": "画面显示一条狭窄的乡村碎石道路，左侧是茂密的竹林和杂草，右侧有电线杆。远处有一栋房屋。画面极底部隐约可见黑色物体边缘（疑似车把），暗示移动视角。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P004": [
+        {
+          "asset_id": "V004",
+          "evidence_frame_ids": [
+            "asset-3-f0"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F004",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角显示骑行者双手握住装有码表的自行车车把，沿着一条有白色护栏的专用道行驶。右侧机动车道上有一辆黑色轿车驶过，远处可见高架桥结构。"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "READABLE",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F004",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角显示骑行者双手握住装有码表的自行车车把，沿着一条有白色护栏的专用道行驶。右侧机动车道上有一辆黑色轿车驶过，远处可见高架桥结构。"
+            }
+          ],
+          "scene_observation_id": "FO:P004",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "supported_fact_ids": [
+            "F004"
+          ],
+          "text": "第一人称视角显示骑行者双手握住装有码表的自行车车把，沿着一条有白色护栏的专用道行驶。右侧机动车道上有一辆黑色轿车驶过，远处可见高架桥结构。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P005": [
+        {
+          "asset_id": "V005",
+          "evidence_frame_ids": [
+            "asset-4-f0"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F005",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "画面呈现骑行者在路口前的视角，前方地面有明显的斑马线标线，左侧立柱上挂有交通信号灯。街道两旁分布着民居建筑、电线杆及蓝色路牌。"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "READABLE",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F005",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "画面呈现骑行者在路口前的视角，前方地面有明显的斑马线标线，左侧立柱上挂有交通信号灯。街道两旁分布着民居建筑、电线杆及蓝色路牌。"
+            }
+          ],
+          "scene_observation_id": "FO:P005",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "supported_fact_ids": [
+            "F005"
+          ],
+          "text": "画面呈现骑行者在路口前的视角，前方地面有明显的斑马线标线，左侧立柱上挂有交通信号灯。街道两旁分布着民居建筑、电线杆及蓝色路牌。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P006": [
+        {
+          "asset_id": "V006",
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F006",
+              "not_visible_quote": "、路边竖立的黄色警示牌以及一辆停在路边的白色轻型卡车。",
+              "support": "PARTIAL",
+              "visible_quote": "视频记录骑行过程，环境为两侧植被茂密的乡间公路。沿途依次可见巨大的高压输电塔"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "READABLE",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F006",
+              "not_visible_quote": "、路边竖立的黄色警示牌以及一辆停在路边的白色轻型卡车。",
+              "support": "PARTIAL",
+              "visible_quote": "视频记录骑行过程，环境为两侧植被茂密的乡间公路。沿途依次可见巨大的高压输电塔"
+            }
+          ],
+          "scene_observation_id": "FO:P006",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "supported_fact_ids": [
+            "F006"
+          ],
+          "text": "视频记录骑行过程，环境为两侧植被茂密的乡间公路。沿途依次可见巨大的高压输电塔。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P007": [
+        {
+          "asset_id": "V007",
+          "evidence_frame_ids": [
+            "asset-6-f0"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F007",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "画面显示一条狭窄的铺装道路，左侧有一座红瓦屋顶的建筑和茂密的植被。"
+            },
+            {
+              "fact_id": "F008",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "右侧可见电线杆和现代建筑的一角。"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "READABLE",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F007",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "画面显示一条狭窄的铺装道路，左侧有一座红瓦屋顶的建筑和茂密的植被。"
+            },
+            {
+              "fact_id": "F008",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "右侧可见电线杆和现代建筑的一角。"
+            }
+          ],
+          "scene_observation_id": "FO:P007",
+          "subject_role": "BACKGROUND",
+          "supported_fact_ids": [
+            "F007",
+            "F008"
+          ],
+          "text": "画面显示一条狭窄的铺装道路，左侧有一座红瓦屋顶的建筑和茂密的植被。右侧可见电线杆和现代建筑的一角。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P008": [
+        {
+          "asset_id": "V008",
+          "evidence_frame_ids": [
+            "asset-7-f0"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F009",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角展示双手握着自行车车把，正在林间土路上骑行。"
+            },
+            {
+              "fact_id": "F010",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "前方是蜿蜒的泥土小径，两侧被高大的树木包围。"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "READABLE",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F009",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角展示双手握着自行车车把，正在林间土路上骑行。"
+            },
+            {
+              "fact_id": "F010",
+              "not_visible_quote": "",
+              "support": "VISIBLE",
+              "visible_quote": "前方是蜿蜒的泥土小径，两侧被高大的树木包围。"
+            }
+          ],
+          "scene_observation_id": "FO:P008",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "supported_fact_ids": [
+            "F009",
+            "F010"
+          ],
+          "text": "第一人称视角展示双手握着自行车车把，正在林间土路上骑行。前方是蜿蜒的泥土小径，两侧被高大的树木包围。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P009": [
+        {
+          "asset_id": "V002",
+          "evidence_frame_ids": [
+            "asset-1-f1"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F002",
+              "not_visible_quote": "穿过一座混凝土桥梁底部（f0）。随后驶出绿植区域，接近一个路口，路边停放着车辆（f1），最终到达与主干道交汇处的蓝色自行车道入口（f2）。",
+              "support": "PARTIAL",
+              "visible_quote": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "READABLE",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F002",
+              "not_visible_quote": "穿过一座混凝土桥梁底部（f0）。随后驶出绿植区域，接近一个路口，路边停放着车辆（f1），最终到达与主干道交汇处的蓝色自行车道入口（f2）。",
+              "support": "PARTIAL",
+              "visible_quote": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行"
+            }
+          ],
+          "scene_observation_id": "FO:P009",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "supported_fact_ids": [
+            "F002"
+          ],
+          "text": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，接近一个路口，路边停放着车辆。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P010": [],
+      "P011": [
+        {
+          "asset_id": "V002",
+          "evidence_frame_ids": [
+            "asset-1-f2"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F002",
+              "not_visible_quote": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，穿过一座混凝土桥梁底部（f0）。随后驶出绿植区域，接近一个路口，路边停放着车辆（f1）",
+              "support": "PARTIAL",
+              "visible_quote": "最终到达与主干道交汇处的蓝色自行车道入口（f2）。"
+            }
+          ],
+          "occlusion": "NONE",
+          "prominence": "READABLE",
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "raw_fact_supports": [
+            {
+              "fact_id": "F002",
+              "not_visible_quote": "第一人称视角骑行视频，画面下方可见车把和手臂。镜头沿植被茂密的铺装小路前行，穿过一座混凝土桥梁底部（f0）。随后驶出绿植区域，接近一个路口，路边停放着车辆（f1）",
+              "support": "PARTIAL",
+              "visible_quote": "最终到达与主干道交汇处的蓝色自行车道入口（f2）。"
+            }
+          ],
+          "scene_observation_id": "FO:P011",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "supported_fact_ids": [
+            "F002"
+          ],
+          "text": "画面展示了与主干道交汇处的蓝色自行车道入口，旁边有停放的车辆。",
+          "visibility": "CLEAR"
+        }
+      ],
+      "P012": []
+    },
+    "evidence_scope": "DEDICATED_PER_IMAGE_MODEL_OBSERVATION_WITH_FACT_QUOTES_NOT_VISUAL_GROUND_TRUTH",
+    "issues": [
+      {
+        "asset_id": "V006",
+        "candidate_id": "P010",
+        "frame_id": "asset-5-f1",
+        "reason": "Image subject lacks a directly supported fact fragment",
+        "status": "UNVERIFIED"
+      },
+      {
+        "asset_id": "V006",
+        "candidate_id": "P012",
+        "frame_id": "asset-5-f2",
+        "reason": "Image subject lacks a directly supported fact fragment",
+        "status": "UNVERIFIED"
+      }
+    ]
+  }
+}

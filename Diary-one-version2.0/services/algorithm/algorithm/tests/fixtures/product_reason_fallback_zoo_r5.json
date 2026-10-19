@@ -1,0 +1,1239 @@
+{
+  "source_result_sha256": "ebd5b374c357b410ae1b8a0b2f2e2329b07313ac9d861eef33d7f4136cd62c88",
+  "source": "R5 real saved zoo result, minimal projection; not edited source result",
+  "chapters": [
+    {
+      "id": "9a69aa5b-d7d6-519e-b1b5-847ef2a25cb2",
+      "title": "岩石上的灵长类与原木间的小熊猫",
+      "story": "一只棕色灵长类动物坐在岩石边缘，背景是绘有绿色植被的墙壁。水族箱里，一条橙色金鱼游动于绿色水草和鹅卵石之间。浅色地面上散布着灰黑与浅褐色的绵羊。",
+      "preview_story": "一只棕色灵长类动物坐在岩石边缘，背景是绘有绿色植被的墙壁。",
+      "title_claim_ids": [
+        "F002",
+        "F008"
+      ],
+      "time_label": "",
+      "tags": [],
+      "moment_ids": [
+        "5ee1b3f1-0db3-5900-8bce-fd2f65883674",
+        "f66e0e75-25b9-5968-b052-505935e32234",
+        "a23e2795-73a3-5a7b-b44a-f2e1e77695ad",
+        "8082fa91-1851-560e-9674-6d4843f9c573",
+        "67d20dd1-2371-5f29-81ac-7d04fe239884"
+      ],
+      "hero_asset_id": "asset-5",
+      "selection_focus": {
+        "experience_kind": "ZOO_ANIMALS",
+        "focus": "在动物园园区内观察陆生动物（绵羊、灵长类、小熊猫等）及水族馆区域的鱼类展示。",
+        "fact_ids": [
+          "F002",
+          "F008",
+          "F009"
+        ]
+      },
+      "hero_frame_id": "asset-5-f0",
+      "hero_reason": "A red panda walking along a thick wooden log in an enclosure with a pavilion structure.",
+      "selected_media": [
+        {
+          "asset_id": "asset-1",
+          "source_asset_id": "asset-1",
+          "media_kind": "VIDEO",
+          "role": "SUPPORT",
+          "evidence_frame_ids": [
+            "asset-1-f2",
+            "asset-1-f0",
+            "asset-1-f1"
+          ],
+          "start_ms": 0,
+          "end_ms": 10000,
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "focus_pts_ms": null,
+          "source_sequence_index": 1,
+          "representative_frame_id": "asset-1-f2",
+          "selection_fact_ids": [
+            "F002"
+          ],
+          "selection_reason": "A close-up of a brown monkey grooming itself while sitting on a rock.",
+          "selection_role": "SUPPORT"
+        },
+        {
+          "asset_id": "asset-2",
+          "source_asset_id": "asset-2",
+          "media_kind": "VIDEO",
+          "role": "SUPPORT",
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "start_ms": 0,
+          "end_ms": 10000,
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "focus_pts_ms": null,
+          "source_sequence_index": 2,
+          "representative_frame_id": "asset-2-f0",
+          "selection_fact_ids": [
+            "F003"
+          ],
+          "selection_reason": "A glass aquarium exhibit containing fish swimming among driftwood and white sand substrate.",
+          "selection_role": "SUPPORT"
+        },
+        {
+          "asset_id": "asset-3",
+          "source_asset_id": "asset-3",
+          "media_kind": "VIDEO",
+          "role": "SUPPORT",
+          "evidence_frame_ids": [
+            "asset-3-f1",
+            "asset-3-f0"
+          ],
+          "start_ms": 0,
+          "end_ms": 10000,
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "focus_pts_ms": null,
+          "source_sequence_index": 3,
+          "representative_frame_id": "asset-3-f1",
+          "selection_fact_ids": [
+            "F005"
+          ],
+          "selection_reason": "Multiple small animals resting on rocks and stumps in a sandy enclosure with a painted landscape background.",
+          "selection_role": "SUPPORT"
+        },
+        {
+          "asset_id": "asset-5",
+          "source_asset_id": "asset-5",
+          "media_kind": "VIDEO",
+          "role": "HERO",
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "start_ms": 0,
+          "end_ms": 10000,
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "focus_pts_ms": null,
+          "source_sequence_index": 5,
+          "representative_frame_id": "asset-5-f0",
+          "selection_fact_ids": [
+            "F007",
+            "F008"
+          ],
+          "selection_reason": "A red panda walking along a thick wooden log in an enclosure with a pavilion structure.",
+          "selection_role": "PRIMARY"
+        },
+        {
+          "asset_id": "asset-6",
+          "source_asset_id": "asset-6",
+          "media_kind": "VIDEO",
+          "role": "SUPPORT",
+          "evidence_frame_ids": [
+            "asset-6-f2",
+            "asset-6-f0"
+          ],
+          "start_ms": 0,
+          "end_ms": 10000,
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "focus_pts_ms": null,
+          "source_sequence_index": 6,
+          "representative_frame_id": "asset-6-f2",
+          "selection_fact_ids": [
+            "F009"
+          ],
+          "selection_reason": "Close-up view inside an aquarium tank showing a goldfish, artificial plants, and pebbles.",
+          "selection_role": "SUPPORT"
+        }
+      ],
+      "claims": [
+        {
+          "fact_id": "e4ed4fa1-d5e1-5325-ae0b-485f767ec0ac",
+          "text": "镜头由远及近推向一只坐在岩石边缘的棕色灵长类动物，背景为绘有绿色植被的墙壁，远处石堆上隐约可见其他同类。",
+          "evidence_frame_ids": [
+            "asset-1-f0",
+            "asset-1-f1",
+            "asset-1-f2"
+          ],
+          "support_grade": "STRONG",
+          "id": "F002",
+          "asset_id": "V002",
+          "source_asset_id": "asset-1",
+          "observation_id": "77cded5a-6f2a-5e9a-8070-a5af7822bef5",
+          "frame_pts_ms": [
+            1000,
+            2000,
+            7000
+          ],
+          "temporal_support": "CHANGE",
+          "visual_reviewed": true,
+          "original_text": "镜头由远及近推向一只坐在岩石边缘的棕色灵长类动物，背景为绘有绿色植被的墙壁，远处石堆上隐约可见其他同类。"
+        },
+        {
+          "fact_id": "ffb6744b-1a17-522c-a996-a71e1c1ca363",
+          "text": "一只红褐色的小型动物（外观特征符合小熊猫）正位于横跨画面的粗大原木上。",
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "support_grade": "STRONG",
+          "id": "F008",
+          "asset_id": "V006",
+          "source_asset_id": "asset-5",
+          "observation_id": "37c9caa4-ebbc-583f-95e3-af62417f544f",
+          "frame_pts_ms": [
+            4000
+          ],
+          "temporal_support": "STATE",
+          "visual_reviewed": true,
+          "original_text": "一只红褐色的小型动物（外观特征符合小熊猫）正位于横跨画面的粗大原木上。"
+        },
+        {
+          "fact_id": "4a5ffcc1-fba4-594d-88d1-52269cf7e31a",
+          "text": "视频展示了一个半户外的长廊区域，一侧排列着多个玻璃水族箱。一名穿蓝色T恤的男子站在通道中间面向镜头。随后镜头转向并推近其中一个水族箱，清晰展示了内部的一条橙色金鱼、绿色水草和底部的鹅卵石。",
+          "evidence_frame_ids": [
+            "asset-6-f0",
+            "asset-6-f2"
+          ],
+          "support_grade": "STRONG",
+          "id": "F009",
+          "asset_id": "V007",
+          "source_asset_id": "asset-6",
+          "observation_id": "0f8c73ef-0e28-56da-9ae8-2b505fa63f46",
+          "frame_pts_ms": [
+            1000,
+            9000
+          ],
+          "temporal_support": "CHANGE",
+          "visual_reviewed": true,
+          "original_text": "视频展示了一个半户外的长廊区域，一侧排列着多个玻璃水族箱。一名穿蓝色T恤的男子站在通道中间面向镜头。随后镜头转向并推近其中一个水族箱，清晰展示了内部的一条橙色金鱼、绿色水草和底部的鹅卵石。"
+        },
+        {
+          "fact_id": "89805ef4-477a-5299-adfa-00da1269e199",
+          "text": "在带有白色顶棚的半露天围栏内，可见数只绵羊（包括灰黑色和浅褐色）散布在浅色地面上，地面散落着深色颗粒状粪便。",
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ],
+          "support_grade": "STRONG",
+          "id": "F001",
+          "asset_id": "V001",
+          "source_asset_id": "asset-0",
+          "observation_id": "718ef5b1-035a-5c41-9118-c29dcd8e950e",
+          "frame_pts_ms": [
+            3000
+          ],
+          "temporal_support": "STATE",
+          "visual_reviewed": true,
+          "original_text": "在带有白色顶棚的半露天围栏内，可见数只绵羊（包括灰黑色和浅褐色）散布在浅色地面上，地面散落着深色颗粒状粪便。"
+        },
+        {
+          "fact_id": "45c1dd35-3b40-56cc-a6a4-ed586b273f9d",
+          "text": "画面展示了一个包含木质栈道、凉亭结构和茂密植被的户外动物围栏场景。",
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "support_grade": "STRONG",
+          "id": "F007",
+          "asset_id": "V006",
+          "source_asset_id": "asset-5",
+          "observation_id": "37c9caa4-ebbc-583f-95e3-af62417f544f",
+          "frame_pts_ms": [
+            4000
+          ],
+          "temporal_support": "STATE",
+          "visual_reviewed": true,
+          "original_text": "画面展示了一个包含木质栈道、凉亭结构和茂密植被的户外动物围栏场景。"
+        },
+        {
+          "fact_id": "1d00efcc-18fa-5863-96af-3c66e46ba0c0",
+          "text": "画面显示多只小型动物在沙地和木桩间休息或活动，背景绘有草原风景。",
+          "evidence_frame_ids": [
+            "asset-3-f1"
+          ],
+          "support_grade": "STRONG",
+          "id": "F005",
+          "asset_id": "V004",
+          "source_asset_id": "asset-3",
+          "observation_id": "2d14c76f-2ce5-5c8f-9220-dd76ae09cb62",
+          "frame_pts_ms": [
+            8000
+          ],
+          "temporal_support": "STATE",
+          "visual_reviewed": true,
+          "original_text": "镜头移动后显示多只小型动物在沙地和木桩间休息或活动，背景绘有草原风景。"
+        },
+        {
+          "fact_id": "b7c0e0ec-0c5f-5b6a-8c98-a0e6dd1846fc",
+          "text": "透过玻璃展缸可见水底铺设白沙、枯木造景及多条游动的鱼；上方悬挂有说明牌，左侧有金属扶手栏杆。",
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "support_grade": "MODERATE",
+          "id": "F003",
+          "asset_id": "V003",
+          "source_asset_id": "asset-2",
+          "observation_id": "22cdc85a-fbfb-587e-a36a-c781b32dbcc3",
+          "frame_pts_ms": [
+            5000
+          ],
+          "temporal_support": "STATE",
+          "visual_reviewed": true,
+          "original_text": "透过玻璃展缸可见水底铺设白沙、枯木造景及多条游动的鱼；上方悬挂有说明牌，左侧有金属扶手栏杆。"
+        }
+      ],
+      "sentence_claims": [
+        {
+          "text": "一只棕色灵长类动物坐在岩石边缘，背景是绘有绿色植被的墙壁。",
+          "fact_ids": [
+            "F002"
+          ]
+        },
+        {
+          "text": "水族箱里，一条橙色金鱼游动于绿色水草和鹅卵石之间。",
+          "fact_ids": [
+            "F009"
+          ]
+        },
+        {
+          "text": "浅色地面上散布着灰黑与浅褐色的绵羊。",
+          "fact_ids": [
+            "F001"
+          ]
+        }
+      ],
+      "copy_review_flags": [],
+      "highlights": [],
+      "publication_status": "STAGED_PREVIEW_VALIDATED"
+    },
+    {
+      "id": "1e45de61-8238-51eb-ae49-af47c40fcbf6",
+      "title": "被绿树包围的蜿蜒小径",
+      "story": "穿过公园或庭院，前方是蜿蜒的铺装小径。",
+      "preview_story": "穿过公园或庭院，前方是蜿蜒的铺装小径。",
+      "title_claim_ids": [
+        "F010"
+      ],
+      "time_label": "",
+      "tags": [
+        "ACTIVITY.WALKING",
+        "SETTING.OUTDOOR_NATURE"
+      ],
+      "moment_ids": [
+        "712b6f48-d750-5f6d-839c-340a53d93870"
+      ],
+      "hero_asset_id": "asset-7",
+      "selection_focus": {
+        "experience_kind": "NATURE_WALK",
+        "focus": "第一人称视角穿过植被茂密的公园或庭院铺装小径。",
+        "fact_ids": [
+          "F010"
+        ]
+      },
+      "hero_frame_id": "asset-7-f1",
+      "hero_reason": "A first-person perspective shot moving along a paved path surrounded by dense green trees.",
+      "selected_media": [
+        {
+          "asset_id": "asset-7",
+          "source_asset_id": "asset-7",
+          "media_kind": "VIDEO",
+          "role": "HERO",
+          "evidence_frame_ids": [
+            "asset-7-f1",
+            "asset-7-f0"
+          ],
+          "start_ms": 0,
+          "end_ms": 10000,
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "focus_pts_ms": null,
+          "source_sequence_index": 7,
+          "representative_frame_id": "asset-7-f1",
+          "selection_fact_ids": [
+            "F010"
+          ],
+          "selection_reason": "A first-person perspective shot moving along a paved path surrounded by dense green trees.",
+          "selection_role": "PRIMARY"
+        }
+      ],
+      "claims": [
+        {
+          "fact_id": "b00fbc0d-6ae0-5d62-8c34-998f1cf28e49",
+          "text": "视频以第一人称视角拍摄了一条穿过公园或庭院的蜿蜒铺装小径。起初画面左侧可见石砌花坛和部分建筑，随着镜头沿路径向前推进，视野逐渐被茂密的绿色树木和灌木丛所包围。",
+          "evidence_frame_ids": [
+            "asset-7-f0",
+            "asset-7-f1"
+          ],
+          "support_grade": "STRONG",
+          "id": "F010",
+          "asset_id": "V008",
+          "source_asset_id": "asset-7",
+          "observation_id": "e202ed3b-6165-51c1-b691-c5274ca0bc32",
+          "frame_pts_ms": [
+            1000,
+            5000
+          ],
+          "temporal_support": "CHANGE",
+          "visual_reviewed": true,
+          "original_text": "视频以第一人称视角拍摄了一条穿过公园或庭院的蜿蜒铺装小径。起初画面左侧可见石砌花坛和部分建筑，随着镜头沿路径向前推进，视野逐渐被茂密的绿色树木和灌木丛所包围。"
+        }
+      ],
+      "sentence_claims": [
+        {
+          "text": "穿过公园或庭院，前方是蜿蜒的铺装小径。",
+          "fact_ids": [
+            "F010"
+          ]
+        }
+      ],
+      "copy_review_flags": [],
+      "highlights": [],
+      "publication_status": "STAGED_PREVIEW_VALIDATED"
+    }
+  ],
+  "packet": {
+    "final_verification_input": {
+      "mode": "IMAGE_BOUND_CLAIM_BATCHES_V01",
+      "locale": "zh-Hans",
+      "time_basis": "IMPORT_ORDER_ONLY; clip-relative PTS are not capture time",
+      "claims": [
+        {
+          "claim_id": "Q001",
+          "memory_id": "C01",
+          "kind": "CHAPTER",
+          "field": "TITLE",
+          "source_index": null,
+          "text": "岩石上的灵长类与原木间的小熊猫",
+          "fact_ids": [
+            "F002",
+            "F008"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F002",
+              "asset_id": "V002",
+              "source_asset_id": "asset-1",
+              "frame_id": "asset-1-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 1000
+            },
+            {
+              "fact_id": "F002",
+              "asset_id": "V002",
+              "source_asset_id": "asset-1",
+              "frame_id": "asset-1-f1",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 2000
+            },
+            {
+              "fact_id": "F002",
+              "asset_id": "V002",
+              "source_asset_id": "asset-1",
+              "frame_id": "asset-1-f2",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 7000
+            },
+            {
+              "fact_id": "F008",
+              "asset_id": "V006",
+              "source_asset_id": "asset-5",
+              "frame_id": "asset-5-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 4000
+            }
+          ],
+          "batch_id": "B001"
+        },
+        {
+          "claim_id": "Q002",
+          "memory_id": "C01",
+          "kind": "CHAPTER",
+          "field": "SENTENCE",
+          "source_index": 0,
+          "text": "一只棕色灵长类动物坐在岩石边缘，背景是绘有绿色植被的墙壁。",
+          "fact_ids": [
+            "F002"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F002",
+              "asset_id": "V002",
+              "source_asset_id": "asset-1",
+              "frame_id": "asset-1-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 1000
+            },
+            {
+              "fact_id": "F002",
+              "asset_id": "V002",
+              "source_asset_id": "asset-1",
+              "frame_id": "asset-1-f1",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 2000
+            },
+            {
+              "fact_id": "F002",
+              "asset_id": "V002",
+              "source_asset_id": "asset-1",
+              "frame_id": "asset-1-f2",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 7000
+            }
+          ],
+          "batch_id": "B002"
+        },
+        {
+          "claim_id": "Q003",
+          "memory_id": "C01",
+          "kind": "CHAPTER",
+          "field": "SENTENCE",
+          "source_index": 1,
+          "text": "红褐色小熊猫位于横跨画面的粗大原木上。",
+          "fact_ids": [
+            "F008"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F008",
+              "asset_id": "V006",
+              "source_asset_id": "asset-5",
+              "frame_id": "asset-5-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 4000
+            }
+          ],
+          "batch_id": "B003"
+        },
+        {
+          "claim_id": "Q004",
+          "memory_id": "C01",
+          "kind": "CHAPTER",
+          "field": "SENTENCE",
+          "source_index": 2,
+          "text": "水族箱里，一条橙色金鱼游动于绿色水草和鹅卵石之间。",
+          "fact_ids": [
+            "F009"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F009",
+              "asset_id": "V007",
+              "source_asset_id": "asset-6",
+              "frame_id": "asset-6-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 1000
+            },
+            {
+              "fact_id": "F009",
+              "asset_id": "V007",
+              "source_asset_id": "asset-6",
+              "frame_id": "asset-6-f2",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 9000
+            }
+          ],
+          "batch_id": "B004"
+        },
+        {
+          "claim_id": "Q005",
+          "memory_id": "C01",
+          "kind": "CHAPTER",
+          "field": "SENTENCE",
+          "source_index": 3,
+          "text": "浅色地面上散布着灰黑与浅褐色的绵羊。",
+          "fact_ids": [
+            "F001"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F001",
+              "asset_id": "V001",
+              "source_asset_id": "asset-0",
+              "frame_id": "asset-0-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 3000
+            }
+          ],
+          "batch_id": "B005"
+        },
+        {
+          "claim_id": "Q006",
+          "memory_id": "C02",
+          "kind": "CHAPTER",
+          "field": "TITLE",
+          "source_index": null,
+          "text": "被绿树包围的蜿蜒小径",
+          "fact_ids": [
+            "F010"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F010",
+              "asset_id": "V008",
+              "source_asset_id": "asset-7",
+              "frame_id": "asset-7-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 1000
+            },
+            {
+              "fact_id": "F010",
+              "asset_id": "V008",
+              "source_asset_id": "asset-7",
+              "frame_id": "asset-7-f1",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 5000
+            }
+          ],
+          "batch_id": "B006"
+        },
+        {
+          "claim_id": "Q007",
+          "memory_id": "C02",
+          "kind": "CHAPTER",
+          "field": "SENTENCE",
+          "source_index": 0,
+          "text": "穿过公园或庭院，前方是蜿蜒的铺装小径。",
+          "fact_ids": [
+            "F010"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F010",
+              "asset_id": "V008",
+              "source_asset_id": "asset-7",
+              "frame_id": "asset-7-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 1000
+            },
+            {
+              "fact_id": "F010",
+              "asset_id": "V008",
+              "source_asset_id": "asset-7",
+              "frame_id": "asset-7-f1",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 5000
+            }
+          ],
+          "batch_id": "B006"
+        },
+        {
+          "claim_id": "Q008",
+          "memory_id": "C02",
+          "kind": "CHAPTER",
+          "field": "SENTENCE",
+          "source_index": 1,
+          "text": "随着前行，视野逐渐被茂密的绿色树木和灌木丛所包围。",
+          "fact_ids": [
+            "F010"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F010",
+              "asset_id": "V008",
+              "source_asset_id": "asset-7",
+              "frame_id": "asset-7-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 1000
+            },
+            {
+              "fact_id": "F010",
+              "asset_id": "V008",
+              "source_asset_id": "asset-7",
+              "frame_id": "asset-7-f1",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 5000
+            }
+          ],
+          "batch_id": "B006"
+        },
+        {
+          "claim_id": "Q009",
+          "memory_id": "M01",
+          "kind": "HIGHLIGHT",
+          "field": "TITLE",
+          "source_index": null,
+          "text": "原木上的小熊猫",
+          "fact_ids": [
+            "F008"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F008",
+              "asset_id": "V006",
+              "source_asset_id": "asset-5",
+              "frame_id": "asset-5-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 4000
+            }
+          ],
+          "batch_id": "B003"
+        },
+        {
+          "claim_id": "Q010",
+          "memory_id": "M01",
+          "kind": "HIGHLIGHT",
+          "field": "SENTENCE",
+          "source_index": 0,
+          "text": "红褐色小熊猫位于横跨画面的粗大原木上",
+          "fact_ids": [
+            "F008"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F008",
+              "asset_id": "V006",
+              "source_asset_id": "asset-5",
+              "frame_id": "asset-5-f0",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 4000
+            }
+          ],
+          "batch_id": "B003"
+        },
+        {
+          "claim_id": "Q011",
+          "memory_id": "M02",
+          "kind": "HIGHLIGHT",
+          "field": "TITLE",
+          "source_index": null,
+          "text": "水草间的橙色金鱼",
+          "fact_ids": [
+            "F009"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F009",
+              "asset_id": "V007",
+              "source_asset_id": "asset-6",
+              "frame_id": "asset-6-f2",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 9000
+            }
+          ],
+          "batch_id": "B007"
+        },
+        {
+          "claim_id": "Q012",
+          "memory_id": "M02",
+          "kind": "HIGHLIGHT",
+          "field": "SENTENCE",
+          "source_index": 0,
+          "text": "水族箱内一条橙色金鱼游动于绿色水草和鹅卵石间",
+          "fact_ids": [
+            "F009"
+          ],
+          "frame_refs": [
+            {
+              "fact_id": "F009",
+              "asset_id": "V007",
+              "source_asset_id": "asset-6",
+              "frame_id": "asset-6-f2",
+              "media_kind": "VIDEO",
+              "source_timestamp_ms": 9000
+            }
+          ],
+          "batch_id": "B007"
+        }
+      ],
+      "images_available_for_binding": true,
+      "actual_images_attached": true,
+      "final_evidence_scope": {
+        "version": "FINAL_COPY_SHOWN_FRAME_SCOPE_V01",
+        "max_frames": 24,
+        "bundle_root": "/Users/youtang/Documents/Nexleap/work_logs/evidence/chapter-v071-20261019/inputs/tokyo_zoo__group_01",
+        "scope_notice": "Images are available evidence, not verified visual truth. Judge each memory only from its own shown_refs. Unshown facts cannot establish visual relations.",
+        "shown_frames": [
+          {
+            "asset_id": "V001",
+            "source_asset_id": "asset-0",
+            "frame_id": "asset-0-f0"
+          },
+          {
+            "asset_id": "V008",
+            "source_asset_id": "asset-7",
+            "frame_id": "asset-7-f0"
+          },
+          {
+            "asset_id": "V006",
+            "source_asset_id": "asset-5",
+            "frame_id": "asset-5-f0"
+          },
+          {
+            "asset_id": "V007",
+            "source_asset_id": "asset-6",
+            "frame_id": "asset-6-f2"
+          },
+          {
+            "asset_id": "V002",
+            "source_asset_id": "asset-1",
+            "frame_id": "asset-1-f0"
+          },
+          {
+            "asset_id": "V008",
+            "source_asset_id": "asset-7",
+            "frame_id": "asset-7-f1"
+          },
+          {
+            "asset_id": "V002",
+            "source_asset_id": "asset-1",
+            "frame_id": "asset-1-f1"
+          },
+          {
+            "asset_id": "V002",
+            "source_asset_id": "asset-1",
+            "frame_id": "asset-1-f2"
+          },
+          {
+            "asset_id": "V003",
+            "source_asset_id": "asset-2",
+            "frame_id": "asset-2-f0"
+          },
+          {
+            "asset_id": "V004",
+            "source_asset_id": "asset-3",
+            "frame_id": "asset-3-f0"
+          },
+          {
+            "asset_id": "V004",
+            "source_asset_id": "asset-3",
+            "frame_id": "asset-3-f1"
+          },
+          {
+            "asset_id": "V005",
+            "source_asset_id": "asset-4",
+            "frame_id": "asset-4-f0"
+          },
+          {
+            "asset_id": "V007",
+            "source_asset_id": "asset-6",
+            "frame_id": "asset-6-f0"
+          }
+        ],
+        "memories": [
+          {
+            "id": "C01",
+            "kind": "CHAPTER",
+            "shown_frame_ids": [
+              "asset-0-f0",
+              "asset-1-f0",
+              "asset-1-f1",
+              "asset-1-f2",
+              "asset-2-f0",
+              "asset-3-f0",
+              "asset-3-f1",
+              "asset-4-f0",
+              "asset-5-f0",
+              "asset-6-f0",
+              "asset-6-f2"
+            ],
+            "shown_refs": [
+              {
+                "fact_id": "F001",
+                "asset_id": "V001",
+                "source_asset_id": "asset-0",
+                "frame_id": "asset-0-f0"
+              },
+              {
+                "fact_id": "F002",
+                "asset_id": "V002",
+                "source_asset_id": "asset-1",
+                "frame_id": "asset-1-f0"
+              },
+              {
+                "fact_id": "F002",
+                "asset_id": "V002",
+                "source_asset_id": "asset-1",
+                "frame_id": "asset-1-f1"
+              },
+              {
+                "fact_id": "F002",
+                "asset_id": "V002",
+                "source_asset_id": "asset-1",
+                "frame_id": "asset-1-f2"
+              },
+              {
+                "fact_id": "F003",
+                "asset_id": "V003",
+                "source_asset_id": "asset-2",
+                "frame_id": "asset-2-f0"
+              },
+              {
+                "fact_id": "F004",
+                "asset_id": "V004",
+                "source_asset_id": "asset-3",
+                "frame_id": "asset-3-f0"
+              },
+              {
+                "fact_id": "F005",
+                "asset_id": "V004",
+                "source_asset_id": "asset-3",
+                "frame_id": "asset-3-f1"
+              },
+              {
+                "fact_id": "F006",
+                "asset_id": "V005",
+                "source_asset_id": "asset-4",
+                "frame_id": "asset-4-f0"
+              },
+              {
+                "fact_id": "F007",
+                "asset_id": "V006",
+                "source_asset_id": "asset-5",
+                "frame_id": "asset-5-f0"
+              },
+              {
+                "fact_id": "F008",
+                "asset_id": "V006",
+                "source_asset_id": "asset-5",
+                "frame_id": "asset-5-f0"
+              },
+              {
+                "fact_id": "F009",
+                "asset_id": "V007",
+                "source_asset_id": "asset-6",
+                "frame_id": "asset-6-f0"
+              },
+              {
+                "fact_id": "F009",
+                "asset_id": "V007",
+                "source_asset_id": "asset-6",
+                "frame_id": "asset-6-f2"
+              }
+            ],
+            "unshown_refs": [],
+            "visual_check_available": true
+          },
+          {
+            "id": "C02",
+            "kind": "CHAPTER",
+            "shown_frame_ids": [
+              "asset-7-f0",
+              "asset-7-f1"
+            ],
+            "shown_refs": [
+              {
+                "fact_id": "F010",
+                "asset_id": "V008",
+                "source_asset_id": "asset-7",
+                "frame_id": "asset-7-f0"
+              },
+              {
+                "fact_id": "F010",
+                "asset_id": "V008",
+                "source_asset_id": "asset-7",
+                "frame_id": "asset-7-f1"
+              }
+            ],
+            "unshown_refs": [],
+            "visual_check_available": true
+          },
+          {
+            "id": "M01",
+            "kind": "HIGHLIGHT",
+            "shown_frame_ids": [
+              "asset-5-f0"
+            ],
+            "shown_refs": [
+              {
+                "fact_id": "F008",
+                "asset_id": "V006",
+                "source_asset_id": "asset-5",
+                "frame_id": "asset-5-f0"
+              }
+            ],
+            "unshown_refs": [],
+            "visual_check_available": true
+          },
+          {
+            "id": "M02",
+            "kind": "HIGHLIGHT",
+            "shown_frame_ids": [
+              "asset-6-f2"
+            ],
+            "shown_refs": [
+              {
+                "fact_id": "F009",
+                "asset_id": "V007",
+                "source_asset_id": "asset-6",
+                "frame_id": "asset-6-f2"
+              }
+            ],
+            "unshown_refs": [],
+            "visual_check_available": true
+          }
+        ],
+        "issues": []
+      }
+    },
+    "final_verification_output": {
+      "provenance": "PROGRAM_AGGREGATED_IMAGE_CLAIM_VERDICTS",
+      "items": [
+        {
+          "id": "C01",
+          "title_supported": true,
+          "title_reason": "在asset-1的帧中，可以看到一只灵长类动物（看起来像狒狒）坐在岩石结构的边缘；在asset-5的帧中，可以看到一只小熊猫位于横跨画面的原木下方区域。标题准确描述了画面中的主要视觉元素。",
+          "sentences": [
+            {
+              "source_index": 0,
+              "supported": true,
+              "reason": "图像清晰展示了一只棕色灵长类动物（外观特征符合狒狒或类似物种）正坐在一处岩石结构的边缘，身体朝向画面左侧。背景中可以看到绘有绿色植被图案的墙壁，表明这是一个人工模拟的自然环境（如动物园展区）。待核文字对主体颜色、动作、位置及背景的描述与视觉证据完全一致。"
+            },
+            {
+              "source_index": 1,
+              "supported": false,
+              "reason": "画面中横跨画面的粗大原木位于上方，其表面没有红褐色小熊猫。小熊猫实际趴在下方的岩石堆上，并未位于该原木上。"
+            },
+            {
+              "source_index": 2,
+              "supported": true,
+              "reason": "在asset-6-f2画面中，可以清晰看到水族箱内有一条橙色金鱼，其周围分布着绿色水草（含一朵黄色假花）和底部的鹅卵石/碎石，视觉元素与文字描述完全一致。"
+            },
+            {
+              "source_index": 3,
+              "supported": true,
+              "reason": "图像显示地面为浅色（灰白），上面散布着多只羊。左侧的羊呈现深灰色或黑褐色，右侧前景的羊呈现浅米色或浅褐色，符合“灰黑与浅褐色的绵羊”这一描述。"
+            }
+          ]
+        },
+        {
+          "id": "C02",
+          "title_supported": true,
+          "title_reason": "两张图片均清晰展示了被茂密绿色树木包围的蜿蜒铺装小径，画面内容与标题描述完全一致。",
+          "sentences": [
+            {
+              "source_index": 0,
+              "supported": true,
+              "reason": "第一张图（f0）显示前景为砖石铺装地面，前方连接着一条向右弯曲的小径；第二张图（f1）显示该小径位于植被茂密的公园或庭院环境中，符合文字描述。"
+            },
+            {
+              "source_index": 1,
+              "supported": false,
+              "reason": "文字描述的是“随着前行”的动态过程及视野变化。提供的两张静态帧分别展示了两处不同的场景（一处有石墙和建筑，一处为林间），无法通过这两张图片证明镜头移动过程中视野“逐渐”被包围的变化过程。"
+            }
+          ]
+        },
+        {
+          "id": "M01",
+          "title_supported": false,
+          "title_reason": "小熊猫在图中位于下方的岩石区域，而非横跨画面的原木上，标题描述的位置关系与实际画面不符。",
+          "sentences": [
+            {
+              "source_index": 0,
+              "supported": false,
+              "reason": "视觉证据显示小熊猫位于下方的岩石上，上方的粗大原木上没有动物，文字描述的方位关系与图像矛盾。"
+            }
+          ]
+        },
+        {
+          "id": "M02",
+          "title_supported": true,
+          "title_reason": "画面中清晰可见一条橙色金鱼，且其位于绿色水草附近，符合“水草间的橙色金鱼”这一描述。",
+          "sentences": [
+            {
+              "source_index": 0,
+              "supported": false,
+              "reason": "虽然画面中有水族箱、橙色金鱼和绿色水草，但金鱼的位置明显处于水体上层（靠近水面），而鹅卵石铺设在缸底，两者在垂直空间上距离较远，并未处于“游动于绿色水草和鹅卵石间”的中间夹层状态，图文关系不符。"
+            }
+          ]
+        }
+      ]
+    },
+    "selected_structure": {
+      "chapters": [
+        {
+          "id": "C01",
+          "theme": "动物园多物种与水生生物观察",
+          "fact_ids": [
+            "F001",
+            "F002",
+            "F003",
+            "F004",
+            "F005",
+            "F006",
+            "F007",
+            "F008",
+            "F009"
+          ],
+          "grouping_reason": "所有事实均指向同一参观经历中的不同展区：从陆地围栏到玻璃展缸再到水族长廊，属于连续的动物园游览活动，不应因展品类别拆分章节。",
+          "selection_focus": {
+            "experience_kind": "ZOO_ANIMALS",
+            "focus": "在动物园园区内观察陆生动物（绵羊、灵长类、小熊猫等）及水族馆区域的鱼类展示。",
+            "fact_ids": [
+              "F002",
+              "F008",
+              "F009"
+            ]
+          },
+          "selected_asset_ids": [
+            "V006",
+            "V002",
+            "V004",
+            "V003",
+            "V007"
+          ],
+          "hero_asset_id": "V006",
+          "hero_frame_id": "asset-5-f0",
+          "media_choices": [
+            {
+              "asset_id": "V006",
+              "frame_id": "asset-5-f0",
+              "fact_ids": [
+                "F007",
+                "F008"
+              ],
+              "role": "PRIMARY",
+              "reason": "A red panda walking along a thick wooden log in an enclosure with a pavilion structure."
+            },
+            {
+              "asset_id": "V002",
+              "frame_id": "asset-1-f2",
+              "fact_ids": [
+                "F002"
+              ],
+              "role": "SUPPORT",
+              "reason": "A close-up of a brown monkey grooming itself while sitting on a rock."
+            },
+            {
+              "asset_id": "V004",
+              "frame_id": "asset-3-f1",
+              "fact_ids": [
+                "F005"
+              ],
+              "role": "SUPPORT",
+              "reason": "Multiple small animals resting on rocks and stumps in a sandy enclosure with a painted landscape background."
+            },
+            {
+              "asset_id": "V003",
+              "frame_id": "asset-2-f0",
+              "fact_ids": [
+                "F003"
+              ],
+              "role": "SUPPORT",
+              "reason": "A glass aquarium exhibit containing fish swimming among driftwood and white sand substrate."
+            },
+            {
+              "asset_id": "V007",
+              "frame_id": "asset-6-f2",
+              "fact_ids": [
+                "F009"
+              ],
+              "role": "SUPPORT",
+              "reason": "Close-up view inside an aquarium tank showing a goldfish, artificial plants, and pebbles."
+            }
+          ],
+          "candidate_selection_audit": {
+            "rule": "ONE_PER_ASSET_EXPLICIT_HERO_ELSE_MODEL_PREFERENCE_ORDER",
+            "capacity_rule": "EXPLICIT_HERO_PLUS_FIRST_RANKED_OTHER_ASSETS",
+            "max_selected_assets": 5,
+            "ranked_candidate_ids": [
+              "P006",
+              "P013",
+              "P010",
+              "P003",
+              "P011",
+              "P001"
+            ],
+            "hero_candidate_id": "P006",
+            "selected_candidate_ids": [
+              "P006",
+              "P013",
+              "P010",
+              "P003",
+              "P011"
+            ],
+            "capacity_omitted_asset_ids": [
+              "V001"
+            ],
+            "capacity_omitted_candidates": [
+              {
+                "candidate_id": "P001",
+                "asset_id": "V001",
+                "representative_candidate_id": "P001",
+                "reason": "DISPLAY_CAPACITY_NOT_VALUE_JUDGMENT"
+              }
+            ],
+            "deduplicated_candidates": []
+          }
+        },
+        {
+          "id": "C02",
+          "theme": "公园自然步道漫步",
+          "fact_ids": [
+            "F010"
+          ],
+          "grouping_reason": "该片段独立展示了非动物展示区的户外自然环境步行体验，与动物园的观赏性质有明确区分。",
+          "selection_focus": {
+            "experience_kind": "NATURE_WALK",
+            "focus": "第一人称视角穿过植被茂密的公园或庭院铺装小径。",
+            "fact_ids": [
+              "F010"
+            ]
+          },
+          "selected_asset_ids": [
+            "V008"
+          ],
+          "hero_asset_id": "V008",
+          "hero_frame_id": "asset-7-f1",
+          "media_choices": [
+            {
+              "asset_id": "V008",
+              "frame_id": "asset-7-f1",
+              "fact_ids": [
+                "F010"
+              ],
+              "role": "PRIMARY",
+              "reason": "A first-person perspective shot moving along a paved path surrounded by dense green trees."
+            }
+          ],
+          "candidate_selection_audit": {
+            "rule": "ONE_PER_ASSET_EXPLICIT_HERO_ELSE_MODEL_PREFERENCE_ORDER",
+            "capacity_rule": "EXPLICIT_HERO_PLUS_FIRST_RANKED_OTHER_ASSETS",
+            "max_selected_assets": 5,
+            "ranked_candidate_ids": [
+              "P012"
+            ],
+            "hero_candidate_id": "P012",
+            "selected_candidate_ids": [
+              "P012"
+            ],
+            "capacity_omitted_asset_ids": [],
+            "capacity_omitted_candidates": [],
+            "deduplicated_candidates": []
+          }
+        }
+      ],
+      "moments": [
+        {
+          "id": "M01",
+          "parent_chapter_id": "C01",
+          "fact_id": "F008",
+          "focus": "红褐色小熊猫位于横跨画面的粗大原木上",
+          "revisit_reason": "符合动物园场景的高光优先级，捕捉到了清晰且辨识度高的具体动物姿态。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ],
+          "event_group_id": "M01",
+          "comparison_reason": "候选展示了具体的陆生动物主体，与另一候选的水族生物构成不同类别的视觉记忆点。",
+          "value_type": "DISTINCT_DETAIL",
+          "focus_frame_ids": [
+            "asset-5-f0"
+          ],
+          "anchor_reviewed_with_images": true
+        },
+        {
+          "id": "M02",
+          "parent_chapter_id": "C01",
+          "fact_id": "F009",
+          "focus": "水族箱内一条橙色金鱼游动于绿色水草和鹅卵石间",
+          "revisit_reason": "符合动物园场景规则，镜头推近后提供了具有观赏价值的静态动物色彩与形态细节。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ],
+          "event_group_id": "M02",
+          "comparison_reason": "候选聚焦于水族馆内的具体鱼类细节，与前一候选的陆生动物形成互补。",
+          "value_type": "DISTINCT_DETAIL",
+          "focus_frame_ids": [
+            "asset-6-f2"
+          ],
+          "anchor_reviewed_with_images": true
+        }
+      ]
+    }
+  }
+}

@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any
 from pathlib import Path
 
-from shared.result_contract import validate_result_contract, SCHEMA_SHA256
+from shared.result_contract import validate_result_contract, CONTRACT_VERSION
 
 
 # Delivery states that may surface to Diary (honest empty included separately).
@@ -83,6 +83,8 @@ def build_publish_envelope(
         "experiment": result.get("experiment"),
         "bundle_version": bundle_version,
         "bundle_manifest_sha256": result.get("bundle_manifest_sha256"),
+        "session_id": result.get("session_id"),
+        "result_contract_version": CONTRACT_VERSION,
         "production_ready": bool(result.get("production_ready")),
         "is_mock_fallback": is_mock,
         "prd_refs": ["SYS01", "DAT01", "AI03", "DIA02"],
@@ -106,8 +108,7 @@ def apply_admission(
         try:
             if manifest_bytes is None:
                 raise ValueError('missing_input_manifest')
-            validate_result_contract(result, manifest_bytes, bundle_dir)
-            envelope['result_contract_sha256'] = SCHEMA_SHA256
+            envelope['result_contract_sha256'] = validate_result_contract(result, manifest_bytes, bundle_dir)
             envelope['input_bound'] = True
         except (ValueError, KeyError, TypeError, OSError) as error:
             envelope.update(publish_admit=False, fail_job=True, input_bound=False,

@@ -54,6 +54,10 @@ export function mapPreviewToDiary(
         dateLabel,
         weakTime: ch.time_label || undefined,
         aiStory: ch.story,
+        // Preserve algorithm metadata in the existing snapshot; remote UI decides
+        // whether/how to render these optional fields without changing its layout.
+        previewStory: ch.preview_story,
+        highlights: ch.highlights?.map((h) => ({ id: h.id, text: h.story })),
         tags: ch.tags.slice(0, 2),
         detailTags: ch.tags.length > 2 ? ch.tags.slice(2) : undefined,
         moments: momentPlaceholders,

@@ -1,0 +1,1293 @@
+{
+  "ahas": [],
+  "bundle_manifest_sha256": "b68293288c0124d065b10045e7724de2a9d11fcba0147ba63e7f419f1ff50752",
+  "chapters": [
+    {
+      "claims": [
+        {
+          "asset_id": "V001",
+          "evidence_frame_ids": [
+            "asset-0-f0",
+            "asset-0-f1"
+          ],
+          "fact_id": "8cab7cc2-e241-5084-9677-a17201b26de0",
+          "frame_pts_ms": [
+            1001,
+            5005
+          ],
+          "id": "F001",
+          "observation_id": "c71bcfbd-b68a-58a0-a920-e932cce8fbec",
+          "original_text": "视频画面显示第一人称视角的骑行场景，车把和手臂可见。前方为铺设道路，路旁有草地、电线杆及一座高架桥。随后一列橙色列车驶过高架桥（asset-0-f1）。",
+          "source_asset_id": "asset-0",
+          "support_grade": "STRONG",
+          "temporal_support": "CHANGE",
+          "text": "视频画面显示第一人称视角的骑行场景，车把和手臂可见。前方为铺设道路，路旁有草地、电线杆及一座高架桥。随后一列橙色列车驶过高架桥（asset-0-f1）。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V005",
+          "evidence_frame_ids": [
+            "asset-4-f0",
+            "asset-4-f1",
+            "asset-4-f2"
+          ],
+          "fact_id": "7ab92105-d394-5379-af16-305e0bc902be",
+          "frame_pts_ms": [
+            3002,
+            6005,
+            8992
+          ],
+          "id": "F005",
+          "observation_id": "c307bba2-8ace-52de-b831-27a673ecf2ad",
+          "original_text": "视频展示了骑行者在桥上停留并拍摄风景的过程：先是大范围河流景观（f0），随后镜头转向靠在栏杆上的戴头盔女子（f1），最后展示夕阳下的桥梁与城市远景（f2）。",
+          "source_asset_id": "asset-4",
+          "support_grade": "MODERATE",
+          "temporal_support": "CHANGE",
+          "text": "视频展示了骑行者在桥上停留并拍摄风景的过程：先是大范围河流景观（f0），随后镜头转向靠在栏杆上的戴头盔女子（f1），最后展示夕阳下的桥梁与城市远景（f2）。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V003",
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "fact_id": "d63b9575-af70-5d27-9257-ee71730f1549",
+          "frame_pts_ms": [
+            6005
+          ],
+          "id": "F003",
+          "observation_id": "a6e15c96-136e-594f-a126-330d8d175d10",
+          "original_text": "第一人称视角的骑行画面，双手握住弯把，前方是树木茂密的狭窄铺装路面，远处可见红色桥梁结构。",
+          "source_asset_id": "asset-2",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "第一人称视角的骑行画面，双手握住弯把，前方是树木茂密的狭窄铺装路面，远处可见红色桥梁结构。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V006",
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "fact_id": "5a93a0d5-57cb-5341-b004-24c292ee8afb",
+          "frame_pts_ms": [
+            6005
+          ],
+          "id": "F006",
+          "observation_id": "62f52a8c-6e42-5a1c-a89b-56b8e867393a",
+          "original_text": "第一人称视角骑行画面，车辆行驶在两旁有民居和电线杆的城市街道上。",
+          "source_asset_id": "asset-5",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "第一人称视角骑行画面，车辆行驶在两旁有民居和电线杆的城市街道上。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V008",
+          "evidence_frame_ids": [
+            "asset-7-f0",
+            "asset-7-f1",
+            "asset-7-f2"
+          ],
+          "fact_id": "1e4b1a8e-4a38-523c-8dad-1cb9f0030cd7",
+          "frame_pts_ms": [
+            16,
+            5004,
+            8992
+          ],
+          "id": "F008",
+          "observation_id": "3d9b054b-3676-5442-985a-390f7426f5be",
+          "original_text": "画面展示了骑行者在黄昏时分沿长满杂草的土路前行，右侧可见公寓楼和电线杆。",
+          "source_asset_id": "asset-7",
+          "support_grade": "MODERATE",
+          "temporal_support": "STATE",
+          "text": "画面展示了骑行者在黄昏时分沿长满杂草的土路前行，右侧可见公寓楼和电线杆。",
+          "visual_reviewed": true
+        }
+      ],
+      "copy_review_flags": [],
+      "hero_asset_id": "asset-0",
+      "hero_frame_id": "asset-0-f1",
+      "hero_reason": "高架桥上有一列橙色列车正在驶过。",
+      "highlights": [
+        {
+          "claims": [
+            {
+              "asset_id": "V001",
+              "evidence_frame_ids": [
+                "asset-0-f0",
+                "asset-0-f1"
+              ],
+              "fact_id": "8cab7cc2-e241-5084-9677-a17201b26de0",
+              "frame_pts_ms": [
+                1001,
+                5005
+              ],
+              "id": "F001",
+              "observation_id": "c71bcfbd-b68a-58a0-a920-e932cce8fbec",
+              "original_text": "视频画面显示第一人称视角的骑行场景，车把和手臂可见。前方为铺设道路，路旁有草地、电线杆及一座高架桥。随后一列橙色列车驶过高架桥（asset-0-f1）。",
+              "source_asset_id": "asset-0",
+              "support_grade": "STRONG",
+              "temporal_support": "CHANGE",
+              "text": "视频画面显示第一人称视角的骑行场景，车把和手臂可见。前方为铺设道路，路旁有草地、电线杆及一座高架桥。随后一列橙色列车驶过高架桥（asset-0-f1）。",
+              "visual_reviewed": true
+            }
+          ],
+          "id": "a0f73220-dc9a-5945-8fc6-205cac8c4393",
+          "parent_chapter_id": "da765480-c387-5adf-88a3-c409ab943bd9",
+          "revisit_reason": "事实明确支持列车运动，且画面清晰展示了这一沿途具体发现。",
+          "selected_media": [
+            {
+              "asset_id": "asset-0",
+              "end_ms": 10010,
+              "evidence_frame_ids": [
+                "asset-0-f1",
+                "asset-0-f0"
+              ],
+              "focus_pts_ms": 5005,
+              "media_kind": "VIDEO",
+              "range_basis": "WHOLE_SOURCE_CLIP",
+              "role": "CORE",
+              "source_asset_id": "asset-0",
+              "source_sequence_index": 0,
+              "start_ms": 0
+            }
+          ],
+          "story": "骑行途中，前方高架桥上有一列橙色列车驶过。",
+          "value_type": "ACTION_CHANGE"
+        },
+        {
+          "claims": [
+            {
+              "asset_id": "V005",
+              "evidence_frame_ids": [
+                "asset-4-f0",
+                "asset-4-f1",
+                "asset-4-f2"
+              ],
+              "fact_id": "7ab92105-d394-5379-af16-305e0bc902be",
+              "frame_pts_ms": [
+                3002,
+                6005,
+                8992
+              ],
+              "id": "F005",
+              "observation_id": "c307bba2-8ace-52de-b831-27a673ecf2ad",
+              "original_text": "视频展示了骑行者在桥上停留并拍摄风景的过程：先是大范围河流景观（f0），随后镜头转向靠在栏杆上的戴头盔女子（f1），最后展示夕阳下的桥梁与城市远景（f2）。",
+              "source_asset_id": "asset-4",
+              "support_grade": "MODERATE",
+              "temporal_support": "CHANGE",
+              "text": "视频展示了骑行者在桥上停留并拍摄风景的过程：先是大范围河流景观（f0），随后镜头转向靠在栏杆上的戴头盔女子（f1），最后展示夕阳下的桥梁与城市远景（f2）。",
+              "visual_reviewed": true
+            }
+          ],
+          "id": "c333e555-8e51-57d2-a34a-bec1c5ce65aa",
+          "parent_chapter_id": "da765480-c387-5adf-88a3-c409ab943bd9",
+          "revisit_reason": "人物姿态与黄昏光影构成了具有辨识度的生活细节，符合高光标准。",
+          "selected_media": [
+            {
+              "asset_id": "asset-4",
+              "end_ms": 9993,
+              "evidence_frame_ids": [
+                "asset-4-f1"
+              ],
+              "focus_pts_ms": 6005,
+              "media_kind": "VIDEO",
+              "range_basis": "WHOLE_SOURCE_CLIP",
+              "role": "CORE",
+              "source_asset_id": "asset-4",
+              "source_sequence_index": 4,
+              "start_ms": 0
+            }
+          ],
+          "story": "夕阳下，一位戴头盔的女子靠在桥梁栏杆上。",
+          "value_type": "DISTINCT_DETAIL"
+        }
+      ],
+      "id": "da765480-c387-5adf-88a3-c409ab943bd9",
+      "moment_ids": [
+        "d1df1b9d-3ca0-5246-b3a8-2ffbcfb10883",
+        "6b38ede7-ad19-5e09-9f0a-34ed48c3fcb0",
+        "32f92832-dc77-50a2-a842-13ac40ef54ad",
+        "84303174-9716-5676-a205-aeb5224b8f30",
+        "191e5ac8-2426-5dd5-9891-28a723ec84a5"
+      ],
+      "preview_story": "一列橙色列车驶过高架桥。",
+      "publication_status": "STAGED_PREVIEW_VALIDATED",
+      "selected_media": [
+        {
+          "asset_id": "asset-0",
+          "end_ms": 10010,
+          "evidence_frame_ids": [
+            "asset-0-f1",
+            "asset-0-f0"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-0-f1",
+          "role": "HERO",
+          "selection_fact_ids": [
+            "F001"
+          ],
+          "selection_reason": "高架桥上有一列橙色列车正在驶过。",
+          "selection_role": "PRIMARY",
+          "source_asset_id": "asset-0",
+          "source_sequence_index": 0,
+          "start_ms": 0
+        },
+        {
+          "asset_id": "asset-2",
+          "end_ms": 9993,
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-2-f0",
+          "role": "SUPPORT",
+          "selection_fact_ids": [
+            "F003"
+          ],
+          "selection_reason": "第一人称视角骑行在树木茂密的道路上，远处有一座红色桥梁。",
+          "selection_role": "SUPPORT",
+          "source_asset_id": "asset-2",
+          "source_sequence_index": 2,
+          "start_ms": 0
+        },
+        {
+          "asset_id": "asset-4",
+          "end_ms": 9993,
+          "evidence_frame_ids": [
+            "asset-4-f0",
+            "asset-4-f1",
+            "asset-4-f2"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-4-f0",
+          "role": "SUPPORT",
+          "selection_fact_ids": [
+            "F005"
+          ],
+          "selection_reason": "从桥上拍摄的宽阔河流景观。",
+          "selection_role": "SUPPORT",
+          "source_asset_id": "asset-4",
+          "source_sequence_index": 4,
+          "start_ms": 0
+        },
+        {
+          "asset_id": "asset-5",
+          "end_ms": 9993,
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-5-f0",
+          "role": "SUPPORT",
+          "selection_fact_ids": [
+            "F006"
+          ],
+          "selection_reason": "第一人称视角骑行在有民居和电线杆的城市街道上。",
+          "selection_role": "SUPPORT",
+          "source_asset_id": "asset-5",
+          "source_sequence_index": 5,
+          "start_ms": 0
+        },
+        {
+          "asset_id": "asset-7",
+          "end_ms": 9993,
+          "evidence_frame_ids": [
+            "asset-7-f0",
+            "asset-7-f1",
+            "asset-7-f2"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-7-f0",
+          "role": "SUPPORT",
+          "selection_fact_ids": [
+            "F008"
+          ],
+          "selection_reason": "黄昏时分沿长满杂草的土路前行，右侧可见公寓楼。",
+          "selection_role": "SUPPORT",
+          "source_asset_id": "asset-7",
+          "source_sequence_index": 7,
+          "start_ms": 0
+        }
+      ],
+      "selection_focus": {
+        "experience_kind": "CYCLING",
+        "fact_ids": [
+          "F001",
+          "F003",
+          "F005",
+          "F006"
+        ],
+        "focus": "记录骑行过程中经过的不同路况（铺装路、林荫道、土路、街道）及沿途发现的铁路、输电塔、桥梁景观与生活街区。"
+      },
+      "sentence_claims": [
+        {
+          "fact_ids": [
+            "F001"
+          ],
+          "text": "一列橙色列车驶过高架桥。"
+        },
+        {
+          "fact_ids": [
+            "F003"
+          ],
+          "text": "树木茂密的狭窄铺装路面上，远处可见红色桥梁结构。"
+        },
+        {
+          "fact_ids": [
+            "F005"
+          ],
+          "text": "夕阳下，桥梁映衬着城市远景。"
+        },
+        {
+          "fact_ids": [
+            "F006"
+          ],
+          "text": "两旁有民居和电线杆的城市街道延伸向前。"
+        }
+      ],
+      "story": "一列橙色列车驶过高架桥。树木茂密的狭窄铺装路面上，远处可见红色桥梁结构。夕阳下，桥梁映衬着城市远景。两旁有民居和电线杆的城市街道延伸向前。",
+      "tags": [
+        "SETTING.OUTDOOR_NATURE"
+      ],
+      "time_label": "",
+      "title": "橙色列车与夕阳下的桥",
+      "title_claim_ids": [
+        "F001",
+        "F005"
+      ]
+    }
+  ],
+  "coverage_status": "COMPLETE",
+  "decision_trace": {
+    "editor_revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_2",
+    "fact_coverage": [
+      {
+        "fact_id": "F001",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F002",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F003",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F004",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F005",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F006",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F007",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F008",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      }
+    ],
+    "semantic_review": [
+      {
+        "id": "C01",
+        "reason": "事实与表达一致",
+        "reviewed": true,
+        "status": "ACCEPTED",
+        "style_flags": []
+      },
+      {
+        "id": "M01",
+        "reason": "事实与表达一致",
+        "reviewed": true,
+        "status": "ACCEPTED",
+        "style_flags": []
+      },
+      {
+        "id": "M02",
+        "reason": "事实与表达一致",
+        "reviewed": true,
+        "status": "ACCEPTED",
+        "style_flags": []
+      }
+    ],
+    "prompt_sha256": {
+      "copy_repair": "a4e0f49f57b8692f76345c9a4eaee33cd3ab7a8560c35109e65a87bf610feefa",
+      "coverage_review": "fb4604528364016e6b861d051dcbb402f17b1b3c5b299bd66c9192f3f6c41028",
+      "editor": "f78ba652505ffa9f4f7791ad35b46b797fc640abd248b1190e89066e27f9d801",
+      "final_copy_verification": "c37ca3e4c501660d3b1d3acf10104e98d1941d9ebc91864b211ea57e616f7b1b",
+      "frame_observation": "a01a71a7de7b7a02596903300078061dfb79ae86985b244da6d3a1b3b4d93c5c",
+      "frame_selection": "270b7c0ee1e44f2e34bb42e6c0d2e50a6bd78c48bbdf1f8a0434be0b2d8aeaac",
+      "independent_scene": "1687d661d47edf5c9f7e4d6c415530d46d559aba1418946b6313d7bf77393e5c",
+      "media_selection": "03f458ec72c2f103ae32d4a57b1d55c1586615c5361debbd2a58da643beddca7",
+      "moment_value": "a2c36254019a5b68dff76c55f30bb4f393d61746862d7648e71178fb7b2d291f",
+      "narrative_brief": "9feb5d30fd64bec06e18f5f2544fd4560cc224c01a8cd07ed5420cee7fcb3c56",
+      "relation_review": "64da6f12eba4685f5e13a9a17599940de6520dbbb41f77f3f3adfcff306a76d4",
+      "review": "5a4ddeb57a5c7ee16b1926e937e1079394554483fecc40ed86ef0032537ddaa3",
+      "spatial_relation_verification": "f225b1a4f814b6f43e66f8dc7d329d0922a5f3a7cb4128192a1731c55477bc8d",
+      "structure_review": "72673a7d1a3b2438f4305008367fbdd1fb1c906b579af42628fff290cee7a939",
+      "visual_review": "a3efa193b1dd249e3f4586060f2168acb666beff9a1c4769939157223f2ea955",
+      "writer": "4c31de751556841df3f85df0eea37dcbdf32edd743b664d7455386b6ae3accc4"
+    },
+    "verified_facts": {
+      "F001": {
+        "asset_id": "V001",
+        "evidence_frame_ids": [
+          "asset-0-f0",
+          "asset-0-f1"
+        ],
+        "fact_id": "8cab7cc2-e241-5084-9677-a17201b26de0",
+        "frame_pts_ms": [
+          1001,
+          5005
+        ],
+        "id": "F001",
+        "observation_id": "c71bcfbd-b68a-58a0-a920-e932cce8fbec",
+        "original_text": "视频画面显示第一人称视角的骑行场景，车把和手臂可见。前方为铺设道路，路旁有草地、电线杆及一座高架桥。随后一列橙色列车驶过高架桥（asset-0-f1）。",
+        "source_asset_id": "asset-0",
+        "support_grade": "STRONG",
+        "temporal_support": "CHANGE",
+        "text": "视频画面显示第一人称视角的骑行场景，车把和手臂可见。前方为铺设道路，路旁有草地、电线杆及一座高架桥。随后一列橙色列车驶过高架桥（asset-0-f1）。",
+        "visual_reviewed": true
+      },
+      "F002": {
+        "asset_id": "V002",
+        "evidence_frame_ids": [
+          "asset-1-f0"
+        ],
+        "fact_id": "b38deae2-7d1f-5392-94f6-85a8024259a9",
+        "frame_pts_ms": [
+          6006
+        ],
+        "id": "F002",
+        "observation_id": "10c958c7-c880-588e-b95b-4d0fef0acc24",
+        "original_text": "画面中一名身穿粉色上衣、戴头盔的骑行者坐在公路车上，停在路边。背景可见高压输电塔、河流及逆光天空。",
+        "source_asset_id": "asset-1",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "画面中一名身穿粉色上衣、戴头盔的骑行者坐在公路车上，停在路边。背景可见高压输电塔、河流及逆光天空。",
+        "visual_reviewed": true
+      },
+      "F003": {
+        "asset_id": "V003",
+        "evidence_frame_ids": [
+          "asset-2-f0"
+        ],
+        "fact_id": "d63b9575-af70-5d27-9257-ee71730f1549",
+        "frame_pts_ms": [
+          6005
+        ],
+        "id": "F003",
+        "observation_id": "a6e15c96-136e-594f-a126-330d8d175d10",
+        "original_text": "第一人称视角的骑行画面，双手握住弯把，前方是树木茂密的狭窄铺装路面，远处可见红色桥梁结构。",
+        "source_asset_id": "asset-2",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "第一人称视角的骑行画面，双手握住弯把，前方是树木茂密的狭窄铺装路面，远处可见红色桥梁结构。",
+        "visual_reviewed": true
+      },
+      "F004": {
+        "asset_id": "V004",
+        "evidence_frame_ids": [
+          "asset-3-f0"
+        ],
+        "fact_id": "b0b590fd-8a45-55a6-917d-ca23d8bf9177",
+        "frame_pts_ms": [
+          5005
+        ],
+        "id": "F004",
+        "observation_id": "79e4b339-767b-547e-8277-84d79618a80e",
+        "original_text": "第一人称视角骑行画面，前方可见另一名佩戴头盔的骑行者，行驶在两侧有草地的土路上。",
+        "source_asset_id": "asset-3",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "第一人称视角骑行画面，前方可见另一名佩戴头盔的骑行者，行驶在两侧有草地的道路上。",
+        "visual_reviewed": true
+      },
+      "F005": {
+        "asset_id": "V005",
+        "evidence_frame_ids": [
+          "asset-4-f0",
+          "asset-4-f1",
+          "asset-4-f2"
+        ],
+        "fact_id": "7ab92105-d394-5379-af16-305e0bc902be",
+        "frame_pts_ms": [
+          3002,
+          6005,
+          8992
+        ],
+        "id": "F005",
+        "observation_id": "c307bba2-8ace-52de-b831-27a673ecf2ad",
+        "original_text": "视频展示了骑行者在桥上停留并拍摄风景的过程：先是大范围河流景观（f0），随后镜头转向靠在栏杆上的戴头盔女子（f1），最后展示夕阳下的桥梁与城市远景（f2）。",
+        "source_asset_id": "asset-4",
+        "support_grade": "MODERATE",
+        "temporal_support": "CHANGE",
+        "text": "视频展示了骑行者在桥上停留并拍摄风景的过程：先是大范围河流景观（f0），随后镜头转向靠在栏杆上的戴头盔女子（f1），最后展示夕阳下的桥梁与城市远景（f2）。",
+        "visual_reviewed": true
+      },
+      "F006": {
+        "asset_id": "V006",
+        "evidence_frame_ids": [
+          "asset-5-f0"
+        ],
+        "fact_id": "5a93a0d5-57cb-5341-b004-24c292ee8afb",
+        "frame_pts_ms": [
+          6005
+        ],
+        "id": "F006",
+        "observation_id": "62f52a8c-6e42-5a1c-a89b-56b8e867393a",
+        "original_text": "第一人称视角骑行画面，车辆行驶在两旁有民居和电线杆的城市街道上。",
+        "source_asset_id": "asset-5",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "第一人称视角骑行画面，车辆行驶在两旁有民居和电线杆的城市街道上。",
+        "visual_reviewed": true
+      },
+      "F007": {
+        "asset_id": "V007",
+        "evidence_frame_ids": [
+          "asset-6-f0"
+        ],
+        "fact_id": "927fd69a-fcb8-56f7-8198-94967d2f1275",
+        "frame_pts_ms": [
+          5005
+        ],
+        "id": "F007",
+        "observation_id": "3d7175ba-fc07-5629-a0d2-2ec74d964bfa",
+        "original_text": "第一人称视角显示骑行者双手握住公路车弯把，在铺设路面的街道上向前骑行。",
+        "source_asset_id": "asset-6",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "第一人称视角显示骑行者双手握住公路车弯把，在铺设路面的街道上向前骑行。",
+        "visual_reviewed": true
+      },
+      "F008": {
+        "asset_id": "V008",
+        "evidence_frame_ids": [
+          "asset-7-f0",
+          "asset-7-f1",
+          "asset-7-f2"
+        ],
+        "fact_id": "1e4b1a8e-4a38-523c-8dad-1cb9f0030cd7",
+        "frame_pts_ms": [
+          16,
+          5004,
+          8992
+        ],
+        "id": "F008",
+        "observation_id": "3d9b054b-3676-5442-985a-390f7426f5be",
+        "original_text": "画面展示了骑行者在黄昏时分沿长满杂草的土路前行，右侧可见公寓楼和电线杆。",
+        "source_asset_id": "asset-7",
+        "support_grade": "MODERATE",
+        "temporal_support": "STATE",
+        "text": "画面展示了骑行者在黄昏时分沿长满杂草的土路前行，右侧可见公寓楼和电线杆。",
+        "visual_reviewed": true
+      }
+    },
+    "selected_structure": {
+      "chapters": [
+        {
+          "candidate_selection_audit": {
+            "capacity_omitted_asset_ids": [
+              "V002",
+              "V004",
+              "V007"
+            ],
+            "capacity_omitted_candidates": [
+              {
+                "asset_id": "V002",
+                "candidate_id": "P002",
+                "reason": "DISPLAY_CAPACITY_NOT_VALUE_JUDGMENT",
+                "representative_candidate_id": "P002"
+              },
+              {
+                "asset_id": "V004",
+                "candidate_id": "P004",
+                "reason": "DISPLAY_CAPACITY_NOT_VALUE_JUDGMENT",
+                "representative_candidate_id": "P004"
+              },
+              {
+                "asset_id": "V007",
+                "candidate_id": "P007",
+                "reason": "DISPLAY_CAPACITY_NOT_VALUE_JUDGMENT",
+                "representative_candidate_id": "P007"
+              }
+            ],
+            "capacity_rule": "EXPLICIT_HERO_PLUS_FIRST_RANKED_OTHER_ASSETS",
+            "deduplicated_candidates": [
+              {
+                "asset_id": "V001",
+                "candidate_id": "P001",
+                "reason": "EXPLICIT_HERO_FOR_ASSET",
+                "representative_candidate_id": "P009"
+              },
+              {
+                "asset_id": "V005",
+                "candidate_id": "P010",
+                "reason": "EARLIER_MODEL_PREFERENCE_FOR_ASSET",
+                "representative_candidate_id": "P005"
+              },
+              {
+                "asset_id": "V005",
+                "candidate_id": "P012",
+                "reason": "EARLIER_MODEL_PREFERENCE_FOR_ASSET",
+                "representative_candidate_id": "P005"
+              },
+              {
+                "asset_id": "V008",
+                "candidate_id": "P011",
+                "reason": "EARLIER_MODEL_PREFERENCE_FOR_ASSET",
+                "representative_candidate_id": "P008"
+              },
+              {
+                "asset_id": "V008",
+                "candidate_id": "P013",
+                "reason": "EARLIER_MODEL_PREFERENCE_FOR_ASSET",
+                "representative_candidate_id": "P008"
+              }
+            ],
+            "hero_candidate_id": "P009",
+            "max_selected_assets": 5,
+            "ranked_candidate_ids": [
+              "P009",
+              "P001",
+              "P005",
+              "P010",
+              "P012",
+              "P003",
+              "P006",
+              "P008",
+              "P002",
+              "P004",
+              "P007",
+              "P011",
+              "P013"
+            ],
+            "rule": "ONE_PER_ASSET_EXPLICIT_HERO_ELSE_MODEL_PREFERENCE_ORDER",
+            "selected_candidate_ids": [
+              "P009",
+              "P005",
+              "P003",
+              "P006",
+              "P008"
+            ]
+          },
+          "fact_ids": [
+            "F001",
+            "F002",
+            "F003",
+            "F004",
+            "F005",
+            "F006",
+            "F007",
+            "F008"
+          ],
+          "grouping_reason": "所有片段均支持第一人称或伴随视角的持续骑行状态，涵盖道路类型变化及沿途标志性景物。桥上停留观景属于骑行途中的自然停顿，未构成独立活动转换，故归入同一章。",
+          "hero_asset_id": "V001",
+          "hero_frame_id": "asset-0-f1",
+          "id": "C01",
+          "media_choices": [
+            {
+              "asset_id": "V001",
+              "fact_ids": [
+                "F001"
+              ],
+              "frame_id": "asset-0-f1",
+              "reason": "高架桥上有一列橙色列车正在驶过。",
+              "role": "PRIMARY"
+            },
+            {
+              "asset_id": "V005",
+              "fact_ids": [
+                "F005"
+              ],
+              "frame_id": "asset-4-f0",
+              "reason": "从桥上拍摄的宽阔河流景观。",
+              "role": "SUPPORT"
+            },
+            {
+              "asset_id": "V003",
+              "fact_ids": [
+                "F003"
+              ],
+              "frame_id": "asset-2-f0",
+              "reason": "第一人称视角骑行在树木茂密的道路上，远处有一座红色桥梁。",
+              "role": "SUPPORT"
+            },
+            {
+              "asset_id": "V006",
+              "fact_ids": [
+                "F006"
+              ],
+              "frame_id": "asset-5-f0",
+              "reason": "第一人称视角骑行在有民居和电线杆的城市街道上。",
+              "role": "SUPPORT"
+            },
+            {
+              "asset_id": "V008",
+              "fact_ids": [
+                "F008"
+              ],
+              "frame_id": "asset-7-f0",
+              "reason": "黄昏时分沿长满杂草的土路前行，右侧可见公寓楼。",
+              "role": "SUPPORT"
+            }
+          ],
+          "selected_asset_ids": [
+            "V001",
+            "V005",
+            "V003",
+            "V006",
+            "V008"
+          ],
+          "selection_focus": {
+            "experience_kind": "CYCLING",
+            "fact_ids": [
+              "F001",
+              "F003",
+              "F005",
+              "F006"
+            ],
+            "focus": "记录骑行过程中经过的不同路况（铺装路、林荫道、土路、街道）及沿途发现的铁路、输电塔、桥梁景观与生活街区。"
+          },
+          "theme": "穿越城市边缘与河景的公路骑行"
+        }
+      ],
+      "moments": [
+        {
+          "anchor_reviewed_with_images": true,
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ],
+          "comparison_reason": "M01是骑行途中的动态视觉发现，与M02的静态停留场景构成不同记忆点。",
+          "event_group_id": "M01",
+          "fact_id": "F001",
+          "focus": "骑行途中前方高架桥上驶过的橙色列车",
+          "focus_frame_ids": [
+            "asset-0-f1",
+            "asset-0-f0"
+          ],
+          "id": "M01",
+          "parent_chapter_id": "C01",
+          "revisit_reason": "事实明确支持列车运动，且画面清晰展示了这一沿途具体发现。",
+          "value_type": "ACTION_CHANGE"
+        },
+        {
+          "anchor_reviewed_with_images": true,
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ],
+          "comparison_reason": "M02聚焦于骑行者在桥上的停留姿态与环境组合，与M01的行进中动态景观不重复。",
+          "event_group_id": "M02",
+          "fact_id": "F005",
+          "focus": "夕阳下靠在桥梁栏杆上的戴头盔女子与城市远景",
+          "focus_frame_ids": [
+            "asset-4-f1"
+          ],
+          "id": "M02",
+          "parent_chapter_id": "C01",
+          "revisit_reason": "人物姿态与黄昏光影构成了具有辨识度的生活细节，符合高光标准。",
+          "value_type": "DISTINCT_DETAIL"
+        }
+      ]
+    },
+    "visual_fact_ledger": [
+      {
+        "asset_id": "V001",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F001",
+        "model_text_matches_applied": true,
+        "reason": "画面细节与描述一致，包括第一人称视角、道路环境及列车驶过桥梁的动作变化。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V002",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F002",
+        "model_text_matches_applied": true,
+        "reason": "人物姿态、衣着颜色及背景中的电塔、河流均符合图片内容。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V003",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F003",
+        "model_text_matches_applied": true,
+        "reason": "第一人称视角、握姿、道路环境及远处的红色桥梁结构均准确无误。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V004",
+        "changed": true,
+        "corrections": [
+          {
+            "rejected_text": "土路上",
+            "replacement_text": "道路上"
+          }
+        ],
+        "decision": "CORRECT",
+        "fact_id": "F004",
+        "model_text_matches_applied": true,
+        "reason": "原事实称“土路”，但画面中地面平整呈灰褐色，更像压实路面或铺装道，故修正为“道路”。",
+        "status": "VERIFIED",
+        "text_source": "APPLIED_CORRECTIONS"
+      },
+      {
+        "asset_id": "V005",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F005",
+        "model_text_matches_applied": true,
+        "reason": "对三帧画面的顺序、内容及人物动作（靠栏杆）的描述完全正确。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V006",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F006",
+        "model_text_matches_applied": true,
+        "reason": "街道环境、民居建筑及电线杆等元素与图片相符。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V007",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F007",
+        "model_text_matches_applied": true,
+        "reason": "画面清晰展示了第一人称骑行视角及铺装路面环境。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V008",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F008",
+        "model_text_matches_applied": true,
+        "reason": "黄昏光线、杂草丛生的土路以及右侧的公寓楼和电线杆均与图片吻合。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      }
+    ],
+    "recovery_visual_ledger": []
+  },
+  "delivery_state": "READY_WITH_ITEM_BLOCKS",
+  "editor_policy": "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07",
+  "experimental": true,
+  "moments": [],
+  "observations": [
+    {
+      "activity_code": "WALKING",
+      "asset_id": "asset-0",
+      "degraded_fields": [],
+      "episode_code": "NATURE_WALK",
+      "event_kind": "ACTION",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "asset-0-f0",
+        "asset-0-f1"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-0-f0",
+            "asset-0-f1"
+          ],
+          "fact_id": "8cab7cc2-e241-5084-9677-a17201b26de0",
+          "support_grade": "STRONG",
+          "text": "视频画面显示第一人称视角的骑行场景，车把和手臂可见。前方为铺设道路，路旁有草地、电线杆及一座高架桥。随后一列橙色列车驶过高架桥（asset-0-f1）。"
+        }
+      ],
+      "id": "c71bcfbd-b68a-58a0-a920-e932cce8fbec",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "自行车骑行",
+        "铁路桥",
+        "通勤列车",
+        "河畔步道"
+      ],
+      "quality_score": 0.9,
+      "setting_code": "NATURE_TRAIL",
+      "source_asset_id": "asset-0",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "OTHER",
+        "LANDSCAPE"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-1",
+      "degraded_fields": [
+        {
+          "action": "USE_NONE_NONE_WITHOUT_EVENT_INFERENCE",
+          "json_field_path": "$.observations[*].event_kind|event_salience",
+          "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+          "validation_rule_id": "X02V03_EVENT_TUPLE_CONTRADICTION"
+        }
+      ],
+      "episode_code": "NATURE_WALK",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-1-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-1-f0"
+          ],
+          "fact_id": "b38deae2-7d1f-5392-94f6-85a8024259a9",
+          "support_grade": "STRONG",
+          "text": "画面中一名身穿粉色上衣、戴头盔的骑行者坐在公路车上，停在路边。背景可见高压输电塔、河流及逆光天空。"
+        }
+      ],
+      "id": "10c958c7-c880-588e-b95b-4d0fef0acc24",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "骑行者",
+        "休息",
+        "河流",
+        "电力塔"
+      ],
+      "quality_score": 0.85,
+      "setting_code": "NATURE_TRAIL",
+      "source_asset_id": "asset-1",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "PEOPLE",
+        "LANDSCAPE"
+      ]
+    },
+    {
+      "activity_code": "WALKING",
+      "asset_id": "asset-2",
+      "degraded_fields": [],
+      "episode_code": "NATURE_WALK",
+      "event_kind": "ACTION",
+      "event_salience": "LOW",
+      "evidence_frame_ids": [
+        "asset-2-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "fact_id": "d63b9575-af70-5d27-9257-ee71730f1549",
+          "support_grade": "STRONG",
+          "text": "第一人称视角的骑行画面，双手握住弯把，前方是树木茂密的狭窄铺装路面，远处可见红色桥梁结构。"
+        }
+      ],
+      "id": "a6e15c96-136e-594f-a126-330d8d175d10",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "林荫道",
+        "自行车",
+        "骑行"
+      ],
+      "quality_score": 0.9,
+      "setting_code": "NATURE_TRAIL",
+      "source_asset_id": "asset-2",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "OTHER",
+        "LANDSCAPE"
+      ]
+    },
+    {
+      "activity_code": "TRANSIT",
+      "asset_id": "asset-3",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "ACTION",
+      "event_salience": "LOW",
+      "evidence_frame_ids": [
+        "asset-3-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-3-f0"
+          ],
+          "fact_id": "b0b590fd-8a45-55a6-917d-ca23d8bf9177",
+          "support_grade": "STRONG",
+          "text": "第一人称视角骑行画面，前方可见另一名佩戴头盔的骑行者，行驶在两侧有草地的土路上。"
+        }
+      ],
+      "id": "79e4b339-767b-547e-8277-84d79618a80e",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "自行车",
+        "草地",
+        "背影",
+        "户外"
+      ],
+      "quality_score": 0.9,
+      "setting_code": "NATURE_TRAIL",
+      "source_asset_id": "asset-3",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "PEOPLE"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-4",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "asset-4-f0",
+        "asset-4-f1",
+        "asset-4-f2"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-4-f0",
+            "asset-4-f1",
+            "asset-4-f2"
+          ],
+          "fact_id": "7ab92105-d394-5379-af16-305e0bc902be",
+          "support_grade": "MODERATE",
+          "text": "视频展示了骑行者在桥上停留并拍摄风景的过程：先是大范围河流景观（f0），随后镜头转向靠在栏杆上的戴头盔女子（f1），最后展示夕阳下的桥梁与城市远景（f2）。"
+        }
+      ],
+      "id": "c307bba2-8ace-52de-b831-27a673ecf2ad",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "河流",
+        "桥梁",
+        "日落",
+        "观景",
+        "骑行"
+      ],
+      "quality_score": 0.85,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset-4",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "LANDSCAPE",
+        "PEOPLE"
+      ]
+    },
+    {
+      "activity_code": "TRANSIT",
+      "asset_id": "asset-5",
+      "degraded_fields": [
+        {
+          "action": "USE_UNKNOWN_WITHOUT_INFERRING_REPLACEMENT_EPISODE",
+          "json_field_path": "$.observations[*].episode_code",
+          "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+          "validation_rule_id": "X02V02_EPISODE_URBAN_WALK"
+        }
+      ],
+      "episode_code": "UNKNOWN",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-5-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "fact_id": "5a93a0d5-57cb-5341-b004-24c292ee8afb",
+          "support_grade": "STRONG",
+          "text": "第一人称视角骑行画面，车辆行驶在两旁有民居和电线杆的城市街道上。"
+        }
+      ],
+      "id": "62f52a8c-6e42-5a1c-a89b-56b8e867393a",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "街道",
+        "民居",
+        "电线杆",
+        "车把"
+      ],
+      "quality_score": 0.9,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset-5",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "STREET_SCENE"
+      ]
+    },
+    {
+      "activity_code": "OTHER",
+      "asset_id": "asset-6",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-6-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-6-f0"
+          ],
+          "fact_id": "927fd69a-fcb8-56f7-8198-94967d2f1275",
+          "support_grade": "STRONG",
+          "text": "第一人称视角显示骑行者双手握住公路车弯把，在铺设路面的街道上向前骑行。"
+        }
+      ],
+      "id": "3d7175ba-fc07-5629-a0d2-2ec74d964bfa",
+      "limitations": [
+        "提供的活动代码枚举中不包含“骑行”，故标记为OTHER"
+      ],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "骑行",
+        "街道",
+        "主观视角"
+      ],
+      "quality_score": 0.8,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset-6",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "PEOPLE",
+        "STREET_SCENE"
+      ]
+    },
+    {
+      "activity_code": "OTHER",
+      "asset_id": "asset-7",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-7-f0",
+        "asset-7-f1",
+        "asset-7-f2"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-7-f0",
+            "asset-7-f1",
+            "asset-7-f2"
+          ],
+          "fact_id": "1e4b1a8e-4a38-523c-8dad-1cb9f0030cd7",
+          "support_grade": "MODERATE",
+          "text": "画面展示了骑行者在黄昏时分沿长满杂草的土路前行，右侧可见公寓楼和电线杆。"
+        }
+      ],
+      "id": "3d9b054b-3676-5442-985a-390f7426f5be",
+      "limitations": [
+        "提供的活动代码枚举中不包含“骑行”，故标记为OTHER"
+      ],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "骑行",
+        "土路",
+        "黄昏",
+        "杂草"
+      ],
+      "quality_score": 0.8,
+      "setting_code": "NATURE_TRAIL",
+      "source_asset_id": "asset-7",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "PEOPLE",
+        "LANDSCAPE"
+      ]
+    }
+  ],
+  "output_mode": "CHAPTER_DAY",
+  "production_ready": false,
+  "schema_version": "DIARY_ONE_X02_PRODUCT_PREVIEW_V01",
+  "selected_memory_outcomes": [
+    {
+      "memory_id": "da765480-c387-5adf-88a3-c409ab943bd9",
+      "memory_type": "CHAPTER",
+      "visibility_state": "VISIBLE_PREVIEW"
+    }
+  ],
+  "semantic_day_state": "CHAPTER_DAY",
+  "session_id": "d18555e5-f9c9-4931-ab8e-cdcc9aab6246",
+  "time_reliability": {
+    "capture_time_reliable": false,
+    "interval_reliable": false,
+    "timezone_reliable": false
+  },
+  "timeline_basis": "IMPORT_SEQUENCE_ONLY",
+  "timeline_date": null,
+  "trace": {
+    "pipeline_version": "X02_PRODUCT_EDITOR_V07",
+    "provider": "alibaba_model_studio",
+    "model": "qwen3.8-flash",
+    "stage_metrics": []
+  },
+  "unresolved_asset_ids": []
+}

@@ -1,0 +1,16 @@
+# Branches
+
+## feat/main-algorithms-only · 2026-10-19
+
+- Base: origin/main `602d2cf7f60600e7a7b9d19a87eff5fb7977c84f`; clean worktree at creation.
+- Purpose: retain upstream 2.0 product implementation and port only MobileCLIP-S0 FP16 v07, native evidence timing/lifecycle fixes, R5_7 cloud Chapter/Aha/scene-aware selection and necessary wire/media integration.
+- Source: the working tree of `feat/integrate-v2-preserve-v07` at `782287f4ae83680d1d86bfcb96bbd7e35bc8079d`, including uncommitted algorithm fixes; old checkout is preserved.
+- Upstream UI, authentication, storage, task/import implementation and player are retained. No deployment credentials or runtime datasets are copied.
+- Status: scoped migration and fresh local verification completed; content quality is not accepted. Prior-branch test results are references, not evidence of this branch passing.
+- Minimal upstream compatibility exception: `sha256File.ts` passes the same bytes as `Uint8Array` to Expo 57 Crypto. The unchanged main implementation passed `ArrayBuffer` and failed in the actual iOS native bridge before enqueueing an import. UI, authentication, storage and player implementations remain upstream; 153 protected files are byte-identical to the base.
+- Local validation: algorithm 980 passed / 25 missing-fixture skips, BFF 71 passed, App core 39 passed, mobile targeted 45 passed, SHA-256 compatibility 6 passed; 28 strategy / 5 pixel fixtures and 10 macOS AVFoundation cases passed. Typecheck passes; lint has 0 errors and 7 warnings. These counts describe separate suites, not a unique-test grand total.
+- Real cloud verification: four fresh groups (27 videos, 53 existing verified S0 frames, 85 model calls) passed HTTP, application-contract and PostgreSQL/MinIO persistence checks. Content failures remain: hero/title/body scope mismatch, missing structural fields, rigid copy and inconsistent per-claim visual judgments.
+- Actual arm64 iOS simulator Release: six previously failing cycling originals were imported through Photos, decoded with AVFoundation and selected with S0 FP16 v07 into 14 frames, uploaded and processed by qwen3.8-flash; 1 Aha was persisted and survived a cold restart. Raw original/frame SHA and selected PTS were independently verified. No Chapter survived the cloud semantic/structural gates in this run, so native Chapter display and playback were not exercised. Aha uses the upstream text-only SmallMemory UI/model.
+- Local cloud activation: set the server-side, non-secret `DIARY_ONE_X02_EDITOR=product_v1` to use the migrated product editor; the upstream legacy default remains available. Provider credentials belong only in the server environment. Public `eas.json` and its BFF address are unchanged; this test Release used a separate local BFF at `http://127.0.0.1:8909` with an ordinary signed-in session.
+- Not verified/deployed: public infrastructure, physical iPhone/BLE, Apple/Google OAuth, TestFlight, upgrade/sandbox relocation, development hot refresh, native Chapter playback, and the normal Redis notification path (local tests exercised upstream durable PostgreSQL recovery).
+- Evidence: /Users/youtang/Documents/Nexleap/work_logs/evidence/main-algorithms-only-20261019-195307

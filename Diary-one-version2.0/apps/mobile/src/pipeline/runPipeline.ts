@@ -324,11 +324,11 @@ export async function runPipeline(taskId: string, items: PickedMedia[]): Promise
         task?.dayRevisionId ?? taskId,
       );
       assertOwner();
-      const valid = validatePreviewResult(preview, { manifest: bundle, manifestSha256 });
+      const valid = await validatePreviewResult(preview, { manifest: bundle, manifestSha256 });
+      assertOwner();
       if (!valid.ok) {
         throw new Error(`Result validation failed: ${valid.reason}`);
       }
-      assertOwner();
       const dayKey =
         useAppStore.getState().pipelineTasks.find((t) => t.id === taskId)?.dayKey ?? diaryTodayKey();
       const mapped = mapPreviewToDiary(preview, dayKey);
@@ -443,7 +443,8 @@ export function resumeInFlightCloudJobs(): void {
           const manifest = JSON.parse(raw) as import('./bundleTypes').AppLibraryBundle;
           const manifestSha256 = await sha256SubmittedManifest(manifest);
           if (!stillOwns(t.id)) return;
-          const valid = validatePreviewResult(preview, { manifest, manifestSha256 });
+          const valid = await validatePreviewResult(preview, { manifest, manifestSha256 });
+          if (!stillOwns(t.id)) return;
           if (!valid.ok) throw new Error(valid.reason);
           const mapped = mapPreviewToDiary(preview, t.dayKey);
           const chaptersWithHero = await attachChapterMediaFromBundle(

@@ -61,6 +61,34 @@ class AppClientProfileTests(unittest.TestCase):
             self.assertIn("Pets", loaded["boost_tags"])
             self.assertTrue(acp.prompt_instruction(loaded))
 
+    def test_invalid_http_profile_never_replaces_saved_profile(self):
+        invalid_values = [
+            [], None, "cycling",
+            {"schema_version": "APP_CLIENT_PROFILE_V99", "writing_style": "warm"},
+            {"schema_version": None},
+            {"writing_style": 4},
+        ]
+        for key in ("memory_preferences", "boost_tags", "avoid_topics", "preferred_categories"):
+            invalid_values.extend([{key: "cycling"}, {key: ["cycling", 3]}, {key: None}])
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            acp.write_profile(root, b'{"boost_tags":["cycling"]}')
+            path = root / acp.PROFILE_FILENAME
+            before = path.read_bytes()
+            for value in invalid_values:
+                with self.subTest(value=value):
+                    with self.assertRaises(ValueError):
+                        acp.write_profile(root, json.dumps(value).encode("utf-8"))
+                    self.assertEqual(path.read_bytes(), before)
+
+    def test_legacy_upload_lines_and_empty_profile_are_still_accepted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            legacy = acp.write_profile(root, b'{"memory_preferences":["Writing style: Warm"]}')
+            self.assertEqual(legacy["writing_style"], "Warm")
+            self.assertFalse(acp.write_profile(root, b'{}')["present"])
+            self.assertFalse(acp.write_profile(root, b'{"writing_style":null}')["present"])
+
 
 if __name__ == "__main__":
     unittest.main()

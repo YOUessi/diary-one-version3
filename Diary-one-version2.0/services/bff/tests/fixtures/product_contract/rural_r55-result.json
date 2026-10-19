@@ -1,0 +1,1018 @@
+{
+  "ahas": [
+    {
+      "claims": [
+        {
+          "asset_id": "V003",
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "fact_id": "002a78e3-a130-5787-a9db-b47efd2c768a",
+          "frame_pts_ms": [
+            5000
+          ],
+          "id": "F004",
+          "observation_id": "1cd936eb-23d0-5ffd-b18b-d2c9a1b5ba8b",
+          "original_text": "画面显示一条狭窄的乡村铺装小路，两侧有茂密的竹林和杂草，远处可见民宅。",
+          "source_asset_id": "asset-2",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "画面显示一条狭窄的乡村碎石和泥土混合而成的路面，两侧有茂密的竹林和杂草，远处可见民宅。",
+          "visual_reviewed": true
+        }
+      ],
+      "id": "41ecdf76-4f26-5bf5-b2e1-4b10fc6c384c",
+      "publication_status": "STAGED_PREVIEW_VALIDATED",
+      "revisit_reason": "符合骑行场景中关于“沿途具体发现、明显地形或景观细节”的高光标准，提供了不同于普通路面的体验记忆。",
+      "selected_media": [
+        {
+          "asset_id": "asset-2",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "focus_pts_ms": 5000,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "role": "CORE",
+          "source_asset_id": "asset-2",
+          "source_sequence_index": 2,
+          "start_ms": 0
+        }
+      ],
+      "source_sequence_index": 2,
+      "story": "穿过茂密竹林和杂草的狭窄乡村碎石泥土路",
+      "value_type": "SCENIC_DISCOVERY"
+    },
+    {
+      "claims": [
+        {
+          "asset_id": "V008",
+          "evidence_frame_ids": [
+            "asset-7-f0"
+          ],
+          "fact_id": "0c1ec9b1-c59d-55b6-b75f-509e2bc16c80",
+          "frame_pts_ms": [
+            8000
+          ],
+          "id": "F009",
+          "observation_id": "b85e4dbb-8fa0-5e21-bbf5-3a1a0cfe2f74",
+          "original_text": "第一人称视角显示双手佩戴手套握着自行车把手，前方是一条穿过树林的泥土小径。",
+          "source_asset_id": "asset-7",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "第一人称视角显示双手佩戴手套握着自行车把手，前方是一条穿过树林的泥土小径。",
+          "visual_reviewed": true
+        }
+      ],
+      "id": "05ed0701-da70-590d-9dce-e66e24564353",
+      "publication_status": "STAGED_PREVIEW_VALIDATED",
+      "revisit_reason": "清晰呈现了林间土路的具体地形特征，属于骑行经历中值得保留的景观细节。",
+      "selected_media": [
+        {
+          "asset_id": "asset-7",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-7-f0"
+          ],
+          "focus_pts_ms": 8000,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "role": "CORE",
+          "source_asset_id": "asset-7",
+          "source_sequence_index": 7,
+          "start_ms": 0
+        }
+      ],
+      "source_sequence_index": 7,
+      "story": "沿着穿过树林的泥土小径骑行",
+      "value_type": "SCENIC_DISCOVERY"
+    }
+  ],
+  "bundle_manifest_sha256": "ec8109a1a3736a7369e4ec65cbb265439f43194ad99172fa5e942cd64266488e",
+  "chapters": [],
+  "coverage_status": "COMPLETE",
+  "decision_trace": {
+    "editor_revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_5",
+    "fact_coverage": [
+      {
+        "fact_id": "F001",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F002",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F003",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F004",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F005",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F006",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F007",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F008",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F009",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      }
+    ],
+    "semantic_review": [
+      {
+        "copy_issues": [
+          {
+            "code": "MULTI_ASSET_SENTENCE",
+            "fact_ids": [
+              "F002",
+              "F005"
+            ],
+            "sentence_index": 1,
+            "source_index": 1
+          },
+          {
+            "asset_id": null,
+            "code": "CROSS_CLIP_TRANSITION",
+            "fact_ids": [
+              "F002",
+              "F005"
+            ],
+            "local_change_fact_ids": [
+              "F002"
+            ],
+            "previous_asset_id": "V008",
+            "repair_requirement": "本句不能承接上一视频的地点或动作；片内变化须在本句交代自己的起点。CHANGE不证明跨片连续。",
+            "sentence_index": 1,
+            "source_index": 1,
+            "trigger_span": [
+              0,
+              2
+            ],
+            "trigger_text": "来到"
+          }
+        ],
+        "id": "C01",
+        "reason": "MULTI_ASSET_SENTENCE:1：本句引用多个视频，请只选一个视频的事实重写，不能只删引用; CROSS_CLIP_TRANSITION:1：本句不能承接上一视频的地点或动作；片内变化须在本句交代自己的起点。CHANGE不证明跨片连续。；触发词“来到”，V008→None",
+        "reviewed": true,
+        "status": "BLOCKED"
+      },
+      {
+        "id": "M02",
+        "reason": "事实与表达一致",
+        "reviewed": true,
+        "status": "ACCEPTED",
+        "style_flags": []
+      }
+    ],
+    "prompt_sha256": {
+      "copy_repair": "a4e0f49f57b8692f76345c9a4eaee33cd3ab7a8560c35109e65a87bf610feefa",
+      "coverage_review": "fb4604528364016e6b861d051dcbb402f17b1b3c5b299bd66c9192f3f6c41028",
+      "editor": "78eb16cdd8b2bff9df5fea7b6d771e2f994a9e69627fd75d14170eb91a9ae2dd",
+      "final_copy_verification": "c37ca3e4c501660d3b1d3acf10104e98d1941d9ebc91864b211ea57e616f7b1b",
+      "frame_observation": "a01a71a7de7b7a02596903300078061dfb79ae86985b244da6d3a1b3b4d93c5c",
+      "frame_selection": "270b7c0ee1e44f2e34bb42e6c0d2e50a6bd78c48bbdf1f8a0434be0b2d8aeaac",
+      "independent_scene": "1687d661d47edf5c9f7e4d6c415530d46d559aba1418946b6313d7bf77393e5c",
+      "media_selection": "d75cb200944bdfc4ce6dd2ba07e549eeae7db7e97cb3fda8e70b0ac457e7593a",
+      "moment_value": "a2c36254019a5b68dff76c55f30bb4f393d61746862d7648e71178fb7b2d291f",
+      "narrative_brief": "9feb5d30fd64bec06e18f5f2544fd4560cc224c01a8cd07ed5420cee7fcb3c56",
+      "relation_review": "64da6f12eba4685f5e13a9a17599940de6520dbbb41f77f3f3adfcff306a76d4",
+      "review": "5a4ddeb57a5c7ee16b1926e937e1079394554483fecc40ed86ef0032537ddaa3",
+      "spatial_relation_verification": "abadea74e41a3dffb0faad81e2927fa99be5c2c94f457e6184c5560959eb7e7d",
+      "structure_review": "c4a73f458127e5bb5ad11f460435e8ca72c70618e1ee5d8249041466956d86db",
+      "visual_review": "a3efa193b1dd249e3f4586060f2168acb666beff9a1c4769939157223f2ea955",
+      "writer": "4c31de751556841df3f85df0eea37dcbdf32edd743b664d7455386b6ae3accc4"
+    },
+    "verified_facts": {
+      "F001": {
+        "asset_id": "V001",
+        "evidence_frame_ids": [
+          "asset-0-f0"
+        ],
+        "fact_id": "a1646fab-b571-5c1c-84fc-d7838850e87b",
+        "frame_pts_ms": [
+          4000
+        ],
+        "id": "F001",
+        "observation_id": "f786fb1d-889c-532d-abb6-9b68cd103929",
+        "original_text": "画面显示一条带有蓝色铺装路面的专用车道，右侧为机动车道及高架桥，左侧可见商业建筑。",
+        "source_asset_id": "asset-0",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "画面显示一条带有蓝色铺装路面的专用车道，右侧为机动车道及高架桥，左侧可见商业建筑。",
+        "visual_reviewed": true
+      },
+      "F002": {
+        "asset_id": "V002",
+        "evidence_frame_ids": [
+          "asset-1-f0",
+          "asset-1-f1",
+          "asset-1-f2"
+        ],
+        "fact_id": "cd7cd12f-49e5-5143-964e-e3460da45fc3",
+        "frame_pts_ms": [
+          0,
+          3000,
+          5000
+        ],
+        "id": "F002",
+        "observation_id": "4ff121df-f5d3-58d5-b349-4369b0ad377e",
+        "original_text": "第一人称视角骑行视频，骑行者双手握把，从植被茂密的路段行驶至与城市道路交汇处。",
+        "source_asset_id": "asset-1",
+        "support_grade": "STRONG",
+        "temporal_support": "CHANGE",
+        "text": "第一人称视角骑行视频，骑行者双手握把，从植被茂密的路段行驶至与城市道路交汇处。",
+        "visual_reviewed": true
+      },
+      "F003": {
+        "asset_id": "V002",
+        "evidence_frame_ids": [
+          "asset-1-f2"
+        ],
+        "fact_id": "d290dbd9-7f96-53ce-b34d-311887043148",
+        "frame_pts_ms": [
+          5000
+        ],
+        "id": "F003",
+        "observation_id": "4ff121df-f5d3-58d5-b349-4369b0ad377e",
+        "original_text": "在f2帧中，镜头明显向右倾斜，显示骑行者在路口转弯或调整车身姿态。",
+        "source_asset_id": "asset-1",
+        "support_grade": "MODERATE",
+        "temporal_support": "STATE",
+        "text": "在f2帧中，镜头明显向右倾斜，显示骑行者在路口转弯或调整车身姿态。",
+        "visual_reviewed": true
+      },
+      "F004": {
+        "asset_id": "V003",
+        "evidence_frame_ids": [
+          "asset-2-f0"
+        ],
+        "fact_id": "002a78e3-a130-5787-a9db-b47efd2c768a",
+        "frame_pts_ms": [
+          5000
+        ],
+        "id": "F004",
+        "observation_id": "1cd936eb-23d0-5ffd-b18b-d2c9a1b5ba8b",
+        "original_text": "画面显示一条狭窄的乡村铺装小路，两侧有茂密的竹林和杂草，远处可见民宅。",
+        "source_asset_id": "asset-2",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "画面显示一条狭窄的乡村碎石和泥土混合而成的路面，两侧有茂密的竹林和杂草，远处可见民宅。",
+        "visual_reviewed": true
+      },
+      "F005": {
+        "asset_id": "V004",
+        "evidence_frame_ids": [
+          "asset-3-f0"
+        ],
+        "fact_id": "945f1b1c-7734-5e02-b88d-f14197408984",
+        "frame_pts_ms": [
+          8000
+        ],
+        "id": "F005",
+        "observation_id": "a980e5b0-b036-5e5e-a16a-b22de1d12a54",
+        "original_text": "画面显示第一人称视角，佩戴黑色手套的双手握住自行车车把。前方可见机动车道、白色隔离护栏、绿化带及高架桥结构，远处有行驶中的汽车。",
+        "source_asset_id": "asset-3",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "画面显示第一人称视角，佩戴黑色手套的双手握住自行车车把。前方可见机动车道、白色隔离护栏、绿化带及高架桥结构，远处有行驶中的汽车。",
+        "visual_reviewed": true
+      },
+      "F006": {
+        "asset_id": "V005",
+        "evidence_frame_ids": [
+          "asset-4-f0"
+        ],
+        "fact_id": "610cbab4-c06a-5374-abde-69ca33b3ded4",
+        "frame_pts_ms": [
+          1000
+        ],
+        "id": "F006",
+        "observation_id": "48fa14da-bde7-5f42-a389-e4c485296b32",
+        "original_text": "第一人称骑行视角停在或经过路口斑马线前。左侧可见红绿灯杆和电线杆，背景为低层住宅建筑，天空多云。",
+        "source_asset_id": "asset-4",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "第一人称骑行视角停在或经过路口斑马线前。左侧可见红绿灯杆和电线杆，背景为低层住宅建筑，天空多云。",
+        "visual_reviewed": true
+      },
+      "F007": {
+        "asset_id": "V006",
+        "evidence_frame_ids": [
+          "asset-5-f0",
+          "asset-5-f1",
+          "asset-5-f2"
+        ],
+        "fact_id": "bffda9a9-d2ed-52fc-9748-932762b8efaa",
+        "frame_pts_ms": [
+          1000,
+          5000,
+          9000
+        ],
+        "id": "F007",
+        "observation_id": "8f1b1033-290d-5e18-9124-cf8b2acddfc3",
+        "original_text": "视频记录了沿乡间公路骑行的过程。从开阔道路（f0）行进至弯道处（f2），沿途可见茂密植被、输电铁塔及路边停靠的白色小货车。",
+        "source_asset_id": "asset-5",
+        "support_grade": "STRONG",
+        "temporal_support": "CHANGE",
+        "text": "视频记录了沿乡间公路骑行的过程。从开阔道路（f0）行进至弯道处（f2），沿途可见茂密植被、输电铁塔及路边停靠的白色小货车。",
+        "visual_reviewed": true
+      },
+      "F008": {
+        "asset_id": "V007",
+        "evidence_frame_ids": [
+          "asset-6-f0"
+        ],
+        "fact_id": "306795e1-0ddb-572a-887a-47287c50c248",
+        "frame_pts_ms": [
+          4000
+        ],
+        "id": "F008",
+        "observation_id": "d4effa90-d252-54c6-baa6-19fb002e68bc",
+        "original_text": "可见一条狭窄的柏油路，路边有金属护栏、杂草丛生的植被以及一座屋顶破损的建筑。",
+        "source_asset_id": "asset-6",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "可见一条狭窄的柏油路，路边有金属护栏、杂草丛生的植被以及一座屋顶破损的建筑。",
+        "visual_reviewed": true
+      },
+      "F009": {
+        "asset_id": "V008",
+        "evidence_frame_ids": [
+          "asset-7-f0"
+        ],
+        "fact_id": "0c1ec9b1-c59d-55b6-b75f-509e2bc16c80",
+        "frame_pts_ms": [
+          8000
+        ],
+        "id": "F009",
+        "observation_id": "b85e4dbb-8fa0-5e21-bbf5-3a1a0cfe2f74",
+        "original_text": "第一人称视角显示双手佩戴手套握着自行车把手，前方是一条穿过树林的泥土小径。",
+        "source_asset_id": "asset-7",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "第一人称视角显示双手佩戴手套握着自行车把手，前方是一条穿过树林的泥土小径。",
+        "visual_reviewed": true
+      }
+    },
+    "selected_structure": {
+      "chapters": [
+        {
+          "candidate_selection_audit": {
+            "capacity_omitted_asset_ids": [],
+            "capacity_omitted_candidates": [],
+            "capacity_rule": "EXPLICIT_HERO_PLUS_FIRST_RANKED_OTHER_ASSETS",
+            "deduplicated_candidates": [],
+            "hero_candidate_id": "P004",
+            "max_selected_assets": 5,
+            "ranked_candidate_ids": [
+              "P004",
+              "P009",
+              "P006",
+              "P008",
+              "P001"
+            ],
+            "rule": "ONE_PER_ASSET_EXPLICIT_HERO_ELSE_MODEL_PREFERENCE_ORDER",
+            "selected_candidate_ids": [
+              "P004",
+              "P009",
+              "P006",
+              "P008",
+              "P001"
+            ]
+          },
+          "fact_ids": [
+            "F001",
+            "F002",
+            "F003",
+            "F004",
+            "F005",
+            "F006",
+            "F007",
+            "F008",
+            "F009"
+          ],
+          "grouping_reason": "所有事实均支持第一人称骑行活动，环境变化（城市/乡村）不改变活动本质，合并为一次完整经历。",
+          "hero_asset_id": "V004",
+          "hero_frame_id": "asset-3-f0",
+          "id": "C01",
+          "media_choices": [
+            {
+              "asset_id": "V004",
+              "fact_ids": [
+                "F005"
+              ],
+              "frame_id": "asset-3-f0",
+              "reason": "第一人称视角，佩戴黑色手套的双手握住自行车车把。前方可见机动车道、白色隔离护栏、绿化带及高架桥结构，远处有行驶中的汽车。",
+              "role": "PRIMARY"
+            },
+            {
+              "asset_id": "V002",
+              "fact_ids": [
+                "F002"
+              ],
+              "frame_id": "asset-1-f1",
+              "reason": "第一人称视角骑行视频，骑行者双手握把，从植被茂密的路段驶向城市道路交汇处。",
+              "role": "SUPPORT"
+            },
+            {
+              "asset_id": "V006",
+              "fact_ids": [
+                "F007"
+              ],
+              "frame_id": "asset-5-f0",
+              "reason": "沿乡间公路骑行的过程。开阔道路上可见茂密植被及输电铁塔。",
+              "role": "SUPPORT"
+            },
+            {
+              "asset_id": "V008",
+              "fact_ids": [
+                "F009"
+              ],
+              "frame_id": "asset-7-f0",
+              "reason": "第一人称视角显示双手佩戴手套握着自行车把手，前方是一条穿过树林的泥土小径。",
+              "role": "SUPPORT"
+            },
+            {
+              "asset_id": "V001",
+              "fact_ids": [
+                "F001"
+              ],
+              "frame_id": "asset-0-f0",
+              "reason": "一条带有蓝色铺装路面的专用车道，右侧为机动车道及高架桥，左侧可见商业建筑。",
+              "role": "SUPPORT"
+            }
+          ],
+          "selected_asset_ids": [
+            "V004",
+            "V002",
+            "V006",
+            "V008",
+            "V001"
+          ],
+          "selection_focus": {
+            "experience_kind": "CYCLING",
+            "fact_ids": [
+              "F002",
+              "F005",
+              "F007",
+              "F009"
+            ],
+            "focus": "穿越城市与乡野不同道路环境的骑行状态"
+          },
+          "theme": "第一人称骑行视角记录"
+        }
+      ],
+      "moments": [
+        {
+          "anchor_reviewed_with_images": true,
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ],
+          "comparison_reason": "相比M01的普通路口转弯，本候选明确捕捉到了穿越树林的泥土小径这一具体的非铺装路面环境变化，具有更清晰的视觉记忆价值。",
+          "event_group_id": "M02",
+          "fact_id": "F009",
+          "focus": "第一人称视角穿过树林的泥土小径特写",
+          "focus_frame_ids": [
+            "asset-7-f0"
+          ],
+          "id": "M02",
+          "parent_chapter_id": "C01",
+          "revisit_reason": "画面清晰呈现了骑行进入林间泥土小径的具体场景，符合骑行场景中“明显地形或景观细节”的高光优先项。",
+          "value_type": "SCENIC_DISCOVERY"
+        },
+        {
+          "anchor_reviewed_with_images": true,
+          "chapter_relations": [],
+          "comparison_reason": "与城市道路相比，该路段展示了具体的乡野地貌和植被特征。",
+          "event_group_id": "M91",
+          "fact_id": "F004",
+          "focus": "穿过茂密竹林和杂草的狭窄乡村碎石泥土路",
+          "focus_frame_ids": [
+            "asset-2-f0"
+          ],
+          "id": "M91",
+          "parent_chapter_id": null,
+          "revisit_reason": "符合骑行场景中关于“沿途具体发现、明显地形或景观细节”的高光标准，提供了不同于普通路面的体验记忆。",
+          "value_type": "SCENIC_DISCOVERY"
+        },
+        {
+          "anchor_reviewed_with_images": true,
+          "chapter_relations": [],
+          "comparison_reason": "独特的林间越野小径，与一般铺装道路形成鲜明对比。",
+          "event_group_id": "M92",
+          "fact_id": "F009",
+          "focus": "第一人称视角下沿着穿过树林的泥土小径骑行",
+          "focus_frame_ids": [
+            "asset-7-f0"
+          ],
+          "id": "M92",
+          "parent_chapter_id": null,
+          "revisit_reason": "清晰呈现了林间土路的具体地形特征，属于骑行经历中值得保留的景观细节。",
+          "value_type": "SCENIC_DISCOVERY"
+        }
+      ]
+    },
+    "visual_fact_ledger": [
+      {
+        "asset_id": "V001",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F001",
+        "model_text_matches_applied": true,
+        "reason": "图片中清晰可见蓝色自行车道、右侧机动车道与高架桥结构，以及左侧的商业建筑（疑似停车场）。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V002",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F002",
+        "model_text_matches_applied": true,
+        "reason": "序列帧展示了从两侧有灌木的窄路行驶至路口并汇入城市道路的过程。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V002",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F003",
+        "model_text_matches_applied": true,
+        "reason": "asset-1-f2 帧中地平线明显向右下倾斜，符合转弯时的视觉特征。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "applied_text": "画面显示一条狭窄的乡村碎石和泥土混合而成的路面，两侧有茂密的竹林和杂草，远处可见民宅。",
+        "asset_id": "V003",
+        "changed": true,
+        "corrections": [
+          {
+            "rejected_text": "铺装小路",
+            "replacement_text": "碎石和泥土混合而成的路面"
+          }
+        ],
+        "decision": "CORRECT",
+        "fact_id": "F004",
+        "model_text": "画面显示一条狭窄的乡村小路，路面由碎石和泥土混合而成，两侧有茂密的竹林和杂草，远处可见民宅。",
+        "model_text_matches_applied": false,
+        "reason": "原描述称“铺装小路”，但图片显示路面粗糙，为典型的非铺装碎石土路。",
+        "status": "VERIFIED",
+        "text_source": "APPLIED_CORRECTIONS"
+      },
+      {
+        "asset_id": "V004",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F005",
+        "model_text_matches_applied": true,
+        "reason": "图片细节完全符合描述，包括手套颜色、白色护栏、高架桥及车辆。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V005",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F006",
+        "model_text_matches_applied": true,
+        "reason": "图片显示骑行者在斑马线前，左侧有信号灯柱，背景为住宅区。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V006",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F007",
+        "model_text_matches_applied": true,
+        "reason": "多帧图像支持了从直路到弯道的行进过程，且包含了输电塔和路边停放的白色小货车。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V007",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F008",
+        "model_text_matches_applied": true,
+        "reason": "图片清晰显示了柏油路、波形护栏、杂草以及左侧一栋屋顶塌陷的废弃建筑。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V008",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F009",
+        "model_text_matches_applied": true,
+        "reason": "图片内容与描述一致，为林间泥土路骑行视角。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      }
+    ],
+    "recovery_visual_ledger": []
+  },
+  "delivery_state": "READY_WITH_ITEM_BLOCKS",
+  "editor_policy": "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07",
+  "experimental": true,
+  "moments": [],
+  "observations": [
+    {
+      "activity_code": "TRANSIT",
+      "asset_id": "asset-0",
+      "degraded_fields": [],
+      "episode_code": "TRANSIT",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-0-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ],
+          "fact_id": "a1646fab-b571-5c1c-84fc-d7838850e87b",
+          "support_grade": "STRONG",
+          "text": "画面显示一条带有蓝色铺装路面的专用车道，右侧为机动车道及高架桥，左侧可见商业建筑。"
+        }
+      ],
+      "id": "f786fb1d-889c-532d-abb6-9b68cd103929",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "蓝色自行车道",
+        "高架桥",
+        "道路标识"
+      ],
+      "quality_score": 0.9,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset-0",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "STREET_SCENE"
+      ]
+    },
+    {
+      "activity_code": "TRANSIT",
+      "asset_id": "asset-1",
+      "degraded_fields": [],
+      "episode_code": "TRANSIT",
+      "event_kind": "ACTION",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "asset-1-f0",
+        "asset-1-f1",
+        "asset-1-f2"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-1-f0",
+            "asset-1-f1",
+            "asset-1-f2"
+          ],
+          "fact_id": "cd7cd12f-49e5-5143-964e-e3460da45fc3",
+          "support_grade": "STRONG",
+          "text": "第一人称视角骑行视频，骑行者双手握把，从植被茂密的路段行驶至与城市道路交汇处。"
+        },
+        {
+          "evidence_frame_ids": [
+            "asset-1-f2"
+          ],
+          "fact_id": "d290dbd9-7f96-53ce-b34d-311887043148",
+          "support_grade": "MODERATE",
+          "text": "在f2帧中，镜头明显向右倾斜，显示骑行者在路口转弯或调整车身姿态。"
+        }
+      ],
+      "id": "4ff121df-f5d3-58d5-b349-4369b0ad377e",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "第一人称视角",
+        "车把",
+        "绿化带",
+        "路口"
+      ],
+      "quality_score": 0.85,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset-1",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "PEOPLE"
+      ]
+    },
+    {
+      "activity_code": "UNKNOWN",
+      "asset_id": "asset-2",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-2-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "fact_id": "002a78e3-a130-5787-a9db-b47efd2c768a",
+          "support_grade": "STRONG",
+          "text": "画面显示一条狭窄的乡村铺装小路，两侧有茂密的竹林和杂草，远处可见民宅。"
+        }
+      ],
+      "id": "1cd936eb-23d0-5ffd-b18b-d2c9a1b5ba8b",
+      "limitations": [
+        "单帧画面缺乏动作连续性，无法确认是步行还是骑行（尽管底部边缘疑似有车把手）。"
+      ],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "竹林",
+        "乡间小路",
+        "绿色植被"
+      ],
+      "quality_score": 0.7,
+      "setting_code": "NATURE_TRAIL",
+      "source_asset_id": "asset-2",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "LANDSCAPE"
+      ]
+    },
+    {
+      "activity_code": "TRANSIT",
+      "asset_id": "asset-3",
+      "degraded_fields": [],
+      "episode_code": "TRANSIT",
+      "event_kind": "ACTION",
+      "event_salience": "LOW",
+      "evidence_frame_ids": [
+        "asset-3-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-3-f0"
+          ],
+          "fact_id": "945f1b1c-7734-5e02-b88d-f14197408984",
+          "support_grade": "STRONG",
+          "text": "画面显示第一人称视角，佩戴黑色手套的双手握住自行车车把。前方可见机动车道、白色隔离护栏、绿化带及高架桥结构，远处有行驶中的汽车。"
+        }
+      ],
+      "id": "a980e5b0-b036-5e5e-a16a-b22de1d12a54",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "cycling",
+        "pov",
+        "road",
+        "infrastructure"
+      ],
+      "quality_score": 1.0,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset-3",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "OTHER"
+      ]
+    },
+    {
+      "activity_code": "TRANSIT",
+      "asset_id": "asset-4",
+      "degraded_fields": [],
+      "episode_code": "TRANSIT",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-4-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-4-f0"
+          ],
+          "fact_id": "610cbab4-c06a-5374-abde-69ca33b3ded4",
+          "support_grade": "STRONG",
+          "text": "第一人称骑行视角停在或经过路口斑马线前。左侧可见红绿灯杆和电线杆，背景为低层住宅建筑，天空多云。"
+        }
+      ],
+      "id": "48fa14da-bde7-5f42-a389-e4c485296b32",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "intersection",
+        "crosswalk",
+        "traffic_light",
+        "residential"
+      ],
+      "quality_score": 1.0,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset-4",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "STREET_SCENE"
+      ]
+    },
+    {
+      "activity_code": "TRANSIT",
+      "asset_id": "asset-5",
+      "degraded_fields": [],
+      "episode_code": "TRANSIT",
+      "event_kind": "TRANSITION",
+      "event_salience": "LOW",
+      "evidence_frame_ids": [
+        "asset-5-f0",
+        "asset-5-f1",
+        "asset-5-f2"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-5-f0",
+            "asset-5-f1",
+            "asset-5-f2"
+          ],
+          "fact_id": "bffda9a9-d2ed-52fc-9748-932762b8efaa",
+          "support_grade": "STRONG",
+          "text": "视频记录了沿乡间公路骑行的过程。从开阔道路（f0）行进至弯道处（f2），沿途可见茂密植被、输电铁塔及路边停靠的白色小货车。"
+        }
+      ],
+      "id": "8f1b1033-290d-5e18-9124-cf8b2acddfc3",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "rural_road",
+        "greenery",
+        "cycling",
+        "power_lines"
+      ],
+      "quality_score": 1.0,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset-5",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "LANDSCAPE"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-6",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-6-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-6-f0"
+          ],
+          "fact_id": "306795e1-0ddb-572a-887a-47287c50c248",
+          "support_grade": "STRONG",
+          "text": "可见一条狭窄的柏油路，路边有金属护栏、杂草丛生的植被以及一座屋顶破损的建筑。"
+        }
+      ],
+      "id": "d4effa90-d252-54c6-baa6-19fb002e68bc",
+      "limitations": [
+        "单帧视频窗口无法确认移动或具体活动"
+      ],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "road",
+        "vegetation",
+        "building",
+        "guardrail"
+      ],
+      "quality_score": 0.8,
+      "setting_code": "URBAN_STREET",
+      "source_asset_id": "asset-6",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "STREET_SCENE",
+        "LANDSCAPE"
+      ]
+    },
+    {
+      "activity_code": "OTHER",
+      "asset_id": "asset-7",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "ACTION",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "asset-7-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-7-f0"
+          ],
+          "fact_id": "0c1ec9b1-c59d-55b6-b75f-509e2bc16c80",
+          "support_grade": "STRONG",
+          "text": "第一人称视角显示双手佩戴手套握着自行车把手，前方是一条穿过树林的泥土小径。"
+        }
+      ],
+      "id": "b85e4dbb-8fa0-5e21-bbf5-3a1a0cfe2f74",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "cycling",
+        "forest",
+        "trail",
+        "handlebars"
+      ],
+      "quality_score": 0.95,
+      "setting_code": "NATURE_TRAIL",
+      "source_asset_id": "asset-7",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "PEOPLE",
+        "LANDSCAPE"
+      ]
+    }
+  ],
+  "output_mode": "HIGHLIGHT_DAY",
+  "production_ready": false,
+  "schema_version": "DIARY_ONE_X02_PRODUCT_PREVIEW_V01",
+  "selected_memory_outcomes": [
+    {
+      "memory_id": "f3cf7221-f7a7-5496-bb1b-9c9fba11e66c",
+      "memory_type": "CHAPTER",
+      "visibility_state": "DIAGNOSTIC_ONLY"
+    },
+    {
+      "memory_id": "41ecdf76-4f26-5bf5-b2e1-4b10fc6c384c",
+      "memory_type": "AHA",
+      "visibility_state": "VISIBLE_PREVIEW"
+    },
+    {
+      "memory_id": "05ed0701-da70-590d-9dce-e66e24564353",
+      "memory_type": "AHA",
+      "visibility_state": "VISIBLE_PREVIEW"
+    }
+  ],
+  "semantic_day_state": "HIGHLIGHT_DAY",
+  "session_id": "539574d6-c072-44e8-a120-caf17ebd563e",
+  "time_reliability": {
+    "capture_time_reliable": false,
+    "interval_reliable": false,
+    "timezone_reliable": false
+  },
+  "timeline_basis": "IMPORT_SEQUENCE_ONLY",
+  "timeline_date": null,
+  "trace": {
+    "pipeline_version": "X02_PRODUCT_EDITOR_V07",
+    "provider": "alibaba_model_studio",
+    "model": "qwen3.8-flash",
+    "stage_metrics": []
+  },
+  "unresolved_asset_ids": []
+}

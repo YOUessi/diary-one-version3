@@ -1,0 +1,58 @@
+{
+  "source": "/Users/youtang/Documents/Nexleap/work_logs/evidence/repair-native-cloud-20261019-174228/cloud-r56/fixed-title-replay-result.json",
+  "source_sha256": "cda2a4ef9df5917ca3b1987d4296de27b2ce14bbe4eb0e404bab805148222693",
+  "revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_6",
+  "raw_title_patch": {
+    "id": "C01",
+    "title": "林间土路骑行至城市道路交汇",
+    "title_fact_ids": [
+      "F009",
+      "F002"
+    ]
+  },
+  "retained_body": [
+    {
+      "text": "骑车穿过树林，双手握着车把行驶在泥土小径上。",
+      "fact_ids": [
+        "F009"
+      ],
+      "source_index": 0
+    },
+    {
+      "text": "骑行至植被茂密路段与城市道路交汇处。",
+      "fact_ids": [
+        "F002"
+      ],
+      "source_index": 1
+    },
+    {
+      "text": "前方可见机动车道、白色隔离护栏和高架桥结构。",
+      "fact_ids": [
+        "F005"
+      ],
+      "source_index": 2
+    }
+  ],
+  "independent_title_verdict": {
+    "id": "C01",
+    "title_supported": false,
+    "title_reason": "Claim文本描述为“林间土路骑行至城市道路交汇”，暗示了一个从自然地形过渡到城市地形的连续过程。然而，提供的frame_refs包含两个完全不同的视频源：asset-7（F009）仅展示了林间土路，而asset-1（F002）展示的是铺装路面（柏油路）接近路口，并非土路直接汇入。虽然图片共同涵盖了“林间”和“城市道路”两个场景，但视觉上缺乏连接两者的证据（即没有显示从土路变为铺装路的过程），且两个片段可能来自不同地点或时间，无法证实“骑行至...交汇”这一空间位移的连续性事实。",
+    "sentences": [
+      {
+        "source_index": 0,
+        "supported": true,
+        "reason": "图像为第一人称视角，画面下方清晰可见戴手套的双手握住车把，正前方是一条穿过树林的泥土小径，与文字描述一致。"
+      },
+      {
+        "source_index": 1,
+        "supported": true,
+        "reason": "视频帧序列完整展示了该过程：asset-1-f0显示骑行者在植被茂密的小路上行驶；asset-1-f1显示小路尽头连接着有车辆、房屋和路牌的开阔区域；asset-1-f2视角转入带有蓝色铺装和标线的城市道路，证实了从植被路段至城市道路交汇处的移动轨迹。"
+      },
+      {
+        "source_index": 2,
+        "supported": true,
+        "reason": "图像中前方右侧可见沥青路面及行驶的白色机动车，左侧可见白色金属隔离护栏，右上方背景处可见高架桥结构，所有描述要素均在图中清晰呈现。"
+      }
+    ]
+  }
+}

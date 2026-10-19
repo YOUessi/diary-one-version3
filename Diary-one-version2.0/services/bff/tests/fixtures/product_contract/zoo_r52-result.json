@@ -1,0 +1,1734 @@
+{
+  "ahas": [],
+  "bundle_manifest_sha256": "07bf0fb91c0e762f55575e343db8c50c0f26b2f0990fe744da697334607c00b6",
+  "chapters": [
+    {
+      "claims": [
+        {
+          "asset_id": "V002",
+          "evidence_frame_ids": [
+            "asset-1-f0",
+            "asset-1-f1"
+          ],
+          "fact_id": "ef41eea3-8c5b-589a-add3-917aa0c75b4c",
+          "frame_pts_ms": [
+            1000,
+            2000
+          ],
+          "id": "F002",
+          "observation_id": "89c92466-6e3a-5692-85bf-ed1b120fb114",
+          "original_text": "画面中可见岩石造景与水池围栏，几只狒狒在石堆间停留。",
+          "source_asset_id": "asset-1",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "画面中可见岩石造景与水池围栏，几只狒狒在石堆间停留。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V004",
+          "evidence_frame_ids": [
+            "asset-3-f1"
+          ],
+          "fact_id": "110ba410-992b-5271-a293-e01f023fdc87",
+          "frame_pts_ms": [
+            8000
+          ],
+          "id": "F006",
+          "observation_id": "18c27ac9-d810-5c52-bae6-7a05dac22cfb",
+          "original_text": "视频画面显示动物园内的动物围栏，包含沙地、岩石和休息的狐猴。",
+          "source_asset_id": "asset-3",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "视频画面显示动物园内的动物围栏，包含沙地、岩石和休息的猫鼬。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V006",
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "fact_id": "c60fa8fa-b0cf-5a7f-859f-799822681c30",
+          "frame_pts_ms": [
+            4000
+          ],
+          "id": "F008",
+          "observation_id": "de0ed7ab-5813-5b42-9336-d730fcc08913",
+          "original_text": "视频画面显示一处户外围栏，有一只小熊猫在木桥附近的岩石上活动。",
+          "source_asset_id": "asset-5",
+          "support_grade": "MODERATE",
+          "temporal_support": "STATE",
+          "text": "视频画面显示一处户外围栏，有一只小熊猫在木桥附近的树干上活动。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V001",
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ],
+          "fact_id": "37e14cbb-0c5b-521e-9b04-320b7e2eaae1",
+          "frame_pts_ms": [
+            3000
+          ],
+          "id": "F001",
+          "observation_id": "a554ac2a-cb90-5054-901e-bf66ba5e12de",
+          "original_text": "视频帧显示半开放棚架下有多只绵羊站立，地面散落黑色颗粒状物体。",
+          "source_asset_id": "asset-0",
+          "support_grade": "MODERATE",
+          "temporal_support": "STATE",
+          "text": "视频帧显示半开放棚架下有多只绵羊站立，地面散落黑色颗粒状物体。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V005",
+          "evidence_frame_ids": [
+            "asset-4-f0"
+          ],
+          "fact_id": "f86ec6bd-506f-5d19-9782-fed3cffb0e0d",
+          "frame_pts_ms": [
+            4000
+          ],
+          "id": "F007",
+          "observation_id": "bc120753-61f5-583b-83fa-3a082dc47d51",
+          "original_text": "视频画面展示了一个大型玻璃温室状建筑外部，透过玻璃可见内部植被与栖架。",
+          "source_asset_id": "asset-4",
+          "support_grade": "MODERATE",
+          "temporal_support": "STATE",
+          "text": "视频画面展示了一个大型玻璃温室状建筑外部，透过玻璃可见内部植被与栖架。",
+          "visual_reviewed": true
+        }
+      ],
+      "copy_review_flags": [],
+      "hero_asset_id": "asset-5",
+      "hero_frame_id": "asset-5-f0",
+      "hero_reason": "用作本章节封面。",
+      "highlights": [],
+      "id": "bcea4c77-ef69-5d0e-8959-c34b12023b03",
+      "moment_ids": [
+        "0e17ce09-fe58-503d-9552-60a236a47e7c",
+        "293aa745-4380-537c-a3da-a8095c616e9c",
+        "afd7f5ca-2ee4-55ca-ae0e-01ccaf9c407c",
+        "75fc7217-1079-5bcd-9e55-982a9394d154",
+        "1992e259-3e24-55cb-ac7d-52c73c9ca087"
+      ],
+      "preview_story": "棚架下站着几只绵羊，地面散落着黑色颗粒。",
+      "publication_status": "STAGED_PREVIEW_VALIDATED",
+      "selected_media": [
+        {
+          "asset_id": "asset-0",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-0-f0",
+          "role": "SUPPORT",
+          "selection_fact_ids": [
+            "F001"
+          ],
+          "selection_reason": "Several sheep are standing on a light-colored floor under an open trellis structure, with black pellets scattered around them.",
+          "selection_role": "SUPPORT",
+          "source_asset_id": "asset-0",
+          "source_sequence_index": 0,
+          "start_ms": 0
+        },
+        {
+          "asset_id": "asset-1",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-1-f0",
+            "asset-1-f1"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-1-f0",
+          "role": "SUPPORT",
+          "selection_fact_ids": [
+            "F002"
+          ],
+          "selection_reason": "A baboon sits alone on the edge of a rock formation inside an enclosure featuring painted jungle murals and a moat.",
+          "selection_role": "SUPPORT",
+          "source_asset_id": "asset-1",
+          "source_sequence_index": 1,
+          "start_ms": 0
+        },
+        {
+          "asset_id": "asset-3",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-3-f1"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-3-f1",
+          "role": "SUPPORT",
+          "selection_fact_ids": [
+            "F006"
+          ],
+          "selection_reason": "作为本章节的补充画面。",
+          "selection_role": "SUPPORT",
+          "source_asset_id": "asset-3",
+          "source_sequence_index": 3,
+          "start_ms": 0
+        },
+        {
+          "asset_id": "asset-4",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-4-f0"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-4-f0",
+          "role": "SUPPORT",
+          "selection_fact_ids": [
+            "F007"
+          ],
+          "selection_reason": "Exterior view of a glass-walled building containing trees and climbing structures for animals.",
+          "selection_role": "SUPPORT",
+          "source_asset_id": "asset-4",
+          "source_sequence_index": 4,
+          "start_ms": 0
+        },
+        {
+          "asset_id": "asset-5",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-5-f0",
+          "role": "HERO",
+          "selection_fact_ids": [
+            "F008"
+          ],
+          "selection_reason": "用作本章节封面。",
+          "selection_role": "PRIMARY",
+          "source_asset_id": "asset-5",
+          "source_sequence_index": 5,
+          "start_ms": 0
+        }
+      ],
+      "selection_focus": {
+        "experience_kind": "ZOO_ANIMALS",
+        "fact_ids": [
+          "F001",
+          "F002",
+          "F006",
+          "F008"
+        ],
+        "focus": "记录在动物园不同展区看到的多种动物及其栖息环境，包括绵羊、狒狒、猫及小熊猫。"
+      },
+      "sentence_claims": [
+        {
+          "fact_ids": [
+            "F001"
+          ],
+          "text": "棚架下站着几只绵羊，地面散落着黑色颗粒。"
+        },
+        {
+          "fact_ids": [
+            "F002"
+          ],
+          "text": "石堆间有几只狒狒停留。"
+        }
+      ],
+      "story": "棚架下站着几只绵羊，地面散落着黑色颗粒。石堆间有几只狒狒停留。",
+      "tags": [],
+      "time_label": "",
+      "title": "动物园里的闲适时刻",
+      "title_claim_ids": [
+        "F002",
+        "F006",
+        "F008"
+      ]
+    },
+    {
+      "claims": [
+        {
+          "asset_id": "V003",
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "fact_id": "8eeaa31b-63be-5ef7-98ae-c42bf66a0674",
+          "frame_pts_ms": [
+            5000
+          ],
+          "id": "F005",
+          "observation_id": "115a7073-ef43-5786-955c-c80efc130af0",
+          "original_text": "展缸内有几条银色鱼类在水中游动。",
+          "source_asset_id": "asset-2",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "展缸内有几条银白色鱼类在水中游动。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V007",
+          "evidence_frame_ids": [
+            "asset-6-f2"
+          ],
+          "fact_id": "8236a177-1eab-5bbc-8427-1f39d825bb74",
+          "frame_pts_ms": [
+            9000
+          ],
+          "id": "F011",
+          "observation_id": "2c197cf5-180c-5925-844e-01bec70bd63c",
+          "original_text": "画面特写展示了一个玻璃鱼缸内部。一条橙白相间的金鱼正游向水面，缸底铺有碎石，并放置了绿色的仿真水草和一朵黄色向日葵装饰物。",
+          "source_asset_id": "asset-6",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "画面特写展示了一个玻璃鱼缸内部。一条橙白相间的金鱼正游向水面，缸底铺有碎石，并放置了绿色的仿真水草和一朵黄色向日葵装饰物。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V007",
+          "evidence_frame_ids": [
+            "asset-6-f0"
+          ],
+          "fact_id": "a667aef6-53dd-5f1d-bad7-376c2ed80931",
+          "frame_pts_ms": [
+            1000
+          ],
+          "id": "F009",
+          "observation_id": "2c197cf5-180c-5925-844e-01bec70bd63c",
+          "original_text": "视频画面显示一处半露天长廊，顶部为拱形透明结构。右侧排列着多层玻璃展示缸（鱼缸），左侧可见一名背对镜头的成人和一名儿童正在观看低处的展示缸，中间有一名穿蓝衣男子迎面走来。背景可见树木、围栏及草地。",
+          "source_asset_id": "asset-6",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "视频画面显示一处半露天长廊，顶部为拱形透明结构。右侧排列着多层玻璃展示缸（鱼缸），左侧可见一名背对镜头的成人和一名儿童正在观看低处的展示缸，中间有一名穿蓝衣男子迎面走来。背景可见树木、围栏及草地。",
+          "visual_reviewed": true
+        },
+        {
+          "asset_id": "V003",
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "fact_id": "f42c58ff-7e41-5552-9a61-b5522bf3cf71",
+          "frame_pts_ms": [
+            5000
+          ],
+          "id": "F004",
+          "observation_id": "115a7073-ef43-5786-955c-c80efc130af0",
+          "original_text": "侧面视角的长条形玻璃展缸，内部铺设白沙底床并放置沉木与石块。",
+          "source_asset_id": "asset-2",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "侧面视角的长条形玻璃展缸，内部铺设白沙底床并放置沉木与石块。",
+          "visual_reviewed": true
+        }
+      ],
+      "copy_review_flags": [],
+      "hero_asset_id": "asset-6",
+      "hero_frame_id": "asset-6-f0",
+      "hero_reason": "People stand in a covered walkway lined with aquariums; a man in blue faces forward while others look at tanks.",
+      "highlights": [
+        {
+          "claims": [
+            {
+              "asset_id": "V007",
+              "evidence_frame_ids": [
+                "asset-6-f2"
+              ],
+              "fact_id": "8236a177-1eab-5bbc-8427-1f39d825bb74",
+              "frame_pts_ms": [
+                9000
+              ],
+              "id": "F011",
+              "observation_id": "2c197cf5-180c-5925-844e-01bec70bd63c",
+              "original_text": "画面特写展示了一个玻璃鱼缸内部。一条橙白相间的金鱼正游向水面，缸底铺有碎石，并放置了绿色的仿真水草和一朵黄色向日葵装饰物。",
+              "source_asset_id": "asset-6",
+              "support_grade": "STRONG",
+              "temporal_support": "STATE",
+              "text": "画面特写展示了一个玻璃鱼缸内部。一条橙白相间的金鱼正游向水面，缸底铺有碎石，并放置了绿色的仿真水草和一朵黄色向日葵装饰物。",
+              "visual_reviewed": true
+            }
+          ],
+          "id": "89c17923-8951-5e97-95a2-b104b2202b46",
+          "parent_chapter_id": "e87a3d81-7173-5bb3-b25e-9843452cbe1d",
+          "revisit_reason": "特写镜头下金鱼的动态与缸底独特的向日葵装饰形成了具辨识度的静态/微动态组合，值得回看。",
+          "selected_media": [
+            {
+              "asset_id": "asset-6",
+              "end_ms": 10000,
+              "evidence_frame_ids": [
+                "asset-6-f2"
+              ],
+              "focus_pts_ms": 9000,
+              "media_kind": "VIDEO",
+              "range_basis": "WHOLE_SOURCE_CLIP",
+              "role": "CORE",
+              "source_asset_id": "asset-6",
+              "source_sequence_index": 6,
+              "start_ms": 0
+            }
+          ],
+          "story": "橙白金鱼游向水面，缸底有向日葵装饰",
+          "value_type": "DISTINCT_DETAIL"
+        }
+      ],
+      "id": "e87a3d81-7173-5bb3-b25e-9843452cbe1d",
+      "moment_ids": [
+        "5fc76416-c6b4-5e45-869e-f49028f623f5",
+        "9c73a5a1-9491-5e87-a055-3ea2dfc127db"
+      ],
+      "preview_story": "一条橙白相间的金鱼正游向水面，缸底铺着碎石，点缀着仿真水草和一朵明黄的向日葵装饰。",
+      "publication_status": "STAGED_PREVIEW_VALIDATED",
+      "selected_media": [
+        {
+          "asset_id": "asset-2",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-2-f0",
+          "role": "SUPPORT",
+          "selection_fact_ids": [
+            "F004",
+            "F005"
+          ],
+          "selection_reason": "作为本章节的补充画面。",
+          "selection_role": "SUPPORT",
+          "source_asset_id": "asset-2",
+          "source_sequence_index": 2,
+          "start_ms": 0
+        },
+        {
+          "asset_id": "asset-6",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-6-f0",
+            "asset-6-f1",
+            "asset-6-f2"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-6-f0",
+          "role": "HERO",
+          "selection_fact_ids": [
+            "F009"
+          ],
+          "selection_reason": "People stand in a covered walkway lined with aquariums; a man in blue faces forward while others look at tanks.",
+          "selection_role": "PRIMARY",
+          "source_asset_id": "asset-6",
+          "source_sequence_index": 6,
+          "start_ms": 0
+        }
+      ],
+      "selection_focus": {
+        "experience_kind": "MUSEUM",
+        "fact_ids": [
+          "F005",
+          "F009",
+          "F011"
+        ],
+        "focus": "透过玻璃展缸观察水生生物（银色鱼类、金鱼）及长廊内外的环境与人物观看行为。"
+      },
+      "sentence_claims": [
+        {
+          "fact_ids": [
+            "F011"
+          ],
+          "text": "一条橙白相间的金鱼正游向水面，缸底铺着碎石，点缀着仿真水草和一朵明黄的向日葵装饰。"
+        },
+        {
+          "fact_ids": [
+            "F009"
+          ],
+          "text": "大人带着孩子驻足观看低处的展示缸。"
+        }
+      ],
+      "story": "一条橙白相间的金鱼正游向水面，缸底铺着碎石，点缀着仿真水草和一朵明黄的向日葵装饰。大人带着孩子驻足观看低处的展示缸。",
+      "tags": [
+        "SETTING.OUTDOOR_NATURE"
+      ],
+      "time_label": "",
+      "title": "展缸中的游鱼世界",
+      "title_claim_ids": [
+        "F005",
+        "F011"
+      ]
+    },
+    {
+      "claims": [
+        {
+          "asset_id": "V008",
+          "evidence_frame_ids": [
+            "asset-7-f0"
+          ],
+          "fact_id": "f82d968d-2a32-5954-a45b-b1ce8f7f12ad",
+          "frame_pts_ms": [
+            1000
+          ],
+          "id": "F012",
+          "observation_id": "cd512e0e-de1c-51a1-964f-38d3fb2aa55a",
+          "original_text": "画面展示了一条铺设平整的灰色步道，蜿蜒通向远处。路旁植被茂密，包含高大的树木和低矮灌木丛。左侧有一道浅色的石砌矮墙，将步道与旁边的铺装区域分隔开。",
+          "source_asset_id": "asset-7",
+          "support_grade": "STRONG",
+          "temporal_support": "STATE",
+          "text": "画面展示了一条铺设平整的灰色步道，蜿蜒通向远处。路旁植被茂密，包含高大的树木和低矮灌木丛。左侧有一道浅色的石砌矮墙，将步道与旁边的铺装区域分隔开。",
+          "visual_reviewed": true
+        }
+      ],
+      "copy_review_flags": [],
+      "hero_asset_id": "asset-7",
+      "hero_frame_id": "asset-7-f0",
+      "hero_reason": "A paved gray path curves through a green park area next to a low stone retaining wall.",
+      "highlights": [],
+      "id": "c23717fa-79a0-58fd-8073-ad82562d8e3c",
+      "moment_ids": [
+        "e6d7d755-ea06-53ab-87c9-14b9e1c986b1"
+      ],
+      "preview_story": "一条铺设平整的灰色步道蜿蜒伸向远方。",
+      "publication_status": "STAGED_PREVIEW_VALIDATED",
+      "selected_media": [
+        {
+          "asset_id": "asset-7",
+          "end_ms": 10000,
+          "evidence_frame_ids": [
+            "asset-7-f0"
+          ],
+          "focus_pts_ms": null,
+          "media_kind": "VIDEO",
+          "range_basis": "WHOLE_SOURCE_CLIP",
+          "representative_frame_id": "asset-7-f0",
+          "role": "HERO",
+          "selection_fact_ids": [
+            "F012"
+          ],
+          "selection_reason": "A paved gray path curves through a green park area next to a low stone retaining wall.",
+          "selection_role": "PRIMARY",
+          "source_asset_id": "asset-7",
+          "source_sequence_index": 7,
+          "start_ms": 0
+        }
+      ],
+      "selection_focus": {
+        "experience_kind": "NATURE_WALK",
+        "fact_ids": [
+          "F012"
+        ],
+        "focus": "在植被茂密的公园步道上行走，感受树林环绕的自然环境。"
+      },
+      "sentence_claims": [
+        {
+          "fact_ids": [
+            "F012"
+          ],
+          "text": "一条铺设平整的灰色步道蜿蜒伸向远方。"
+        },
+        {
+          "fact_ids": [
+            "F012"
+          ],
+          "text": "路旁植被茂密，高大的树木与低矮灌木丛交织，营造出清幽的自然氛围。"
+        }
+      ],
+      "story": "一条铺设平整的灰色步道蜿蜒伸向远方。路旁植被茂密，高大的树木与低矮灌木丛交织，营造出清幽的自然氛围。",
+      "tags": [
+        "ACTIVITY.WALKING",
+        "SETTING.OUTDOOR_NATURE"
+      ],
+      "time_label": "",
+      "title": "蜿蜒幽静的林间步道",
+      "title_claim_ids": [
+        "F012"
+      ]
+    }
+  ],
+  "coverage_status": "COMPLETE",
+  "decision_trace": {
+    "editor_revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_2",
+    "fact_coverage": [
+      {
+        "fact_id": "F001",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F002",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F004",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F005",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F006",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F007",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F008",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F009",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F010",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F011",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      },
+      {
+        "fact_id": "F012",
+        "reason": null,
+        "review_missing": false,
+        "status": "SELECTED"
+      }
+    ],
+    "semantic_review": [
+      {
+        "copy_issues": [
+          {
+            "code": "MULTI_ASSET_SENTENCE",
+            "fact_ids": [
+              "F001",
+              "F002"
+            ],
+            "sentence_index": 0,
+            "source_index": 0
+          }
+        ],
+        "id": "C01",
+        "reason": "MULTI_ASSET_SENTENCE:0：本句引用多个视频，请只选一个视频的事实重写，不能只删引用",
+        "reviewed": true,
+        "status": "BLOCKED"
+      },
+      {
+        "id": "C02",
+        "reason": "事实与表达一致",
+        "reviewed": true,
+        "status": "ACCEPTED",
+        "style_flags": [
+          "镜头"
+        ]
+      },
+      {
+        "id": "C03",
+        "reason": "事实与表达一致",
+        "reviewed": true,
+        "status": "ACCEPTED",
+        "style_flags": []
+      },
+      {
+        "id": "M01",
+        "reason": "事实与表达一致",
+        "reviewed": true,
+        "status": "ACCEPTED",
+        "style_flags": []
+      },
+      {
+        "id": "M02",
+        "reason": "事实与表达一致",
+        "reviewed": true,
+        "status": "ACCEPTED",
+        "style_flags": []
+      }
+    ],
+    "prompt_sha256": {
+      "copy_repair": "a4e0f49f57b8692f76345c9a4eaee33cd3ab7a8560c35109e65a87bf610feefa",
+      "coverage_review": "fb4604528364016e6b861d051dcbb402f17b1b3c5b299bd66c9192f3f6c41028",
+      "editor": "f78ba652505ffa9f4f7791ad35b46b797fc640abd248b1190e89066e27f9d801",
+      "final_copy_verification": "c37ca3e4c501660d3b1d3acf10104e98d1941d9ebc91864b211ea57e616f7b1b",
+      "frame_observation": "a01a71a7de7b7a02596903300078061dfb79ae86985b244da6d3a1b3b4d93c5c",
+      "frame_selection": "270b7c0ee1e44f2e34bb42e6c0d2e50a6bd78c48bbdf1f8a0434be0b2d8aeaac",
+      "independent_scene": "1687d661d47edf5c9f7e4d6c415530d46d559aba1418946b6313d7bf77393e5c",
+      "media_selection": "03f458ec72c2f103ae32d4a57b1d55c1586615c5361debbd2a58da643beddca7",
+      "moment_value": "a2c36254019a5b68dff76c55f30bb4f393d61746862d7648e71178fb7b2d291f",
+      "narrative_brief": "9feb5d30fd64bec06e18f5f2544fd4560cc224c01a8cd07ed5420cee7fcb3c56",
+      "relation_review": "64da6f12eba4685f5e13a9a17599940de6520dbbb41f77f3f3adfcff306a76d4",
+      "review": "5a4ddeb57a5c7ee16b1926e937e1079394554483fecc40ed86ef0032537ddaa3",
+      "spatial_relation_verification": "f225b1a4f814b6f43e66f8dc7d329d0922a5f3a7cb4128192a1731c55477bc8d",
+      "structure_review": "72673a7d1a3b2438f4305008367fbdd1fb1c906b579af42628fff290cee7a939",
+      "visual_review": "a3efa193b1dd249e3f4586060f2168acb666beff9a1c4769939157223f2ea955",
+      "writer": "4c31de751556841df3f85df0eea37dcbdf32edd743b664d7455386b6ae3accc4"
+    },
+    "verified_facts": {
+      "F001": {
+        "asset_id": "V001",
+        "evidence_frame_ids": [
+          "asset-0-f0"
+        ],
+        "fact_id": "37e14cbb-0c5b-521e-9b04-320b7e2eaae1",
+        "frame_pts_ms": [
+          3000
+        ],
+        "id": "F001",
+        "observation_id": "a554ac2a-cb90-5054-901e-bf66ba5e12de",
+        "original_text": "视频帧显示半开放棚架下有多只绵羊站立，地面散落黑色颗粒状物体。",
+        "source_asset_id": "asset-0",
+        "support_grade": "MODERATE",
+        "temporal_support": "STATE",
+        "text": "视频帧显示半开放棚架下有多只绵羊站立，地面散落黑色颗粒状物体。",
+        "visual_reviewed": true
+      },
+      "F002": {
+        "asset_id": "V002",
+        "evidence_frame_ids": [
+          "asset-1-f0",
+          "asset-1-f1"
+        ],
+        "fact_id": "ef41eea3-8c5b-589a-add3-917aa0c75b4c",
+        "frame_pts_ms": [
+          1000,
+          2000
+        ],
+        "id": "F002",
+        "observation_id": "89c92466-6e3a-5692-85bf-ed1b120fb114",
+        "original_text": "画面中可见岩石造景与水池围栏，几只狒狒在石堆间停留。",
+        "source_asset_id": "asset-1",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "画面中可见岩石造景与水池围栏，几只狒狒在石堆间停留。",
+        "visual_reviewed": true
+      },
+      "F004": {
+        "asset_id": "V003",
+        "evidence_frame_ids": [
+          "asset-2-f0"
+        ],
+        "fact_id": "f42c58ff-7e41-5552-9a61-b5522bf3cf71",
+        "frame_pts_ms": [
+          5000
+        ],
+        "id": "F004",
+        "observation_id": "115a7073-ef43-5786-955c-c80efc130af0",
+        "original_text": "侧面视角的长条形玻璃展缸，内部铺设白沙底床并放置沉木与石块。",
+        "source_asset_id": "asset-2",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "侧面视角的长条形玻璃展缸，内部铺设白沙底床并放置沉木与石块。",
+        "visual_reviewed": true
+      },
+      "F005": {
+        "asset_id": "V003",
+        "evidence_frame_ids": [
+          "asset-2-f0"
+        ],
+        "fact_id": "8eeaa31b-63be-5ef7-98ae-c42bf66a0674",
+        "frame_pts_ms": [
+          5000
+        ],
+        "id": "F005",
+        "observation_id": "115a7073-ef43-5786-955c-c80efc130af0",
+        "original_text": "展缸内有几条银色鱼类在水中游动。",
+        "source_asset_id": "asset-2",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "展缸内有几条银白色鱼类在水中游动。",
+        "visual_reviewed": true
+      },
+      "F006": {
+        "asset_id": "V004",
+        "evidence_frame_ids": [
+          "asset-3-f1"
+        ],
+        "fact_id": "110ba410-992b-5271-a293-e01f023fdc87",
+        "frame_pts_ms": [
+          8000
+        ],
+        "id": "F006",
+        "observation_id": "18c27ac9-d810-5c52-bae6-7a05dac22cfb",
+        "original_text": "视频画面显示动物园内的动物围栏，包含沙地、岩石和休息的狐猴。",
+        "source_asset_id": "asset-3",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "视频画面显示动物园内的动物围栏，包含沙地、岩石和休息的猫鼬。",
+        "visual_reviewed": true
+      },
+      "F007": {
+        "asset_id": "V005",
+        "evidence_frame_ids": [
+          "asset-4-f0"
+        ],
+        "fact_id": "f86ec6bd-506f-5d19-9782-fed3cffb0e0d",
+        "frame_pts_ms": [
+          4000
+        ],
+        "id": "F007",
+        "observation_id": "bc120753-61f5-583b-83fa-3a082dc47d51",
+        "original_text": "视频画面展示了一个大型玻璃温室状建筑外部，透过玻璃可见内部植被与栖架。",
+        "source_asset_id": "asset-4",
+        "support_grade": "MODERATE",
+        "temporal_support": "STATE",
+        "text": "视频画面展示了一个大型玻璃温室状建筑外部，透过玻璃可见内部植被与栖架。",
+        "visual_reviewed": true
+      },
+      "F008": {
+        "asset_id": "V006",
+        "evidence_frame_ids": [
+          "asset-5-f0"
+        ],
+        "fact_id": "c60fa8fa-b0cf-5a7f-859f-799822681c30",
+        "frame_pts_ms": [
+          4000
+        ],
+        "id": "F008",
+        "observation_id": "de0ed7ab-5813-5b42-9336-d730fcc08913",
+        "original_text": "视频画面显示一处户外围栏，有一只小熊猫在木桥附近的岩石上活动。",
+        "source_asset_id": "asset-5",
+        "support_grade": "MODERATE",
+        "temporal_support": "STATE",
+        "text": "视频画面显示一处户外围栏，有一只小熊猫在木桥附近的树干上活动。",
+        "visual_reviewed": true
+      },
+      "F009": {
+        "asset_id": "V007",
+        "evidence_frame_ids": [
+          "asset-6-f0"
+        ],
+        "fact_id": "a667aef6-53dd-5f1d-bad7-376c2ed80931",
+        "frame_pts_ms": [
+          1000
+        ],
+        "id": "F009",
+        "observation_id": "2c197cf5-180c-5925-844e-01bec70bd63c",
+        "original_text": "视频画面显示一处半露天长廊，顶部为拱形透明结构。右侧排列着多层玻璃展示缸（鱼缸），左侧可见一名背对镜头的成人和一名儿童正在观看低处的展示缸，中间有一名穿蓝衣男子迎面走来。背景可见树木、围栏及草地。",
+        "source_asset_id": "asset-6",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "视频画面显示一处半露天长廊，顶部为拱形透明结构。右侧排列着多层玻璃展示缸（鱼缸），左侧可见一名背对镜头的成人和一名儿童正在观看低处的展示缸，中间有一名穿蓝衣男子迎面走来。背景可见树木、围栏及草地。",
+        "visual_reviewed": true
+      },
+      "F010": {
+        "asset_id": "V007",
+        "evidence_frame_ids": [
+          "asset-6-f1"
+        ],
+        "fact_id": "22f8228a-18cf-5aeb-996a-b1adb9f9b773",
+        "frame_pts_ms": [
+          4000
+        ],
+        "id": "F010",
+        "observation_id": "2c197cf5-180c-5925-844e-01bec70bd63c",
+        "original_text": "镜头移动至走廊转角处，视野开阔，直接展示了外部的公园绿地景观，包括草坪、树木和黑色金属围栏。右下角仍可见部分带有向日葵装饰物的展示缸。",
+        "source_asset_id": "asset-6",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "镜头移动至走廊转角处，视野开阔，直接展示了外部的公园绿地景观，包括草坪、树木和黑色金属围栏。右下角仍可见部分带有向日葵装饰物的展示缸。",
+        "visual_reviewed": true
+      },
+      "F011": {
+        "asset_id": "V007",
+        "evidence_frame_ids": [
+          "asset-6-f2"
+        ],
+        "fact_id": "8236a177-1eab-5bbc-8427-1f39d825bb74",
+        "frame_pts_ms": [
+          9000
+        ],
+        "id": "F011",
+        "observation_id": "2c197cf5-180c-5925-844e-01bec70bd63c",
+        "original_text": "画面特写展示了一个玻璃鱼缸内部。一条橙白相间的金鱼正游向水面，缸底铺有碎石，并放置了绿色的仿真水草和一朵黄色向日葵装饰物。",
+        "source_asset_id": "asset-6",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "画面特写展示了一个玻璃鱼缸内部。一条橙白相间的金鱼正游向水面，缸底铺有碎石，并放置了绿色的仿真水草和一朵黄色向日葵装饰物。",
+        "visual_reviewed": true
+      },
+      "F012": {
+        "asset_id": "V008",
+        "evidence_frame_ids": [
+          "asset-7-f0"
+        ],
+        "fact_id": "f82d968d-2a32-5954-a45b-b1ce8f7f12ad",
+        "frame_pts_ms": [
+          1000
+        ],
+        "id": "F012",
+        "observation_id": "cd512e0e-de1c-51a1-964f-38d3fb2aa55a",
+        "original_text": "画面展示了一条铺设平整的灰色步道，蜿蜒通向远处。路旁植被茂密，包含高大的树木和低矮灌木丛。左侧有一道浅色的石砌矮墙，将步道与旁边的铺装区域分隔开。",
+        "source_asset_id": "asset-7",
+        "support_grade": "STRONG",
+        "temporal_support": "STATE",
+        "text": "画面展示了一条铺设平整的灰色步道，蜿蜒通向远处。路旁植被茂密，包含高大的树木和低矮灌木丛。左侧有一道浅色的石砌矮墙，将步道与旁边的铺装区域分隔开。",
+        "visual_reviewed": true
+      }
+    },
+    "selected_structure": {
+      "chapters": [
+        {
+          "candidate_selection_audit": {
+            "capacity_omitted_asset_ids": [],
+            "capacity_omitted_candidates": [],
+            "capacity_rule": "EXPLICIT_HERO_PLUS_FIRST_RANKED_OTHER_ASSETS",
+            "deduplicated_candidates": [],
+            "hero_candidate_id": "P005",
+            "max_selected_assets": 5,
+            "ranked_candidate_ids": [
+              "P005",
+              "P001",
+              "P002",
+              "P003",
+              "P004"
+            ],
+            "rule": "ONE_PER_ASSET_EXPLICIT_HERO_ELSE_MODEL_PREFERENCE_ORDER",
+            "selected_candidate_ids": [
+              "P005",
+              "P001",
+              "P002",
+              "P003",
+              "P004"
+            ]
+          },
+          "fact_ids": [
+            "F001",
+            "F002",
+            "F006",
+            "F007",
+            "F008"
+          ],
+          "grouping_reason": "所有事实均指向动物园内的动物展示或饲养环境，属于同一类持续性的动物观察经历。",
+          "hero_asset_id": "V006",
+          "hero_frame_id": "asset-5-f0",
+          "id": "C01",
+          "media_choices": [
+            {
+              "asset_id": "V006",
+              "fact_ids": [
+                "F008"
+              ],
+              "frame_id": "asset-5-f0",
+              "reason": "A red panda walks along a large horizontal log above a wooden bridge in an outdoor enclosure.",
+              "role": "PRIMARY"
+            },
+            {
+              "asset_id": "V001",
+              "fact_ids": [
+                "F001"
+              ],
+              "frame_id": "asset-0-f0",
+              "reason": "Several sheep are standing on a light-colored floor under an open trellis structure, with black pellets scattered around them.",
+              "role": "SUPPORT"
+            },
+            {
+              "asset_id": "V002",
+              "fact_ids": [
+                "F002"
+              ],
+              "frame_id": "asset-1-f0",
+              "reason": "A baboon sits alone on the edge of a rock formation inside an enclosure featuring painted jungle murals and a moat.",
+              "role": "SUPPORT"
+            },
+            {
+              "asset_id": "V004",
+              "fact_ids": [
+                "F006"
+              ],
+              "frame_id": "asset-3-f1",
+              "reason": "Small mammals, appearing to be meerkats, rest on wooden stumps and rocks within a sandy enclosure.",
+              "role": "SUPPORT"
+            },
+            {
+              "asset_id": "V005",
+              "fact_ids": [
+                "F007"
+              ],
+              "frame_id": "asset-4-f0",
+              "reason": "Exterior view of a glass-walled building containing trees and climbing structures for animals.",
+              "role": "SUPPORT"
+            }
+          ],
+          "selected_asset_ids": [
+            "V006",
+            "V001",
+            "V002",
+            "V004",
+            "V005"
+          ],
+          "selection_focus": {
+            "experience_kind": "ZOO_ANIMALS",
+            "fact_ids": [
+              "F001",
+              "F002",
+              "F006",
+              "F008"
+            ],
+            "focus": "记录在动物园不同展区看到的多种动物及其栖息环境，包括绵羊、狒狒、猫及小熊猫。"
+          },
+          "theme": "动物园多物种观察"
+        },
+        {
+          "candidate_selection_audit": {
+            "capacity_omitted_asset_ids": [],
+            "capacity_omitted_candidates": [],
+            "capacity_rule": "EXPLICIT_HERO_PLUS_FIRST_RANKED_OTHER_ASSETS",
+            "deduplicated_candidates": [
+              {
+                "asset_id": "V007",
+                "candidate_id": "P011",
+                "reason": "EXPLICIT_HERO_FOR_ASSET",
+                "representative_candidate_id": "P007"
+              },
+              {
+                "asset_id": "V007",
+                "candidate_id": "P010",
+                "reason": "EXPLICIT_HERO_FOR_ASSET",
+                "representative_candidate_id": "P007"
+              }
+            ],
+            "hero_candidate_id": "P007",
+            "max_selected_assets": 5,
+            "ranked_candidate_ids": [
+              "P007",
+              "P006",
+              "P011",
+              "P010"
+            ],
+            "rule": "ONE_PER_ASSET_EXPLICIT_HERO_ELSE_MODEL_PREFERENCE_ORDER",
+            "selected_candidate_ids": [
+              "P007",
+              "P006"
+            ]
+          },
+          "fact_ids": [
+            "F004",
+            "F005",
+            "F009",
+            "F010",
+            "F011"
+          ],
+          "grouping_reason": "这些片段集中在带有玻璃展缸的长廊区域，主要活动是观看展品（鱼类）和经过该建筑空间，构成一次连贯的水族馆/展览馆参观体验。",
+          "hero_asset_id": "V007",
+          "hero_frame_id": "asset-6-f0",
+          "id": "C02",
+          "media_choices": [
+            {
+              "asset_id": "V007",
+              "fact_ids": [
+                "F009"
+              ],
+              "frame_id": "asset-6-f0",
+              "reason": "People stand in a covered walkway lined with aquariums; a man in blue faces forward while others look at tanks.",
+              "role": "PRIMARY"
+            },
+            {
+              "asset_id": "V003",
+              "fact_ids": [
+                "F004",
+                "F005"
+              ],
+              "frame_id": "asset-2-f0",
+              "reason": "Silver fish swim inside a long rectangular aquarium filled with white sand, driftwood, and rocks.",
+              "role": "SUPPORT"
+            }
+          ],
+          "selected_asset_ids": [
+            "V007",
+            "V003"
+          ],
+          "selection_focus": {
+            "experience_kind": "MUSEUM",
+            "fact_ids": [
+              "F005",
+              "F009",
+              "F011"
+            ],
+            "focus": "透过玻璃展缸观察水生生物（银色鱼类、金鱼）及长廊内外的环境与人物观看行为。"
+          },
+          "theme": "水族馆长廊观鱼"
+        },
+        {
+          "candidate_selection_audit": {
+            "capacity_omitted_asset_ids": [],
+            "capacity_omitted_candidates": [],
+            "capacity_rule": "EXPLICIT_HERO_PLUS_FIRST_RANKED_OTHER_ASSETS",
+            "deduplicated_candidates": [],
+            "hero_candidate_id": "P008",
+            "max_selected_assets": 5,
+            "ranked_candidate_ids": [
+              "P008"
+            ],
+            "rule": "ONE_PER_ASSET_EXPLICIT_HERO_ELSE_MODEL_PREFERENCE_ORDER",
+            "selected_candidate_ids": [
+              "P008"
+            ]
+          },
+          "fact_ids": [
+            "F012"
+          ],
+          "grouping_reason": "画面主体为铺设平整的步道和周围树木，没有特定的动物或展品焦点，属于典型的自然环境步行经历。",
+          "hero_asset_id": "V008",
+          "hero_frame_id": "asset-7-f0",
+          "id": "C03",
+          "media_choices": [
+            {
+              "asset_id": "V008",
+              "fact_ids": [
+                "F012"
+              ],
+              "frame_id": "asset-7-f0",
+              "reason": "A paved gray path curves through a green park area next to a low stone retaining wall.",
+              "role": "PRIMARY"
+            }
+          ],
+          "selected_asset_ids": [
+            "V008"
+          ],
+          "selection_focus": {
+            "experience_kind": "NATURE_WALK",
+            "fact_ids": [
+              "F012"
+            ],
+            "focus": "在植被茂密的公园步道上行走，感受树林环绕的自然环境。"
+          },
+          "theme": "公园林荫步道漫步"
+        }
+      ],
+      "moments": [
+        {
+          "anchor_reviewed_with_images": true,
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ],
+          "comparison_reason": "该候选提供了动物园场景中具体的动物行为细节，与博物馆场景的候选无重叠。",
+          "event_group_id": "M01",
+          "fact_id": "F008",
+          "focus": "小熊猫在木桥上方树干处活动",
+          "focus_frame_ids": [
+            "asset-5-f0"
+          ],
+          "id": "M01",
+          "parent_chapter_id": "C01",
+          "revisit_reason": "画面清晰展示了小熊猫在栖息环境中的具体位置与姿态，符合动物园观察场景下的记忆点保留规则。",
+          "value_type": "DISTINCT_DETAIL"
+        },
+        {
+          "anchor_reviewed_with_images": true,
+          "chapter_relations": [
+            {
+              "chapter_id": "C02",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ],
+          "comparison_reason": "该候选捕捉了展品中色彩鲜明的主体（金鱼）与特征性道具（向日葵），是独立的视觉记忆点。",
+          "event_group_id": "M02",
+          "fact_id": "F011",
+          "focus": "鱼缸特写：游向水面的橙白金鱼与底部向日葵装饰",
+          "focus_frame_ids": [
+            "asset-6-f2"
+          ],
+          "id": "M02",
+          "parent_chapter_id": "C02",
+          "revisit_reason": "特写镜头下金鱼的动态与缸底独特的向日葵装饰形成了具辨识度的静态/微动态组合，值得回看。",
+          "value_type": "DISTINCT_DETAIL"
+        }
+      ]
+    },
+    "visual_fact_ledger": [
+      {
+        "asset_id": "V001",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F001",
+        "model_text_matches_applied": true,
+        "reason": "图片清晰显示了棚架下的绵羊群和地面上的黑色粪便颗粒，描述准确。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V002",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F002",
+        "model_text_matches_applied": true,
+        "reason": "画面包含人造岩石、护城河（水池）及多只灵长类动物（狒狒），描述符合视觉事实。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V003",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F004",
+        "model_text_matches_applied": true,
+        "reason": "图片展示了典型的长条形水族箱，内部环境特征（白沙、木头、石头）均吻合。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V003",
+        "changed": true,
+        "corrections": [
+          {
+            "rejected_text": "银色",
+            "replacement_text": "银白色"
+          }
+        ],
+        "decision": "CORRECT",
+        "fact_id": "F005",
+        "model_text_matches_applied": true,
+        "reason": "缸内的鱼体色偏白或浅灰，描述为“银白色”比“银色”更准确。",
+        "status": "VERIFIED",
+        "text_source": "APPLIED_CORRECTIONS"
+      },
+      {
+        "asset_id": "V004",
+        "changed": true,
+        "corrections": [
+          {
+            "rejected_text": "狐猴",
+            "replacement_text": "猫鼬"
+          }
+        ],
+        "decision": "CORRECT",
+        "fact_id": "F006",
+        "model_text_matches_applied": true,
+        "reason": "图中的动物是细尾獴（猫鼬），直立张望是其典型特征，并非狐猴。",
+        "status": "VERIFIED",
+        "text_source": "APPLIED_CORRECTIONS"
+      },
+      {
+        "asset_id": "V005",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F007",
+        "model_text_matches_applied": true,
+        "reason": "画面确实是玻璃房外观，且能透过玻璃看到内部的树木和供动物攀爬的架子。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V006",
+        "changed": true,
+        "corrections": [
+          {
+            "rejected_text": "岩石上",
+            "replacement_text": "树干上"
+          }
+        ],
+        "decision": "CORRECT",
+        "fact_id": "F008",
+        "model_text_matches_applied": true,
+        "reason": "小熊猫正趴在一根横跨画面的枯木/树干上，而非直接趴在岩石上。",
+        "status": "VERIFIED",
+        "text_source": "APPLIED_CORRECTIONS"
+      },
+      {
+        "asset_id": "V007",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F009",
+        "model_text_matches_applied": true,
+        "reason": "场景布局、人物衣着及位置关系与描述完全一致。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V007",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F010",
+        "model_text_matches_applied": true,
+        "reason": "描述了走廊尽头的视野及右下角露出的特定装饰鱼缸，细节准确。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V007",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F011",
+        "model_text_matches_applied": true,
+        "reason": "特写镜头中的金鱼、水草及向日葵装饰物均清晰可见，描述无误。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V008",
+        "changed": false,
+        "corrections": [],
+        "decision": "KEEP",
+        "fact_id": "F012",
+        "model_text_matches_applied": true,
+        "reason": "准确描述了步道、植被及左侧石砌花坛的特征。",
+        "status": "VERIFIED",
+        "text_source": "ORIGINAL"
+      },
+      {
+        "asset_id": "V002",
+        "fact_id": "F003",
+        "reason": "Change claim lacks distinct temporal evidence",
+        "status": "UNVERIFIED"
+      },
+      {
+        "asset_id": "V008",
+        "fact_id": "F013",
+        "reason": "Change claim lacks distinct temporal evidence",
+        "status": "UNVERIFIED"
+      }
+    ],
+    "recovery_visual_ledger": []
+  },
+  "delivery_state": "READY_WITH_ITEM_BLOCKS",
+  "editor_policy": "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07",
+  "experimental": true,
+  "moments": [],
+  "observations": [
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-0",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-0-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ],
+          "fact_id": "37e14cbb-0c5b-521e-9b04-320b7e2eaae1",
+          "support_grade": "MODERATE",
+          "text": "视频帧显示半开放棚架下有多只绵羊站立，地面散落黑色颗粒状物体。"
+        }
+      ],
+      "id": "a554ac2a-cb90-5054-901e-bf66ba5e12de",
+      "limitations": [
+        "单一时间切片无法确认动态行为",
+        "具体场景地点不明"
+      ],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "sheep",
+        "enclosure",
+        "pellets"
+      ],
+      "quality_score": 0.7,
+      "setting_code": "OTHER",
+      "source_asset_id": "asset-0",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "ANIMAL"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-1",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "ACTION",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "asset-1-f0",
+        "asset-1-f1",
+        "asset-1-f2"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-1-f0",
+            "asset-1-f1"
+          ],
+          "fact_id": "ef41eea3-8c5b-589a-add3-917aa0c75b4c",
+          "support_grade": "STRONG",
+          "text": "画面中可见岩石造景与水池围栏，几只狒狒在石堆间停留。"
+        },
+        {
+          "evidence_frame_ids": [
+            "asset-1-f2"
+          ],
+          "fact_id": "ff6d7250-700d-5831-a2cc-96a6e8c85dc2",
+          "support_grade": "STRONG",
+          "text": "镜头拉近后清晰展示一只狒狒坐在前景石块边缘，低头进行理毛动作。"
+        }
+      ],
+      "id": "89c92466-6e3a-5692-85bf-ed1b120fb114",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "baboon",
+        "rockery",
+        "grooming"
+      ],
+      "quality_score": 0.95,
+      "setting_code": "INDOOR_PUBLIC",
+      "source_asset_id": "asset-1",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "ANIMAL"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-2",
+      "degraded_fields": [],
+      "episode_code": "OTHER",
+      "event_kind": "ACTION",
+      "event_salience": "LOW",
+      "evidence_frame_ids": [
+        "asset-2-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "fact_id": "f42c58ff-7e41-5552-9a61-b5522bf3cf71",
+          "support_grade": "STRONG",
+          "text": "侧面视角的长条形玻璃展缸，内部铺设白沙底床并放置沉木与石块。"
+        },
+        {
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "fact_id": "8eeaa31b-63be-5ef7-98ae-c42bf66a0674",
+          "support_grade": "STRONG",
+          "text": "展缸内有几条银色鱼类在水中游动。"
+        }
+      ],
+      "id": "115a7073-ef43-5786-955c-c80efc130af0",
+      "limitations": [
+        "反光影响部分视野"
+      ],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "aquarium",
+        "fish",
+        "driftwood"
+      ],
+      "quality_score": 0.85,
+      "setting_code": "INDOOR_PUBLIC",
+      "source_asset_id": "asset-2",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "ANIMAL"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-3",
+      "degraded_fields": [
+        {
+          "action": "USE_NONE_NONE_WITHOUT_EVENT_INFERENCE",
+          "json_field_path": "$.observations[*].event_kind|event_salience",
+          "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+          "validation_rule_id": "X02V03_EVENT_TUPLE_CONTRADICTION"
+        }
+      ],
+      "episode_code": "OTHER",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-3-f0",
+        "asset-3-f1"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-3-f0",
+            "asset-3-f1"
+          ],
+          "fact_id": "110ba410-992b-5271-a293-e01f023fdc87",
+          "support_grade": "STRONG",
+          "text": "视频画面显示动物园内的动物围栏，包含沙地、岩石和休息的狐猴。"
+        }
+      ],
+      "id": "18c27ac9-d810-5c52-bae6-7a05dac22cfb",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "zoo",
+        "animal_enclosure",
+        "lemur",
+        "rocks",
+        "sand_pit"
+      ],
+      "quality_score": 0.9,
+      "setting_code": "OTHER",
+      "source_asset_id": "asset-3",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "ANIMAL"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-4",
+      "degraded_fields": [
+        {
+          "action": "USE_NONE_NONE_WITHOUT_EVENT_INFERENCE",
+          "json_field_path": "$.observations[*].event_kind|event_salience",
+          "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+          "validation_rule_id": "X02V03_EVENT_TUPLE_CONTRADICTION"
+        }
+      ],
+      "episode_code": "OTHER",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-4-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-4-f0"
+          ],
+          "fact_id": "f86ec6bd-506f-5d19-9782-fed3cffb0e0d",
+          "support_grade": "MODERATE",
+          "text": "视频画面展示了一个大型玻璃温室状建筑外部，透过玻璃可见内部植被与栖架。"
+        }
+      ],
+      "id": "bc120753-61f5-583b-83fa-3a082dc47d51",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "greenhouse",
+        "glass_building",
+        "aviary",
+        "plants",
+        "perches"
+      ],
+      "quality_score": 0.85,
+      "setting_code": "OTHER",
+      "source_asset_id": "asset-4",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "LANDSCAPE"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-5",
+      "degraded_fields": [
+        {
+          "action": "USE_NONE_NONE_WITHOUT_EVENT_INFERENCE",
+          "json_field_path": "$.observations[*].event_kind|event_salience",
+          "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+          "validation_rule_id": "X02V03_EVENT_TUPLE_CONTRADICTION"
+        }
+      ],
+      "episode_code": "OTHER",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-5-f0"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "fact_id": "c60fa8fa-b0cf-5a7f-859f-799822681c30",
+          "support_grade": "MODERATE",
+          "text": "视频画面显示一处户外围栏，有一只小熊猫在木桥附近的岩石上活动。"
+        }
+      ],
+      "id": "de0ed7ab-5813-5b42-9336-d730fcc08913",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "red_panda",
+        "wooden_bridge",
+        "rockery",
+        "tree_trunk",
+        "fence"
+      ],
+      "quality_score": 0.9,
+      "setting_code": "OTHER",
+      "source_asset_id": "asset-5",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "ANIMAL"
+      ]
+    },
+    {
+      "activity_code": "OBSERVING",
+      "asset_id": "asset-6",
+      "degraded_fields": [],
+      "episode_code": "NATURE_WALK",
+      "event_kind": "DISCOVERY",
+      "event_salience": "MEDIUM",
+      "evidence_frame_ids": [
+        "asset-6-f0",
+        "asset-6-f1",
+        "asset-6-f2"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-6-f0"
+          ],
+          "fact_id": "a667aef6-53dd-5f1d-bad7-376c2ed80931",
+          "support_grade": "STRONG",
+          "text": "视频画面显示一处半露天长廊，顶部为拱形透明结构。右侧排列着多层玻璃展示缸（鱼缸），左侧可见一名背对镜头的成人和一名儿童正在观看低处的展示缸，中间有一名穿蓝衣男子迎面走来。背景可见树木、围栏及草地。"
+        },
+        {
+          "evidence_frame_ids": [
+            "asset-6-f1"
+          ],
+          "fact_id": "22f8228a-18cf-5aeb-996a-b1adb9f9b773",
+          "support_grade": "STRONG",
+          "text": "镜头移动至走廊转角处，视野开阔，直接展示了外部的公园绿地景观，包括草坪、树木和黑色金属围栏。右下角仍可见部分带有向日葵装饰物的展示缸。"
+        },
+        {
+          "evidence_frame_ids": [
+            "asset-6-f2"
+          ],
+          "fact_id": "8236a177-1eab-5bbc-8427-1f39d825bb74",
+          "support_grade": "STRONG",
+          "text": "画面特写展示了一个玻璃鱼缸内部。一条橙白相间的金鱼正游向水面，缸底铺有碎石，并放置了绿色的仿真水草和一朵黄色向日葵装饰物。"
+        }
+      ],
+      "id": "2c197cf5-180c-5925-844e-01bec70bd63c",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "aquariums",
+        "goldfish",
+        "park_path",
+        "greenery"
+      ],
+      "quality_score": 0.95,
+      "setting_code": "NATURE_TRAIL",
+      "source_asset_id": "asset-6",
+      "status": "OBSERVED",
+      "subject_codes": [
+        "PEOPLE",
+        "ANIMAL"
+      ]
+    },
+    {
+      "activity_code": "WALKING",
+      "asset_id": "asset-7",
+      "degraded_fields": [
+        {
+          "action": "USE_NONE_NONE_WITHOUT_EVENT_INFERENCE",
+          "json_field_path": "$.observations[*].event_kind|event_salience",
+          "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+          "validation_rule_id": "X02V03_EVENT_TUPLE_CONTRADICTION"
+        }
+      ],
+      "episode_code": "NATURE_WALK",
+      "event_kind": "NONE",
+      "event_salience": "NONE",
+      "evidence_frame_ids": [
+        "asset-7-f0",
+        "asset-7-f1"
+      ],
+      "facts": [
+        {
+          "evidence_frame_ids": [
+            "asset-7-f0"
+          ],
+          "fact_id": "f82d968d-2a32-5954-a45b-b1ce8f7f12ad",
+          "support_grade": "STRONG",
+          "text": "画面展示了一条铺设平整的灰色步道，蜿蜒通向远处。路旁植被茂密，包含高大的树木和低矮灌木丛。左侧有一道浅色的石砌矮墙，将步道与旁边的铺装区域分隔开。"
+        },
+        {
+          "evidence_frame_ids": [
+            "asset-7-f1"
+          ],
+          "fact_id": "eecc26eb-c891-5acd-ae09-8e245e44f232",
+          "support_grade": "STRONG",
+          "text": "视角继续向前推进，进入树林更为密集的区域。步道两侧被绿叶环绕，光线透过树冠变得柔和，左侧可见深色的金属栏杆。"
+        }
+      ],
+      "id": "cd512e0e-de1c-51a1-964f-38d3fb2aa55a",
+      "limitations": [],
+      "media_kind": "VIDEO",
+      "motifs": [
+        "paved_path",
+        "trees",
+        "stone_wall",
+        "foliage"
+      ],
+      "quality_score": 0.9,
+      "setting_code": "NATURE_TRAIL",
+      "source_asset_id": "asset-7",
+      "status": "PARTIAL",
+      "subject_codes": [
+        "LANDSCAPE"
+      ]
+    }
+  ],
+  "output_mode": "CHAPTER_DAY",
+  "production_ready": false,
+  "schema_version": "DIARY_ONE_X02_PRODUCT_PREVIEW_V01",
+  "selected_memory_outcomes": [
+    {
+      "memory_id": "bcea4c77-ef69-5d0e-8959-c34b12023b03",
+      "memory_type": "CHAPTER",
+      "visibility_state": "VISIBLE_PREVIEW"
+    },
+    {
+      "memory_id": "e87a3d81-7173-5bb3-b25e-9843452cbe1d",
+      "memory_type": "CHAPTER",
+      "visibility_state": "VISIBLE_PREVIEW"
+    },
+    {
+      "memory_id": "c23717fa-79a0-58fd-8073-ad82562d8e3c",
+      "memory_type": "CHAPTER",
+      "visibility_state": "VISIBLE_PREVIEW"
+    }
+  ],
+  "semantic_day_state": "CHAPTER_DAY",
+  "session_id": "975c8204-ba21-4557-958e-7cf99b700434",
+  "time_reliability": {
+    "capture_time_reliable": false,
+    "interval_reliable": false,
+    "timezone_reliable": false
+  },
+  "timeline_basis": "IMPORT_SEQUENCE_ONLY",
+  "timeline_date": null,
+  "trace": {
+    "pipeline_version": "X02_PRODUCT_EDITOR_V07",
+    "provider": "alibaba_model_studio",
+    "model": "qwen3.8-flash",
+    "stage_metrics": []
+  },
+  "unresolved_asset_ids": []
+}

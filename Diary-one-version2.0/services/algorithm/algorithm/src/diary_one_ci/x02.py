@@ -472,9 +472,9 @@ def _call_stage_transport(
         )
     except (X01Error, TimeoutError, OSError) as exc:
         # Historical V03 allowed the adapter/transport exception to reach the
-        # server's legacy model_request_failed boundary. Only V04.1 turns the
-        # failed attempt into a StageRun; otherwise the public V03 envelope
-        # would drift merely because the new preview exists.
+        # server's legacy model_request_failed boundary. V04.1 and explicitly
+        # opted-in product calls retain failed attempts as StageRuns; otherwise
+        # the public V03 envelope must stay unchanged.
         if not audit_pre_response_failures:
             raise
         latency = time.monotonic() - started
@@ -567,10 +567,11 @@ class QwenStageGateway(StageModelGateway):
     ) -> StageRun:
         if not self.ready:
             raise X02ModelNotReady(
-                "X02 requires DASHSCOPE_API_KEY on the local research server."
+                "X02 requires %s on the local research server." % self.credential_environment
             )
         context = context or {}
-        audit_v041_failures = context.get("_x02_policy_version") == "V04_1"
+        audit_stage_failures = (context.get("_x02_policy_version") == "V04_1"
+                                or context.get("_audit_stage_failures") is True)
         full_prompt = (
             prompt
             + "\nReturn exactly one valid JSON object. Do not include markdown. "
@@ -592,7 +593,7 @@ class QwenStageGateway(StageModelGateway):
             "model": self.adapter.model,
             "messages": [{"role": "user", "content": content}],
             "response_format": {"type": "json_object"},
-            "enable_thinking": False,
+            **self.adapter.request_options(),
             "stream": False,
         }
         headers = {
@@ -611,16 +612,16 @@ class QwenStageGateway(StageModelGateway):
             model=self.adapter.model,
             selected_evidence=selected,
             frame_count=len(evidence),
-            pricing_currency="CNY",
+            pricing_currency=self.adapter.pricing_currency,
             input_rate=self.adapter.input_rate_per_million,
             output_rate=self.adapter.output_rate_per_million,
             native_per_usd=self.adapter.native_currency_per_usd,
             pricing_basis=self.adapter.pricing_basis,
-            audit_pre_response_failures=audit_v041_failures,
+            audit_pre_response_failures=audit_stage_failures,
         )
         if status < 200 or status >= 300:
             message = response_data[:2_048].decode("utf-8", errors="replace")
-            if not audit_v041_failures:
+            if not audit_stage_failures:
                 raise X02Error(
                     "%s model request failed: %s" % (stage, message)
                 )
@@ -638,7 +639,7 @@ class QwenStageGateway(StageModelGateway):
                 latency_seconds=latency,
                 evidence=selected,
                 frame_count=len(evidence),
-                pricing_currency="CNY",
+                pricing_currency=self.adapter.pricing_currency,
                 input_rate=self.adapter.input_rate_per_million,
                 output_rate=self.adapter.output_rate_per_million,
                 native_per_usd=self.adapter.native_currency_per_usd,
@@ -665,7 +666,7 @@ class QwenStageGateway(StageModelGateway):
                 latency_seconds=latency,
                 evidence=selected,
                 frame_count=len(evidence),
-                pricing_currency="CNY",
+                pricing_currency=self.adapter.pricing_currency,
                 input_rate=self.adapter.input_rate_per_million,
                 output_rate=self.adapter.output_rate_per_million,
                 native_per_usd=self.adapter.native_currency_per_usd,
@@ -700,7 +701,7 @@ class QwenStageGateway(StageModelGateway):
                 latency_seconds=latency,
                 evidence=selected,
                 frame_count=len(evidence),
-                pricing_currency="CNY",
+                pricing_currency=self.adapter.pricing_currency,
                 input_rate=self.adapter.input_rate_per_million,
                 output_rate=self.adapter.output_rate_per_million,
                 native_per_usd=self.adapter.native_currency_per_usd,
@@ -725,7 +726,7 @@ class QwenStageGateway(StageModelGateway):
             latency_seconds=latency,
             model_frame_count=len(evidence),
             model_calls=1,
-            pricing_currency="CNY",
+            pricing_currency=self.adapter.pricing_currency,
             input_rate_per_million=self.adapter.input_rate_per_million,
             output_rate_per_million=self.adapter.output_rate_per_million,
             native_currency_per_usd=self.adapter.native_currency_per_usd,
@@ -1172,6 +1173,11 @@ def run_x02(manifest_path: Path, gateway: StageModelGateway) -> Dict[str, object
     return _run_x02_with_policy(manifest_path, gateway, "V04_1")
 
 
+def run_x02_product(manifest_path: Path, gateway: StageModelGateway) -> Dict[str, object]:
+    """Product editorial path; legacy/research entry points remain reproducible."""
+    return _run_x02_with_policy(manifest_path, gateway, "V04_1", product_editor=True)
+
+
 def _retain_failed_stage_run(
     gateway: StageModelGateway,
     stage_runs: List[StageRun],
@@ -1203,12 +1209,13 @@ def _run_x02_with_policy(
     *,
     editorial_order_policy: Optional[str] = None,
     recording_editor_policy: Optional[str] = None,
+    product_editor: bool = False,
 ) -> Dict[str, object]:
     recorder = _RecordingStageGateway(gateway)
     try:
         return _run_x02_impl(manifest_path, recorder, policy_version,
                              editorial_order_policy=editorial_order_policy,
-                             recording_editor_policy=recording_editor_policy)
+                             recording_editor_policy=recording_editor_policy, product_editor=product_editor)
     except X02ModelNotReady:
         raise
     except X02StageCallError as exc:
@@ -1243,6 +1250,7 @@ def _run_x02_impl(
     *,
     editorial_order_policy: Optional[str] = None,
     recording_editor_policy: Optional[str] = None,
+    product_editor: bool = False,
 ) -> Dict[str, object]:
     if recording_editor_policy not in (
         None, recording_editor.POLICY_VERSION, grounded_recording_editor.POLICY_VERSION,
@@ -1634,6 +1642,22 @@ def _run_x02_impl(
             ]
         ),
     ))
+
+    if product_editor:
+        from .product_editor import run as run_product_editor
+        product_call, profile_audit = client_profile.product_editor_call(call_model, app_profile)
+        result = run_product_editor(
+            bundle=bundle, observations=observations, observation_ledger=observation_ledger,
+            evidence_ledger=evidence_ledger, unresolved_asset_ids=unresolved_asset_ids,
+            call_model=product_call, stage_runs=stage_runs, gateway=gateway,
+            run_started=run_started, namespace=namespace,
+        )
+        if app_profile.get("present"):
+            result["chapters"], reorder_audit = client_profile.apply_soft_editorial(
+                result["chapters"], app_profile)
+            profile_audit["soft_editorial"] = reorder_audit
+            result["decision_trace"]["client_profile_audit"] = profile_audit
+        return result
 
     structure_started = time.monotonic()
     roles = _assign_roles(

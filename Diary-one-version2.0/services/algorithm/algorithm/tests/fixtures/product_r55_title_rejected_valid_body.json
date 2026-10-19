@@ -1,0 +1,403 @@
+{
+  "source": "/Users/youtang/Documents/Nexleap/work_logs/evidence/repair-native-cloud-20261019-174228/cloud-r55/real-inputs/rural_cycling__group_01/result.json",
+  "source_sha256": "c1b1e86e11300b54160b44f2f6288df7611efbd9756376ff1212b19669b26430",
+  "revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_5",
+  "memory": {
+    "id": "C01",
+    "kind": "CHAPTER",
+    "theme": "第一人称骑行视角记录",
+    "fact_ids": [
+      "F001",
+      "F002",
+      "F003",
+      "F004",
+      "F005",
+      "F006",
+      "F007",
+      "F008",
+      "F009"
+    ],
+    "selection_focus": {
+      "experience_kind": "CYCLING",
+      "fact_ids": [
+        "F002",
+        "F005",
+        "F007",
+        "F009"
+      ],
+      "focus": "穿越城市与乡野不同道路环境的骑行状态"
+    },
+    "facts": [
+      {
+        "id": "F001",
+        "text": "画面显示一条带有蓝色铺装路面的专用车道，右侧为机动车道及高架桥，左侧可见商业建筑。",
+        "support_grade": "STRONG",
+        "asset_id": "V001",
+        "frame_pts_ms": [
+          4000
+        ],
+        "temporal_support": "STATE",
+        "visual_reviewed": true,
+        "evidence_frame_ids": [
+          "asset-0-f0"
+        ]
+      },
+      {
+        "id": "F002",
+        "text": "第一人称视角骑行视频，骑行者双手握把，从植被茂密的路段行驶至与城市道路交汇处。",
+        "support_grade": "STRONG",
+        "asset_id": "V002",
+        "frame_pts_ms": [
+          0,
+          3000,
+          5000
+        ],
+        "temporal_support": "CHANGE",
+        "visual_reviewed": true,
+        "evidence_frame_ids": [
+          "asset-1-f0",
+          "asset-1-f1",
+          "asset-1-f2"
+        ]
+      },
+      {
+        "id": "F003",
+        "text": "在f2帧中，镜头明显向右倾斜，显示骑行者在路口转弯或调整车身姿态。",
+        "support_grade": "MODERATE",
+        "asset_id": "V002",
+        "frame_pts_ms": [
+          5000
+        ],
+        "temporal_support": "STATE",
+        "visual_reviewed": true,
+        "evidence_frame_ids": [
+          "asset-1-f2"
+        ]
+      },
+      {
+        "id": "F004",
+        "text": "画面显示一条狭窄的乡村碎石和泥土混合而成的路面，两侧有茂密的竹林和杂草，远处可见民宅。",
+        "support_grade": "STRONG",
+        "asset_id": "V003",
+        "frame_pts_ms": [
+          5000
+        ],
+        "temporal_support": "STATE",
+        "visual_reviewed": true,
+        "evidence_frame_ids": [
+          "asset-2-f0"
+        ]
+      },
+      {
+        "id": "F005",
+        "text": "画面显示第一人称视角，佩戴黑色手套的双手握住自行车车把。前方可见机动车道、白色隔离护栏、绿化带及高架桥结构，远处有行驶中的汽车。",
+        "support_grade": "STRONG",
+        "asset_id": "V004",
+        "frame_pts_ms": [
+          8000
+        ],
+        "temporal_support": "STATE",
+        "visual_reviewed": true,
+        "evidence_frame_ids": [
+          "asset-3-f0"
+        ]
+      },
+      {
+        "id": "F006",
+        "text": "第一人称骑行视角停在或经过路口斑马线前。左侧可见红绿灯杆和电线杆，背景为低层住宅建筑，天空多云。",
+        "support_grade": "STRONG",
+        "asset_id": "V005",
+        "frame_pts_ms": [
+          1000
+        ],
+        "temporal_support": "STATE",
+        "visual_reviewed": true,
+        "evidence_frame_ids": [
+          "asset-4-f0"
+        ]
+      },
+      {
+        "id": "F007",
+        "text": "视频记录了沿乡间公路骑行的过程。从开阔道路（f0）行进至弯道处（f2），沿途可见茂密植被、输电铁塔及路边停靠的白色小货车。",
+        "support_grade": "STRONG",
+        "asset_id": "V006",
+        "frame_pts_ms": [
+          1000,
+          5000,
+          9000
+        ],
+        "temporal_support": "CHANGE",
+        "visual_reviewed": true,
+        "evidence_frame_ids": [
+          "asset-5-f0",
+          "asset-5-f1",
+          "asset-5-f2"
+        ]
+      },
+      {
+        "id": "F008",
+        "text": "可见一条狭窄的柏油路，路边有金属护栏、杂草丛生的植被以及一座屋顶破损的建筑。",
+        "support_grade": "STRONG",
+        "asset_id": "V007",
+        "frame_pts_ms": [
+          4000
+        ],
+        "temporal_support": "STATE",
+        "visual_reviewed": true,
+        "evidence_frame_ids": [
+          "asset-6-f0"
+        ]
+      },
+      {
+        "id": "F009",
+        "text": "第一人称视角显示双手佩戴手套握着自行车把手，前方是一条穿过树林的泥土小径。",
+        "support_grade": "STRONG",
+        "asset_id": "V008",
+        "frame_pts_ms": [
+          8000
+        ],
+        "temporal_support": "STATE",
+        "visual_reviewed": true,
+        "evidence_frame_ids": [
+          "asset-7-f0"
+        ]
+      }
+    ],
+    "copy_contract": {
+      "type_label": "章节",
+      "length_policy": "按内容自然成文，不设目标字数、句数或事实条数"
+    },
+    "evidence_groups": [
+      {
+        "asset_id": "V001",
+        "facts": [
+          {
+            "id": "F001",
+            "text": "画面显示一条带有蓝色铺装路面的专用车道，右侧为机动车道及高架桥，左侧可见商业建筑。",
+            "support_grade": "STRONG",
+            "asset_id": "V001",
+            "frame_pts_ms": [
+              4000
+            ],
+            "temporal_support": "STATE",
+            "visual_reviewed": true,
+            "evidence_frame_ids": [
+              "asset-0-f0"
+            ]
+          }
+        ]
+      },
+      {
+        "asset_id": "V002",
+        "facts": [
+          {
+            "id": "F002",
+            "text": "第一人称视角骑行视频，骑行者双手握把，从植被茂密的路段行驶至与城市道路交汇处。",
+            "support_grade": "STRONG",
+            "asset_id": "V002",
+            "frame_pts_ms": [
+              0,
+              3000,
+              5000
+            ],
+            "temporal_support": "CHANGE",
+            "visual_reviewed": true,
+            "evidence_frame_ids": [
+              "asset-1-f0",
+              "asset-1-f1",
+              "asset-1-f2"
+            ]
+          },
+          {
+            "id": "F003",
+            "text": "在f2帧中，镜头明显向右倾斜，显示骑行者在路口转弯或调整车身姿态。",
+            "support_grade": "MODERATE",
+            "asset_id": "V002",
+            "frame_pts_ms": [
+              5000
+            ],
+            "temporal_support": "STATE",
+            "visual_reviewed": true,
+            "evidence_frame_ids": [
+              "asset-1-f2"
+            ]
+          }
+        ]
+      },
+      {
+        "asset_id": "V003",
+        "facts": [
+          {
+            "id": "F004",
+            "text": "画面显示一条狭窄的乡村碎石和泥土混合而成的路面，两侧有茂密的竹林和杂草，远处可见民宅。",
+            "support_grade": "STRONG",
+            "asset_id": "V003",
+            "frame_pts_ms": [
+              5000
+            ],
+            "temporal_support": "STATE",
+            "visual_reviewed": true,
+            "evidence_frame_ids": [
+              "asset-2-f0"
+            ]
+          }
+        ]
+      },
+      {
+        "asset_id": "V004",
+        "facts": [
+          {
+            "id": "F005",
+            "text": "画面显示第一人称视角，佩戴黑色手套的双手握住自行车车把。前方可见机动车道、白色隔离护栏、绿化带及高架桥结构，远处有行驶中的汽车。",
+            "support_grade": "STRONG",
+            "asset_id": "V004",
+            "frame_pts_ms": [
+              8000
+            ],
+            "temporal_support": "STATE",
+            "visual_reviewed": true,
+            "evidence_frame_ids": [
+              "asset-3-f0"
+            ]
+          }
+        ]
+      },
+      {
+        "asset_id": "V005",
+        "facts": [
+          {
+            "id": "F006",
+            "text": "第一人称骑行视角停在或经过路口斑马线前。左侧可见红绿灯杆和电线杆，背景为低层住宅建筑，天空多云。",
+            "support_grade": "STRONG",
+            "asset_id": "V005",
+            "frame_pts_ms": [
+              1000
+            ],
+            "temporal_support": "STATE",
+            "visual_reviewed": true,
+            "evidence_frame_ids": [
+              "asset-4-f0"
+            ]
+          }
+        ]
+      },
+      {
+        "asset_id": "V006",
+        "facts": [
+          {
+            "id": "F007",
+            "text": "视频记录了沿乡间公路骑行的过程。从开阔道路（f0）行进至弯道处（f2），沿途可见茂密植被、输电铁塔及路边停靠的白色小货车。",
+            "support_grade": "STRONG",
+            "asset_id": "V006",
+            "frame_pts_ms": [
+              1000,
+              5000,
+              9000
+            ],
+            "temporal_support": "CHANGE",
+            "visual_reviewed": true,
+            "evidence_frame_ids": [
+              "asset-5-f0",
+              "asset-5-f1",
+              "asset-5-f2"
+            ]
+          }
+        ]
+      },
+      {
+        "asset_id": "V007",
+        "facts": [
+          {
+            "id": "F008",
+            "text": "可见一条狭窄的柏油路，路边有金属护栏、杂草丛生的植被以及一座屋顶破损的建筑。",
+            "support_grade": "STRONG",
+            "asset_id": "V007",
+            "frame_pts_ms": [
+              4000
+            ],
+            "temporal_support": "STATE",
+            "visual_reviewed": true,
+            "evidence_frame_ids": [
+              "asset-6-f0"
+            ]
+          }
+        ]
+      },
+      {
+        "asset_id": "V008",
+        "facts": [
+          {
+            "id": "F009",
+            "text": "第一人称视角显示双手佩戴手套握着自行车把手，前方是一条穿过树林的泥土小径。",
+            "support_grade": "STRONG",
+            "asset_id": "V008",
+            "frame_pts_ms": [
+              8000
+            ],
+            "temporal_support": "STATE",
+            "visual_reviewed": true,
+            "evidence_frame_ids": [
+              "asset-7-f0"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "row": {
+    "id": "C01",
+    "decision": "PUBLISH",
+    "reason": "Recorded R5_5 input before final image verdict",
+    "title": "从林间土路骑向城市",
+    "title_fact_ids": [
+      "F002",
+      "F009"
+    ],
+    "voice_issues": [],
+    "sentences": [
+      {
+        "text": "骑车穿过树林，双手握着车把行驶在泥土小径上。",
+        "fact_ids": [
+          "F009"
+        ],
+        "source_index": 0
+      },
+      {
+        "text": "骑行至植被茂密路段与城市道路交汇处。",
+        "fact_ids": [
+          "F002"
+        ],
+        "source_index": 1
+      },
+      {
+        "text": "前方可见机动车道、白色隔离护栏和高架桥结构。",
+        "fact_ids": [
+          "F005"
+        ],
+        "source_index": 2
+      }
+    ]
+  },
+  "verdict": {
+    "id": "C01",
+    "sentences": [
+      {
+        "reason": "图像为第一人称视角，画面下方清晰可见戴手套的双手握住车把，正前方是一条穿过树林的泥土小径，与文字描述一致。",
+        "source_index": 0,
+        "supported": true
+      },
+      {
+        "reason": "视频帧序列完整展示了该过程：asset-1-f0显示骑行者在植被茂密的小路上行驶；asset-1-f1显示小路尽头连接着有车辆、房屋和路牌的开阔区域；asset-1-f2视角转入带有蓝色铺装和标线的城市道路，证实了从植被路段至城市道路交汇处的移动轨迹。",
+        "source_index": 1,
+        "supported": true
+      },
+      {
+        "reason": "图像中前方右侧可见沥青路面及行驶的白色机动车，左侧可见白色金属隔离护栏，右上方背景处可见高架桥结构，所有描述要素均在图中清晰呈现。",
+        "source_index": 2,
+        "supported": true
+      }
+    ],
+    "title_reason": "图像证据不支持“从林间土路骑向城市”的时间先后与路线顺序。Claim引用的F002（asset-1）画面显示的是铺装路面（柏油/水泥），两侧为灌木丛及高架桥，远处有房屋车辆，并非“林间土路”。而唯一的“林间土路”画面来自F009（asset-7）。依据IMPORT_ORDER_ONLY原则，F002在时间轴上早于F009，即画面内容是从“非土路的城市边缘道路”开始，随后才出现“林间土路”，这与文字描述的“从土路骑向城市”方向相反；且不同素材间的画面无法证明连续的骑行路径。",
+    "title_supported": false
+  }
+}

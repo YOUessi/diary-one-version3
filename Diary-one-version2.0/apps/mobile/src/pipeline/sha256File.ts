@@ -34,9 +34,9 @@ export async function sha256File(uri: string): Promise<string> {
     encoding: FileSystem.EncodingType.Base64,
   });
   const bytes = base64ToUint8Array(base64);
-  // Copy into a concrete ArrayBuffer so Crypto.digest accepts BufferSource under strict TS.
+  // Keep a concrete buffer for strict TS; the Expo native bridge requires a TypedArray view.
   const ab = new ArrayBuffer(bytes.byteLength);
   new Uint8Array(ab).set(bytes);
-  const digest = await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, ab);
+  const digest = await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, new Uint8Array(ab));
   return arrayBufferToHex(digest);
 }

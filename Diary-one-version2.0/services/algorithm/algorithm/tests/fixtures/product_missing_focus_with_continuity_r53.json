@@ -1,0 +1,227 @@
+{
+  "provenance": "/Users/youtang/Documents/Nexleap/work_logs/evidence/repair-native-cloud-20261019-174228/cloud-r53/real-inputs/rural_cycling__group_01/result.json",
+  "revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_3",
+  "raw_structure": {
+    "chapter_boundaries": [],
+    "chapters": [
+      {
+        "experience_kind": "CYCLING",
+        "fact_ids": [
+          "F001",
+          "F002",
+          "F003",
+          "F004",
+          "F005",
+          "F006",
+          "F007",
+          "F008",
+          "F009",
+          "F010",
+          "F011",
+          "F012"
+        ],
+        "focus": "第一人称视角下的连续骑行体验，涵盖城市高架旁、林间小径、乡村道路及路口等多种环境变化。",
+        "grouping_reason": "所有事实均证实为第一人称骑行活动，背景差异属于同一持续过程中的环境转换，不拆章。",
+        "id": "C01",
+        "theme": "多路况骑行记录"
+      }
+    ],
+    "moments": [
+      {
+        "chapter_relations": [
+          {
+            "chapter_id": "C01",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ],
+        "fact_id": "F004",
+        "focus": "骑行至路口时前方停放的橙色越野车和白色面包车",
+        "id": "M01",
+        "parent_chapter_id": "C01",
+        "revisit_reason": "骑行途中遇到的具体交通场景细节，具有明确的视觉焦点。"
+      },
+      {
+        "chapter_relations": [
+          {
+            "chapter_id": "C01",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ],
+        "fact_id": "F011",
+        "focus": "乡村道路左侧被茂密植被包围的红瓦屋顶旧建筑",
+        "id": "M02",
+        "parent_chapter_id": "C01",
+        "revisit_reason": "骑行经过的具有辨识度的乡村景观元素，提供独特视觉记忆点。"
+      }
+    ],
+    "unselected_facts": []
+  },
+  "facts": [
+    {
+      "evidence_frame_ids": [
+        "asset-0-f0"
+      ],
+      "support_grade": "STRONG",
+      "text": "画面展示一条带有蓝色铺装的自行车道，右侧有机动车行驶，上方为高架轨道。",
+      "id": "F001",
+      "asset_id": "V001",
+      "frame_pts_ms": [
+        4000
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-1-f0"
+      ],
+      "support_grade": "STRONG",
+      "text": "第一人称视角显示骑行者双手握把，沿植被茂密的小径向前移动。",
+      "id": "F002",
+      "asset_id": "V002",
+      "frame_pts_ms": [
+        0
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-1-f0"
+      ],
+      "support_grade": "MODERATE",
+      "text": "路径穿过一座混凝土桥梁下方。",
+      "id": "F003",
+      "asset_id": "V002",
+      "frame_pts_ms": [
+        0
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-1-f1",
+        "asset-1-f2"
+      ],
+      "support_grade": "STRONG",
+      "text": "小径延伸至路口，前方可见一辆橙色越野车和白色面包车停在路边。",
+      "id": "F004",
+      "asset_id": "V002",
+      "frame_pts_ms": [
+        3000,
+        5000
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-1-f1",
+        "asset-1-f2"
+      ],
+      "support_grade": "STRONG",
+      "text": "车辆驶出树丛遮蔽区域，到达一个有地面标线的铺装路面交叉口。",
+      "id": "F005",
+      "asset_id": "V002",
+      "frame_pts_ms": [
+        3000,
+        5000
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-2-f0"
+      ],
+      "support_grade": "STRONG",
+      "text": "画面以低角度向前移动，左侧为密集的竹林，右侧有电线杆。",
+      "id": "F006",
+      "asset_id": "V003",
+      "frame_pts_ms": [
+        5000
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-2-f0"
+      ],
+      "support_grade": "MODERATE",
+      "text": "道路尽头可见一栋房屋建筑。",
+      "id": "F007",
+      "asset_id": "V003",
+      "frame_pts_ms": [
+        5000
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-3-f0"
+      ],
+      "support_grade": "STRONG",
+      "text": "第一人称视角骑行画面，双手戴手套握持车把，前方为沥青道路及高架桥结构。",
+      "id": "F008",
+      "asset_id": "V004",
+      "frame_pts_ms": [
+        8000
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-4-f0"
+      ],
+      "support_grade": "STRONG",
+      "text": "第一人称视角骑行经过路口，可见斑马线、交通信号灯及两侧建筑物。",
+      "id": "F009",
+      "asset_id": "V005",
+      "frame_pts_ms": [
+        1000
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-5-f0",
+        "asset-5-f1",
+        "asset-5-f2"
+      ],
+      "support_grade": "STRONG",
+      "text": "视频展示第一人称骑行过程，沿途经过绿树成荫的路段、高压输电塔及路边停靠的白色小货车。",
+      "id": "F010",
+      "asset_id": "V006",
+      "frame_pts_ms": [
+        1000,
+        5000,
+        9000
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-6-f0"
+      ],
+      "support_grade": "STRONG",
+      "text": "视频画面显示一条乡村柏油路，左侧可见一栋红瓦屋顶的旧建筑被茂密植被包围，右侧有现代房屋。",
+      "id": "F011",
+      "asset_id": "V007",
+      "frame_pts_ms": [
+        4000
+      ]
+    },
+    {
+      "evidence_frame_ids": [
+        "asset-7-f0"
+      ],
+      "support_grade": "STRONG",
+      "text": "第一人称视角显示佩戴手套的双手握着自行车车把，前方是一条穿过树林的泥土小径。",
+      "id": "F012",
+      "asset_id": "V008",
+      "frame_pts_ms": [
+        8000
+      ]
+    }
+  ],
+  "original_rejected_items": [
+    {
+      "item": "C01",
+      "reason": "chapters.C01.selection_focus.focus: unsupported context: 连续骑行"
+    },
+    {
+      "item": "M01",
+      "reason": "Unknown or duplicate chapter relation"
+    },
+    {
+      "item": "M02",
+      "reason": "Unknown or duplicate chapter relation"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://diary.one/contracts/codex_app_library_bundle_v04.schema.json",
   "title": "Diary One Phone-library Full-frame Test Bundle V04",
-  "description": "V04 preserves the complete source frame via aspect-fit letterboxing on a 768x1024 canvas. All V03 sequence-only and temporal sampling fields remain unchanged; V03 remains center-cropped.",
+  "description": "V04 preserves the complete source frame via aspect-fit letterboxing on a 768x1024 canvas. All V03 sequence-only and temporal sampling fields remain unchanged; V03 remains center-cropped. Explicit MOBILECLIP_S0_FP16_COVERAGE_V07 sampling extension permits actual 1..10 frames per 10-second window without padding; cross-field chronology is validated by the loader.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -201,6 +201,16 @@
       }
     },
     "asset": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/legacy_asset"
+        },
+        {
+          "$ref": "#/$defs/mobileclip_asset"
+        }
+      ]
+    },
+    "legacy_asset": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -487,6 +497,169 @@
           }
         }
       ]
+    },
+    "mobileclip_asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_id",
+        "media_kind",
+        "media_source",
+        "original_file_extension",
+        "original_sha256",
+        "original_bytes",
+        "original_width",
+        "original_height",
+        "original_duration_ms",
+        "original_included",
+        "sequence_index",
+        "logical_asset_duration_ms",
+        "materialized_video",
+        "evidence_sampling_profile",
+        "evidence_window_count",
+        "frames"
+      ],
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_display_name": {
+          "type": "string"
+        },
+        "media_kind": {
+          "const": "VIDEO"
+        },
+        "media_source": {
+          "const": "PHONE_LIBRARY_DAY_TEST"
+        },
+        "original_file_extension": {
+          "type": "string",
+          "minLength": 1
+        },
+        "original_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "original_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "original_width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "original_height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "original_duration_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120000
+        },
+        "original_included": {
+          "const": false
+        },
+        "sequence_index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Must equal this asset's zero-based position in the assets array; continuity and order are validated by the bundle loader."
+        },
+        "logical_asset_duration_ms": {
+          "const": 9000,
+          "description": "Canonical Evidence normalization parameter only. It is not the source duration and must never be used as capture time or cross-asset elapsed time."
+        },
+        "materialized_video": {
+          "const": false
+        },
+        "evidence_sampling_profile": {
+          "enum": ["MOBILECLIP_S0_FP16_COVERAGE_V07",
+            "MOBILECLIP_S0_FP16_COVERAGE_V07_BALANCED_V1", "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY"]
+        },
+        "evidence_window_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "frames": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 120,
+          "items": {
+            "$ref": "#/$defs/mobileclip_frame"
+          }
+        }
+      }
+    },
+    "mobileclip_frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frame_id",
+        "window_index",
+        "window_count",
+        "sample_role",
+        "canonical_offset_ms",
+        "source_timestamp_ms",
+        "relative_path",
+        "sha256",
+        "width",
+        "height",
+        "spatial_transform"
+      ],
+      "properties": {
+        "frame_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "window_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 11
+        },
+        "window_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "sample_role": {
+          "enum": [
+            "WINDOW_EARLY",
+            "WINDOW_MIDDLE",
+            "WINDOW_LATE"
+          ]
+        },
+        "canonical_offset_ms": {
+          "enum": [
+            1500,
+            4500,
+            7500
+          ]
+        },
+        "source_timestamp_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Actual decoded PTS within the original video. Window boundaries and unique chronological order checked by loader."
+        },
+        "relative_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "width": {
+          "const": 768
+        },
+        "height": {
+          "const": 1024
+        },
+        "spatial_transform": {
+          "const": "ASPECT_FIT_LETTERBOX"
+        }
+      }
     }
   }
 }

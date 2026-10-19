@@ -67,12 +67,18 @@ from .x02 import (
     X02_V03_RUN_SIDECAR_PATH,
     X02_V03_SCHEMA_VERSION,
     run_x02,
+    run_x02_product,
     run_x02_v03,
     x02_runtime_policies,
     stage_run_audit_snapshot,
     stage_gateway_for_adapter,
 )
 from .codex_chapter_media import POLICY_VERSION as CHAPTER_MEDIA_POLICY_VERSION
+from . import product_editor
+
+
+def _product_editor_enabled():
+    return os.environ.get('DIARY_ONE_X02_EDITOR', 'legacy') == 'product_v1'
 
 
 DEFAULT_MAX_BODY_BYTES = 512 * 1024 * 1024
@@ -238,7 +244,9 @@ def _write_x02_run_audit(
     run_id = _normalized_session_id(trace.get("run_id") or str(uuid.uuid4()))
     trace["run_id"] = run_id
     result_schema_version = result.get("schema_version")
-    if result_schema_version == X02_SCHEMA_VERSION:
+    if result_schema_version == product_editor.SCHEMA_VERSION:
+        audit_schema_version = 'DIARY_ONE_X02_PRODUCT_RUN_AUDIT_V01'
+    elif result_schema_version == X02_SCHEMA_VERSION:
         audit_schema_version = X02_RUN_AUDIT_SCHEMA_VERSION
     elif result_schema_version == X02_V03_SCHEMA_VERSION:
         audit_schema_version = X02_V03_RUN_AUDIT_SCHEMA_VERSION
@@ -781,12 +789,14 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             return
         self._json(200, {
             "status": "ok",
-            "schemaVersion": X02_SCHEMA_VERSION,
+            "schemaVersion": product_editor.SCHEMA_VERSION if _product_editor_enabled() else X02_SCHEMA_VERSION,
+            "editorPolicy": product_editor.POLICY_VERSION if _product_editor_enabled() else 'LEGACY_V04_1',
+            "editorRevision": product_editor.EDITOR_REVISION if _product_editor_enabled() else None,
             "experiment": X02_EXPERIMENT,
             "experimental": True,
             "leaderboardEligible": False,
             "productionReady": bool(
-                self.stage_gateway.ready
+                not _product_editor_enabled() and self.stage_gateway.ready
                 and (
                     "alibaba" in str(self.stage_gateway.provider or "").lower()
                     or "qwen" in str(self.stage_gateway.model or "").lower()
@@ -805,9 +815,9 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             "observationSemanticContractSHA256": X02_OBSERVATION_COMPATIBILITY_SHA256,
             "fieldDegradationContractVersion": X02_FIELD_DEGRADATION_VERSION,
             "fieldDegradationContractSHA256": X02_FIELD_DEGRADATION_SHA256,
-            "writerSurfacePolicyVersion": X02_WRITER_SURFACE_POLICY_VERSION,
-            "chapterMediaPolicyVersion": CHAPTER_MEDIA_POLICY_VERSION,
-            "runtimePolicies": x02_runtime_policies(),
+            "writerSurfacePolicyVersion": product_editor.POLICY_VERSION if _product_editor_enabled() else X02_WRITER_SURFACE_POLICY_VERSION,
+            "chapterMediaPolicyVersion": product_editor.POLICY_VERSION if _product_editor_enabled() else CHAPTER_MEDIA_POLICY_VERSION,
+            "runtimePolicies": ({"product_editor": product_editor.POLICY_VERSION} if _product_editor_enabled() else x02_runtime_policies()),
             "perceptionBatchMaxAssets": PERCEPTION_BATCH_MAX_ASSETS,
             "perceptionBatchMaxFrames": PERCEPTION_BATCH_MAX_FRAMES,
             "perceptionBatchMaxEvidenceBytes": PERCEPTION_BATCH_MAX_EVIDENCE_BYTES,
@@ -840,9 +850,9 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             "granularObservationValidation": True,
             "fieldLevelObservationDegradation": True,
             "durationAwarePhoneTestEvidence": True,
-            "contractBasis": "CANONICAL_V1_25_S00_S13",
+            "contractBasis": product_editor.SCHEMA_VERSION if _product_editor_enabled() else "CANONICAL_V1_25_S00_S13",
             "executionMode": "X02_STAGED_REAL_MEDIA_PREVIEW_NOT_PRODUCTION",
-            "pipelineVersion": X02_PIPELINE_VERSION,
+            "pipelineVersion": product_editor.PIPELINE_VERSION if _product_editor_enabled() else X02_PIPELINE_VERSION,
             "stagedRealMediaPreviewImplemented": True,
             "storylineSegmentationImplemented": True,
             "fullStagedPipelineImplemented": False,
@@ -873,7 +883,7 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             X02_V03_RUN_SIDECAR_PATH,
         ):
             if request_path == X02_RUN_SIDECAR_PATH:
-                expected_pipeline_version = X02_PIPELINE_VERSION
+                expected_pipeline_version = product_editor.PIPELINE_VERSION if _product_editor_enabled() else X02_PIPELINE_VERSION
             elif request_path == X02_V03_RUN_SIDECAR_PATH:
                 expected_pipeline_version = X02_V03_PIPELINE_VERSION
             else:
@@ -919,7 +929,8 @@ class X01RequestHandler(BaseHTTPRequestHandler):
                 manifest = loaded_manifest
                 pipeline_started = time.monotonic()
                 if request_path == X02_PREVIEW_PATH:
-                    result = run_x02(manifest_path, self.stage_gateway)
+                    runner = run_x02_product if _product_editor_enabled() else run_x02
+                    result = runner(manifest_path, self.stage_gateway)
                 elif request_path == X02_V03_PREVIEW_PATH:
                     result = run_x02_v03(manifest_path, self.stage_gateway)
                 else:

@@ -1,0 +1,3676 @@
+{
+  "provenance": {
+    "source": "/Users/youtang/Documents/Nexleap/work_logs/evidence/chapter-v071-20261019/candidate-v7-1-hardened-r2/nagoya_cycling__group_01/result.json",
+    "sha256": "fe6e19263ff7f4d507e165ac833a916773dc7de112940a23ff9235979ff2183f",
+    "note": "Real R2 structural inputs only; no generated copy rewritten."
+  },
+  "output": {
+    "chapter_boundaries": [],
+    "chapters": [
+      {
+        "id": "C01",
+        "theme": "骑行途中的景观与路况",
+        "fact_ids": [
+          "F001",
+          "F002",
+          "F003",
+          "F004",
+          "F005",
+          "F006",
+          "F007",
+          "F008",
+          "F009",
+          "F010"
+        ],
+        "experience_kind": "CYCLING",
+        "focus": "第一人称视角的骑行活动，涵盖经过铁轨桥、河畔道路、植被小路、民居街道及郊野土路等多种路况，包含途中短暂驻足观景。",
+        "focus_fact_ids": [
+          "F001",
+          "F006",
+          "F009"
+        ],
+        "grouping_reason": "所有事实均指向同一类持续性的骑行活动（包括移动和短暂停留），背景变化属于同一次经历中的不同路段或瞬间，不构成独立章节。",
+        "hero_candidate_id": "P001"
+      }
+    ],
+    "moments": [
+      {
+        "id": "M01",
+        "parent_chapter_id": "C01",
+        "fact_id": "F001",
+        "focus": "橙色列车驶过铁轨桥",
+        "revisit_reason": "骑行途中遇到的具体动态视觉焦点，记录了交通工具与骑行路径交汇的瞬间。",
+        "chapter_relations": [
+          {
+            "chapter_id": "C01",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ]
+      },
+      {
+        "id": "M02",
+        "parent_chapter_id": "C01",
+        "fact_id": "F006",
+        "focus": "桥上眺望城市与逆光塔楼剪影",
+        "revisit_reason": "骑行中驻足观察的具体景观细节，包含开阔视野和具有辨识度的光影元素。",
+        "chapter_relations": [
+          {
+            "chapter_id": "C01",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ]
+      }
+    ],
+    "unselected_facts": [],
+    "media_choices": [
+      {
+        "chapter_id": "C01",
+        "candidate_id": "P001",
+        "reason": "画面清晰展示第一人称视角在草堤小路上骑行并接近铁轨桥，直接呈现本次骑行的主要路线特征。"
+      },
+      {
+        "chapter_id": "C01",
+        "candidate_id": "P009",
+        "reason": "捕捉到橙色列车驶过高架桥的瞬间，是沿途最显著的动态发现，作为高光时刻值得保留。"
+      },
+      {
+        "chapter_id": "C01",
+        "candidate_id": "P005",
+        "reason": "展示了从桥上眺望河流与城市建筑群的开阔视野，代表了骑行中途驻足观景的经历。"
+      },
+      {
+        "chapter_id": "C01",
+        "candidate_id": "P012",
+        "reason": "逆光下的塔楼剪影提供了独特的光影氛围，补充了桥上观景的具体视觉记忆点。"
+      },
+      {
+        "chapter_id": "C01",
+        "candidate_id": "P002",
+        "reason": "记录同伴在河边道路停下休息的状态，体现了骑行过程中的互动与节奏变化。"
+      },
+      {
+        "chapter_id": "C01",
+        "candidate_id": "P011",
+        "reason": "展示了在长满杂草的非铺装土路上骑行的场景，体现了路况的多样性与挑战性。"
+      },
+      {
+        "chapter_id": "C01",
+        "candidate_id": "P006",
+        "reason": "呈现了穿越两侧有民居的狭窄街道的场景，丰富了骑行经过的生活化环境细节。"
+      },
+      {
+        "chapter_id": "C01",
+        "candidate_id": "P003",
+        "reason": "展示了植被茂密的道路尽头出现红色桥梁的景象，作为沿途发现的标志性景观。"
+      }
+    ],
+    "frame_assessments": [
+      {
+        "candidate_id": "P001",
+        "fact_ids": [
+          "F001",
+          "F002"
+        ],
+        "scene_observation_id": "FO:P001",
+        "visible_detail": "第一人称视角显示骑行者正沿着两旁有草堤的铺装小路前进，前方可见一座铁轨桥。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P002",
+        "fact_ids": [
+          "F003"
+        ],
+        "scene_observation_id": "FO:P002",
+        "visible_detail": "一名身穿粉色上衣、戴头盔的骑行者在河边道路上停下或缓慢移动。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P003",
+        "fact_ids": [
+          "F004"
+        ],
+        "scene_observation_id": "FO:P003",
+        "visible_detail": "第一人称视角骑行，前方植被茂密的道路尽头有一座红色桥梁。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "READABLE",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P004",
+        "fact_ids": [
+          "F005"
+        ],
+        "scene_observation_id": "FO:P004",
+        "visible_detail": "透过车把可以看到前方有一名戴头盔的骑行者正在河堤旁的道路上骑行。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "READABLE",
+        "occlusion": "PARTIAL"
+      },
+      {
+        "candidate_id": "P005",
+        "fact_ids": [
+          "F006"
+        ],
+        "scene_observation_id": "FO:P005",
+        "visible_detail": "画面展示了从桥上眺望河流与城市建筑群的视野。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P006",
+        "fact_ids": [
+          "F007"
+        ],
+        "scene_observation_id": "FO:P006",
+        "visible_detail": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P007",
+        "fact_ids": [
+          "F008"
+        ],
+        "scene_observation_id": "FO:P007",
+        "visible_detail": "第一人称视角骑行，前方为铺装道路及左侧建筑。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P008",
+        "fact_ids": [],
+        "scene_observation_id": null,
+        "visible_detail": "",
+        "theme_fit": "UNSUPPORTED",
+        "visibility": "NOT_VISIBLE",
+        "prominence": "TINY_OR_UNCLEAR",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P009",
+        "fact_ids": [],
+        "scene_observation_id": null,
+        "visible_detail": "",
+        "theme_fit": "UNSUPPORTED",
+        "visibility": "NOT_VISIBLE",
+        "prominence": "TINY_OR_UNCLEAR",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P010",
+        "fact_ids": [],
+        "scene_observation_id": null,
+        "visible_detail": "",
+        "theme_fit": "UNSUPPORTED",
+        "visibility": "NOT_VISIBLE",
+        "prominence": "TINY_OR_UNCLEAR",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P011",
+        "fact_ids": [
+          "F009",
+          "F010"
+        ],
+        "scene_observation_id": "FO:P011",
+        "visible_detail": "第一人称视角下，手臂和车把出现在长满杂草的土路上，右侧可见公寓楼。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P012",
+        "fact_ids": [
+          "F006"
+        ],
+        "scene_observation_id": "FO:P012",
+        "visible_detail": "逆光下，远处的塔楼剪影矗立在河畔。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "READABLE",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P013",
+        "fact_ids": [
+          "F010"
+        ],
+        "scene_observation_id": "FO:P013",
+        "visible_detail": "第一人称视角的车把和手臂在长满杂草的土路上移动。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      }
+    ]
+  },
+  "facts": {
+    "F001": {
+      "evidence_frame_ids": [
+        "asset-0-f0",
+        "asset-0-f1"
+      ],
+      "fact_id": "ea00482f-7e55-511b-a006-fa110509de86",
+      "support_grade": "STRONG",
+      "text": "第一人称视角骑行，前方可见铁轨桥，一列橙色列车从桥上驶过。",
+      "id": "F001",
+      "asset_id": "V001",
+      "source_asset_id": "asset-0",
+      "observation_id": "25ad706f-b8e2-5f34-a470-e423e96536e3",
+      "frame_pts_ms": [
+        1001,
+        5005
+      ],
+      "temporal_support": "CHANGE",
+      "visual_reviewed": true,
+      "original_text": "第一人称视角骑行，前方可见铁轨桥，一列橙色列车从桥上驶过。"
+    },
+    "F002": {
+      "evidence_frame_ids": [
+        "asset-0-f0",
+        "asset-0-f1"
+      ],
+      "fact_id": "5086f85e-bc11-55fe-a12a-5f541cf4c4ce",
+      "support_grade": "MODERATE",
+      "text": "在铺设好的小路上骑自行车，路两旁是草堤和电线杆。",
+      "id": "F002",
+      "asset_id": "V001",
+      "source_asset_id": "asset-0",
+      "observation_id": "25ad706f-b8e2-5f34-a470-e423e96536e3",
+      "frame_pts_ms": [
+        1001,
+        5005
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "在铺设好的小路上骑自行车，路两旁是草堤和电线杆。"
+    },
+    "F003": {
+      "evidence_frame_ids": [
+        "asset-1-f0"
+      ],
+      "fact_id": "d284bd8b-4760-5c81-a2b7-6851665586eb",
+      "support_grade": "STRONG",
+      "text": "一名身穿粉色骑行服、戴头盔的骑行者在河边道路上停下或缓慢移动。",
+      "id": "F003",
+      "asset_id": "V002",
+      "source_asset_id": "asset-1",
+      "observation_id": "e3b22663-3b99-5226-8ae7-2f2e39f55c77",
+      "frame_pts_ms": [
+        6006
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "一名身穿粉色骑行服、戴头盔的骑行者在河边道路上停下或缓慢移动。"
+    },
+    "F004": {
+      "evidence_frame_ids": [
+        "asset-2-f0"
+      ],
+      "fact_id": "ed4e6900-1c48-507e-828c-eef80682dd0b",
+      "support_grade": "STRONG",
+      "text": "第一人称视角骑行，沿着植被茂密的铺装小路前进，远处有一座红色桥梁。",
+      "id": "F004",
+      "asset_id": "V003",
+      "source_asset_id": "asset-2",
+      "observation_id": "fdb88ec0-47ea-5217-8d6e-8386caf8185e",
+      "frame_pts_ms": [
+        6005
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "第一人称视角骑行，沿着植被茂密的铺装小路前进，远处有一座红色桥梁。"
+    },
+    "F005": {
+      "evidence_frame_ids": [
+        "asset-3-f0"
+      ],
+      "fact_id": "be0f7f8e-657d-5c27-a44b-db8801406122",
+      "support_grade": "STRONG",
+      "text": "第一人称视角显示骑行者双手握着自行车车把，前方有一名戴头盔的骑行者在河堤旁的道路上骑行。",
+      "id": "F005",
+      "asset_id": "V004",
+      "source_asset_id": "asset-3",
+      "observation_id": "cee7f7de-e9f4-5114-af48-90d15cf3160f",
+      "frame_pts_ms": [
+        5005
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "第一人称视角显示骑行者双手握着自行车车把，前方有一名戴头盔的骑行者在河堤旁的道路上骑行。"
+    },
+    "F006": {
+      "evidence_frame_ids": [
+        "asset-4-f0",
+        "asset-4-f1",
+        "asset-4-f2"
+      ],
+      "fact_id": "e22f33b0-dd68-5280-b66c-eca8d6f4affb",
+      "support_grade": "STRONG",
+      "text": "视频展示了从桥上眺望河流与城市建筑群的视野，随后镜头中出现一名戴头盔的女性扶着自行车站在桥边，最后画面转向逆光下的塔楼剪影。",
+      "id": "F006",
+      "asset_id": "V005",
+      "source_asset_id": "asset-4",
+      "observation_id": "ce323141-6fa3-5798-a955-065a6dc700ef",
+      "frame_pts_ms": [
+        3002,
+        6005,
+        8992
+      ],
+      "temporal_support": "CHANGE",
+      "visual_reviewed": true,
+      "original_text": "视频展示了从桥上眺望河流与城市建筑群的视野，随后镜头中出现一名戴头盔的女性扶着自行车站在桥边，最后画面转向逆光下的塔楼剪影。"
+    },
+    "F007": {
+      "evidence_frame_ids": [
+        "asset-5-f0"
+      ],
+      "fact_id": "d117e004-312c-5298-9ec7-d7294fc3c700",
+      "support_grade": "STRONG",
+      "text": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行。",
+      "id": "F007",
+      "asset_id": "V006",
+      "source_asset_id": "asset-5",
+      "observation_id": "ae86e097-6f4f-5381-b117-b826b654b479",
+      "frame_pts_ms": [
+        6005
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行。"
+    },
+    "F008": {
+      "evidence_frame_ids": [
+        "asset-6-f0"
+      ],
+      "fact_id": "60801fc3-4e60-5663-9127-a1b3dd10688b",
+      "support_grade": "STRONG",
+      "text": "第一人称视角骑行，双手握把，前方为铺装道路及左侧建筑。",
+      "id": "F008",
+      "asset_id": "V007",
+      "source_asset_id": "asset-6",
+      "observation_id": "3663e2c9-c8e5-5104-b05f-e727952a363e",
+      "frame_pts_ms": [
+        5005
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "第一人称视角骑行，双手握把，前方为铺装道路及左侧建筑。"
+    },
+    "F009": {
+      "evidence_frame_ids": [
+        "asset-7-f0",
+        "asset-7-f1"
+      ],
+      "fact_id": "9c809fb9-04a4-5a34-8269-9296e5591af4",
+      "support_grade": "STRONG",
+      "text": "视频显示第一人称视角在长满杂草的土路上移动，右侧可见公寓楼。",
+      "id": "F009",
+      "asset_id": "V008",
+      "source_asset_id": "asset-7",
+      "observation_id": "215ac8e4-bbcd-5f01-aa52-fb135d775e61",
+      "frame_pts_ms": [
+        16,
+        5004
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "视频显示第一人称视角在长满杂草的土路上移动，右侧可见公寓楼。"
+    },
+    "F010": {
+      "evidence_frame_ids": [
+        "asset-7-f1",
+        "asset-7-f2"
+      ],
+      "fact_id": "55e17c5b-7458-5d88-a9d1-d7496d6059ee",
+      "support_grade": "MODERATE",
+      "text": "画面中可见车把和手臂（如f1、f2），表明正在骑行。",
+      "id": "F010",
+      "asset_id": "V008",
+      "source_asset_id": "asset-7",
+      "observation_id": "215ac8e4-bbcd-5f01-aa52-fb135d775e61",
+      "frame_pts_ms": [
+        5004,
+        8992
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面中可见车把和手臂（如f1、f2），表明正在骑行。"
+    }
+  },
+  "assets": {
+    "V001": {
+      "asset_id": "asset-0",
+      "source_display_name": "nagoya_cycling_t000000_10s.mp4",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "35c0bce3e8727dbb0ed555fc80c821211ef791a3d612220e9ce3687e55b0f665",
+      "original_bytes": 7899859,
+      "original_width": 2560,
+      "original_height": 1440,
+      "original_duration_ms": 10010,
+      "original_included": false,
+      "sequence_index": 0,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "asset-0-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_EARLY",
+          "canonical_offset_ms": 1500,
+          "source_timestamp_ms": 1001,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-0-f0.jpg",
+          "sha256": "801d87d99aa5c4c852e6204594f7c7b6cc0af252456f62deeeb93591ef55bd3e",
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "frame_id": "asset-0-f1",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_LATE",
+          "canonical_offset_ms": 7500,
+          "source_timestamp_ms": 5005,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-0-f1.jpg",
+          "sha256": "88972962975953a12b0c5e78870fd64a55c433a145fc37ae1db6621787ddcfb5",
+          "width": 768,
+          "height": 1024
+        }
+      ]
+    },
+    "V002": {
+      "asset_id": "asset-1",
+      "source_display_name": "nagoya_cycling_t000240_10s.mp4",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "73eaa6ea0c2dfcacc660fb0aeb44ff11c62e1e78c4b3229a50b38b63f729a12b",
+      "original_bytes": 7877367,
+      "original_width": 2560,
+      "original_height": 1440,
+      "original_duration_ms": 10010,
+      "original_included": false,
+      "sequence_index": 1,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "asset-1-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 6006,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-1-f0.jpg",
+          "sha256": "7e5d8fb03c2d6bd431c9fe565db3f8c4dec0e23838e6b6841eaaa928e1aaaba3",
+          "width": 768,
+          "height": 1024
+        }
+      ]
+    },
+    "V003": {
+      "asset_id": "asset-2",
+      "source_display_name": "nagoya_cycling_t000480_10s.mp4",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "0ccaa27b011ab97ea25f19c16fe1df6f509bf34b9167a36c159b1f6c3386a6e5",
+      "original_bytes": 7886435,
+      "original_width": 2560,
+      "original_height": 1440,
+      "original_duration_ms": 9993,
+      "original_included": false,
+      "sequence_index": 2,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "asset-2-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 6005,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-2-f0.jpg",
+          "sha256": "c9e5601397b662068df4e7db85c1f1e20a4d1e28e205e4cbffa3c8f8de125f48",
+          "width": 768,
+          "height": 1024
+        }
+      ]
+    },
+    "V004": {
+      "asset_id": "asset-3",
+      "source_display_name": "nagoya_cycling_t000720_10s.mp4",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "40f300d0ad77b766f60bbc677472a60aa88d5a417c38d984d6228f988a9c98f4",
+      "original_bytes": 7896835,
+      "original_width": 2560,
+      "original_height": 1440,
+      "original_duration_ms": 10010,
+      "original_included": false,
+      "sequence_index": 3,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "asset-3-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 5005,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-3-f0.jpg",
+          "sha256": "958eb2f9b92e66d61a4109a4fb29b7761d5e37faf0a602260bdf5a78764710ac",
+          "width": 768,
+          "height": 1024
+        }
+      ]
+    },
+    "V005": {
+      "asset_id": "asset-4",
+      "source_display_name": "nagoya_cycling_t000960_10s.mp4",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "7c6429608b87001e0ae3add0f97eb6f2d67b60d1bc866c3947d5399f2fb33ecc",
+      "original_bytes": 7872704,
+      "original_width": 2560,
+      "original_height": 1440,
+      "original_duration_ms": 9993,
+      "original_included": false,
+      "sequence_index": 4,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "asset-4-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_EARLY",
+          "canonical_offset_ms": 1500,
+          "source_timestamp_ms": 3002,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-4-f0.jpg",
+          "sha256": "673bf4e087790aa02e54d7f7ce3660c05b2e4c4a034f234b962534150a122048",
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "frame_id": "asset-4-f1",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 6005,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-4-f1.jpg",
+          "sha256": "900c5988817994f536f0c9edcc3829338c58aedb5d3087d50e040714bb61652f",
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "frame_id": "asset-4-f2",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_LATE",
+          "canonical_offset_ms": 7500,
+          "source_timestamp_ms": 8992,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-4-f2.jpg",
+          "sha256": "cafc6d482fb4e65306a079881c37d88a27828b520304d278dd34313a97adc834",
+          "width": 768,
+          "height": 1024
+        }
+      ]
+    },
+    "V006": {
+      "asset_id": "asset-5",
+      "source_display_name": "nagoya_cycling_t001200_10s.mp4",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "c6e0e7bdef8d1431c1fa2e4e47105b866e85c1c4461b4f8f2ac2f121dba8ad4f",
+      "original_bytes": 7885200,
+      "original_width": 2560,
+      "original_height": 1440,
+      "original_duration_ms": 9993,
+      "original_included": false,
+      "sequence_index": 5,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "asset-5-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 6005,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-5-f0.jpg",
+          "sha256": "af34633a5b8b666eef2ecde43815fa2e61ebddff5d367f89040c27d587ab37ac",
+          "width": 768,
+          "height": 1024
+        }
+      ]
+    },
+    "V007": {
+      "asset_id": "asset-6",
+      "source_display_name": "nagoya_cycling_t001440_10s.mp4",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "9f18811437a32a0806208da704cbe7c4dbfb47a456c0766f3c498fc0f79a0eec",
+      "original_bytes": 7899250,
+      "original_width": 2560,
+      "original_height": 1440,
+      "original_duration_ms": 10010,
+      "original_included": false,
+      "sequence_index": 6,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "asset-6-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 5005,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-6-f0.jpg",
+          "sha256": "1b4beba548bda7cf483c20e6afb01b67094613835cab8a77af178a0f441dd2a0",
+          "width": 768,
+          "height": 1024
+        }
+      ]
+    },
+    "V008": {
+      "asset_id": "asset-7",
+      "source_display_name": "nagoya_cycling_t001680_10s.mp4",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "42f619497f6c24b9f92ad34d37007a7a5add512c597666a8c9c3bb75f0cc0fab",
+      "original_bytes": 7899703,
+      "original_width": 2560,
+      "original_height": 1440,
+      "original_duration_ms": 9993,
+      "original_included": false,
+      "sequence_index": 7,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "asset-7-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_EARLY",
+          "canonical_offset_ms": 1500,
+          "source_timestamp_ms": 16,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-7-f0.jpg",
+          "sha256": "fe497baa415c0c1779312d1347547be4db66bc8ab894e4afc396fcd8d12ddf32",
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "frame_id": "asset-7-f1",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 5004,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-7-f1.jpg",
+          "sha256": "356935cb4c7e4f035f6e705de85e2c9295108f4cf611aff2f5312735abcb2535",
+          "width": 768,
+          "height": 1024
+        },
+        {
+          "frame_id": "asset-7-f2",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_LATE",
+          "canonical_offset_ms": 7500,
+          "source_timestamp_ms": 8992,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX",
+          "relative_path": "frames/asset-7-f2.jpg",
+          "sha256": "f0a02dd417f8e286d4aa14305dd5732aa54c9a7c01bf337203559b16fa3aaaa1",
+          "width": 768,
+          "height": 1024
+        }
+      ]
+    }
+  },
+  "candidates": [
+    {
+      "candidate_id": "P001",
+      "asset_id": "V001",
+      "frame_id": "asset-0-f0",
+      "pts_ms": 1001,
+      "fact_ids": [
+        "F001",
+        "F002"
+      ]
+    },
+    {
+      "candidate_id": "P002",
+      "asset_id": "V002",
+      "frame_id": "asset-1-f0",
+      "pts_ms": 6006,
+      "fact_ids": [
+        "F003"
+      ]
+    },
+    {
+      "candidate_id": "P003",
+      "asset_id": "V003",
+      "frame_id": "asset-2-f0",
+      "pts_ms": 6005,
+      "fact_ids": [
+        "F004"
+      ]
+    },
+    {
+      "candidate_id": "P004",
+      "asset_id": "V004",
+      "frame_id": "asset-3-f0",
+      "pts_ms": 5005,
+      "fact_ids": [
+        "F005"
+      ]
+    },
+    {
+      "candidate_id": "P005",
+      "asset_id": "V005",
+      "frame_id": "asset-4-f0",
+      "pts_ms": 3002,
+      "fact_ids": [
+        "F006"
+      ]
+    },
+    {
+      "candidate_id": "P006",
+      "asset_id": "V006",
+      "frame_id": "asset-5-f0",
+      "pts_ms": 6005,
+      "fact_ids": [
+        "F007"
+      ]
+    },
+    {
+      "candidate_id": "P007",
+      "asset_id": "V007",
+      "frame_id": "asset-6-f0",
+      "pts_ms": 5005,
+      "fact_ids": [
+        "F008"
+      ]
+    },
+    {
+      "candidate_id": "P008",
+      "asset_id": "V008",
+      "frame_id": "asset-7-f0",
+      "pts_ms": 16,
+      "fact_ids": [
+        "F009"
+      ]
+    },
+    {
+      "candidate_id": "P009",
+      "asset_id": "V001",
+      "frame_id": "asset-0-f1",
+      "pts_ms": 5005,
+      "fact_ids": [
+        "F001",
+        "F002"
+      ]
+    },
+    {
+      "candidate_id": "P010",
+      "asset_id": "V005",
+      "frame_id": "asset-4-f1",
+      "pts_ms": 6005,
+      "fact_ids": [
+        "F006"
+      ]
+    },
+    {
+      "candidate_id": "P011",
+      "asset_id": "V008",
+      "frame_id": "asset-7-f1",
+      "pts_ms": 5004,
+      "fact_ids": [
+        "F009",
+        "F010"
+      ]
+    },
+    {
+      "candidate_id": "P012",
+      "asset_id": "V005",
+      "frame_id": "asset-4-f2",
+      "pts_ms": 8992,
+      "fact_ids": [
+        "F006"
+      ]
+    },
+    {
+      "candidate_id": "P013",
+      "asset_id": "V008",
+      "frame_id": "asset-7-f2",
+      "pts_ms": 8992,
+      "fact_ids": [
+        "F010"
+      ]
+    }
+  ],
+  "shown": {
+    "V001": {
+      "asset-0-f0": {
+        "candidate_id": "P001",
+        "asset_id": "V001",
+        "frame_id": "asset-0-f0",
+        "pts_ms": 1001,
+        "fact_ids": [
+          "F001",
+          "F002"
+        ]
+      },
+      "asset-0-f1": {
+        "candidate_id": "P009",
+        "asset_id": "V001",
+        "frame_id": "asset-0-f1",
+        "pts_ms": 5005,
+        "fact_ids": [
+          "F001",
+          "F002"
+        ]
+      }
+    },
+    "V002": {
+      "asset-1-f0": {
+        "candidate_id": "P002",
+        "asset_id": "V002",
+        "frame_id": "asset-1-f0",
+        "pts_ms": 6006,
+        "fact_ids": [
+          "F003"
+        ]
+      }
+    },
+    "V003": {
+      "asset-2-f0": {
+        "candidate_id": "P003",
+        "asset_id": "V003",
+        "frame_id": "asset-2-f0",
+        "pts_ms": 6005,
+        "fact_ids": [
+          "F004"
+        ]
+      }
+    },
+    "V004": {
+      "asset-3-f0": {
+        "candidate_id": "P004",
+        "asset_id": "V004",
+        "frame_id": "asset-3-f0",
+        "pts_ms": 5005,
+        "fact_ids": [
+          "F005"
+        ]
+      }
+    },
+    "V005": {
+      "asset-4-f0": {
+        "candidate_id": "P005",
+        "asset_id": "V005",
+        "frame_id": "asset-4-f0",
+        "pts_ms": 3002,
+        "fact_ids": [
+          "F006"
+        ]
+      },
+      "asset-4-f1": {
+        "candidate_id": "P010",
+        "asset_id": "V005",
+        "frame_id": "asset-4-f1",
+        "pts_ms": 6005,
+        "fact_ids": [
+          "F006"
+        ]
+      },
+      "asset-4-f2": {
+        "candidate_id": "P012",
+        "asset_id": "V005",
+        "frame_id": "asset-4-f2",
+        "pts_ms": 8992,
+        "fact_ids": [
+          "F006"
+        ]
+      }
+    },
+    "V006": {
+      "asset-5-f0": {
+        "candidate_id": "P006",
+        "asset_id": "V006",
+        "frame_id": "asset-5-f0",
+        "pts_ms": 6005,
+        "fact_ids": [
+          "F007"
+        ]
+      }
+    },
+    "V007": {
+      "asset-6-f0": {
+        "candidate_id": "P007",
+        "asset_id": "V007",
+        "frame_id": "asset-6-f0",
+        "pts_ms": 5005,
+        "fact_ids": [
+          "F008"
+        ]
+      }
+    },
+    "V008": {
+      "asset-7-f0": {
+        "candidate_id": "P008",
+        "asset_id": "V008",
+        "frame_id": "asset-7-f0",
+        "pts_ms": 16,
+        "fact_ids": [
+          "F009"
+        ]
+      },
+      "asset-7-f1": {
+        "candidate_id": "P011",
+        "asset_id": "V008",
+        "frame_id": "asset-7-f1",
+        "pts_ms": 5004,
+        "fact_ids": [
+          "F009",
+          "F010"
+        ]
+      },
+      "asset-7-f2": {
+        "candidate_id": "P013",
+        "asset_id": "V008",
+        "frame_id": "asset-7-f2",
+        "pts_ms": 8992,
+        "fact_ids": [
+          "F010"
+        ]
+      }
+    }
+  },
+  "scene_clues": {
+    "candidate_scene_clues": {
+      "P001": [
+        {
+          "scene_observation_id": "FO:P001",
+          "text": "第一人称视角显示骑行者正沿着两旁有草堤的铺装小路前进，前方可见一座铁轨桥。",
+          "asset_id": "V001",
+          "evidence_frame_ids": [
+            "asset-0-f0"
+          ],
+          "supported_fact_ids": [
+            "F001",
+            "F002"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F001",
+              "support": "PARTIAL",
+              "visible_quote": "前方可见铁轨桥",
+              "not_visible_quote": "一列橙色列车从桥上驶过"
+            },
+            {
+              "fact_id": "F002",
+              "support": "VISIBLE",
+              "visible_quote": "在铺设好的小路上骑自行车，路两旁是草堤和电线杆",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P002": [
+        {
+          "scene_observation_id": "FO:P002",
+          "text": "一名身穿粉色上衣、戴头盔的骑行者在河边道路上停下或缓慢移动。",
+          "asset_id": "V002",
+          "evidence_frame_ids": [
+            "asset-1-f0"
+          ],
+          "supported_fact_ids": [
+            "F003"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F003",
+              "support": "VISIBLE",
+              "visible_quote": "一名身穿粉色骑行服、戴头盔的骑行者在河边道路上停下或缓慢移动",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P003": [
+        {
+          "scene_observation_id": "FO:P003",
+          "text": "第一人称视角骑行，前方植被茂密的道路尽头有一座红色桥梁。",
+          "asset_id": "V003",
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "supported_fact_ids": [
+            "F004"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F004",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角骑行，沿着植被茂密的铺装小路前进，远处有一座红色桥梁",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        }
+      ],
+      "P004": [
+        {
+          "scene_observation_id": "FO:P004",
+          "text": "透过车把可以看到前方有一名戴头盔的骑行者正在河堤旁的道路上骑行。",
+          "asset_id": "V004",
+          "evidence_frame_ids": [
+            "asset-3-f0"
+          ],
+          "supported_fact_ids": [
+            "F005"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F005",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角显示骑行者双手握着自行车车把，前方有一名戴头盔的骑行者在河堤旁的道路上骑行",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "PARTIAL"
+        }
+      ],
+      "P005": [
+        {
+          "scene_observation_id": "FO:P005",
+          "text": "画面展示了从桥上眺望河流与城市建筑群的视野。",
+          "asset_id": "V005",
+          "evidence_frame_ids": [
+            "asset-4-f0"
+          ],
+          "supported_fact_ids": [
+            "F006"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F006",
+              "support": "PARTIAL",
+              "visible_quote": "视频展示了从桥上眺望河流与城市建筑群的视野",
+              "not_visible_quote": "随后镜头中出现一名戴头盔的女性扶着自行车站在桥边，最后画面转向逆光下的塔楼剪影"
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "BACKGROUND",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P006": [
+        {
+          "scene_observation_id": "FO:P006",
+          "text": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行。",
+          "asset_id": "V006",
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "supported_fact_ids": [
+            "F007"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F007",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P007": [
+        {
+          "scene_observation_id": "FO:P007",
+          "text": "第一人称视角骑行，前方为铺装道路及左侧建筑。",
+          "asset_id": "V007",
+          "evidence_frame_ids": [
+            "asset-6-f0"
+          ],
+          "supported_fact_ids": [
+            "F008"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F008",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角骑行，双手握把，前方为铺装道路及左侧建筑",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P008": [],
+      "P009": [],
+      "P010": [],
+      "P011": [
+        {
+          "scene_observation_id": "FO:P011",
+          "text": "第一人称视角下，手臂和车把出现在长满杂草的土路上，右侧可见公寓楼。",
+          "asset_id": "V008",
+          "evidence_frame_ids": [
+            "asset-7-f1"
+          ],
+          "supported_fact_ids": [
+            "F009",
+            "F010"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F009",
+              "support": "VISIBLE",
+              "visible_quote": "视频显示第一人称视角在长满杂草的土路上移动，右侧可见公寓楼",
+              "not_visible_quote": ""
+            },
+            {
+              "fact_id": "F010",
+              "support": "VISIBLE",
+              "visible_quote": "画面中可见车把和手臂（如f1、f2），表明正在骑行",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P012": [
+        {
+          "scene_observation_id": "FO:P012",
+          "text": "逆光下，远处的塔楼剪影矗立在河畔。",
+          "asset_id": "V005",
+          "evidence_frame_ids": [
+            "asset-4-f2"
+          ],
+          "supported_fact_ids": [
+            "F006"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F006",
+              "support": "PARTIAL",
+              "visible_quote": "画面转向逆光下的塔楼剪影",
+              "not_visible_quote": "视频展示了从桥上眺望河流与城市建筑群的视野，随后镜头中出现一名戴头盔的女性扶着自行车站在桥边"
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        }
+      ],
+      "P013": [
+        {
+          "scene_observation_id": "FO:P013",
+          "text": "第一人称视角的车把和手臂在长满杂草的土路上移动。",
+          "asset_id": "V008",
+          "evidence_frame_ids": [
+            "asset-7-f2"
+          ],
+          "supported_fact_ids": [
+            "F010"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F010",
+              "support": "VISIBLE",
+              "visible_quote": "画面中可见车把和手臂（如f1、f2），表明正在骑行",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ]
+    }
+  },
+  "initial": {
+    "observations": [
+      {
+        "activity_code": "OTHER",
+        "asset_id": "asset-0",
+        "degraded_fields": [],
+        "episode_code": "OTHER",
+        "event_kind": "TRANSITION",
+        "event_salience": "MEDIUM",
+        "evidence_frame_ids": [
+          "asset-0-f1",
+          "asset-0-f0"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "asset-0-f1"
+            ],
+            "fact_id": "ea00482f-7e55-511b-a006-fa110509de86",
+            "support_grade": "STRONG",
+            "text": "第一人称视角骑行，前方可见铁轨桥，一列橙色列车从桥上驶过。"
+          },
+          {
+            "evidence_frame_ids": [
+              "asset-0-f0"
+            ],
+            "fact_id": "5086f85e-bc11-55fe-a12a-5f541cf4c4ce",
+            "support_grade": "MODERATE",
+            "text": "在铺设好的小路上骑自行车，路两旁是草堤和电线杆。"
+          }
+        ],
+        "id": "25ad706f-b8e2-5f34-a470-e423e96536e3",
+        "limitations": [],
+        "media_kind": "VIDEO",
+        "motifs": [
+          "cycling",
+          "train_crossing",
+          "first-person_view"
+        ],
+        "quality_score": 0.9,
+        "setting_code": "NATURE_TRAIL",
+        "source_asset_id": "asset-0",
+        "status": "OBSERVED",
+        "subject_codes": [
+          "STREET_SCENE"
+        ]
+      },
+      {
+        "activity_code": "OBSERVING",
+        "asset_id": "asset-1",
+        "degraded_fields": [
+          {
+            "action": "USE_NONE_NONE_WITHOUT_EVENT_INFERENCE",
+            "json_field_path": "$.observations[*].event_kind|event_salience",
+            "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+            "validation_rule_id": "X02V03_EVENT_TUPLE_CONTRADICTION"
+          }
+        ],
+        "episode_code": "OTHER",
+        "event_kind": "NONE",
+        "event_salience": "NONE",
+        "evidence_frame_ids": [
+          "asset-1-f0"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "asset-1-f0"
+            ],
+            "fact_id": "d284bd8b-4760-5c81-a2b7-6851665586eb",
+            "support_grade": "STRONG",
+            "text": "一名身穿粉色骑行服、戴头盔的骑行者在河边道路上停下或缓慢移动。"
+          }
+        ],
+        "id": "e3b22663-3b99-5226-8ae7-2f2e39f55c77",
+        "limitations": [
+          "单帧画面无法确认具体动作状态（静止或运动）"
+        ],
+        "media_kind": "VIDEO",
+        "motifs": [
+          "cyclist",
+          "riverside",
+          "sunset"
+        ],
+        "quality_score": 0.85,
+        "setting_code": "NATURE_TRAIL",
+        "source_asset_id": "asset-1",
+        "status": "PARTIAL",
+        "subject_codes": [
+          "PEOPLE"
+        ]
+      },
+      {
+        "activity_code": "OTHER",
+        "asset_id": "asset-2",
+        "degraded_fields": [],
+        "episode_code": "OTHER",
+        "event_kind": "NONE",
+        "event_salience": "NONE",
+        "evidence_frame_ids": [
+          "asset-2-f0"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "asset-2-f0"
+            ],
+            "fact_id": "ed4e6900-1c48-507e-828c-eef80682dd0b",
+            "support_grade": "STRONG",
+            "text": "第一人称视角骑行，沿着植被茂密的铺装小路前进，远处有一座红色桥梁。"
+          }
+        ],
+        "id": "fdb88ec0-47ea-5217-8d6e-8386caf8185e",
+        "limitations": [],
+        "media_kind": "VIDEO",
+        "motifs": [
+          "cycling",
+          "greenery",
+          "bridge"
+        ],
+        "quality_score": 0.9,
+        "setting_code": "NATURE_TRAIL",
+        "source_asset_id": "asset-2",
+        "status": "OBSERVED",
+        "subject_codes": [
+          "LANDSCAPE"
+        ]
+      },
+      {
+        "activity_code": "TRANSIT",
+        "asset_id": "asset-3",
+        "degraded_fields": [],
+        "episode_code": "OTHER",
+        "event_kind": "NONE",
+        "event_salience": "NONE",
+        "evidence_frame_ids": [
+          "asset-3-f0"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "asset-3-f0"
+            ],
+            "fact_id": "be0f7f8e-657d-5c27-a44b-db8801406122",
+            "support_grade": "STRONG",
+            "text": "第一人称视角显示骑行者双手握着自行车车把，前方有一名戴头盔的骑行者在河堤旁的道路上骑行。"
+          }
+        ],
+        "id": "cee7f7de-e9f4-5114-af48-90d15cf3160f",
+        "limitations": [],
+        "media_kind": "VIDEO",
+        "motifs": [
+          "骑行",
+          "第一人称视角",
+          "河堤道路"
+        ],
+        "quality_score": 1.0,
+        "setting_code": "NATURE_TRAIL",
+        "source_asset_id": "asset-3",
+        "status": "OBSERVED",
+        "subject_codes": [
+          "PEOPLE"
+        ]
+      },
+      {
+        "activity_code": "OBSERVING",
+        "asset_id": "asset-4",
+        "degraded_fields": [],
+        "episode_code": "OTHER",
+        "event_kind": "NONE",
+        "event_salience": "NONE",
+        "evidence_frame_ids": [
+          "asset-4-f0",
+          "asset-4-f1",
+          "asset-4-f2"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "asset-4-f0",
+              "asset-4-f1",
+              "asset-4-f2"
+            ],
+            "fact_id": "e22f33b0-dd68-5280-b66c-eca8d6f4affb",
+            "support_grade": "STRONG",
+            "text": "视频展示了从桥上眺望河流与城市建筑群的视野，随后镜头中出现一名戴头盔的女性扶着自行车站在桥边，最后画面转向逆光下的塔楼剪影。"
+          }
+        ],
+        "id": "ce323141-6fa3-5798-a955-065a6dc700ef",
+        "limitations": [],
+        "media_kind": "VIDEO",
+        "motifs": [
+          "桥梁",
+          "河流",
+          "夕阳",
+          "驻足观景"
+        ],
+        "quality_score": 1.0,
+        "setting_code": "URBAN_STREET",
+        "source_asset_id": "asset-4",
+        "status": "OBSERVED",
+        "subject_codes": [
+          "PEOPLE",
+          "LANDSCAPE"
+        ]
+      },
+      {
+        "activity_code": "TRANSIT",
+        "asset_id": "asset-5",
+        "degraded_fields": [],
+        "episode_code": "OTHER",
+        "event_kind": "NONE",
+        "event_salience": "NONE",
+        "evidence_frame_ids": [
+          "asset-5-f0"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "asset-5-f0"
+            ],
+            "fact_id": "d117e004-312c-5298-9ec7-d7294fc3c700",
+            "support_grade": "STRONG",
+            "text": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行。"
+          }
+        ],
+        "id": "ae86e097-6f4f-5381-b117-b826b654b479",
+        "limitations": [],
+        "media_kind": "VIDEO",
+        "motifs": [
+          "骑行",
+          "街道",
+          "民居"
+        ],
+        "quality_score": 1.0,
+        "setting_code": "URBAN_STREET",
+        "source_asset_id": "asset-5",
+        "status": "OBSERVED",
+        "subject_codes": [
+          "STREET_SCENE"
+        ]
+      },
+      {
+        "activity_code": "OTHER",
+        "asset_id": "asset-6",
+        "degraded_fields": [],
+        "episode_code": "OTHER",
+        "event_kind": "NONE",
+        "event_salience": "NONE",
+        "evidence_frame_ids": [
+          "asset-6-f0"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "asset-6-f0"
+            ],
+            "fact_id": "60801fc3-4e60-5663-9127-a1b3dd10688b",
+            "support_grade": "STRONG",
+            "text": "第一人称视角骑行，双手握把，前方为铺装道路及左侧建筑。"
+          }
+        ],
+        "id": "3663e2c9-c8e5-5104-b05f-e727952a363e",
+        "limitations": [],
+        "media_kind": "VIDEO",
+        "motifs": [
+          "自行车",
+          "骑行",
+          "铺装路面",
+          "城市边缘"
+        ],
+        "quality_score": 0.9,
+        "setting_code": "URBAN_STREET",
+        "source_asset_id": "asset-6",
+        "status": "OBSERVED",
+        "subject_codes": [
+          "STREET_SCENE",
+          "OTHER"
+        ]
+      },
+      {
+        "activity_code": "WALKING",
+        "asset_id": "asset-7",
+        "degraded_fields": [],
+        "episode_code": "NATURE_WALK",
+        "event_kind": "TRANSITION",
+        "event_salience": "LOW",
+        "evidence_frame_ids": [
+          "asset-7-f0",
+          "asset-7-f1",
+          "asset-7-f2"
+        ],
+        "facts": [
+          {
+            "evidence_frame_ids": [
+              "asset-7-f0",
+              "asset-7-f1",
+              "asset-7-f2"
+            ],
+            "fact_id": "9c809fb9-04a4-5a34-8269-9296e5591af4",
+            "support_grade": "STRONG",
+            "text": "视频显示第一人称视角在长满杂草的土路上移动，右侧可见公寓楼。"
+          },
+          {
+            "evidence_frame_ids": [
+              "asset-7-f1",
+              "asset-7-f2"
+            ],
+            "fact_id": "55e17c5b-7458-5d88-a9d1-d7496d6059ee",
+            "support_grade": "MODERATE",
+            "text": "画面中可见车把和手臂（如f1、f2），表明正在骑行。"
+          }
+        ],
+        "id": "215ac8e4-bbcd-5f01-aa52-fb135d775e61",
+        "limitations": [
+          "兼容性契约未定义“骑车”活动代码，故映射至最接近的“行走”类别；视觉上明显为骑行。"
+        ],
+        "media_kind": "VIDEO",
+        "motifs": [
+          "草地",
+          "土路",
+          "夕阳_逆光",
+          "河堤",
+          "高层住宅"
+        ],
+        "quality_score": 0.85,
+        "setting_code": "NATURE_TRAIL",
+        "source_asset_id": "asset-7",
+        "status": "OBSERVED",
+        "subject_codes": [
+          "LANDSCAPE",
+          "HISTORIC_ARCHITECTURE"
+        ]
+      }
+    ],
+    "observation_ledger": [
+      {
+        "compatibility_rule_id": "X02V02_GENERIC_EPISODE",
+        "degraded_fields": [],
+        "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+        "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01",
+        "observation_id": "25ad706f-b8e2-5f34-a470-e423e96536e3",
+        "reason_codes": [
+          "PER_ASSET_CONTRACT_PASSED"
+        ],
+        "semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+        "semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02",
+        "source_asset_id": "asset-0",
+        "terminal_status": "OBSERVED",
+        "validation_status": "PASSED"
+      },
+      {
+        "canonical_candidate_sha256": "3413a96da26b8fd2eb09d4bae014047bd40770c5c56ec7cb1ca3d62be5c778a5",
+        "compatibility_rule_id": "X02V02_GENERIC_EPISODE",
+        "degraded_fields": [
+          {
+            "action": "USE_NONE_NONE_WITHOUT_EVENT_INFERENCE",
+            "json_field_path": "$.observations[*].event_kind|event_salience",
+            "original_value_sentinel": "<CONTRADICTORY_CLOSED_VOCABULARY_TUPLE>",
+            "validation_rule_id": "X02V03_EVENT_TUPLE_CONTRADICTION"
+          }
+        ],
+        "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+        "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01",
+        "observation_id": "e3b22663-3b99-5226-8ae7-2f2e39f55c77",
+        "reason_codes": [
+          "VALID_GROUNDED_FACTS_PRESERVED_WITH_FIELD_DEGRADATION"
+        ],
+        "semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+        "semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02",
+        "source_asset_id": "asset-1",
+        "terminal_status": "PARTIAL",
+        "validation_status": "PASSED_WITH_FIELD_DEGRADATION"
+      },
+      {
+        "compatibility_rule_id": "X02V02_GENERIC_EPISODE",
+        "degraded_fields": [],
+        "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+        "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01",
+        "observation_id": "fdb88ec0-47ea-5217-8d6e-8386caf8185e",
+        "reason_codes": [
+          "PER_ASSET_CONTRACT_PASSED"
+        ],
+        "semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+        "semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02",
+        "source_asset_id": "asset-2",
+        "terminal_status": "OBSERVED",
+        "validation_status": "PASSED"
+      },
+      {
+        "compatibility_rule_id": "X02V02_GENERIC_EPISODE",
+        "degraded_fields": [],
+        "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+        "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01",
+        "observation_id": "cee7f7de-e9f4-5114-af48-90d15cf3160f",
+        "reason_codes": [
+          "PER_ASSET_CONTRACT_PASSED"
+        ],
+        "semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+        "semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02",
+        "source_asset_id": "asset-3",
+        "terminal_status": "OBSERVED",
+        "validation_status": "PASSED"
+      },
+      {
+        "compatibility_rule_id": "X02V02_GENERIC_EPISODE",
+        "degraded_fields": [],
+        "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+        "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01",
+        "observation_id": "ce323141-6fa3-5798-a955-065a6dc700ef",
+        "reason_codes": [
+          "PER_ASSET_CONTRACT_PASSED"
+        ],
+        "semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+        "semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02",
+        "source_asset_id": "asset-4",
+        "terminal_status": "OBSERVED",
+        "validation_status": "PASSED"
+      },
+      {
+        "compatibility_rule_id": "X02V02_GENERIC_EPISODE",
+        "degraded_fields": [],
+        "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+        "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01",
+        "observation_id": "ae86e097-6f4f-5381-b117-b826b654b479",
+        "reason_codes": [
+          "PER_ASSET_CONTRACT_PASSED"
+        ],
+        "semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+        "semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02",
+        "source_asset_id": "asset-5",
+        "terminal_status": "OBSERVED",
+        "validation_status": "PASSED"
+      },
+      {
+        "compatibility_rule_id": "X02V02_GENERIC_EPISODE",
+        "degraded_fields": [],
+        "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+        "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01",
+        "observation_id": "3663e2c9-c8e5-5104-b05f-e727952a363e",
+        "reason_codes": [
+          "PER_ASSET_CONTRACT_PASSED"
+        ],
+        "semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+        "semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02",
+        "source_asset_id": "asset-6",
+        "terminal_status": "OBSERVED",
+        "validation_status": "PASSED"
+      },
+      {
+        "compatibility_rule_id": "X02V02_EPISODE_NATURE_WALK",
+        "degraded_fields": [],
+        "field_degradation_contract_sha256": "310156a23edb7f5e8d898862824f30b68376c2c5fdb0d24ad6b857666ef63117",
+        "field_degradation_contract_version": "DIARY_ONE_X02_FIELD_DEGRADATION_V01",
+        "observation_id": "215ac8e4-bbcd-5f01-aa52-fb135d775e61",
+        "reason_codes": [
+          "PER_ASSET_CONTRACT_PASSED"
+        ],
+        "semantic_contract_sha256": "75f898d7b6fccbe1d3f831f97f772c27eeb74dd474b031c5fa660f782079635e",
+        "semantic_contract_version": "DIARY_ONE_X02_OBSERVATION_COMPATIBILITY_V02",
+        "source_asset_id": "asset-7",
+        "terminal_status": "OBSERVED",
+        "validation_status": "PASSED"
+      }
+    ],
+    "evidence_ledger": [
+      {
+        "asset_id": "asset-0",
+        "canonical_offset_ms": 1500,
+        "frame_id": "asset-0-f0",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_EARLY",
+        "selection_order": 0,
+        "source_asset_id": "asset-0",
+        "source_timestamp_ms": 1001,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-0",
+        "canonical_offset_ms": 7500,
+        "frame_id": "asset-0-f1",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_LATE",
+        "selection_order": 1,
+        "source_asset_id": "asset-0",
+        "source_timestamp_ms": 5005,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-1",
+        "canonical_offset_ms": 4500,
+        "frame_id": "asset-1-f0",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_MIDDLE",
+        "selection_order": 2,
+        "source_asset_id": "asset-1",
+        "source_timestamp_ms": 6006,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-2",
+        "canonical_offset_ms": 4500,
+        "frame_id": "asset-2-f0",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_MIDDLE",
+        "selection_order": 3,
+        "source_asset_id": "asset-2",
+        "source_timestamp_ms": 6005,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-3",
+        "canonical_offset_ms": 4500,
+        "frame_id": "asset-3-f0",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_MIDDLE",
+        "selection_order": 4,
+        "source_asset_id": "asset-3",
+        "source_timestamp_ms": 5005,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-4",
+        "canonical_offset_ms": 1500,
+        "frame_id": "asset-4-f0",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_EARLY",
+        "selection_order": 5,
+        "source_asset_id": "asset-4",
+        "source_timestamp_ms": 3002,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-4",
+        "canonical_offset_ms": 4500,
+        "frame_id": "asset-4-f1",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_MIDDLE",
+        "selection_order": 6,
+        "source_asset_id": "asset-4",
+        "source_timestamp_ms": 6005,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-4",
+        "canonical_offset_ms": 7500,
+        "frame_id": "asset-4-f2",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_LATE",
+        "selection_order": 7,
+        "source_asset_id": "asset-4",
+        "source_timestamp_ms": 8992,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-5",
+        "canonical_offset_ms": 4500,
+        "frame_id": "asset-5-f0",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_MIDDLE",
+        "selection_order": 8,
+        "source_asset_id": "asset-5",
+        "source_timestamp_ms": 6005,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-6",
+        "canonical_offset_ms": 4500,
+        "frame_id": "asset-6-f0",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_MIDDLE",
+        "selection_order": 9,
+        "source_asset_id": "asset-6",
+        "source_timestamp_ms": 5005,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-7",
+        "canonical_offset_ms": 1500,
+        "frame_id": "asset-7-f0",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_EARLY",
+        "selection_order": 10,
+        "source_asset_id": "asset-7",
+        "source_timestamp_ms": 16,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-7",
+        "canonical_offset_ms": 4500,
+        "frame_id": "asset-7-f1",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_MIDDLE",
+        "selection_order": 11,
+        "source_asset_id": "asset-7",
+        "source_timestamp_ms": 5004,
+        "window_count": 1,
+        "window_index": 0
+      },
+      {
+        "asset_id": "asset-7",
+        "canonical_offset_ms": 7500,
+        "frame_id": "asset-7-f2",
+        "media_kind": "VIDEO",
+        "reason_code": "VIDEO_DURATION_AWARE_WINDOWS",
+        "sample_role": "WINDOW_LATE",
+        "selection_order": 12,
+        "source_asset_id": "asset-7",
+        "source_timestamp_ms": 8992,
+        "window_count": 1,
+        "window_index": 0
+      }
+    ],
+    "unresolved_asset_ids": []
+  },
+  "manifest": {
+    "bundle_version": "DIARY_ONE_APP_LIBRARY_BUNDLE_V04",
+    "research_only": true,
+    "session": {
+      "session_id": "385c6007-6b03-4e89-b477-2ef65a8dcb6b",
+      "exported_at": "2026-10-18T20:45:04.961092+00:00",
+      "timezone": "TEST_DAY_NO_TIMEZONE"
+    },
+    "device": {
+      "device_id": "PHOTO_LIBRARY_TEST",
+      "hardware_revision": "N/A",
+      "firmware_version": "N/A",
+      "sdk_version": "diary-one-app-expo"
+    },
+    "normalization": {
+      "width": 768,
+      "height": 1024,
+      "orientation": "PORTRAIT",
+      "aspect_ratio": "3:4",
+      "spatial_transform": "ASPECT_FIT_LETTERBOX",
+      "temporal_transform": "PHONE_TEST_DURATION_WINDOWS_V01",
+      "canonical_frame_offsets_ms": [
+        1500,
+        4500,
+        7500
+      ],
+      "evidence_profile_version": "PHONE_TEST_DURATION_WINDOWS_V01"
+    },
+    "assets": [
+      {
+        "asset_id": "asset-0",
+        "source_display_name": "nagoya_cycling_t000000_10s.mp4",
+        "media_kind": "VIDEO",
+        "media_source": "PHONE_LIBRARY_DAY_TEST",
+        "original_file_extension": "mp4",
+        "original_sha256": "35c0bce3e8727dbb0ed555fc80c821211ef791a3d612220e9ce3687e55b0f665",
+        "original_bytes": 7899859,
+        "original_width": 2560,
+        "original_height": 1440,
+        "original_duration_ms": 10010,
+        "original_included": false,
+        "sequence_index": 0,
+        "logical_asset_duration_ms": 9000,
+        "materialized_video": false,
+        "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+        "evidence_window_count": 1,
+        "frames": [
+          {
+            "frame_id": "asset-0-f0",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_EARLY",
+            "canonical_offset_ms": 1500,
+            "source_timestamp_ms": 1001,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-0-f0.jpg",
+            "sha256": "801d87d99aa5c4c852e6204594f7c7b6cc0af252456f62deeeb93591ef55bd3e",
+            "width": 768,
+            "height": 1024
+          },
+          {
+            "frame_id": "asset-0-f1",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_LATE",
+            "canonical_offset_ms": 7500,
+            "source_timestamp_ms": 5005,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-0-f1.jpg",
+            "sha256": "88972962975953a12b0c5e78870fd64a55c433a145fc37ae1db6621787ddcfb5",
+            "width": 768,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "asset_id": "asset-1",
+        "source_display_name": "nagoya_cycling_t000240_10s.mp4",
+        "media_kind": "VIDEO",
+        "media_source": "PHONE_LIBRARY_DAY_TEST",
+        "original_file_extension": "mp4",
+        "original_sha256": "73eaa6ea0c2dfcacc660fb0aeb44ff11c62e1e78c4b3229a50b38b63f729a12b",
+        "original_bytes": 7877367,
+        "original_width": 2560,
+        "original_height": 1440,
+        "original_duration_ms": 10010,
+        "original_included": false,
+        "sequence_index": 1,
+        "logical_asset_duration_ms": 9000,
+        "materialized_video": false,
+        "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+        "evidence_window_count": 1,
+        "frames": [
+          {
+            "frame_id": "asset-1-f0",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_MIDDLE",
+            "canonical_offset_ms": 4500,
+            "source_timestamp_ms": 6006,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-1-f0.jpg",
+            "sha256": "7e5d8fb03c2d6bd431c9fe565db3f8c4dec0e23838e6b6841eaaa928e1aaaba3",
+            "width": 768,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "asset_id": "asset-2",
+        "source_display_name": "nagoya_cycling_t000480_10s.mp4",
+        "media_kind": "VIDEO",
+        "media_source": "PHONE_LIBRARY_DAY_TEST",
+        "original_file_extension": "mp4",
+        "original_sha256": "0ccaa27b011ab97ea25f19c16fe1df6f509bf34b9167a36c159b1f6c3386a6e5",
+        "original_bytes": 7886435,
+        "original_width": 2560,
+        "original_height": 1440,
+        "original_duration_ms": 9993,
+        "original_included": false,
+        "sequence_index": 2,
+        "logical_asset_duration_ms": 9000,
+        "materialized_video": false,
+        "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+        "evidence_window_count": 1,
+        "frames": [
+          {
+            "frame_id": "asset-2-f0",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_MIDDLE",
+            "canonical_offset_ms": 4500,
+            "source_timestamp_ms": 6005,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-2-f0.jpg",
+            "sha256": "c9e5601397b662068df4e7db85c1f1e20a4d1e28e205e4cbffa3c8f8de125f48",
+            "width": 768,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "asset_id": "asset-3",
+        "source_display_name": "nagoya_cycling_t000720_10s.mp4",
+        "media_kind": "VIDEO",
+        "media_source": "PHONE_LIBRARY_DAY_TEST",
+        "original_file_extension": "mp4",
+        "original_sha256": "40f300d0ad77b766f60bbc677472a60aa88d5a417c38d984d6228f988a9c98f4",
+        "original_bytes": 7896835,
+        "original_width": 2560,
+        "original_height": 1440,
+        "original_duration_ms": 10010,
+        "original_included": false,
+        "sequence_index": 3,
+        "logical_asset_duration_ms": 9000,
+        "materialized_video": false,
+        "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+        "evidence_window_count": 1,
+        "frames": [
+          {
+            "frame_id": "asset-3-f0",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_MIDDLE",
+            "canonical_offset_ms": 4500,
+            "source_timestamp_ms": 5005,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-3-f0.jpg",
+            "sha256": "958eb2f9b92e66d61a4109a4fb29b7761d5e37faf0a602260bdf5a78764710ac",
+            "width": 768,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "asset_id": "asset-4",
+        "source_display_name": "nagoya_cycling_t000960_10s.mp4",
+        "media_kind": "VIDEO",
+        "media_source": "PHONE_LIBRARY_DAY_TEST",
+        "original_file_extension": "mp4",
+        "original_sha256": "7c6429608b87001e0ae3add0f97eb6f2d67b60d1bc866c3947d5399f2fb33ecc",
+        "original_bytes": 7872704,
+        "original_width": 2560,
+        "original_height": 1440,
+        "original_duration_ms": 9993,
+        "original_included": false,
+        "sequence_index": 4,
+        "logical_asset_duration_ms": 9000,
+        "materialized_video": false,
+        "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+        "evidence_window_count": 1,
+        "frames": [
+          {
+            "frame_id": "asset-4-f0",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_EARLY",
+            "canonical_offset_ms": 1500,
+            "source_timestamp_ms": 3002,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-4-f0.jpg",
+            "sha256": "673bf4e087790aa02e54d7f7ce3660c05b2e4c4a034f234b962534150a122048",
+            "width": 768,
+            "height": 1024
+          },
+          {
+            "frame_id": "asset-4-f1",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_MIDDLE",
+            "canonical_offset_ms": 4500,
+            "source_timestamp_ms": 6005,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-4-f1.jpg",
+            "sha256": "900c5988817994f536f0c9edcc3829338c58aedb5d3087d50e040714bb61652f",
+            "width": 768,
+            "height": 1024
+          },
+          {
+            "frame_id": "asset-4-f2",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_LATE",
+            "canonical_offset_ms": 7500,
+            "source_timestamp_ms": 8992,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-4-f2.jpg",
+            "sha256": "cafc6d482fb4e65306a079881c37d88a27828b520304d278dd34313a97adc834",
+            "width": 768,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "asset_id": "asset-5",
+        "source_display_name": "nagoya_cycling_t001200_10s.mp4",
+        "media_kind": "VIDEO",
+        "media_source": "PHONE_LIBRARY_DAY_TEST",
+        "original_file_extension": "mp4",
+        "original_sha256": "c6e0e7bdef8d1431c1fa2e4e47105b866e85c1c4461b4f8f2ac2f121dba8ad4f",
+        "original_bytes": 7885200,
+        "original_width": 2560,
+        "original_height": 1440,
+        "original_duration_ms": 9993,
+        "original_included": false,
+        "sequence_index": 5,
+        "logical_asset_duration_ms": 9000,
+        "materialized_video": false,
+        "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+        "evidence_window_count": 1,
+        "frames": [
+          {
+            "frame_id": "asset-5-f0",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_MIDDLE",
+            "canonical_offset_ms": 4500,
+            "source_timestamp_ms": 6005,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-5-f0.jpg",
+            "sha256": "af34633a5b8b666eef2ecde43815fa2e61ebddff5d367f89040c27d587ab37ac",
+            "width": 768,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "asset_id": "asset-6",
+        "source_display_name": "nagoya_cycling_t001440_10s.mp4",
+        "media_kind": "VIDEO",
+        "media_source": "PHONE_LIBRARY_DAY_TEST",
+        "original_file_extension": "mp4",
+        "original_sha256": "9f18811437a32a0806208da704cbe7c4dbfb47a456c0766f3c498fc0f79a0eec",
+        "original_bytes": 7899250,
+        "original_width": 2560,
+        "original_height": 1440,
+        "original_duration_ms": 10010,
+        "original_included": false,
+        "sequence_index": 6,
+        "logical_asset_duration_ms": 9000,
+        "materialized_video": false,
+        "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+        "evidence_window_count": 1,
+        "frames": [
+          {
+            "frame_id": "asset-6-f0",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_MIDDLE",
+            "canonical_offset_ms": 4500,
+            "source_timestamp_ms": 5005,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-6-f0.jpg",
+            "sha256": "1b4beba548bda7cf483c20e6afb01b67094613835cab8a77af178a0f441dd2a0",
+            "width": 768,
+            "height": 1024
+          }
+        ]
+      },
+      {
+        "asset_id": "asset-7",
+        "source_display_name": "nagoya_cycling_t001680_10s.mp4",
+        "media_kind": "VIDEO",
+        "media_source": "PHONE_LIBRARY_DAY_TEST",
+        "original_file_extension": "mp4",
+        "original_sha256": "42f619497f6c24b9f92ad34d37007a7a5add512c597666a8c9c3bb75f0cc0fab",
+        "original_bytes": 7899703,
+        "original_width": 2560,
+        "original_height": 1440,
+        "original_duration_ms": 9993,
+        "original_included": false,
+        "sequence_index": 7,
+        "logical_asset_duration_ms": 9000,
+        "materialized_video": false,
+        "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+        "evidence_window_count": 1,
+        "frames": [
+          {
+            "frame_id": "asset-7-f0",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_EARLY",
+            "canonical_offset_ms": 1500,
+            "source_timestamp_ms": 16,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-7-f0.jpg",
+            "sha256": "fe497baa415c0c1779312d1347547be4db66bc8ab894e4afc396fcd8d12ddf32",
+            "width": 768,
+            "height": 1024
+          },
+          {
+            "frame_id": "asset-7-f1",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_MIDDLE",
+            "canonical_offset_ms": 4500,
+            "source_timestamp_ms": 5004,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-7-f1.jpg",
+            "sha256": "356935cb4c7e4f035f6e705de85e2c9295108f4cf611aff2f5312735abcb2535",
+            "width": 768,
+            "height": 1024
+          },
+          {
+            "frame_id": "asset-7-f2",
+            "window_index": 0,
+            "window_count": 1,
+            "sample_role": "WINDOW_LATE",
+            "canonical_offset_ms": 7500,
+            "source_timestamp_ms": 8992,
+            "spatial_transform": "ASPECT_FIT_LETTERBOX",
+            "relative_path": "frames/asset-7-f2.jpg",
+            "sha256": "f0a02dd417f8e286d4aa14305dd5732aa54c9a7c01bf337203559b16fa3aaaa1",
+            "width": 768,
+            "height": 1024
+          }
+        ]
+      }
+    ]
+  },
+  "recorded_stages": {
+    "S09C_PRODUCT_VERIFIED_REPAIR": {
+      "chapter_boundaries": [],
+      "chapters": [
+        {
+          "id": "C01",
+          "theme": "骑行途中的景观与路况",
+          "fact_ids": [
+            "F001",
+            "F002",
+            "F003",
+            "F004",
+            "F005",
+            "F006",
+            "F007",
+            "F008",
+            "F009",
+            "F010"
+          ],
+          "experience_kind": "CYCLING",
+          "focus": "第一人称视角的骑行活动，涵盖经过铁轨桥、河畔道路、植被小路、民居街道及郊野土路等多种路况，包含途中短暂驻足观景。",
+          "focus_fact_ids": [
+            "F001",
+            "F006",
+            "F009"
+          ],
+          "grouping_reason": "所有事实均指向同一类持续性的骑行活动（包括移动和短暂停留），背景变化属于同一次经历中的不同路段或瞬间，不构成独立章节。",
+          "hero_candidate_id": "P001"
+        }
+      ],
+      "moments": [
+        {
+          "id": "M01",
+          "parent_chapter_id": "C01",
+          "fact_id": "F001",
+          "focus": "橙色列车驶过铁轨桥",
+          "revisit_reason": "骑行途中遇到的具体动态视觉焦点，记录了交通工具与骑行路径交汇的瞬间。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ]
+        },
+        {
+          "id": "M02",
+          "parent_chapter_id": "C01",
+          "fact_id": "F006",
+          "focus": "桥上眺望城市与逆光塔楼剪影",
+          "revisit_reason": "骑行中驻足观察的具体景观细节，包含开阔视野和具有辨识度的光影元素。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ]
+        }
+      ],
+      "unselected_facts": [],
+      "media_choices": [
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P001",
+          "reason": "画面清晰展示第一人称视角在草堤小路上骑行并接近铁轨桥，直接呈现本次骑行的主要路线特征。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P009",
+          "reason": "捕捉到橙色列车驶过高架桥的瞬间，是沿途最显著的动态发现，作为高光时刻值得保留。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P005",
+          "reason": "展示了从桥上眺望河流与城市建筑群的开阔视野，代表了骑行中途驻足观景的经历。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P012",
+          "reason": "逆光下的塔楼剪影提供了独特的光影氛围，补充了桥上观景的具体视觉记忆点。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P002",
+          "reason": "记录同伴在河边道路停下休息的状态，体现了骑行过程中的互动与节奏变化。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P011",
+          "reason": "展示了在长满杂草的非铺装土路上骑行的场景，体现了路况的多样性与挑战性。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P006",
+          "reason": "呈现了穿越两侧有民居的狭窄街道的场景，丰富了骑行经过的生活化环境细节。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P003",
+          "reason": "展示了植被茂密的道路尽头出现红色桥梁的景象，作为沿途发现的标志性景观。"
+        }
+      ],
+      "frame_assessments": [
+        {
+          "candidate_id": "P001",
+          "fact_ids": [
+            "F001",
+            "F002"
+          ],
+          "scene_observation_id": "FO:P001",
+          "visible_detail": "第一人称视角显示骑行者正沿着两旁有草堤的铺装小路前进，前方可见一座铁轨桥。",
+          "theme_fit": "MAIN_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P002",
+          "fact_ids": [
+            "F003"
+          ],
+          "scene_observation_id": "FO:P002",
+          "visible_detail": "一名身穿粉色上衣、戴头盔的骑行者在河边道路上停下或缓慢移动。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P003",
+          "fact_ids": [
+            "F004"
+          ],
+          "scene_observation_id": "FO:P003",
+          "visible_detail": "第一人称视角骑行，前方植被茂密的道路尽头有一座红色桥梁。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P004",
+          "fact_ids": [
+            "F005"
+          ],
+          "scene_observation_id": "FO:P004",
+          "visible_detail": "透过车把可以看到前方有一名戴头盔的骑行者正在河堤旁的道路上骑行。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "PARTIAL"
+        },
+        {
+          "candidate_id": "P005",
+          "fact_ids": [
+            "F006"
+          ],
+          "scene_observation_id": "FO:P005",
+          "visible_detail": "画面展示了从桥上眺望河流与城市建筑群的视野。",
+          "theme_fit": "MAIN_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P006",
+          "fact_ids": [
+            "F007"
+          ],
+          "scene_observation_id": "FO:P006",
+          "visible_detail": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P007",
+          "fact_ids": [
+            "F008"
+          ],
+          "scene_observation_id": "FO:P007",
+          "visible_detail": "第一人称视角骑行，前方为铺装道路及左侧建筑。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P008",
+          "fact_ids": [],
+          "scene_observation_id": null,
+          "visible_detail": "",
+          "theme_fit": "UNSUPPORTED",
+          "visibility": "NOT_VISIBLE",
+          "prominence": "TINY_OR_UNCLEAR",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P009",
+          "fact_ids": [],
+          "scene_observation_id": null,
+          "visible_detail": "",
+          "theme_fit": "UNSUPPORTED",
+          "visibility": "NOT_VISIBLE",
+          "prominence": "TINY_OR_UNCLEAR",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P010",
+          "fact_ids": [],
+          "scene_observation_id": null,
+          "visible_detail": "",
+          "theme_fit": "UNSUPPORTED",
+          "visibility": "NOT_VISIBLE",
+          "prominence": "TINY_OR_UNCLEAR",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P011",
+          "fact_ids": [
+            "F009",
+            "F010"
+          ],
+          "scene_observation_id": "FO:P011",
+          "visible_detail": "第一人称视角下，手臂和车把出现在长满杂草的土路上，右侧可见公寓楼。",
+          "theme_fit": "MAIN_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P012",
+          "fact_ids": [
+            "F006"
+          ],
+          "scene_observation_id": "FO:P012",
+          "visible_detail": "逆光下，远处的塔楼剪影矗立在河畔。",
+          "theme_fit": "MAIN_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P013",
+          "fact_ids": [
+            "F010"
+          ],
+          "scene_observation_id": "FO:P013",
+          "visible_detail": "第一人称视角的车把和手臂在长满杂草的土路上移动。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ]
+    },
+    "S09B_PRODUCT_VERIFIED_STRUCTURE": {
+      "chapter_boundaries": [],
+      "chapters": [
+        {
+          "id": "C01",
+          "theme": "骑行途中的景观与路况",
+          "fact_ids": [
+            "F001",
+            "F002",
+            "F003",
+            "F004",
+            "F005",
+            "F006",
+            "F007",
+            "F008",
+            "F009",
+            "F010"
+          ],
+          "experience_kind": "CYCLING",
+          "focus": "第一人称视角的骑行活动，涵盖经过铁轨桥、河畔道路、植被小路、民居街道及郊野土路等多种路况，包含途中短暂驻足观景。",
+          "focus_fact_ids": [
+            "F001",
+            "F006",
+            "F009"
+          ],
+          "grouping_reason": "所有事实均指向同一类持续性的骑行活动（包括移动和短暂停留），背景变化属于同一次经历中的不同路段或瞬间，不构成独立章节。",
+          "hero_candidate_id": "P001"
+        }
+      ],
+      "moments": [
+        {
+          "id": "M01",
+          "parent_chapter_id": "C01",
+          "fact_id": "F001",
+          "focus": "橙色列车驶过铁轨桥",
+          "revisit_reason": "骑行途中遇到的具体动态视觉焦点，记录了交通工具与骑行路径交汇的瞬间。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ]
+        },
+        {
+          "id": "M02",
+          "parent_chapter_id": "C01",
+          "fact_id": "F006",
+          "focus": "桥上眺望城市与逆光塔楼剪影",
+          "revisit_reason": "骑行中驻足观察的具体景观细节，包含开阔视野和具有辨识度的光影元素。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ]
+        }
+      ],
+      "unselected_facts": [],
+      "media_choices": [
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P001",
+          "reason": "画面清晰展示第一人称视角在草堤小路上骑行并接近铁轨桥，直接呈现本次骑行的主要路线特征。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P009",
+          "reason": "捕捉到橙色列车驶过高架桥的瞬间，是沿途最显著的动态发现，作为高光时刻值得保留。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P005",
+          "reason": "展示了从桥上眺望河流与城市建筑群的开阔视野，代表了骑行中途驻足观景的经历。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P012",
+          "reason": "逆光下的塔楼剪影提供了独特的光影氛围，补充了桥上观景的具体视觉记忆点。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P002",
+          "reason": "记录同伴在河边道路停下休息的状态，体现了骑行过程中的互动与节奏变化。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P011",
+          "reason": "展示了在长满杂草的非铺装土路上骑行的场景，体现了路况的多样性与挑战性。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P006",
+          "reason": "呈现了穿越两侧有民居的狭窄街道的场景，丰富了骑行经过的生活化环境细节。"
+        },
+        {
+          "chapter_id": "C01",
+          "candidate_id": "P003",
+          "reason": "展示了植被茂密的道路尽头出现红色桥梁的景象，作为沿途发现的标志性景观。"
+        }
+      ],
+      "frame_assessments": [
+        {
+          "candidate_id": "P001",
+          "fact_ids": [
+            "F001",
+            "F002"
+          ],
+          "scene_observation_id": "FO:P001",
+          "visible_detail": "第一人称视角显示骑行者正沿着两旁有草堤的铺装小路前进，前方可见一座铁轨桥。",
+          "theme_fit": "MAIN_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P002",
+          "fact_ids": [
+            "F003"
+          ],
+          "scene_observation_id": "FO:P002",
+          "visible_detail": "一名身穿粉色上衣、戴头盔的骑行者在河边道路上停下或缓慢移动。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P003",
+          "fact_ids": [
+            "F004"
+          ],
+          "scene_observation_id": "FO:P003",
+          "visible_detail": "第一人称视角骑行，前方植被茂密的道路尽头有一座红色桥梁。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P004",
+          "fact_ids": [
+            "F005"
+          ],
+          "scene_observation_id": "FO:P004",
+          "visible_detail": "透过车把可以看到前方有一名戴头盔的骑行者正在河堤旁的道路上骑行。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "PARTIAL"
+        },
+        {
+          "candidate_id": "P005",
+          "fact_ids": [
+            "F006"
+          ],
+          "scene_observation_id": "FO:P005",
+          "visible_detail": "画面展示了从桥上眺望河流与城市建筑群的视野。",
+          "theme_fit": "MAIN_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P006",
+          "fact_ids": [
+            "F007"
+          ],
+          "scene_observation_id": "FO:P006",
+          "visible_detail": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P007",
+          "fact_ids": [
+            "F008"
+          ],
+          "scene_observation_id": "FO:P007",
+          "visible_detail": "第一人称视角骑行，前方为铺装道路及左侧建筑。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P008",
+          "fact_ids": [],
+          "scene_observation_id": null,
+          "visible_detail": "",
+          "theme_fit": "UNSUPPORTED",
+          "visibility": "NOT_VISIBLE",
+          "prominence": "TINY_OR_UNCLEAR",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P009",
+          "fact_ids": [],
+          "scene_observation_id": null,
+          "visible_detail": "",
+          "theme_fit": "UNSUPPORTED",
+          "visibility": "NOT_VISIBLE",
+          "prominence": "TINY_OR_UNCLEAR",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P010",
+          "fact_ids": [],
+          "scene_observation_id": null,
+          "visible_detail": "",
+          "theme_fit": "UNSUPPORTED",
+          "visibility": "NOT_VISIBLE",
+          "prominence": "TINY_OR_UNCLEAR",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P011",
+          "fact_ids": [
+            "F009",
+            "F010"
+          ],
+          "scene_observation_id": "FO:P011",
+          "visible_detail": "第一人称视角下，手臂和车把出现在长满杂草的土路上，右侧可见公寓楼。",
+          "theme_fit": "MAIN_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P012",
+          "fact_ids": [
+            "F006"
+          ],
+          "scene_observation_id": "FO:P012",
+          "visible_detail": "逆光下，远处的塔楼剪影矗立在河畔。",
+          "theme_fit": "MAIN_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        },
+        {
+          "candidate_id": "P013",
+          "fact_ids": [
+            "F010"
+          ],
+          "scene_observation_id": "FO:P013",
+          "visible_detail": "第一人称视角的车把和手臂在长满杂草的土路上移动。",
+          "theme_fit": "SUPPORTING_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ]
+    },
+    "S08_PRODUCT_STRUCTURE_REVIEW": {
+      "chapter_boundaries": [],
+      "chapters": [
+        {
+          "id": "C01",
+          "theme": "多路段骑行经历",
+          "fact_ids": [
+            "F001",
+            "F002",
+            "F003",
+            "F004",
+            "F005",
+            "F006",
+            "F007",
+            "F008",
+            "F009",
+            "F010"
+          ],
+          "experience_kind": "CYCLING",
+          "focus": "第一人称视角的连续骑行活动，涵盖经过铁轨桥、河畔道路、植被小路、民居街道及郊野土路等多种路况，包含途中短暂驻足观景。",
+          "focus_fact_ids": [
+            "F001",
+            "F006",
+            "F009"
+          ],
+          "grouping_reason": "所有事实均指向同一类持续性的骑行活动（包括移动和短暂停留），背景变化（桥梁、河流、土路）属于同一次经历中的不同路段或瞬间，不构成独立章节。"
+        }
+      ],
+      "moments": [
+        {
+          "id": "M01",
+          "parent_chapter_id": "C01",
+          "fact_id": "F001",
+          "focus": "橙色列车驶过铁轨桥",
+          "revisit_reason": "骑行途中遇到的具体动态视觉焦点，记录了交通工具与骑行路径交汇的瞬间。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ]
+        },
+        {
+          "id": "M02",
+          "parent_chapter_id": "C01",
+          "fact_id": "F006",
+          "focus": "桥上眺望城市与逆光塔楼剪影",
+          "revisit_reason": "骑行中驻足观察的具体景观细节，包含开阔视野和具有辨识度的光影元素。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ]
+        }
+      ],
+      "unselected_facts": []
+    },
+    "S09A_FRAME_OBSERVATION": {
+      "images": [
+        {
+          "candidate_id": "P001",
+          "observation": "第一人称视角显示骑行者正沿着两旁有草堤的铺装小路前进，前方可见一座铁轨桥。",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F001",
+              "support": "PARTIAL",
+              "visible_quote": "前方可见铁轨桥",
+              "not_visible_quote": "一列橙色列车从桥上驶过"
+            },
+            {
+              "fact_id": "F002",
+              "support": "VISIBLE",
+              "visible_quote": "在铺设好的小路上骑自行车，路两旁是草堤和电线杆",
+              "not_visible_quote": ""
+            }
+          ]
+        },
+        {
+          "candidate_id": "P002",
+          "observation": "一名身穿粉色上衣、戴头盔的骑行者在河边道路上停下或缓慢移动。",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F003",
+              "support": "VISIBLE",
+              "visible_quote": "一名身穿粉色骑行服、戴头盔的骑行者在河边道路上停下或缓慢移动",
+              "not_visible_quote": ""
+            }
+          ]
+        },
+        {
+          "candidate_id": "P003",
+          "observation": "第一人称视角骑行，前方植被茂密的道路尽头有一座红色桥梁。",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F004",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角骑行，沿着植被茂密的铺装小路前进，远处有一座红色桥梁",
+              "not_visible_quote": ""
+            }
+          ]
+        },
+        {
+          "candidate_id": "P004",
+          "observation": "透过车把可以看到前方有一名戴头盔的骑行者正在河堤旁的道路上骑行。",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "PARTIAL",
+          "fact_checks": [
+            {
+              "fact_id": "F005",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角显示骑行者双手握着自行车车把，前方有一名戴头盔的骑行者在河堤旁的道路上骑行",
+              "not_visible_quote": ""
+            }
+          ]
+        },
+        {
+          "candidate_id": "P005",
+          "observation": "画面展示了从桥上眺望河流与城市建筑群的视野。",
+          "subject_role": "BACKGROUND",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F006",
+              "support": "PARTIAL",
+              "visible_quote": "视频展示了从桥上眺望河流与城市建筑群的视野",
+              "not_visible_quote": "随后镜头中出现一名戴头盔的女性扶着自行车站在桥边，最后画面转向逆光下的塔楼剪影"
+            }
+          ]
+        },
+        {
+          "candidate_id": "P006",
+          "observation": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行。",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F007",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行",
+              "not_visible_quote": ""
+            }
+          ]
+        },
+        {
+          "candidate_id": "P007",
+          "observation": "第一人称视角骑行，前方为铺装道路及左侧建筑。",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F008",
+              "support": "VISIBLE",
+              "visible_quote": "第一人称视角骑行，双手握把，前方为铺装道路及左侧建筑",
+              "not_visible_quote": ""
+            }
+          ]
+        },
+        {
+          "candidate_id": "P008",
+          "observation": "长满杂草的土路通向右侧的一栋公寓楼。",
+          "subject_role": "BACKGROUND",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F009",
+              "support": "PARTIAL",
+              "visible_quote": "在长满杂草的土路上...右侧可见公寓楼",
+              "not_visible_quote": "视频显示第一人称视角...移动"
+            }
+          ]
+        },
+        {
+          "candidate_id": "P009",
+          "observation": "前方可见铁轨桥，一列橙色列车正从桥上驶过。",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F001",
+              "support": "VISIBLE",
+              "visible_quote": "前方可见铁轨桥，一列橙色列车从桥上驶过",
+              "not_visible_quote": "第一人称视角骑行"
+            },
+            {
+              "fact_id": "F002",
+              "support": "VISIBLE",
+              "visible_quote": "在铺设好的小路上...路两旁是草堤和电线杆",
+              "not_visible_quote": "骑自行车"
+            }
+          ]
+        },
+        {
+          "candidate_id": "P010",
+          "observation": "一名戴头盔的女性扶着自行车站在桥边。",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F006",
+              "support": "PARTIAL",
+              "visible_quote": "镜头中出现一名戴头盔的女性扶着自行车站在桥边",
+              "not_visible_quote": "视频展示了从桥上眺望河流与城市建筑群的视野...最后画面转向逆光下的塔楼剪影"
+            }
+          ]
+        },
+        {
+          "candidate_id": "P011",
+          "observation": "第一人称视角下，手臂和车把出现在长满杂草的土路上，右侧可见公寓楼。",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F009",
+              "support": "VISIBLE",
+              "visible_quote": "视频显示第一人称视角在长满杂草的土路上移动，右侧可见公寓楼",
+              "not_visible_quote": ""
+            },
+            {
+              "fact_id": "F010",
+              "support": "VISIBLE",
+              "visible_quote": "画面中可见车把和手臂（如f1、f2），表明正在骑行",
+              "not_visible_quote": ""
+            }
+          ]
+        },
+        {
+          "candidate_id": "P012",
+          "observation": "逆光下，远处的塔楼剪影矗立在河畔。",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F006",
+              "support": "PARTIAL",
+              "visible_quote": "画面转向逆光下的塔楼剪影",
+              "not_visible_quote": "视频展示了从桥上眺望河流与城市建筑群的视野，随后镜头中出现一名戴头盔的女性扶着自行车站在桥边"
+            }
+          ]
+        },
+        {
+          "candidate_id": "P013",
+          "observation": "第一人称视角的车把和手臂在长满杂草的土路上移动。",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE",
+          "fact_checks": [
+            {
+              "fact_id": "F010",
+              "support": "VISIBLE",
+              "visible_quote": "画面中可见车把和手臂（如f1、f2），表明正在骑行",
+              "not_visible_quote": ""
+            }
+          ]
+        }
+      ]
+    },
+    "S09_PRODUCT_CONTRACT_REPAIR": {
+      "chapter_boundaries": [],
+      "chapters": [
+        {
+          "id": "C01",
+          "theme": "骑行途中的景观与路况",
+          "fact_ids": [
+            "F001",
+            "F002",
+            "F003",
+            "F004",
+            "F005",
+            "F006",
+            "F007",
+            "F008",
+            "F009",
+            "F010"
+          ],
+          "experience_kind": "CYCLING",
+          "focus": "第一人称视角的骑行活动，涵盖经过铁轨桥、河畔道路、植被小路、民居街道及郊野土路等多种路况，包含途中短暂驻足观景。",
+          "focus_fact_ids": [
+            "F001",
+            "F006",
+            "F009"
+          ],
+          "grouping_reason": "所有事实均指向同一类持续性的骑行活动（包括移动和短暂停留），背景变化属于同一次经历中的不同路段或瞬间，不构成独立章节。"
+        }
+      ],
+      "moments": [
+        {
+          "id": "M01",
+          "parent_chapter_id": "C01",
+          "fact_id": "F001",
+          "focus": "橙色列车驶过铁轨桥",
+          "revisit_reason": "骑行途中遇到的具体动态视觉焦点，记录了交通工具与骑行路径交汇的瞬间。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ]
+        },
+        {
+          "id": "M02",
+          "parent_chapter_id": "C01",
+          "fact_id": "F006",
+          "focus": "桥上眺望城市与逆光塔楼剪影",
+          "revisit_reason": "骑行中驻足观察的具体景观细节，包含开阔视野和具有辨识度的光影元素。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            }
+          ]
+        }
+      ],
+      "unselected_facts": []
+    },
+    "S09A_PRODUCT_VISUAL_00_SCENE": {
+      "assets": [
+        {
+          "asset_id": "asset-0",
+          "observations": [
+            {
+              "text": "画面前景可见骑行者的双臂和自行车车把，显示正在骑车。",
+              "evidence_frame_ids": [
+                "asset-0-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "前方有一座高架桥横跨道路，背景可见电线杆和建筑。",
+              "evidence_frame_ids": [
+                "asset-0-f0",
+                "asset-0-f1"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "一列红白相间的火车正行驶在前方的高架桥上。",
+              "evidence_frame_ids": [
+                "asset-0-f1"
+              ],
+              "temporal_support": "STATE"
+            }
+          ],
+          "uncertainties": []
+        },
+        {
+          "asset_id": "asset-1",
+          "observations": [
+            {
+              "text": "一名身穿粉色短袖上衣、黑色短裤并佩戴黄绿色头盔的骑行者停在路边。",
+              "evidence_frame_ids": [
+                "asset-1-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "人物跨坐在自行车上，身体转向后方看向拍摄方向。",
+              "evidence_frame_ids": [
+                "asset-1-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "环境位于河边或水渠旁，有白色栏杆，远处可见高压电塔。",
+              "evidence_frame_ids": [
+                "asset-1-f0"
+              ],
+              "temporal_support": "STATE"
+            }
+          ],
+          "uncertainties": []
+        },
+        {
+          "asset_id": "asset-2",
+          "observations": [
+            {
+              "text": "画面显示第一人称视角下的手臂和自行车把手，表明正在骑行。",
+              "evidence_frame_ids": [
+                "asset-2-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "道路平坦笔直，左侧是茂密的树木，右侧是草地。",
+              "evidence_frame_ids": [
+                "asset-2-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "远处可见一座红色的高架桥梁结构。",
+              "evidence_frame_ids": [
+                "asset-2-f0"
+              ],
+              "temporal_support": "STATE"
+            }
+          ],
+          "uncertainties": []
+        },
+        {
+          "asset_id": "asset-3",
+          "observations": [
+            {
+              "text": "画面边缘可见拍摄者的手臂，前方有一名骑行者。",
+              "evidence_frame_ids": [
+                "asset-3-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "前方的骑行者身穿浅粉色上衣和黑色短裤，戴黄绿色头盔，正在向前骑行。",
+              "evidence_frame_ids": [
+                "asset-3-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "两人均位于一条铺有红褐色路面的道路上，左侧是大片绿草地。",
+              "evidence_frame_ids": [
+                "asset-3-f0"
+              ],
+              "temporal_support": "STATE"
+            }
+          ],
+          "uncertainties": []
+        },
+        {
+          "asset_id": "asset-4",
+          "observations": [
+            {
+              "text": "场景位于一座带有金属栏杆的桥梁上，下方是一条宽阔平静的河流。",
+              "evidence_frame_ids": [
+                "asset-4-f0",
+                "asset-4-f1",
+                "asset-4-f2"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "一名身穿粉色上衣、黑色短裤并戴头盔的女性骑行者站在桥面上，身旁停着自行车，面朝河流方向。",
+              "evidence_frame_ids": [
+                "asset-4-f1"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "对岸远处可见密集的城市建筑群和一座高耸的塔楼状建筑物。",
+              "evidence_frame_ids": [
+                "asset-4-f0",
+                "asset-4-f2"
+              ],
+              "temporal_support": "STATE"
+            }
+          ],
+          "uncertainties": []
+        },
+        {
+          "asset_id": "asset-5",
+          "observations": [
+            {
+              "text": "画面为第一人称视角，可见手臂握着装有码表的自行车把手，显示正在骑行。",
+              "evidence_frame_ids": [
+                "asset-5-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "车辆行驶在狭窄的街道上，两侧排列着低层住宅楼。",
+              "evidence_frame_ids": [
+                "asset-5-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "街道上方布满交错的架空电线，左侧停放着一辆汽车。",
+              "evidence_frame_ids": [
+                "asset-5-f0"
+              ],
+              "temporal_support": "STATE"
+            }
+          ],
+          "uncertainties": []
+        },
+        {
+          "asset_id": "asset-6",
+          "observations": [
+            {
+              "text": "画面显示骑行者的手臂和车把，处于骑行状态。",
+              "evidence_frame_ids": [
+                "asset-6-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "前方是一条较宽的柏油马路，路面绘有白色的直行箭头标线。",
+              "evidence_frame_ids": [
+                "asset-6-f0"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "左侧有一栋米黄色的方形建筑，外部设有楼梯。",
+              "evidence_frame_ids": [
+                "asset-6-f0"
+              ],
+              "temporal_support": "STATE"
+            }
+          ],
+          "uncertainties": []
+        },
+        {
+          "asset_id": "asset-7",
+          "observations": [
+            {
+              "text": "画面显示骑行者的手臂，车辆正行驶在一条非铺装的碎石土路上。",
+              "evidence_frame_ids": [
+                "asset-7-f1",
+                "asset-7-f2"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "道路两侧长满了枯黄与绿色相间的高草。",
+              "evidence_frame_ids": [
+                "asset-7-f0",
+                "asset-7-f1",
+                "asset-7-f2"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "右侧高处的斜坡上方矗立着一栋多层公寓楼。",
+              "evidence_frame_ids": [
+                "asset-7-f0",
+                "asset-7-f1"
+              ],
+              "temporal_support": "STATE"
+            },
+            {
+              "text": "强烈的阳光从地平线处照射过来，造成逆光效果。",
+              "evidence_frame_ids": [
+                "asset-7-f0",
+                "asset-7-f1",
+                "asset-7-f2"
+              ],
+              "temporal_support": "STATE"
+            }
+          ],
+          "uncertainties": []
+        }
+      ]
+    },
+    "S09A_PRODUCT_VISUAL_00": {
+      "items": [
+        {
+          "fact_id": "F001",
+          "decision": "KEEP",
+          "text": "第一人称视角骑行，前方可见铁轨桥，一列橙色列车从桥上驶过。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-0-f0",
+            "asset-0-f1"
+          ],
+          "temporal_support": "CHANGE",
+          "reason": "图片显示第一人称骑行视角，前方有高架铁路桥，且有一列橙色列车在f1中清晰可见。"
+        },
+        {
+          "fact_id": "F002",
+          "decision": "KEEP",
+          "text": "在铺设好的小路上骑自行车，路两旁是草堤和电线杆。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-0-f0",
+            "asset-0-f1"
+          ],
+          "temporal_support": "STATE",
+          "reason": "画面确认为铺装路面，两侧为草堤，背景中有明显的电线杆设施。"
+        },
+        {
+          "fact_id": "F003",
+          "decision": "KEEP",
+          "text": "一名身穿粉色骑行服、戴头盔的骑行者在河边道路上停下或缓慢移动。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-1-f0"
+          ],
+          "temporal_support": "STATE",
+          "reason": "图中人物穿着粉色上衣和头盔，位于河边的铺装路上，姿态静止或缓慢。"
+        },
+        {
+          "fact_id": "F004",
+          "decision": "KEEP",
+          "text": "第一人称视角骑行，沿着植被茂密的铺装小路前进，远处有一座红色桥梁。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-2-f0"
+          ],
+          "temporal_support": "STATE",
+          "reason": "第一人称视角下，道路两侧植被茂密，尽头确实可见一座红色的桥梁结构。"
+        },
+        {
+          "fact_id": "F005",
+          "decision": "KEEP",
+          "text": "第一人称视角显示骑行者双手握着自行车车把，前方有一名戴头盔的骑行者在河堤旁的道路上骑行。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-3-f0"
+          ],
+          "temporal_support": "STATE",
+          "reason": "画面显示拍摄者双手握把，前方有一名戴黄绿色头盔的骑行者在河堤旁道路骑行。"
+        },
+        {
+          "fact_id": "F006",
+          "decision": "KEEP",
+          "text": "视频展示了从桥上眺望河流与城市建筑群的视野，随后镜头中出现一名戴头盔的女性扶着自行车站在桥边，最后画面转向逆光下的塔楼剪影。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-4-f0",
+            "asset-4-f1",
+            "asset-4-f2"
+          ],
+          "temporal_support": "CHANGE",
+          "reason": "视频内容依次展示了河流远景、戴头盔女性扶车站立、以及逆光下的塔楼剪影，描述准确。"
+        },
+        {
+          "fact_id": "F007",
+          "decision": "KEEP",
+          "text": "第一人称视角显示骑行者双手握把，在两侧有民居和电线杆的街道上骑行。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-5-f0"
+          ],
+          "temporal_support": "STATE",
+          "reason": "画面为第一人称骑行，街道两侧排列着低层民居和电线杆。"
+        },
+        {
+          "fact_id": "F008",
+          "decision": "KEEP",
+          "text": "第一人称视角骑行，双手握把，前方为铺装道路及左侧建筑。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-6-f0"
+          ],
+          "temporal_support": "STATE",
+          "reason": "画面符合第一人称骑行视角，前方为宽阔的铺装道路，左侧有一栋米黄色方形建筑。"
+        },
+        {
+          "fact_id": "F009",
+          "decision": "KEEP",
+          "text": "视频显示第一人称视角在长满杂草的土路上移动，右侧可见公寓楼。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-7-f0",
+            "asset-7-f1"
+          ],
+          "temporal_support": "STATE",
+          "reason": "画面显示在杂草丛生的非铺装土路上行进，右侧高坡上矗立着一栋多层公寓楼。"
+        },
+        {
+          "fact_id": "F010",
+          "decision": "KEEP",
+          "text": "画面中可见车把和手臂（如f1、f2），表明正在骑行。",
+          "corrections": [],
+          "evidence_frame_ids": [
+            "asset-7-f1",
+            "asset-7-f2"
+          ],
+          "temporal_support": "STATE",
+          "reason": "帧f1和f2中均可见拍摄者的手臂和车把局部，证实了骑行的动作状态。"
+        }
+      ]
+    },
+    "S07_PRODUCT_EDITOR": {
+      "chapter_boundaries": [
+        {
+          "chapter_ids": [
+            "C01",
+            "C02"
+          ],
+          "basis": "SEPARATE_EXPERIENCE",
+          "evidence_fact_ids": [
+            "F005",
+            "F006"
+          ],
+          "reason": "C01为骑行经过铁轨桥的动态过程，C02为在桥上停留眺望并观察同伴的静态/互动场景，活动性质从移动转为驻足观察。"
+        },
+        {
+          "chapter_ids": [
+            "C01",
+            "C03"
+          ],
+          "basis": "DIFFERENT_ACTIVITY",
+          "evidence_fact_ids": [
+            "F002",
+            "F009"
+          ],
+          "reason": "C01主要展现铺装路面及桥梁环境下的骑行，C03明确显示在杂草丛生的土路上骑行，路况与自然环境特征有显著差异。"
+        },
+        {
+          "chapter_ids": [
+            "C02",
+            "C03"
+          ],
+          "basis": "SEPARATE_EXPERIENCE",
+          "evidence_fact_ids": [
+            "F006",
+            "F009"
+          ],
+          "reason": "C02包含城市建筑视野及人物互动，属于观景/社交性质的经历；C03为荒野土路骑行，属于纯粹的运动探索经历。"
+        }
+      ],
+      "chapters": [
+        {
+          "id": "C01",
+          "theme": "沿河街道与桥梁骑行",
+          "fact_ids": [
+            "F001",
+            "F004",
+            "F005",
+            "F007",
+            "F008"
+          ],
+          "experience_kind": "CYCLING",
+          "focus": "第一人称视角下穿越不同路段（河边、植被小路、民居街道）的连续骑行体验，重点捕捉沿途可见的列车、红色桥梁及前方同伴。",
+          "focus_fact_ids": [
+            "F001",
+            "F004",
+            "F005"
+          ],
+          "grouping_reason": "这些事实均描述了第一人称视角的骑行状态，涵盖从经过铁轨桥到进入植被茂密小路再到街道的过程，虽背景变化但均为同一类持续骑行活动。"
+        },
+        {
+          "id": "C02",
+          "theme": "桥上驻足与同伴互动",
+          "fact_ids": [
+            "F003",
+            "F006"
+          ],
+          "experience_kind": "CYCLING",
+          "focus": "骑行途中在桥上或河边停下，眺望城市景观并与戴头盔的同伴互动的瞬间。",
+          "focus_fact_ids": [
+            "F006"
+          ],
+          "grouping_reason": "F003和F006共同指向了骑行过程中的停顿、观景以及与另一位骑行者（粉色衣服/女性）的近距离接触，构成了一个独立的‘休息/观景’子经历。"
+        },
+        {
+          "id": "C03",
+          "theme": "荒野土路骑行",
+          "fact_ids": [
+            "F002",
+            "F009",
+            "F010"
+          ],
+          "experience_kind": "CYCLING",
+          "focus": "在铺设小路及长满杂草的土路上骑行的路况与环境细节，包括电线杆、草堤和公寓楼背景。",
+          "focus_fact_ids": [
+            "F009"
+          ],
+          "grouping_reason": "F002、F009和F010描述了非典型城市道路的环境（草堤、土路、杂草），代表了骑行中偏向自然或郊野路段的经历，与C01的城市/桥梁段区分开。"
+        }
+      ],
+      "moments": [
+        {
+          "id": "M01",
+          "parent_chapter_id": "C01",
+          "fact_id": "F001",
+          "focus": "橙色列车驶过铁轨桥的瞬间",
+          "revisit_reason": "这是骑行途中最具动态感和视觉冲击力的具体发现，记录了交通工具与骑行路径的交汇。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "WITHIN_CHAPTER"
+            },
+            {
+              "chapter_id": "C02",
+              "relation": "DISTINCT"
+            },
+            {
+              "chapter_id": "C03",
+              "relation": "DISTINCT"
+            }
+          ]
+        },
+        {
+          "id": "M02",
+          "parent_chapter_id": "C02",
+          "fact_id": "F006",
+          "focus": "逆光下的塔楼剪影与河畔视野",
+          "revisit_reason": "画面包含了具体的地标性剪影和开阔的城市水景，是这段驻足经历中最具记忆点的视觉元素。",
+          "chapter_relations": [
+            {
+              "chapter_id": "C01",
+              "relation": "DISTINCT"
+            },
+            {
+              "chapter_id": "C02",
+              "relation": "WITHIN_CHAPTER"
+            },
+            {
+              "chapter_id": "C03",
+              "relation": "DISTINCT"
+            }
+          ]
+        }
+      ],
+      "unselected_facts": []
+    }
+  }
+}

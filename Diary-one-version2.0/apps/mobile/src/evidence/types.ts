@@ -1,4 +1,4 @@
-/** Lightweight visual semantic routing (Feature Print + Classify top-10 + rules). Not full video understanding. */
+/** MobileCLIP evidence routing. The fixed FP16 v07 profile is the active phone path. */
 
 export type SemanticClassification = {
   identifier: string;
@@ -7,6 +7,7 @@ export type SemanticClassification = {
 
 export type SemanticEmbedding = {
   vector: number[];
+  fullClassifications?: SemanticClassification[];
   classifications: SemanticClassification[];
 };
 
@@ -88,7 +89,7 @@ export type SemanticRoutingProfile = {
   frame5MeanMin: number;
 };
 
-export type EvidenceFrameLevel = 1 | 3 | 5 | 10;
+export type EvidenceFrameLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export type SemanticRouteDecision = {
   targetFrameCount: EvidenceFrameLevel;
@@ -110,7 +111,7 @@ export type SemanticRouteDecision = {
 export type SemanticRouteAudit = SemanticRouteDecision & {
   profileId: string;
   durationMs: number;
-  analyzerKind: 'native_vision' | 'remote_bff' | 'fallback_expo_go';
+  analyzerKind: 'mobileclip_onnx' | 'native_vision' | 'remote_bff' | 'fallback_expo_go';
 };
 
 export const DEFAULT_SEMANTIC_ROUTING_PROFILE: SemanticRoutingProfile = {
@@ -202,4 +203,12 @@ export function routingProfileForModelId(
 export type ProbePlanItem = {
   requestedMs: number;
   uri: string;
+};
+
+/** Fixed S0 FP16 model; endpoint V05 + global coverage V07. */
+export const MOBILECLIP_FP16_V07_PROFILE: SemanticRoutingProfile = {
+  ...MOBILECLIP_PROMPT_ROUTING_PROFILE,
+  profileId: 'MOBILECLIP_S0_FP16_COVERAGE_V07',
+  modelId: 'MOBILECLIP_S0_IMAGE_512_SCENE_PROMPTS_V01_FP16_INTERNAL',
+  expectedModelSha256: '7ea0ab32ddbbd1c51b6158f12ccb669968de37125dd7455f04b6e1988cb9a141',
 };

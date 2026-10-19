@@ -3,21 +3,25 @@ import { ALGORITHM_LOCK } from '../config/algorithmLock';
 import { admitDeliveryState } from './deliveryAdmit';
 import { isFormalConsumerApp, isLabToolsEnabled } from '../config/buildProfile';
 import { validateResultBinding, type ResultInput } from './validateResultBinding';
+import { productMemoryIdentities } from './productIdentity';
 
 export type ValidateOutcome =
   | { ok: true; honestEmpty?: boolean }
   | { ok: false; reason: string };
 
 /** fail-closed：对齐 BFF result_admit + eval-web 消费门槛（PRD DAT01 / AI03）。 */
-export function validatePreviewResult(result: X02PreviewResult, input?: ResultInput): ValidateOutcome {
+export async function validatePreviewResult(result: X02PreviewResult, input?: ResultInput): Promise<ValidateOutcome> {
   if (!result || typeof result !== 'object') return { ok: false, reason: 'Invalid result object' };
   try {
     if (!input && isFormalConsumerApp) throw new Error('Missing submitted input for validation');
-    if (input) validateResultBinding(result, input, isFormalConsumerApp);
+    if (input) validateResultBinding(result, { ...input,
+      productIdentities: await productMemoryIdentities(result, input.manifest.session.session_id),
+    }, isFormalConsumerApp);
   } catch (error) {
     return { ok: false, reason: error instanceof Error ? error.message : 'Invalid result binding' };
   }
-  if (result.schema_version !== ALGORITHM_LOCK.previewSchema) {
+  if (result.schema_version !== ALGORITHM_LOCK.previewSchema
+    && result.schema_version !== ALGORITHM_LOCK.productPreviewSchema) {
     return { ok: false, reason: `Unexpected schema_version: ${result.schema_version}` };
   }
   if (!Array.isArray(result.chapters) || !Array.isArray(result.ahas)) {

@@ -2,7 +2,7 @@
 const base = require('./app.json').expo;
 
 const isStore = process.env.EXPO_PUBLIC_STORE_RELEASE === '1';
-// Vision config plugin is only needed for prebuild / Dev Client; Expo Go cannot load native Vision.
+// Legacy module name retained for AVFoundation decoding; Expo Go cannot load this native module.
 const includeVision =
   process.env.EXPO_PUBLIC_INCLUDE_VISION === '1' ||
   process.env.EAS_BUILD === 'true' ||
@@ -10,7 +10,7 @@ const includeVision =
 
 const plugins = (base.plugins ?? []).filter((p) => {
   const name = Array.isArray(p) ? p[0] : p;
-  if (name === './modules/diary-one-vision') return includeVision;
+  if (name === './modules/diary-one-vision' || name === './modules/diary-one-vision/app.plugin.js') return includeVision;
   return true;
 });
 if (!plugins.some((p) => (Array.isArray(p) ? p[0] : p) === 'expo-asset')) {

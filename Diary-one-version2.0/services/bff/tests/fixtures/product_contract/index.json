@@ -1,0 +1,36 @@
+{
+  "scope": "Historical real model output metadata, trimmed to public contract/evidence lineage; synthetic JPEG bytes are generated only in filesystem contract unit tests. No R5_7 end-to-end claim.",
+  "cases": [
+    {
+      "name": "nagoya_r52",
+      "origin": "cloud-fresh/real-inputs/nagoya_cycling__group_01",
+      "editor_revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_2",
+      "manifest_sha256": "b68293288c0124d065b10045e7724de2a9d11fcba0147ba63e7f419f1ff50752",
+      "result_source_sha256": "587707d6415e49688d48b4b85610b2ad59d701a095a9644ae0c903fef47e768a",
+      "chapter_count": 1,
+      "aha_count": 0
+    },
+    {
+      "name": "zoo_r52",
+      "origin": "cloud-fresh/real-inputs/tokyo_zoo__group_01",
+      "editor_revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_2",
+      "manifest_sha256": "07bf0fb91c0e762f55575e343db8c50c0f26b2f0990fe744da697334607c00b6",
+      "result_source_sha256": "cc02c62b7d5fe3b2eb6ffc027748fb30d1e2f03d856881c73bf7a56a2bed57bf",
+      "chapter_count": 3,
+      "aha_count": 0
+    },
+    {
+      "name": "rural_r55",
+      "origin": "cloud-r55/real-inputs/rural_cycling__group_01",
+      "editor_revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_5",
+      "manifest_sha256": "ec8109a1a3736a7369e4ec65cbb265439f43194ad99172fa5e942cd64266488e",
+      "result_source_sha256": "c1b1e86e11300b54160b44f2f6288df7611efbd9756376ff1212b19669b26430",
+      "chapter_count": 0,
+      "aha_count": 2
+    },
+    {
+      "name": "photo_v07",
+      "origin": "existing fixed Product V07 PHOTO contract fixture; not a new model run"
+    }
+  ]
+}

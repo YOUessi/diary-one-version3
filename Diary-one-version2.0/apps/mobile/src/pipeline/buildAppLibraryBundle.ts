@@ -1,5 +1,4 @@
 import * as FileSystem from 'expo-file-system/legacy';
-import * as VideoThumbnails from 'expo-video-thumbnails';
 import { sha256File } from './sha256File';
 import { ensureLocalFileUri } from './ensureLocalFileUri';
 import { writeNormalizedFrame, EVIDENCE_FRAME } from './evidenceNormalize';
@@ -35,7 +34,7 @@ function extFromName(name?: string, fallback = 'jpg'): string {
 type FrameRow = {
   frame_id: string;
   window_index: number;
-  window_count: 1 | 2 | 4 | 6 | 10;
+  window_count: number;
   sample_role: 'PHOTO_REPRESENTATIVE' | 'WINDOW_EARLY' | 'WINDOW_MIDDLE' | 'WINDOW_LATE';
   canonical_offset_ms: 1500 | 4500 | 7500;
   source_timestamp_ms: number | null;
@@ -147,64 +146,25 @@ export async function buildAppLibraryBundle(
       continue;
     }
 
-    const durationMs = Math.max(1000, item.durationMs ?? 9000);
-    let evidence_window_count: 1 | 2 | 4 | 6 | 10 = 1;
-    let evidence_sampling_profile = 'VIDEO_SINGLE_WINDOW_THREE';
-    let frames: FrameRow[] = [];
-
-    try {
-      const semantic = await buildSemanticVideoEvidence({
-        assetId,
-        localVideoUri: localUri,
-        durationMs,
-        bundleDir,
-        spatial,
-        sourceW: srcW,
-        sourceH: srcH,
-      });
-      frames = semantic.frames as FrameRow[];
-      evidence_sampling_profile = semantic.evidence_sampling_profile;
-      evidence_window_count = semantic.evidence_window_count as typeof evidence_window_count;
-    } catch {
-      evidence_window_count =
-        durationMs <= 10_000 ? 1 : durationMs <= 30_000 ? 2 : durationMs <= 90_000 ? 4 : 6;
-      evidence_sampling_profile =
-        evidence_window_count === 1
-          ? 'VIDEO_SINGLE_WINDOW_THREE'
-          : 'VIDEO_MULTI_WINDOW_TWO_PER_WINDOW';
-
-      const canonicalOffsets =
-        evidence_window_count === 1
-          ? [1500, 4500, 7500]
-          : Array.from({ length: evidence_window_count }, () => [1500, 7500] as const).flat();
-
-      for (let fi = 0; fi < canonicalOffsets.length; fi++) {
-        const offset = canonicalOffsets[fi];
-        const window_index = evidence_window_count === 1 ? 0 : Math.floor(fi / 2);
-        const sample_role: FrameRow['sample_role'] =
-          offset === 4500 ? 'WINDOW_MIDDLE' : offset === 1500 ? 'WINDOW_EARLY' : 'WINDOW_LATE';
-        const fraction = (fi + 1) / (canonicalOffsets.length + 1);
-        const source_timestamp_ms = Math.max(
-          0,
-          Math.min(durationMs - 1, Math.round(durationMs * fraction)),
-        );
-        const thumb = await VideoThumbnails.getThumbnailAsync(localUri, {
-          time: source_timestamp_ms,
-          quality: 0.85,
-        });
-        const rel = `frames/${assetId}_${fi}.jpg`;
-        frames.push(
-          await frameFromUri(thumb.uri, rel, bundleDir, spatial, srcW, srcH, {
-            frame_id: `${assetId}-f${fi}`,
-            window_index,
-            window_count: evidence_window_count,
-            sample_role,
-            canonical_offset_ms: offset as 1500 | 4500 | 7500,
-            source_timestamp_ms,
-          }),
-        );
-      }
+    const durationMs = Math.round(item.durationMs ?? NaN);
+    if (!Number.isFinite(durationMs) || durationMs <= 0) {
+      throw new Error('Video duration is missing or invalid; reselect a readable video.');
     }
+    // Preserve the main branch's owner fence and durable original/capture metadata.
+    // Only decoded, model-selected frames may enter the evidence bundle. Errors
+    // must reach the existing pipeline retry path instead of fabricating timing.
+    const semantic = await buildSemanticVideoEvidence({
+      assetId,
+      localVideoUri: localUri,
+      durationMs,
+      bundleDir,
+      spatial,
+      sourceW: srcW,
+      sourceH: srcH,
+      assertCurrent,
+    });
+    assertCurrent();
+    const { frames, evidence_sampling_profile, evidence_window_count } = semantic;
 
     assets.push({
       asset_id: assetId,

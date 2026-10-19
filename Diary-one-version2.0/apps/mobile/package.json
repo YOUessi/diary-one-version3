@@ -27,6 +27,8 @@
     "expo-video-encoder": "^1.0.23",
     "expo-video-thumbnails": "~57.0.2",
     "expo-web-browser": "~57.0.3",
+    "jpeg-js": "0.4.4",
+    "onnxruntime-react-native": "1.24.3",
     "react": "19.2.3",
     "react-native": "0.86.3",
     "react-native-gesture-handler": "~2.32.0",
@@ -57,7 +59,12 @@
     "eas:submit:ios:preview": "eas submit --platform ios --profile preview",
     "eas:build:ios:prod": "eas build --profile production --platform ios",
     "lint": "expo lint",
-    "test:core": "node --test tests/*.test.cjs"
+    "test:core": "node --test tests/*.test.cjs",
+    "test:evidence": "node scripts/test-evidence.cjs",
+    "test:onnx": "node --test scripts/test-onnx-lifecycle.cjs scripts/test-onnx-native-patch.cjs",
+    "test:video-evidence": "node --test scripts/test-video-evidence.cjs scripts/test-main-algorithm-adapter.cjs",
+    "test:video-native": "python3 scripts/test-video-native.py",
+    "test:native-config": "node --test scripts/test-native-config.cjs"
   },
   "private": true
 }

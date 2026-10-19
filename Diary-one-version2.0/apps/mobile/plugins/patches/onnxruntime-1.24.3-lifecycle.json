@@ -1,0 +1,41 @@
+{
+  "packageVersion": "1.24.3",
+  "upstreamSnapshotCommit": "69eeb2bb4aba4bf97f091d529222f1516dc98e49",
+  "upstreamSources": [
+    "https://github.com/microsoft/onnxruntime/blob/69eeb2bb4aba4bf97f091d529222f1516dc98e49/js/react_native/cpp/Env.h",
+    "https://github.com/microsoft/onnxruntime/blob/69eeb2bb4aba4bf97f091d529222f1516dc98e49/js/react_native/cpp/JsiMain.cpp"
+  ],
+  "license": "MIT; source snippets Copyright (c) Microsoft Corporation. All rights reserved.",
+  "files": [
+    {
+      "path": "cpp/Env.h",
+      "beforeSha256": "0d70d888c30510e64cca2ae057e7e32941469ea8b5b25b0ec11a3457a161b3f9",
+      "afterSha256": "eda90f9e9b3408e96c25ffb299bee88818c835af9b52501dc3089dd956da5d0f",
+      "replacements": [
+        {
+          "before": "  inline void setTensorConstructor(\n      std::shared_ptr<facebook::jsi::WeakObject> tensorConstructor) {\n    tensorConstructor_ = tensorConstructor;\n  }",
+          "after": "  // Backported from upstream: JS values must be owned by the JS runtime,\n  // not by an Env retained until a later native module install/dealloc.\n  inline void setTensorConstructor(facebook::jsi::Runtime& runtime,\n                                   const facebook::jsi::Object& tensorConstructor) {\n    runtime.global()\n        .getPropertyAsObject(runtime, \"OrtApi\")\n        .setProperty(runtime, \"__tensorConstructor\", tensorConstructor);\n  }"
+        },
+        {
+          "before": "    return tensorConstructor_->lock(runtime);",
+          "after": "    return runtime.global()\n        .getPropertyAsObject(runtime, \"OrtApi\")\n        .getProperty(runtime, \"__tensorConstructor\");"
+        },
+        {
+          "before": "  std::shared_ptr<facebook::jsi::WeakObject> tensorConstructor_;\n",
+          "after": ""
+        }
+      ]
+    },
+    {
+      "path": "cpp/JsiMain.cpp",
+      "beforeSha256": "79c7faad8169e01042d2bd70ef2377eca7208f4e24165515192e0824f61ef8c0",
+      "afterSha256": "dfe1a6ec83ef42d0a08f756a24b4f1f149da3d5e3f400f2d987b33d69b53a898",
+      "replacements": [
+        {
+          "before": "            env->setTensorConstructor(std::make_shared<WeakObject>(\n                runtime, arguments[1].asObject(runtime)));",
+          "after": "            env->setTensorConstructor(runtime, arguments[1].asObject(runtime));"
+        }
+      ]
+    }
+  ]
+}

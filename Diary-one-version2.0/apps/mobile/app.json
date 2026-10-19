@@ -55,7 +55,19 @@
       "expo-sharing",
       "expo-apple-authentication",
       "expo-web-browser",
-      "./modules/diary-one-vision"
+      "./modules/diary-one-vision/app.plugin.js",
+      "onnxruntime-react-native",
+      "./plugins/withOnnxRuntimeLifecycle",
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "./assets/models/mobileclip-s0-fp16/image_encoder.onnx",
+            "./assets/models/mobileclip-s0-fp16/prompts.f32.bin"
+          ]
+        }
+      ],
+      "./plugins/withVideoEncoderAutolinking"
     ]
   }
 }

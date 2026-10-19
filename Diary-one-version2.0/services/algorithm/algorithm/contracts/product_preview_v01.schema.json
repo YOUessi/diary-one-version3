@@ -1,0 +1,406 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Diary One experimental product editor preview V01",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "editor_policy",
+    "experimental",
+    "production_ready",
+    "session_id",
+    "delivery_state",
+    "chapters",
+    "ahas",
+    "decision_trace",
+    "trace"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "DIARY_ONE_X02_PRODUCT_PREVIEW_V01"
+    },
+    "editor_policy": {
+      "enum": [
+        "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V01",
+        "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V02",
+        "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V03",
+        "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V04",
+        "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V05",
+        "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V06",
+        "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07"
+      ]
+    },
+    "experimental": {
+      "const": true
+    },
+    "production_ready": {
+      "const": false
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "delivery_state": {
+      "enum": [
+        "PIPELINE_BLOCKED",
+        "NO_GROUNDED_MEMORY",
+        "READY_WITH_ITEM_BLOCKS",
+        "READY_PRIMARY_COPY"
+      ]
+    },
+    "chapters": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "$ref": "#/$defs/chapter"
+      }
+    },
+    "ahas": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/memory"
+      }
+    },
+    "decision_trace": {
+      "type": "object",
+      "required": [
+        "fact_coverage",
+        "semantic_review",
+        "prompt_sha256"
+      ]
+    },
+    "trace": {
+      "type": "object",
+      "required": [
+        "pipeline_version",
+        "provider",
+        "model",
+        "stage_metrics"
+      ],
+      "properties": {
+        "pipeline_version": {
+          "enum": [
+            "X02_PRODUCT_EDITOR_V01",
+            "X02_PRODUCT_EDITOR_V02",
+            "X02_PRODUCT_EDITOR_V03",
+            "X02_PRODUCT_EDITOR_V04",
+            "X02_PRODUCT_EDITOR_V05",
+            "X02_PRODUCT_EDITOR_V06",
+            "X02_PRODUCT_EDITOR_V07"
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "media": {
+      "type": "object",
+      "required": [
+        "asset_id",
+        "source_asset_id",
+        "evidence_frame_ids",
+        "start_ms",
+        "end_ms",
+        "range_basis"
+      ],
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/text"
+        },
+        "evidence_frame_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "start_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "end_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "range_basis": {
+          "enum": [
+            "WHOLE_SOURCE_CLIP",
+            "EVIDENCE_CONTEXT_WINDOW_NOT_EVENT_BOUNDARIES",
+            "STILL_IMAGE"
+          ]
+        },
+        "representative_frame_id": {
+          "$ref": "#/$defs/text"
+        },
+        "selection_fact_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "selection_reason": {
+          "$ref": "#/$defs/text"
+        },
+        "selection_role": {
+          "enum": [
+            "PRIMARY",
+            "DETAIL",
+            "CONTEXT",
+            "SUPPORT"
+          ]
+        }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "required": [
+        "id",
+        "story",
+        "selected_media",
+        "claims"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/text"
+        },
+        "story": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 28
+        },
+        "selected_media": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/media"
+          }
+        },
+        "claims": {
+          "type": "array",
+          "minItems": 1
+        }
+      }
+    },
+    "highlight": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/memory"
+        },
+        {
+          "required": [
+            "parent_chapter_id"
+          ],
+          "properties": {
+            "parent_chapter_id": {
+              "$ref": "#/$defs/text"
+            }
+          }
+        }
+      ]
+    },
+    "chapter": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "story",
+        "preview_story",
+        "selected_media",
+        "highlights",
+        "claims",
+        "sentence_claims"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/text"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "story": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preview_story": {
+          "$ref": "#/$defs/text"
+        },
+        "selected_media": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "$ref": "#/$defs/media"
+          }
+        },
+        "highlights": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/highlight"
+          }
+        },
+        "claims": {
+          "type": "array",
+          "minItems": 1
+        },
+        "sentence_claims": {
+          "type": "array",
+          "minItems": 1
+        },
+        "selection_focus": {
+          "$ref": "#/$defs/selection_focus"
+        },
+        "hero_frame_id": {
+          "$ref": "#/$defs/text"
+        },
+        "hero_reason": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "selection_focus": {
+      "type": "object",
+      "required": [
+        "experience_kind",
+        "focus",
+        "fact_ids"
+      ],
+      "properties": {
+        "experience_kind": {
+          "enum": [
+            "ZOO_ANIMALS",
+            "CYCLING",
+            "CITYWALK",
+            "FISHING",
+            "FLY_FISHING",
+            "KAYAK_FISHING",
+            "FAMILY_OUTING",
+            "CHILDREN_PLAY",
+            "COOKING",
+            "DINING",
+            "MARKET_SHOPPING",
+            "NATURE_WALK",
+            "GARDEN",
+            "PARK_LEISURE",
+            "OUTDOOR_SCENERY",
+            "MUSEUM",
+            "OTHER",
+            "UNCERTAIN"
+          ]
+        },
+        "focus": {
+          "$ref": "#/$defs/text"
+        },
+        "fact_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "editor_policy": {
+            "const": "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V06"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "pipeline_version": {
+                "const": "X02_PRODUCT_EDITOR_V06"
+              }
+            }
+          },
+          "chapters": {
+            "items": {
+              "required": [
+                "selection_focus",
+                "hero_frame_id",
+                "hero_reason"
+              ],
+              "properties": {
+                "selected_media": {
+                  "items": {
+                    "required": [
+                      "representative_frame_id",
+                      "selection_fact_ids",
+                      "selection_reason",
+                      "selection_role"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "editor_policy": {
+            "const": "EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "pipeline_version": {
+                "const": "X02_PRODUCT_EDITOR_V07"
+              }
+            }
+          },
+          "chapters": {
+            "items": {
+              "required": [
+                "selection_focus",
+                "hero_frame_id",
+                "hero_reason"
+              ],
+              "properties": {
+                "selected_media": {
+                  "items": {
+                    "required": [
+                      "representative_frame_id",
+                      "selection_fact_ids",
+                      "selection_reason",
+                      "selection_role"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

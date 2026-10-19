@@ -7,6 +7,10 @@ name = "diary-one-cloud-intelligence"
 version = "0.4.1"
 description = "Diary One staged real-media preview, Production-shaped V1 reference, and validation harness"
 requires-python = ">=3.9"
+dependencies = ["jsonschema>=4.23.0", "Pillow>=10.4.0"]
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-subtests"]
 
 [project.scripts]
 diary-one-ci = "diary_one_ci.cli:main"

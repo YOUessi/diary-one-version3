@@ -18,6 +18,7 @@ export type SourceUriEntry = { uri: string; media_kind: 'PHOTO' | 'VIDEO' | stri
 
 export type ChapterMediaHints = {
   heroAssetId?: string;
+  heroFrameId?: string;
   selectedMedia?: PreviewSelectedMedia[];
   momentIds: string[];
   timeLabel?: string;
@@ -114,8 +115,11 @@ export function applyChapterMediaHints(
     if (selectedHero && hints.heroAssetId && selectedHero.asset_id !== hints.heroAssetId) {
       throw new Error('Hero asset does not match the selected hero.');
     }
-    const heroFrame = selectedHero
-      ? frameUriForAsset(assetIndex, selectedHero.asset_id, selectedHero.evidence_frame_ids)
+    const heroSource = selectedHero?.source_asset_id ?? selectedHero?.asset_id;
+    const heroFrame = selectedHero && heroSource
+      ? frameUriForAsset(assetIndex, heroSource,
+        hints.heroFrameId ? [hints.heroFrameId] : selectedHero.representative_frame_id
+          ? [selectedHero.representative_frame_id] : selectedHero.evidence_frame_ids)
       : hints.heroAssetId ? frameUriForAsset(assetIndex, hints.heroAssetId) : undefined;
 
     const heroUri = heroFrame;
@@ -126,16 +130,18 @@ export function applyChapterMediaHints(
 
     const moments = selected
       .map((media, index) => {
+        const sourceId = media.source_asset_id ?? media.asset_id;
         const frame =
-          frameUriForAsset(assetIndex, media.asset_id, media.evidence_frame_ids);
+          frameUriForAsset(assetIndex, sourceId,
+            media.representative_frame_id ? [media.representative_frame_id] : media.evidence_frame_ids);
         if (!frame) throw new Error('Selected evidence frame is unavailable.');
         const kind =
-          sourceUris?.[media.asset_id]?.media_kind ??
-          assetIndex.get(media.asset_id)?.mediaKind;
-        if (kind === 'VIDEO' && !sourceUris?.[media.asset_id]?.uri) {
+          sourceUris?.[sourceId]?.media_kind ??
+          assetIndex.get(sourceId)?.mediaKind;
+        if (kind === 'VIDEO' && !sourceUris?.[sourceId]?.uri) {
           throw new Error('Selected video source is unavailable.');
         }
-        const playback = playbackUriForAsset(media.asset_id, frame, kind, sourceUris);
+        const playback = playbackUriForAsset(sourceId, frame, kind, sourceUris);
         return {
           id: `${ch.id}-media-${media.asset_id}-${index}`,
           label: momentLabel(hints.timeLabel, media, index, kind),
@@ -161,6 +167,7 @@ export function mediaHintsFromPreviewChapters(
   for (const ch of previewChapters) {
     out[ch.id] = {
       heroAssetId: ch.hero_asset_id,
+      heroFrameId: ch.hero_frame_id,
       selectedMedia: ch.selected_media,
       momentIds: ch.moment_ids ?? [],
       timeLabel: ch.time_label || undefined,

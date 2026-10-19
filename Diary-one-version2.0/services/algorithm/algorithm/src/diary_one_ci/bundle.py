@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Union
 
+from .mobileclip_evidence import PROFILE as MOBILECLIP_PROFILE, BALANCED_PROFILE, REPLAY_PROFILE, validate_mobileclip_frames
+
 from .core import (
     ASSET_DURATION_MS,
     CAPTURE_INTERVAL_MS,
@@ -363,6 +365,7 @@ def load_app_library_bundle(manifest_path: Path) -> ImportedEvidenceBundle:
         if not isinstance(frames, list):
             raise ValueError(f"assets[{index}].frames must be an array")
         duration_ms = asset.get("original_duration_ms")
+        mobileclip = is_v04 and kind == "VIDEO" and asset.get("evidence_sampling_profile") in (MOBILECLIP_PROFILE, BALANCED_PROFILE, REPLAY_PROFILE)
         if uses_duration_windows:
             window_count = int(asset["evidence_window_count"])
             profile = str(asset["evidence_sampling_profile"])
@@ -387,7 +390,7 @@ def load_app_library_bundle(manifest_path: Path) -> ImportedEvidenceBundle:
                     "VIDEO_SINGLE_WINDOW_THREE"
                     if expected_windows == 1 else "VIDEO_MULTI_WINDOW_TWO_PER_WINDOW"
                 )
-            if window_count != expected_windows or len(frames) != expected_frames or profile != expected_profile:
+            if not mobileclip and (window_count != expected_windows or len(frames) != expected_frames or profile != expected_profile):
                 raise ValueError(f"assets[{index}] does not match the duration-aware Evidence profile")
         else:
             if len(frames) != 3:
@@ -409,10 +412,10 @@ def load_app_library_bundle(manifest_path: Path) -> ImportedEvidenceBundle:
                 _reject_unexpected(frame, _APP_LIBRARY_BUNDLE_V03_FRAME_FIELDS, location)
                 _v03_nonempty_string(frame["frame_id"], f"{location}.frame_id")
                 _v03_integer(frame["window_index"], f"{location}.window_index")
-                if frame["window_index"] > 5:
+                if frame["window_index"] > (11 if mobileclip else 5):
                     raise ValueError(f"{location}.window_index must be <= 5")
                 _v03_integer(frame["window_count"], f"{location}.window_count", minimum=1)
-                if frame["window_count"] not in (1, 2, 4, 6):
+                if frame["window_count"] not in (range(1, 13) if mobileclip else (1, 2, 4, 6)):
                     raise ValueError(f"{location}.window_count is invalid")
                 allowed_roles = {
                     "PHOTO_REPRESENTATIVE", "WINDOW_EARLY", "WINDOW_MIDDLE", "WINDOW_LATE",
@@ -448,7 +451,9 @@ def load_app_library_bundle(manifest_path: Path) -> ImportedEvidenceBundle:
                 and timestamp_valid
             )
             frame_count += 1
-        if uses_duration_windows:
+        if mobileclip:
+            validate_mobileclip_frames(asset)
+        if uses_duration_windows and not mobileclip:
             if any(int(frame["window_count"]) != window_count for frame in frames):
                 raise ValueError(f"assets[{index}] frame window_count mismatch")
             if sorted(int(frame["window_index"]) for frame in frames) != (
