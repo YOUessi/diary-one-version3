@@ -8,6 +8,9 @@ require.extensions['.ts'] = (module, filename) => module._compile(ts.transpileMo
   { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText, filename);
 const originalLoad = Module._load;
 Module._load = function(name, ...args) {
+  if (name === 'expo-file-system') return { File: class {
+    async bytes() { throw Error('Publication metadata tests must not read files'); }
+  } };
   if (name === 'expo-file-system/legacy') return {};
   if (name === 'expo-crypto') return { CryptoDigestAlgorithm: { SHA1: 'sha1' },
     digest: async (algorithm, bytes) => Uint8Array.from(crypto.createHash(algorithm).update(bytes).digest()).buffer };

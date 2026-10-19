@@ -94,9 +94,13 @@ function analyzerHarness() {
   };
   const stubs = {
     'expo-asset': { Asset: { fromModule: name => ({ localUri: `file:///${path.basename(name)}`, downloadAsync: async () => {} }) } },
-    'expo-file-system/legacy': { EncodingType: { Base64: 'base64' }, readAsStringAsync: async uri => {
-      calls.reads.push(uri); if (faults.readError && !uri.includes('prompts')) throw Error(faults.readError);
-      return Buffer.alloc(uri.includes('prompts') ? manifest.labels.length * 512 * 4 : 4).toString('base64');
+    'expo-file-system': { File: class {
+      constructor(uri) { this.uri = uri; }
+      async bytes() {
+        const uri = this.uri;
+        calls.reads.push(uri); if (faults.readError && !uri.includes('prompts')) throw Error(faults.readError);
+        return new Uint8Array(uri.includes('prompts') ? manifest.labels.length * 512 * 4 : 4);
+      }
     } },
     'jpeg-js': { decode: () => { if (faults.jpegError) throw Error(faults.jpegError); return { width: 1, height: 1, data: new Uint8Array(4) }; } },
     'onnxruntime-react-native': ort,
@@ -105,7 +109,7 @@ function analyzerHarness() {
     '../../../assets/models/mobileclip-s0-fp16/prompts.f32.bin': 'prompts.f32.bin',
     '../../pipeline/sha256File': { sha256File: async uri => faults.badHash ? 'wrong' : manifest.files[path.basename(uri)].sha256 },
     '../similarity': load('src/evidence/similarity.ts'),
-    './pixels': { preprocess: () => new Float32Array(3 * 256 * 256), pixelQuality: () => ({ eligibleForSelection: true }) },
+    './pixels': { preprocessAsync: async (_, assertCurrent) => { if (faults.preprocessGate) await faults.preprocessGate.promise; assertCurrent(); return new Float32Array(3 * 256 * 256); }, pixelQuality: () => ({ eligibleForSelection: true }) },
     './sessionLifecycle': load('src/evidence/mobileclip/sessionLifecycle.ts'),
     '../videoWindows': load('src/evidence/videoWindows.ts'),
   };
@@ -120,6 +124,17 @@ test('analyzer module reevaluation preserves its runtime queue/session without p
   await settle(); assert.equal(h.calls.creates, 1); h.faults.initGate.resolve();
   assert.equal((await first).length, 1); assert.equal((await second).length, 1);
   assert.equal(h.calls.creates, 1); assert.equal(h.calls.runs, 2); await reloaded.releaseMobileClip(); assert.equal(h.calls.releases, 1);
+});
+
+test('cancellation during preprocessing does not create tensors or call native inference', async () => {
+  const h = analyzerHarness(), controller = new AbortController();
+  h.faults.preprocessGate = deferred();
+  const pending = h.api.analyzeMobileClip(['photo'], { signal: controller.signal });
+  const rejection = assert.rejects(pending, { name: 'AbortError' });
+  await settle(); controller.abort(); h.faults.preprocessGate.resolve(); await rejection;
+  assert.equal(h.calls.runs, 0); assert.equal(h.calls.tensorDisposals, 0);
+  delete h.faults.preprocessGate;
+  assert.equal((await h.api.analyzeMobileClip(['photo'])).length, 1);
 });
 
 test('invalid model checksum fails closed before native creation and can be retried', async () => {

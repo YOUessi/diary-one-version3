@@ -151,3 +151,18 @@ test('resume request for the current session does not retry an active runner aft
   await run; await new Promise(resolve => setImmediate(resolve));
   assert.equal(h.calls.poll, 1); assert.equal(h.state.pipelineTasks[0].status, 'failed');
 });
+
+for (const hasPrior of [true, false]) {
+  test(`interrupted local build clears the preparing banner (prior content: ${hasPrior})`, () => {
+    const h = harness();
+    Object.assign(h.state.pipelineTasks[0], { status: 'building_evidence', productionJobId: undefined,
+      bundleJsonPath: undefined, bundleDir: undefined });
+    h.state.todayStatus = hasPrior ? 'READY_PREPARING' : 'PREPARING';
+    h.state.chapters = hasPrior ? [{ id: 'prior', dateKey: '2026-10-19' }] : [];
+    h.api.resumeInFlightCloudJobs();
+    assert.equal(h.state.pipelineTasks[0].status, 'failed');
+    assert.equal(h.state.todayStatus, hasPrior ? 'READY' : 'PARTIAL');
+    assert.match(h.state.pipelineTasks[0].message, /select.*again/i);
+    assert.equal(h.calls.submit, 0);
+  });
+}

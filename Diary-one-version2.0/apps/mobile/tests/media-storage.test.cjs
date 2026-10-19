@@ -43,6 +43,10 @@ function harness(t) {
     vm.runInNewContext(code, { module, exports: module.exports, Date, AbortController, atob, Uint8Array, ArrayBuffer,
       require(name) {
         if (name === 'expo-file-system/legacy') return adapter;
+        if (name === 'expo-file-system') return { File: class {
+          constructor(uri) { this.uri = uri; }
+          async bytes() { return fs.readFileSync(filePath(this.uri)); }
+        } };
         if (name === 'expo-sqlite') return { openDatabaseAsync: async () => sql };
         if (name === 'expo-crypto') return { randomUUID: crypto.randomUUID, CryptoDigestAlgorithm: { SHA256: 'sha256' }, digest: async (algo, bytes) => Uint8Array.from(crypto.createHash(algo).update(bytes).digest()).buffer };
         if (name === './evidenceNormalize') return { EVIDENCE_FRAME: { width: 768, height: 1024 }, writeNormalizedFrame: async (source, dest) => fs.copyFileSync(filePath(source), filePath(dest)) };

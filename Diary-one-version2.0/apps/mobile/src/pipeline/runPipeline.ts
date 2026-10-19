@@ -413,6 +413,7 @@ export function resumeInFlightCloudJobs(): void {
     useAppStore.getState().pipelineTasks.some((task) => task.id === id);
   const tasks = useAppStore.getState().pipelineTasks;
   const stuck = ['queued', 'building_evidence', 'bundle_ready', 'uploading'] as const;
+  let interruptedToday = false;
   for (const t of tasks) {
     if (activeRunners.has(t.id)) {
       if (ownerToken && activeRunners.get(t.id) !== ownerToken) {
@@ -421,11 +422,26 @@ export function resumeInFlightCloudJobs(): void {
       continue;
     }
     if (stuck.includes(t.status as (typeof stuck)[number]) && !t.productionJobId) {
+      interruptedToday ||= t.dayKey === diaryTodayKey();
       patchTask(t.id, {
         status: 'failed',
-        message: 'Interrupted before cloud submit',
+        message: t.bundleJsonPath
+          ? 'Interrupted before cloud submit. Try again to resume.'
+          : 'Import interrupted. Select these photos or videos again to continue.',
         error: 'stale_local_pipeline_state',
       });
+    }
+  }
+
+  if (interruptedToday) {
+    const state = useAppStore.getState();
+    const today = diaryTodayKey();
+    const stillRunning = state.pipelineTasks.some((task) => task.dayKey === today &&
+      task.status !== 'failed' && task.status !== 'succeeded');
+    if (!stillRunning) {
+      const hasReady = state.chapters.some((chapter) => chapter.dateKey === today) ||
+        Boolean(state.smallMemoriesByDate[today]?.length);
+      useAppStore.setState({ todayStatus: hasReady ? 'READY' : 'PARTIAL' });
     }
   }
 

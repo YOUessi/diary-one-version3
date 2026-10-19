@@ -14,12 +14,12 @@ function harness(faults = {}) {
   const calls = { byteDigests: [], stringDigests: [] };
   const module = { exports: {} };
   vm.runInNewContext(source, { module, exports: module.exports, atob, Uint8Array, ArrayBuffer, require(name) {
-    if (name === 'expo-file-system/legacy') return { EncodingType: { Base64: 'base64' },
-      readAsStringAsync: async (uri, options) => {
-        assert.equal(options.encoding, 'base64');
+    if (name === 'expo-file-system') return { File: class {
+      constructor(uri) { this.uri = uri; }
+      async bytes() {
         if (faults.readError) throw faults.readError;
-        return fs.readFileSync(fileURLToPath(uri)).toString('base64');
-      } };
+        return fs.readFileSync(fileURLToPath(this.uri));
+      } } };
     if (name === 'expo-crypto') return { CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
       digest: async (algorithm, input) => {
         assert.equal(algorithm, 'SHA-256');

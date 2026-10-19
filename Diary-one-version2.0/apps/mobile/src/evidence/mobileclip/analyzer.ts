@@ -1,12 +1,12 @@
 import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system/legacy';
+import { File } from 'expo-file-system';
 import jpeg from 'jpeg-js';
 import type * as ORT from 'onnxruntime-react-native';
 import manifest from '../../../assets/models/mobileclip-s0-fp16/manifest.json';
 import { sha256File } from '../../pipeline/sha256File';
 import { normalizeVector } from '../similarity';
 import type { SemanticAnalyzeResult } from '../semanticAnalyzer';
-import { pixelQuality, preprocess } from './pixels';
+import { pixelQuality, preprocessAsync } from './pixels';
 import { createSessionLifecycle, throwIfAnalysisCancelled } from './sessionLifecycle';
 
 export const MODEL_ID = manifest.model_id;
@@ -14,11 +14,6 @@ export const MODEL_SHA256 = manifest.files['image_encoder.onnx'].sha256;
 export const PROMPT_SHA256 = manifest.files['prompts.f32.bin'].sha256;
 export { BALANCED_V07_SAMPLING_PROFILE as SAMPLING_PROFILE } from '../videoWindows';
 export type Analysis = SemanticAnalyzeResult & { fullClassifications: NonNullable<SemanticAnalyzeResult['classifications']>; quality: ReturnType<typeof pixelQuality> };
-
-function bytesFromBase64(encoded: string): Uint8Array {
-  const binary = globalThis.atob(encoded);
-  return Uint8Array.from(binary, c => c.charCodeAt(0));
-}
 
 async function assetPath(module: number, expectedHash: string) {
   const asset = Asset.fromModule(module);
@@ -38,8 +33,8 @@ async function loadModel() {
   }
   const model = await assetPath(require('../../../assets/models/mobileclip-s0-fp16/image_encoder.onnx'), MODEL_SHA256);
   const promptFile = await assetPath(require('../../../assets/models/mobileclip-s0-fp16/prompts.f32.bin'), PROMPT_SHA256);
-  const promptBytes = bytesFromBase64(await FileSystem.readAsStringAsync(promptFile, { encoding: FileSystem.EncodingType.Base64 }));
-  const view = new DataView(promptBytes.buffer);
+  const promptBytes = await new File(promptFile).bytes();
+  const view = new DataView(promptBytes.buffer, promptBytes.byteOffset, promptBytes.byteLength);
   const prompts = new Float32Array(manifest.labels.length * manifest.embedding_dim);
   if (promptBytes.length !== prompts.length * 4) throw new Error('MobileCLIP prompt shape mismatch');
   for (let i = 0; i < prompts.length; i++) prompts[i] = view.getFloat32(i * 4, true);
@@ -75,10 +70,12 @@ export function analyzeMobileClip(uris: string[], options: { signal?: AbortSigna
     const results: Analysis[] = [];
     for (const uri of uris) {
       assertCurrent();
-      const bytes = bytesFromBase64(await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 }));
+      const bytes = await new File(uri).bytes();
       assertCurrent();
       const pixels = jpeg.decode(bytes, { useTArray: true, formatAsRGBA: true, maxResolutionInMP: 20, maxMemoryUsageInMB: 128 });
-      const tensor = new ort.Tensor('float32', preprocess(pixels), [1, 3, 256, 256]);
+      const input = await preprocessAsync(pixels, assertCurrent);
+      assertCurrent();
+      const tensor = new ort.Tensor('float32', input, [1, 3, 256, 256]);
       let outputs: ORT.InferenceSession.OnnxValueMapType | undefined;
       try {
         outputs = await session.run({ image: tensor });

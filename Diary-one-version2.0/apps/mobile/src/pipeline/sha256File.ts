@@ -1,22 +1,9 @@
 import * as Crypto from 'expo-crypto';
-import * as FileSystem from 'expo-file-system/legacy';
+import { File } from 'expo-file-system';
 
 /** Multipart sends compact JSON, rather than the pretty-printed local bundle file. */
 export async function sha256SubmittedManifest(manifest: unknown): Promise<string> {
   return Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, JSON.stringify(manifest));
-}
-
-function base64ToUint8Array(base64: string): Uint8Array {
-  const atobFn = globalThis.atob;
-  if (!atobFn) {
-    throw new Error('Cannot decode file bytes (missing atob)');
-  }
-  const binary = atobFn(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i += 1) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes;
 }
 
 function arrayBufferToHex(buffer: ArrayBuffer): string {
@@ -30,13 +17,9 @@ function arrayBufferToHex(buffer: ArrayBuffer): string {
 
 /** SHA-256 of the file's raw bytes (must match X02 `sha256_file`). */
 export async function sha256File(uri: string): Promise<string> {
-  const base64 = await FileSystem.readAsStringAsync(uri, {
-    encoding: FileSystem.EncodingType.Base64,
-  });
-  const bytes = base64ToUint8Array(base64);
-  // Keep a concrete buffer for strict TS; the Expo native bridge requires a TypedArray view.
-  const ab = new ArrayBuffer(bytes.byteLength);
-  new Uint8Array(ab).set(bytes);
-  const digest = await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, new Uint8Array(ab));
+  // Native byte reads avoid a large Base64 string and synchronous JS decoding
+  // when hashing videos or the model. The digest still covers every raw byte.
+  const bytes = await new File(uri).bytes();
+  const digest = await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, bytes);
   return arrayBufferToHex(digest);
 }

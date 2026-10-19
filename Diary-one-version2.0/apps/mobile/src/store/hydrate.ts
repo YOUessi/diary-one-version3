@@ -355,6 +355,10 @@ export async function bootstrapStore(): Promise<void> {
     /* ignore */
   }
 
+  // Bootstrap runs before subscribePersist is installed. Persist session
+  // invalidation and interrupted-task recovery before showing the app.
+  await flushPersist();
+
 }
 
 

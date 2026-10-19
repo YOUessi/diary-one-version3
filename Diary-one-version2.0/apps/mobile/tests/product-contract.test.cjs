@@ -15,6 +15,10 @@ const sql = { execAsync: async q => db.exec(q), getFirstAsync: async (q, ...a) =
   getAllAsync: async (q, ...a) => db.prepare(q).all(...a), runAsync: async (q, ...a) => db.prepare(q).run(...a) };
 const oldLoad = Module._load;
 Module._load = function(name, ...args) {
+  if (name === 'expo-file-system') return { File: class {
+    constructor(uri) { this.uri = uri; }
+    async bytes() { return fs.readFileSync(new URL(this.uri)); }
+  } };
   if (name === 'expo-crypto') return { CryptoDigestAlgorithm: { SHA1: 'sha1', SHA256: 'sha256' },
     digest: async (algo, bytes) => Uint8Array.from(crypto.createHash(algo).update(bytes).digest()).buffer };
   if (name === 'expo-file-system/legacy') return {

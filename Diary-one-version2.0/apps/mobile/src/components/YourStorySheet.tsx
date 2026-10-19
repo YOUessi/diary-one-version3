@@ -78,6 +78,9 @@ export function YourStorySheet({
       ref={ref}
       index={-1}
       snapPoints={snapPoints}
+      // This editor uses fixed percentage stops, not content measurements.
+      // v5 otherwise waits for an unreported content height and cannot open.
+      enableDynamicSizing={false}
       enablePanDownToClose={!saving && !dirty}
       onChange={handleSheetChange}
       backdropComponent={renderBackdrop}

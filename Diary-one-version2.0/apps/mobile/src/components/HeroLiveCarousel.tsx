@@ -77,10 +77,10 @@ export function HeroLiveCarousel({ slides, activePlaybackId, onPlay, onStop, pla
           style={styles.liveChip}
           onPress={() => liveOn ? onStop() : onPlay(liveId)}
           accessibilityRole="button"
-          accessibilityLabel={liveOn ? 'Pause video' : 'Play video'}
+          accessibilityLabel={liveOn ? 'Close video' : 'Play video'}
           hitSlop={8}
         >
-          <Text style={styles.liveText}>{liveOn ? 'Pause' : 'Play'}</Text>
+          <Text style={styles.liveText}>{liveOn ? 'Close' : 'Play'}</Text>
         </Pressable>
       ) : null}
       {slide.title && !liveOn ? (
