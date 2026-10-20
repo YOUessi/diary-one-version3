@@ -69,3 +69,9 @@
 - Validation evidence is the native acceptance checkpoint above: 152 App tests, Release/Debug builds, 12 distinct cycling videos / 28 frames / 2 Chapters / 1 Aha. This is not a new run or full-corpus acceptance; content quality, complete localization and Aha image UI gaps remain open.
 - Historical cloud tests reported 25 skipped test cases because private run archives were absent; this is a test-case count, not 25 missing video files.
 - At preparation time, target branch does not exist remotely. SSH and existing HTTPS credentials both authenticated as `YOUessi` but repository write access was denied. Publication remains pending authorized write access; no remote main or deployment was changed.
+
+### 2026-10-20 · Publication destination update
+
+- The user created and selected `YOUessi/diary-one-version3` as the publication repository. The requested branch remains `version3.0`; `main` is not a push target. The earlier denied testbench publication above is preserved as history.
+- Prepared from the clean local `version3.0` commit `843e3b91b9e9949a7bf68ab6845de43d25d64bf9`. This update changes only this record; product code remains identical to the validated `317595e276e8be8df2700a33095f6f62a8466775`.
+- Publication transport and remote commit verification are recorded in the separate workspace daily log and evidence. Publishing this branch does not deploy the cloud services or close the known product quality gaps.
