@@ -59,3 +59,13 @@
 - The verifier initially rejected immutable sidecar URIs from the old app sandbox after upgrade. That failure is retained; verification now permits only the exact old task/bundle root proven in pre-upgrade snapshots, while current UI SQLite paths remain subject to strict current-container checks. The relocated originals are independently hashed against the uploaded manifest.
 - Duplicate import through Photos correctly reported Already imported; there remain exactly three native cloud jobs. All dispatched jobs are terminal, with only the two deliberate missing-frame/SHA fault jobs failed. The final Release/Debug receipt is `c68f5d299251aa6920aa1a724a6da023bc718e2a43f0eb07a344b35d9444af5b`; final mobile 152/152, strategy/pixel parity, typecheck and lint checks pass. No public deployment or push.
 - Aha text is verified in the actual Diary UI. The upstream text-only SmallMemory model still does not carry/display the cloud-selected Aha imagery. This integration/design gap, incomplete localization and misleading technical progress copy remain explicitly open, along with content quality review.
+
+
+## version3.0 · 2026-10-20
+
+- Requested publication destination: `7tiantian/diary-one-web-testbenches`, branch `version3.0`. Neither repository's `main` is a publication target.
+- Created from `feat/main-algorithms-only` at `317595e276e8be8df2700a33095f6f62a8466775`; the source worktree was clean. This branch contains the current full app/BFF/algorithm snapshot and its existing history, not changes to the testbench main tree.
+- This preparation adds only this branch record. MobileCLIP-S0 FP16 v07, cloud R5_10 and previously validated application code remain identical to the source commit.
+- Validation evidence is the native acceptance checkpoint above: 152 App tests, Release/Debug builds, 12 distinct cycling videos / 28 frames / 2 Chapters / 1 Aha. This is not a new run or full-corpus acceptance; content quality, complete localization and Aha image UI gaps remain open.
+- Historical cloud tests reported 25 skipped test cases because private run archives were absent; this is a test-case count, not 25 missing video files.
+- At preparation time, target branch does not exist remotely. SSH and existing HTTPS credentials both authenticated as `YOUessi` but repository write access was denied. Publication remains pending authorized write access; no remote main or deployment was changed.
