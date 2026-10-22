@@ -19,7 +19,7 @@ from . import narrative_focus, frame_selection, frame_observation, final_moment_
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_19'
+EDITOR_REVISION = 'SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_20'
 
 
 def obj(properties, required=None):
@@ -586,8 +586,9 @@ def repair_boundary_contract(raw, schema, facts, *, ask, audit):
     """One bounded model repair of malformed pair records, preserving all content.
 
     A missing pair identity must not be guessed from its facts. This repair is
-    available only when the remaining response satisfies the wire schema; the
-    ordinary semantic compiler still decides whether any chapter may publish.
+    available when the textual structure is valid. A bad hero can be deferred:
+    it cannot affect the requested pair identity and remains a hard rejection
+    at full compilation. No image or content is replaced by this repair.
     """
     from jsonschema import Draft202012Validator
     if not isinstance(raw, dict) or not isinstance(raw.get('chapters'), list):
@@ -600,7 +601,16 @@ def repair_boundary_contract(raw, schema, facts, *, ask, audit):
     relaxed['required'].remove('chapter_boundaries')
     relaxed.pop('allOf', None)
     rest = {k: v for k, v in raw.items() if k != 'chapter_boundaries'}
-    if next(Draft202012Validator(relaxed).iter_errors(rest), None):
+    deferred_hero_issues = []
+    for error in Draft202012Validator(relaxed).iter_errors(rest):
+        path = list(error.absolute_path)
+        if (len(path) == 3 and path[0] == 'chapters' and isinstance(path[1], int)
+                and path[2] == 'hero_candidate_id' and error.validator == 'enum'
+                and (error.instance is None or isinstance(error.instance, str))):
+            deferred_hero_issues.append({'path': path, 'message': error.message})
+        else:
+            return raw
+    if len({c['id'] for c in chapters}) != len(chapters):
         return raw
     if not chapter_boundary_issues(raw, chapters):
         return raw
@@ -608,7 +618,8 @@ def repair_boundary_contract(raw, schema, facts, *, ask, audit):
     count = len(chapters) * (len(chapters) - 1) // 2
     small['properties']['chapter_boundaries'].update(minItems=count, maxItems=count)
     record = {'stage': 'S09D_PRODUCT_BOUNDARY_REPAIR', 'status': 'REQUESTED',
-              'raw_boundaries': deepcopy(raw.get('chapter_boundaries'))}
+              'raw_boundaries': deepcopy(raw.get('chapter_boundaries')),
+              'deferred_hero_issues': deferred_hero_issues}
     audit.append(record)
     patch = ask(record['stage'],
         '只修复chapter_boundaries。对给定章节每一对提供一次有事实支持的独立经历边界，'
@@ -845,11 +856,12 @@ def compile_structure_wire(output, facts, assets, chapter_limit=4, *, candidates
 
 
 
-def media_selection_candidates(facts, assets, bundle, preferred_assets=(), max_frames=18):
+def media_selection_candidates(facts, assets, bundle, preferred_assets=(), max_frames=18,
+                               chapter_fact_groups=None):
     """Bounded, audited candidate sampling; the model still chooses every image.
 
-    All verified facts survive this display budget. Cover assets first, then
-    sample within each asset; never manufacture a publication choice here.
+    Reserve a candidate for each provisional chapter before filling the asset
+    budget. These are options for model review, never publication choices.
     """
     eligible = {}
     order = list(dict.fromkeys(list(preferred_assets) + list(assets)))
@@ -868,10 +880,25 @@ def media_selection_candidates(facts, assets, bundle, preferred_assets=(), max_f
         indices = list(dict.fromkeys([len(frames) // 2, 0, len(frames) - 1] + list(range(len(frames)))))
         ranked[aid] = frames if total <= max_frames else [frames[i] for i in indices]
     chosen = []
+    groups = chapter_fact_groups or {}
+    options = {}
+    for cid, members in groups.items():
+        supported = {(facts[fid]['asset_id'], frame_id)
+                     for fid in members if fid in facts and facts[fid].get('visual_reviewed')
+                     for frame_id in facts[fid].get('evidence_frame_ids', [])}
+        options[cid] = [(aid, frame) for aid, frames in ranked.items() for frame in frames
+                        if (aid, frame['frame_id']) in supported]
+        if any((aid, frame['frame_id']) in supported for aid, frame in chosen):
+            continue
+        if options[cid] and len(chosen) < max_frames:
+            chosen.append(options[cid][0])
+    selected = {(aid, frame['frame_id']) for aid, frame in chosen}
     for index in range(max((len(fs) for fs in ranked.values()), default=0)):
         for aid, frames in ranked.items():
-            if index < len(frames) and len(chosen) < max_frames:
+            if (index < len(frames) and len(chosen) < max_frames
+                    and (aid, frames[index]['frame_id']) not in selected):
                 chosen.append((aid, frames[index]))
+                selected.add((aid, frames[index]['frame_id']))
     shown, evidence, candidates = {}, [], []
     for aid, frame in chosen:
         frame_id = frame['frame_id']
@@ -880,9 +907,16 @@ def media_selection_candidates(facts, assets, bundle, preferred_assets=(), max_f
         candidates.append({'candidate_id': 'P%03d' % (len(candidates) + 1),
             'asset_id': aid, 'frame_id': frame_id, 'pts_ms': frame.get('source_timestamp_ms'),
             'fact_ids': [fid for fid, f in facts.items() if f['asset_id'] == aid and frame_id in f.get('evidence_frame_ids', [])]})
-    audit = {'policy': 'VERIFIED_FRAME_ASSET_COVERAGE_THEN_WITHIN_ASSET_SAMPLING', 'max_frames': max_frames,
+    audit = {'policy': 'VERIFIED_CHAPTER_COVERAGE_THEN_ASSETS_THEN_WITHIN_ASSET_SAMPLING', 'max_frames': max_frames,
              'eligible_frame_count': total, 'shown_frame_count': len(chosen), 'shown_frames': candidates,
-             'omitted_asset_ids': [aid for aid in eligible if aid not in shown]}
+             'omitted_asset_ids': [aid for aid in eligible if aid not in shown],
+             'chapter_coverage': [{'chapter_id': cid,
+                 'status': 'COVERED' if any((aid, f['frame_id']) in selected for aid, f in options[cid]) else
+                           'BUDGET_EXHAUSTED' if options[cid] else 'NO_VERIFIED_CANDIDATE',
+                 'candidate_ids': [c['candidate_id'] for c in candidates
+                                   if any((c['asset_id'], c['frame_id']) == (aid, f['frame_id'])
+                                          for aid, f in options[cid])]}
+                 for cid in groups]}
     return shown, evidence, audit
 
 
@@ -2567,7 +2601,7 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
                     packet['narrative_brief_output'], chapters)
             except (KeyError, TypeError, ValueError, OSError, x02.X02Error) as exc:
                 packet['narrative_brief_failure'] = type(exc).__name__
-                if isinstance(exc, x02.X02StageCallError):
+                if isinstance(exc, x02.X02StageCallError) and all(r is not exc.stage_run for r in stage_runs):
                     stage_runs.append(exc.stage_run)
                 # Priorities are hints; all original facts remain available.
         # Do not duplicate facts in both a flat list and source groups, or anchor
@@ -2684,7 +2718,7 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
                 'error_type': type(exc).__name__, 'reviewed': False} for m in failed_items)
         else:
             packet['review_ledger'].append({'status': 'BLOCKED', 'reason': type(exc).__name__, 'reviewed': False})
-        if isinstance(exc, x02.X02StageCallError):
+        if isinstance(exc, x02.X02StageCallError) and all(r is not exc.stage_run for r in stage_runs):
             stage_runs.append(exc.stage_run)
     packet['validated_narrative_briefs'] = briefs if items else {}
     verify_final_chapter_copy(packet, items, stages[1] + '_FINAL_VERIFY',
@@ -2802,7 +2836,8 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
     if facts:
         preferred = list(dict.fromkeys(facts[f]['asset_id'] for c in chapters for f in c['fact_ids'] if f in facts))
         shown_media_frames, media_evidence, media_selection_audit = media_selection_candidates(
-            facts, asset_map, bundle, preferred_assets=preferred)
+            facts, asset_map, bundle, preferred_assets=preferred,
+            chapter_fact_groups={c['id']: c['fact_ids'] for c in chapters})
         candidates = media_selection_audit['shown_frames']
         media_selection_audit['independent_scene_clues'] = frame_selection.scene_clues_from_visual_outputs(
             visual_outputs, candidates, facts)
@@ -2984,7 +3019,7 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             reviewed.update(recovery_written['reviewed'])
         except (ValueError, OSError, x02.X02Error) as exc:
             recovery_ledger.append({'status': 'BLOCKED', 'reason': type(exc).__name__})
-            if isinstance(exc, x02.X02StageCallError):
+            if isinstance(exc, x02.X02StageCallError) and all(r is not exc.stage_run for r in stage_runs):
                 stage_runs.append(exc.stage_run)
     recovery_ledger = reconcile_published_capacity(recovery_ledger, moments, reviewed)
     final_assets = visible_assets(chapters, moments, reviewed, facts)

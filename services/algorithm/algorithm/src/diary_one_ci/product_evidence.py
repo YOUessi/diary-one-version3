@@ -566,7 +566,8 @@ def review_moments(moments, chapters, facts, ask, stage='S10_PRODUCT_MOMENT_VALU
             break
         except (ValueError, OSError, x02.X02Error) as exc:
             failures.append({'type': type(exc).__name__, 'code': getattr(exc, 'code', 'UNKNOWN')})
-            if isinstance(exc, x02.X02StageCallError) and stage_runs is not None:
+            if (isinstance(exc, x02.X02StageCallError) and stage_runs is not None
+                    and all(r is not exc.stage_run for r in stage_runs)):
                 stage_runs.append(exc.stage_run)
             if not isinstance(exc, (ValueError, x02.X02StageCallError)) or (
                     isinstance(exc, x02.X02StageCallError) and exc.stage_run.call_status != 'RESPONSE_INVALID'):
@@ -600,7 +601,8 @@ def review_moments(moments, chapters, facts, ask, stage='S10_PRODUCT_MOMENT_VALU
             output = {**combined, 'original_output': output, 'contract_repair_output': repaired_output}
         except (ValueError, OSError, x02.X02Error) as exc:
             failures.append({'type': type(exc).__name__, 'code': getattr(exc, 'code', 'UNKNOWN')})
-            if isinstance(exc, x02.X02StageCallError) and stage_runs is not None:
+            if (isinstance(exc, x02.X02StageCallError) and stage_runs is not None
+                    and all(r is not exc.stage_run for r in stage_runs)):
                 stage_runs.append(exc.stage_run)
     if image_review:
         for moment in kept:

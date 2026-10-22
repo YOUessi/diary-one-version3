@@ -103,3 +103,13 @@ def test_recovery_waits_before_repeating_a_transient_request(tmp_path, monkeypat
     result = x02.run_x02_product(make_x02_bundle(tmp_path, 1), InterruptedGateway('S09_PRODUCT_CONTRACT_REPAIR'))
     assert result['chapters']
     assert len(delays) == 1 and 0.5 <= delays[0] <= 0.75
+
+
+@pytest.mark.parametrize('target,expected', [('S10_PRODUCT_MOMENT_VALUE', 2),
+    ('S11_PRODUCT_WRITER', 4), ('S11_PRODUCT_WRITER_NARRATIVE_BRIEF', 2)])
+def test_caught_failed_attempts_are_counted_once(tmp_path, target, expected):
+    gateway = InterruptedGateway(target, failures=99)
+    result = x02.run_x02_product(make_x02_bundle(tmp_path, 2), gateway)
+    assert gateway.attempts == expected
+    assert result['trace']['model_call_failed_count'] == expected
+    assert result['trace']['model_calls'] == len(gateway.calls)

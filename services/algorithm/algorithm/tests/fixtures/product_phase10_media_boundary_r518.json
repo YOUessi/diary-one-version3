@@ -1,0 +1,2806 @@
+{
+  "provenance": {
+    "source": "national_park phase_10 attempt_02, 20261023_three_group_recovery_v1",
+    "revision": "SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_18",
+    "usage": "structural regression, not semantic quality gold"
+  },
+  "facts": {
+    "F001": {
+      "fact_id": "9e28c3c1-482f-5548-8060-d8b11247102e",
+      "text": "画面显示一条铺装道路，路旁有高大的针叶树（红杉），左侧树干上钉有一块橙色标牌，写有“Utility Parking Only”。",
+      "evidence_frame_ids": [
+        "national_park_10_000011-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F001",
+      "asset_id": "V001",
+      "source_asset_id": "national_park_10_000011",
+      "observation_id": "d6664f2f-dbe5-59ce-98e3-09ce9a3d22c7",
+      "frame_pts_ms": [
+        4000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面显示一条铺装道路，路旁有高大的针叶树（红杉），左侧树干上钉有一块橙色标牌，写有“Utility Parking Only”。"
+    },
+    "F002": {
+      "fact_id": "2748a318-fd63-5b31-8b46-007f4e3b2260",
+      "text": "一名身穿深色衣物的人正背对镜头，行走在布满落叶和岩石的狭窄山径上。",
+      "evidence_frame_ids": [
+        "national_park_10_000095-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F002",
+      "asset_id": "V002",
+      "source_asset_id": "national_park_10_000095",
+      "observation_id": "cb9aee9c-f242-5161-ac34-e0db6d7d5dc5",
+      "frame_pts_ms": [
+        3000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "一名身穿深色衣物的人正背对镜头，行走在布满落叶和岩石的狭窄山径上。"
+    },
+    "F003": {
+      "fact_id": "31c6c9d6-5811-5abc-b33b-d8eeba012673",
+      "text": "画面展示了崎岖的山间小径，路面由泥土和碎石构成，左侧可见陡峭的岩壁与植被。",
+      "evidence_frame_ids": [
+        "national_park_10_000191-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F003",
+      "asset_id": "V003",
+      "source_asset_id": "national_park_10_000191",
+      "observation_id": "e2dd0b66-823f-5593-b914-9714ab05377a",
+      "frame_pts_ms": [
+        6000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面展示了崎岖的山间小径，路面由泥土和碎石构成，右侧可见陡峭的岩壁与植被。"
+    },
+    "F004": {
+      "fact_id": "529acd9c-f6c6-5d1e-95d9-d417d83c9bfe",
+      "text": "单帧画面显示一条泥土小径，左侧有散落的岩石和植被，右侧为巨大的灰色岩壁。",
+      "evidence_frame_ids": [
+        "national_park_10_000275-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F004",
+      "asset_id": "V004",
+      "source_asset_id": "national_park_10_000275",
+      "observation_id": "47059c46-7b8c-565a-8119-1905cd4e6ebc",
+      "frame_pts_ms": [
+        7000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "单帧画面显示一条泥土小径，左侧有散落的岩石和植被，右侧为巨大的灰色岩壁。"
+    },
+    "F005": {
+      "fact_id": "09828c2c-58ca-53bf-bff3-58753e572d99",
+      "text": "单帧画面展示一条位于高处的碎石土路，两侧生长着灌木丛，背景可见天空。",
+      "evidence_frame_ids": [
+        "national_park_10_000371-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F005",
+      "asset_id": "V005",
+      "source_asset_id": "national_park_10_000371",
+      "observation_id": "1fae8646-d383-5dc0-a600-8225cb14885b",
+      "frame_pts_ms": [
+        6000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "单帧画面展示一条位于高处的碎石土路，两侧生长着灌木丛，背景可见天空。"
+    },
+    "F006": {
+      "fact_id": "c84215ea-b6f2-5e6d-855d-9981b290dd2d",
+      "text": "单帧画面呈现穿过树林的狭窄土径，地面布满落叶、枯枝和石块。",
+      "evidence_frame_ids": [
+        "national_park_10_000455-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F006",
+      "asset_id": "V006",
+      "source_asset_id": "national_park_10_000455",
+      "observation_id": "c830f63d-d15f-50e5-b3f4-8d9d95f770d7",
+      "frame_pts_ms": [
+        6000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "单帧画面呈现穿过树林的狭窄土径，地面布满落叶、枯枝和石块。"
+    },
+    "F007": {
+      "fact_id": "d29a3b03-0386-5a85-b871-4672ab9578ce",
+      "text": "画面显示一条位于山脊上的岩石小径，两名背着背包的徒步者正背对镜头沿路行走。左侧可见远处的山谷与岩壁景观。",
+      "evidence_frame_ids": [
+        "national_park_10_000551-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F007",
+      "asset_id": "V007",
+      "source_asset_id": "national_park_10_000551",
+      "observation_id": "5d128ffb-3428-59db-b8aa-e4ecd4077386",
+      "frame_pts_ms": [
+        7000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面显示一条位于山脊上的岩石小径，两名背着背包的徒步者正背对镜头沿路行走。左侧可见远处的山谷与岩壁景观。"
+    },
+    "F008": {
+      "fact_id": "fe8fabd9-4786-5a6a-be3c-85e70b4b3526",
+      "text": "画面为第一人称视角拍摄的林间土路，路面干燥，两侧分布着针叶树和倒下的枯木。",
+      "evidence_frame_ids": [
+        "national_park_10_000635-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F008",
+      "asset_id": "V008",
+      "source_asset_id": "national_park_10_000635",
+      "observation_id": "fd8eaa06-a0bb-5efd-a8f8-8e42688976d4",
+      "frame_pts_ms": [
+        7000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面为第一人称视角拍摄的林间土路，路面干燥，两侧分布着针叶树和倒下的枯木。"
+    },
+    "F009": {
+      "fact_id": "5e9e139c-8e7d-59a4-b195-c24038fb2044",
+      "text": "画面展示了森林中的一处岔路口，左侧立有一块深色木质指示牌，右侧有一块巨大的灰色花岗岩。",
+      "evidence_frame_ids": [
+        "national_park_10_000719-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F009",
+      "asset_id": "V009",
+      "source_asset_id": "national_park_10_000719",
+      "observation_id": "dbbefa3d-bf70-5a7c-8450-bb7479622fe5",
+      "frame_pts_ms": [
+        9000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面展示了森林中的一处岔路口，左侧立有一块深色木质指示牌，右侧有一块巨大的灰色花岗岩。"
+    },
+    "F010": {
+      "fact_id": "ddaade3c-54d4-56e2-90e4-25871f457406",
+      "text": "画面展示了一条位于山坡上的泥土小径，两侧生长着灌木丛，远处可见连绵的山脉。",
+      "evidence_frame_ids": [
+        "national_park_10_000815-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F010",
+      "asset_id": "V010",
+      "source_asset_id": "national_park_10_000815",
+      "observation_id": "a7d9641c-e81b-551b-9020-1c85e01a1d77",
+      "frame_pts_ms": [
+        9967
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面展示了一条位于山坡上的泥土小径，两侧生长着灌木丛，远处可见连绵的山脉。"
+    },
+    "F011": {
+      "fact_id": "e956b3b0-61c7-5cd5-a6ce-abaff2288aeb",
+      "text": "镜头对准一条穿过树林的碎石土路，周围有针叶树和枯枝，背景是起伏的山峦。",
+      "evidence_frame_ids": [
+        "national_park_10_000899-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F011",
+      "asset_id": "V011",
+      "source_asset_id": "national_park_10_000899",
+      "observation_id": "4f03240d-c3e8-56fd-8ca3-ce3e1644dfbb",
+      "frame_pts_ms": [
+        4000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "镜头对准一条穿过树林的碎石土路，周围有针叶树和枯枝，背景是起伏的山峦。"
+    },
+    "F012": {
+      "fact_id": "1d915505-9e6b-5061-8785-21579691b4cb",
+      "text": "展示了林间小径的一角，路面为沙土混合岩石，两旁树木茂密，光线较为柔和。",
+      "evidence_frame_ids": [
+        "national_park_10_000995-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F012",
+      "asset_id": "V012",
+      "source_asset_id": "national_park_10_000995",
+      "observation_id": "536c4c33-db5e-5d9d-8f2d-91200a718b74",
+      "frame_pts_ms": [
+        4000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "展示了林间小径的一角，路面为沙土混合岩石，两旁树木茂密，光线较为柔和。"
+    },
+    "F013": {
+      "fact_id": "18c16271-e1c0-5ee5-a6ea-38772876f189",
+      "text": "画面显示一条位于灌木和针叶林间的碎石土路，远处可见山坡。",
+      "evidence_frame_ids": [
+        "national_park_10_001079-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F013",
+      "asset_id": "V013",
+      "source_asset_id": "national_park_10_001079",
+      "observation_id": "78a1ba5c-8680-51a1-96e8-873c26698eae",
+      "frame_pts_ms": [
+        5000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面显示一条位于灌木和针叶林间的碎石土路，远处可见山坡。"
+    },
+    "F014": {
+      "fact_id": "e0cd5314-4de5-580b-9dde-ecdcc2b2fdf0",
+      "text": "画面显示一段铺设着不规则石板的登山步道，右侧紧邻巨大的灰色花岗岩巨石。",
+      "evidence_frame_ids": [
+        "national_park_10_001175-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F014",
+      "asset_id": "V014",
+      "source_asset_id": "national_park_10_001175",
+      "observation_id": "d4f191ad-11c1-52c4-878c-41d365432bf4",
+      "frame_pts_ms": [
+        3000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面显示一段铺设着不规则石板的登山步道，右侧紧邻巨大的灰色花岗岩巨石。"
+    },
+    "F015": {
+      "fact_id": "2df78723-549e-5cb6-a8fc-32124b5175e9",
+      "text": "一名背着蓝色背包的徒步者站在山间小径上，面朝镜头方向。",
+      "evidence_frame_ids": [
+        "national_park_10_001259-f0"
+      ],
+      "support_grade": "MODERATE",
+      "id": "F015",
+      "asset_id": "V015",
+      "source_asset_id": "national_park_10_001259",
+      "observation_id": "16d932bd-c00f-5b66-bfdb-858432982d16",
+      "frame_pts_ms": [
+        5000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "一名背着蓝色背包的徒步者站在山间小径上，正举起相机拍摄前方的风景。"
+    },
+    "F016": {
+      "fact_id": "36648a3e-a2e4-5e75-ac29-f69e175ec28e",
+      "text": "画面显示一条穿过针叶林山地的碎石土路，左侧有岩石堆砌的路缘。",
+      "evidence_frame_ids": [
+        "national_park_10_001355-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F016",
+      "asset_id": "V016",
+      "source_asset_id": "national_park_10_001355",
+      "observation_id": "c827480b-cd40-5300-af38-57361c9d7ab1",
+      "frame_pts_ms": [
+        6000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面显示一条穿过针叶林山地的碎石土路，左侧有岩石堆砌的路缘。"
+    },
+    "F017": {
+      "fact_id": "5f0d1b1c-7011-56cc-b4b1-f04a2db6d597",
+      "text": "森林小径上可见一名身穿浅色上衣和短裤的行人背对镜头沿路行走。",
+      "evidence_frame_ids": [
+        "national_park_10_001439-f0"
+      ],
+      "support_grade": "MODERATE",
+      "id": "F017",
+      "asset_id": "V017",
+      "source_asset_id": "national_park_10_001439",
+      "observation_id": "e5bf5693-f308-5dfa-a293-57ef7850b872",
+      "frame_pts_ms": [
+        9000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "森林小径上可见一名身穿浅色上衣和短裤的行人背对镜头沿路行走。"
+    },
+    "F018": {
+      "fact_id": "90af670e-4de0-5926-a000-5f7544dc2072",
+      "text": "左侧矗立着一棵树皮呈红褐色的粗壮树干。",
+      "evidence_frame_ids": [
+        "national_park_10_001439-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F018",
+      "asset_id": "V017",
+      "source_asset_id": "national_park_10_001439",
+      "observation_id": "e5bf5693-f308-5dfa-a293-57ef7850b872",
+      "frame_pts_ms": [
+        9000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "左侧矗立着一棵树皮呈红褐色的粗壮树干。"
+    },
+    "F019": {
+      "fact_id": "bd4ff416-5bd3-58ba-92c5-a1194de248af",
+      "text": "画面展示一段光线较暗的林间路径，两侧为密集的树木和植被。",
+      "evidence_frame_ids": [
+        "national_park_10_001523-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F019",
+      "asset_id": "V018",
+      "source_asset_id": "national_park_10_001523",
+      "observation_id": "28100eec-2be4-54cf-a129-49cb2519b4fd",
+      "frame_pts_ms": [
+        5000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面展示一段光线较暗的林间路径，两侧为密集的树木和植被。"
+    },
+    "F020": {
+      "fact_id": "760793c2-25d3-5703-95b6-772f3a1dfb5c",
+      "text": "画面显示一条山间土路，一名背着蓝色背包的人正背对镜头沿小径向前行走。",
+      "evidence_frame_ids": [
+        "national_park_10_001619-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F020",
+      "asset_id": "V019",
+      "source_asset_id": "national_park_10_001619",
+      "observation_id": "47425b2b-2816-5b8f-aa77-f1ba2de6bb88",
+      "frame_pts_ms": [
+        3000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面显示一条山间土路，一名背着蓝色背包的人正背对镜头沿小径向前行走。"
+    },
+    "F021": {
+      "fact_id": "0325b4b2-0808-5f54-abd7-5fa072f48ce0",
+      "text": "画面展示了布满碎石和枯叶的山间小径，周围有树木和岩石，未见人物。",
+      "evidence_frame_ids": [
+        "national_park_10_001703-f0"
+      ],
+      "support_grade": "MODERATE",
+      "id": "F021",
+      "asset_id": "V020",
+      "source_asset_id": "national_park_10_001703",
+      "observation_id": "2754d60c-4f76-5207-9889-10680e2911f9",
+      "frame_pts_ms": [
+        5000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面展示了布满碎石和枯叶的山间小径，周围有树木和岩石，未见人物。"
+    },
+    "F022": {
+      "fact_id": "e5f83677-b342-5aac-b3d2-32db08bcb68a",
+      "text": "一名戴帽子的人与一只四足动物（疑似狗）在山间小路上并排前行。",
+      "evidence_frame_ids": [
+        "national_park_10_001799-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F022",
+      "asset_id": "V021",
+      "source_asset_id": "national_park_10_001799",
+      "observation_id": "fac074a8-dfb1-5722-999e-b376e1033c15",
+      "frame_pts_ms": [
+        7000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "一名戴帽子的人与一只四足动物（疑似狗）在山间小路上并排前行。"
+    },
+    "F023": {
+      "fact_id": "38e0f91e-9a64-543e-b26c-876f67d2c470",
+      "text": "视频画面显示一条铺设好的自然步道，右侧堆叠着巨大的灰色岩石块，左侧可见树木。一名身穿红色上衣的人正背对镜头沿步道向前行走。背景远处是陡峭的浅色花岗岩山体。",
+      "evidence_frame_ids": [
+        "national_park_10_001883-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F023",
+      "asset_id": "V022",
+      "source_asset_id": "national_park_10_001883",
+      "observation_id": "7d7d6d72-813c-5a68-934c-401811e09313",
+      "frame_pts_ms": [
+        7000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "视频画面显示一条铺设好的自然步道，右侧堆叠着巨大的灰色岩石块，左侧可见树木和水面。一名身穿红色上衣的人正背对镜头沿步道向前行走。背景远处是陡峭的浅色花岗岩山体。"
+    },
+    "F024": {
+      "fact_id": "84a0f919-4078-51f0-944c-49a50f17c454",
+      "text": "画面展示了一座带有石砌护栏的桥梁路段，左侧为步行道，右侧为沥青车道。几名行人正在步道上背向镜头行走，其中一人穿着蓝色上衣。背景是茂密的松树林和高耸的灰白色岩壁。",
+      "evidence_frame_ids": [
+        "national_park_10_001979-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F024",
+      "asset_id": "V023",
+      "source_asset_id": "national_park_10_001979",
+      "observation_id": "2891b0cf-148f-5934-8f6f-90dc6722c16f",
+      "frame_pts_ms": [
+        3000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面展示了一座带有石砌护栏的桥梁路段，左侧为步行道，右侧为沥青车道。几名行人正在步道上背向镜头行走，其中一人穿着蓝色上衣。背景是茂密的松树林和高耸的灰白色岩壁。"
+    },
+    "F025": {
+      "fact_id": "e9631263-e304-5558-8f1d-280d322681aa",
+      "text": "画面呈现三维地形图软件界面（MapDirector），显示了山谷地貌的卫星视图。界面上叠加了绿色的路线轨迹线，左上角有距离和海拔爬升的数据文本框。",
+      "evidence_frame_ids": [
+        "national_park_10_002063-f0"
+      ],
+      "support_grade": "STRONG",
+      "id": "F025",
+      "asset_id": "V024",
+      "source_asset_id": "national_park_10_002063",
+      "observation_id": "4677e67a-0687-53ef-af0c-641b2c0c3b35",
+      "frame_pts_ms": [
+        4000
+      ],
+      "temporal_support": "STATE",
+      "visual_reviewed": true,
+      "original_text": "画面呈现三维地形图软件界面（MapDirector），显示了山谷地貌的卫星视图。界面上叠加了绿色的路线轨迹线，左上角有距离和海拔爬升的数据文本框。"
+    }
+  },
+  "assets": {
+    "V001": {
+      "asset_id": "national_park_10_000011",
+      "source_display_name": "national_park_10_000011",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "86485488a88f8b2ae7e23e542b8b8ba6f76cbc083c891f7b6fdd2809f938b6ad",
+      "original_bytes": 3267489,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 0,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000011-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 4000,
+          "relative_path": "frames/national_park_10_000011_f0.jpg",
+          "sha256": "389ae1ea97e4424ba34a81632d5511a4a7f1db1f68610a8e63eb3d08f039e27a",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V002": {
+      "asset_id": "national_park_10_000095",
+      "source_display_name": "national_park_10_000095",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "b6d3c14b04cf58d1aed5700c8c1f66e8d4502eac96970fd9ddc459b17254cd20",
+      "original_bytes": 3252788,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 1,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000095-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 3000,
+          "relative_path": "frames/national_park_10_000095_f0.jpg",
+          "sha256": "520f98d4fc5f95c38c830300f5190864ae744be3dba360216cb571945ea17ab7",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V003": {
+      "asset_id": "national_park_10_000191",
+      "source_display_name": "national_park_10_000191",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "cc73337f1f3f88e36b8aa59a157896b04629f4daa8fcb3718bcd099d98298b36",
+      "original_bytes": 3249006,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 2,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000191-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 6000,
+          "relative_path": "frames/national_park_10_000191_f0.jpg",
+          "sha256": "5ff665feb90296f9dca109634c3dd9f03d9f606ec4bdf62973944216e2143b77",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V004": {
+      "asset_id": "national_park_10_000275",
+      "source_display_name": "national_park_10_000275",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "d18e2c3158c553a7e08426d9085b8c4963a71380c79f040a4b623497b029fd3f",
+      "original_bytes": 3317646,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 3,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000275-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 7000,
+          "relative_path": "frames/national_park_10_000275_f0.jpg",
+          "sha256": "d945e89d6effdd8feed5229fac689e46f0b1d8ec1defeeac4e71d2e5b138eaf0",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V005": {
+      "asset_id": "national_park_10_000371",
+      "source_display_name": "national_park_10_000371",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "fe27bf2f9a2ca83e5d944b35a3f839db6e311c5496fc459c5f2d1578cbfd4937",
+      "original_bytes": 3262912,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 4,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000371-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 6000,
+          "relative_path": "frames/national_park_10_000371_f0.jpg",
+          "sha256": "b5656c95d521a2b7b2922b3f668205ae2a031b501de145581e03e584a36647cd",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V006": {
+      "asset_id": "national_park_10_000455",
+      "source_display_name": "national_park_10_000455",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "8ae4796288b97c9b8ddba521f537e364fe822db26635aa4d79514a8013040ad6",
+      "original_bytes": 3263965,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 5,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000455-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 6000,
+          "relative_path": "frames/national_park_10_000455_f0.jpg",
+          "sha256": "82653bd26b0c53e95cabb690320d730d35d92717d86a5bfc70b7f8da36200a8f",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V007": {
+      "asset_id": "national_park_10_000551",
+      "source_display_name": "national_park_10_000551",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "dd68928fa909a56a1ec8db27d22dee7efd6b4ef7c810899a457ca12fc262d25d",
+      "original_bytes": 3275144,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 6,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000551-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 7000,
+          "relative_path": "frames/national_park_10_000551_f0.jpg",
+          "sha256": "1c2eeee6461868c8742f20a22cef11a4925f30083f08e8151f9b549f33fc446a",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V008": {
+      "asset_id": "national_park_10_000635",
+      "source_display_name": "national_park_10_000635",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "1da020d91d4513b3e832afb1e2e7b6f42407eb007f0887987716f3a60f4857e3",
+      "original_bytes": 3309510,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 7,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000635-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 7000,
+          "relative_path": "frames/national_park_10_000635_f0.jpg",
+          "sha256": "8c75c5a752668319a797ae1a6a3c5e898e5df3d46adfa28b9f6817abdd39e2c3",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V009": {
+      "asset_id": "national_park_10_000719",
+      "source_display_name": "national_park_10_000719",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "f58137060147f23e30a495e552646aec054ec27c808ea078412988617b0591d9",
+      "original_bytes": 3283766,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 8,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000719-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 9000,
+          "relative_path": "frames/national_park_10_000719_f0.jpg",
+          "sha256": "ec2c3125f9b3da4faa921e75408a929acef4551a4156c09a0fed94f0c2e0ed3d",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V010": {
+      "asset_id": "national_park_10_000815",
+      "source_display_name": "national_park_10_000815",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "06e0ed47e5dbaf8cf129fda1d2ae95c9a87d9b08517e946d4bb876c68416fe77",
+      "original_bytes": 3242192,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 9,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000815-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 9967,
+          "relative_path": "frames/national_park_10_000815_f0.jpg",
+          "sha256": "cc3e0182c8289e1550df58b708be284e99b8026c4dd42a5bb9280f72b8c0ca26",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V011": {
+      "asset_id": "national_park_10_000899",
+      "source_display_name": "national_park_10_000899",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "71b9e8de94be75946f453c035479242f48701b7c0d25f51aa03b65d38cc7917a",
+      "original_bytes": 3321029,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 10,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000899-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 4000,
+          "relative_path": "frames/national_park_10_000899_f0.jpg",
+          "sha256": "2768e94a972c658e8eaa376f75b862cb3f23d04c2df3c7773355f6983ef33c68",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V012": {
+      "asset_id": "national_park_10_000995",
+      "source_display_name": "national_park_10_000995",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "856760a97a3d5dc022757ed99e7dbb0f1ba3767ce9640c496798ab046201b334",
+      "original_bytes": 3320667,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 11,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_000995-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 4000,
+          "relative_path": "frames/national_park_10_000995_f0.jpg",
+          "sha256": "ef4163076f7e96bad34704d2037d9510c8bb4d1d27329d3f57cb1943ebb8fa1a",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V013": {
+      "asset_id": "national_park_10_001079",
+      "source_display_name": "national_park_10_001079",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "b7a3a50e7c994daebc39ea9898debf5337f4c169eb1efd87274e28e035a14237",
+      "original_bytes": 3267797,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 12,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001079-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 5000,
+          "relative_path": "frames/national_park_10_001079_f0.jpg",
+          "sha256": "48c3fa686d1215db2c15680744dbeff9510621a30ed3776f6e5c1f8e8e4245bd",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V014": {
+      "asset_id": "national_park_10_001175",
+      "source_display_name": "national_park_10_001175",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "208f97676b16fe1ffdad17e233554a8066483f10f66a635dc3fe2f31e8d786a4",
+      "original_bytes": 3278042,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 13,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001175-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 3000,
+          "relative_path": "frames/national_park_10_001175_f0.jpg",
+          "sha256": "01d7ae82f724361aeb8b7d709ad4eb3a166ba7943955c8c3d2a09d1416f6fbd9",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V015": {
+      "asset_id": "national_park_10_001259",
+      "source_display_name": "national_park_10_001259",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "ed2359462badc0cc719cebaebd613b37efaab6acd30b8eddb3f02eb90016e90a",
+      "original_bytes": 3261794,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 14,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001259-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 5000,
+          "relative_path": "frames/national_park_10_001259_f0.jpg",
+          "sha256": "4b84b4650633da480cac45d31787d23d5f91fd7e80336d3033219d7f28b99693",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V016": {
+      "asset_id": "national_park_10_001355",
+      "source_display_name": "national_park_10_001355",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "d709e350050cf516dd80c041be5fa1193c1679229061d889209f5f07df5e30ca",
+      "original_bytes": 3255036,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 15,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001355-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 6000,
+          "relative_path": "frames/national_park_10_001355_f0.jpg",
+          "sha256": "adc946a118b95770c0362ac5381d277dcddfe851a5a96d6d82f63908ddf951c3",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V017": {
+      "asset_id": "national_park_10_001439",
+      "source_display_name": "national_park_10_001439",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "74050882602fd55b83239f1901f111a5c9f5654199bed45611f9f6bf3922c782",
+      "original_bytes": 3294482,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 16,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001439-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 9000,
+          "relative_path": "frames/national_park_10_001439_f0.jpg",
+          "sha256": "a665d6143caa2b4f5a09f0cc585671442ec968fae1a6b2c9df65bd4a8c976cff",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V018": {
+      "asset_id": "national_park_10_001523",
+      "source_display_name": "national_park_10_001523",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "cd30ec5b93547e232da4cf16af42242b15ca0cba854166cb39f015134b8282ef",
+      "original_bytes": 3229635,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 17,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001523-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 5000,
+          "relative_path": "frames/national_park_10_001523_f0.jpg",
+          "sha256": "0342e2e86b66cfbadd5eb62269eb4a3fefff30727635c376f7d878700d12e2e2",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V019": {
+      "asset_id": "national_park_10_001619",
+      "source_display_name": "national_park_10_001619",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "13cdf21b3dda9223e2e67b75c5e4141307baf22705f78503f08813ef62eb1c6d",
+      "original_bytes": 3214894,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 18,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001619-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 3000,
+          "relative_path": "frames/national_park_10_001619_f0.jpg",
+          "sha256": "61341ee56323471ad37bc7fb92b91a1cf0313842f3099b169440212a0bb11191",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V020": {
+      "asset_id": "national_park_10_001703",
+      "source_display_name": "national_park_10_001703",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "a18f27a52d528ea5d44cf5daf6642207fafa3229aa36f0ee3509de1d0c40d5f0",
+      "original_bytes": 3285889,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 19,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001703-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 5000,
+          "relative_path": "frames/national_park_10_001703_f0.jpg",
+          "sha256": "4758210e6f84b68d4039edaf941067c43be98735a1fae801582813bdcb67af0d",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V021": {
+      "asset_id": "national_park_10_001799",
+      "source_display_name": "national_park_10_001799",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "aa75f7e65116edf5d4c28f21dadd7c9199cac456c16a333c90e5a90a83848e24",
+      "original_bytes": 3260517,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 20,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001799-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 7000,
+          "relative_path": "frames/national_park_10_001799_f0.jpg",
+          "sha256": "87821a609b3e6cb278c0256bd6bd60828a3570b3f78990d4fa6f7a5a94111314",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V022": {
+      "asset_id": "national_park_10_001883",
+      "source_display_name": "national_park_10_001883",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "0f612d9db584157d45a3586ebc713f1053484a3177b733099403dc7b4f90a3ff",
+      "original_bytes": 3259024,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 21,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001883-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 7000,
+          "relative_path": "frames/national_park_10_001883_f0.jpg",
+          "sha256": "7c80d65a5e8c1dcb585a9eb1f4d84cdd8673c84ebab09d1c52f74162d069c10b",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V023": {
+      "asset_id": "national_park_10_001979",
+      "source_display_name": "national_park_10_001979",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "2f59c75dda873af4d9f071c73585b71cbe994c452331f6a380734c1ea2930a9a",
+      "original_bytes": 3254650,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 22,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_001979-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 3000,
+          "relative_path": "frames/national_park_10_001979_f0.jpg",
+          "sha256": "cd9292d2f889b28a6eebfff0100a1bfad332346428a23e72785343f77dba08cb",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    },
+    "V024": {
+      "asset_id": "national_park_10_002063",
+      "source_display_name": "national_park_10_002063",
+      "media_kind": "VIDEO",
+      "media_source": "PHONE_LIBRARY_DAY_TEST",
+      "original_file_extension": "mp4",
+      "original_sha256": "12a80eb380d67ab68c2313b115ada52b7d2ef36d882dc1f046d94a07e898a7dd",
+      "original_bytes": 3435849,
+      "original_width": 1280,
+      "original_height": 720,
+      "original_duration_ms": 10000,
+      "original_included": false,
+      "sequence_index": 23,
+      "logical_asset_duration_ms": 9000,
+      "materialized_video": false,
+      "evidence_sampling_profile": "OFFLINE_MOBILECLIP_S0_FP16_V07_REPLAY",
+      "evidence_window_count": 1,
+      "frames": [
+        {
+          "frame_id": "national_park_10_002063-f0",
+          "window_index": 0,
+          "window_count": 1,
+          "sample_role": "WINDOW_MIDDLE",
+          "canonical_offset_ms": 4500,
+          "source_timestamp_ms": 4000,
+          "relative_path": "frames/national_park_10_002063_f0.jpg",
+          "sha256": "174e401d46fb832ab044a5cfe06940e47112dcc28d3272e7244138fe6d95590d",
+          "width": 768,
+          "height": 1024,
+          "spatial_transform": "ASPECT_FIT_LETTERBOX"
+        }
+      ]
+    }
+  },
+  "candidates": [
+    {
+      "candidate_id": "P001",
+      "asset_id": "V001",
+      "frame_id": "national_park_10_000011-f0",
+      "pts_ms": 4000,
+      "fact_ids": [
+        "F001"
+      ]
+    },
+    {
+      "candidate_id": "P002",
+      "asset_id": "V002",
+      "frame_id": "national_park_10_000095-f0",
+      "pts_ms": 3000,
+      "fact_ids": [
+        "F002"
+      ]
+    },
+    {
+      "candidate_id": "P003",
+      "asset_id": "V003",
+      "frame_id": "national_park_10_000191-f0",
+      "pts_ms": 6000,
+      "fact_ids": [
+        "F003"
+      ]
+    },
+    {
+      "candidate_id": "P004",
+      "asset_id": "V004",
+      "frame_id": "national_park_10_000275-f0",
+      "pts_ms": 7000,
+      "fact_ids": [
+        "F004"
+      ]
+    },
+    {
+      "candidate_id": "P005",
+      "asset_id": "V005",
+      "frame_id": "national_park_10_000371-f0",
+      "pts_ms": 6000,
+      "fact_ids": [
+        "F005"
+      ]
+    },
+    {
+      "candidate_id": "P006",
+      "asset_id": "V006",
+      "frame_id": "national_park_10_000455-f0",
+      "pts_ms": 6000,
+      "fact_ids": [
+        "F006"
+      ]
+    },
+    {
+      "candidate_id": "P007",
+      "asset_id": "V007",
+      "frame_id": "national_park_10_000551-f0",
+      "pts_ms": 7000,
+      "fact_ids": [
+        "F007"
+      ]
+    },
+    {
+      "candidate_id": "P008",
+      "asset_id": "V008",
+      "frame_id": "national_park_10_000635-f0",
+      "pts_ms": 7000,
+      "fact_ids": [
+        "F008"
+      ]
+    },
+    {
+      "candidate_id": "P009",
+      "asset_id": "V009",
+      "frame_id": "national_park_10_000719-f0",
+      "pts_ms": 9000,
+      "fact_ids": [
+        "F009"
+      ]
+    },
+    {
+      "candidate_id": "P010",
+      "asset_id": "V010",
+      "frame_id": "national_park_10_000815-f0",
+      "pts_ms": 9967,
+      "fact_ids": [
+        "F010"
+      ]
+    },
+    {
+      "candidate_id": "P011",
+      "asset_id": "V011",
+      "frame_id": "national_park_10_000899-f0",
+      "pts_ms": 4000,
+      "fact_ids": [
+        "F011"
+      ]
+    },
+    {
+      "candidate_id": "P012",
+      "asset_id": "V012",
+      "frame_id": "national_park_10_000995-f0",
+      "pts_ms": 4000,
+      "fact_ids": [
+        "F012"
+      ]
+    },
+    {
+      "candidate_id": "P013",
+      "asset_id": "V013",
+      "frame_id": "national_park_10_001079-f0",
+      "pts_ms": 5000,
+      "fact_ids": [
+        "F013"
+      ]
+    },
+    {
+      "candidate_id": "P014",
+      "asset_id": "V014",
+      "frame_id": "national_park_10_001175-f0",
+      "pts_ms": 3000,
+      "fact_ids": [
+        "F014"
+      ]
+    },
+    {
+      "candidate_id": "P015",
+      "asset_id": "V015",
+      "frame_id": "national_park_10_001259-f0",
+      "pts_ms": 5000,
+      "fact_ids": [
+        "F015"
+      ]
+    },
+    {
+      "candidate_id": "P016",
+      "asset_id": "V016",
+      "frame_id": "national_park_10_001355-f0",
+      "pts_ms": 6000,
+      "fact_ids": [
+        "F016"
+      ]
+    },
+    {
+      "candidate_id": "P017",
+      "asset_id": "V017",
+      "frame_id": "national_park_10_001439-f0",
+      "pts_ms": 9000,
+      "fact_ids": [
+        "F017",
+        "F018"
+      ]
+    },
+    {
+      "candidate_id": "P018",
+      "asset_id": "V018",
+      "frame_id": "national_park_10_001523-f0",
+      "pts_ms": 5000,
+      "fact_ids": [
+        "F019"
+      ]
+    }
+  ],
+  "shown": {
+    "V001": {
+      "national_park_10_000011-f0": {
+        "frame_id": "national_park_10_000011-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 4000,
+        "relative_path": "frames/national_park_10_000011_f0.jpg",
+        "sha256": "389ae1ea97e4424ba34a81632d5511a4a7f1db1f68610a8e63eb3d08f039e27a",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V002": {
+      "national_park_10_000095-f0": {
+        "frame_id": "national_park_10_000095-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 3000,
+        "relative_path": "frames/national_park_10_000095_f0.jpg",
+        "sha256": "520f98d4fc5f95c38c830300f5190864ae744be3dba360216cb571945ea17ab7",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V003": {
+      "national_park_10_000191-f0": {
+        "frame_id": "national_park_10_000191-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 6000,
+        "relative_path": "frames/national_park_10_000191_f0.jpg",
+        "sha256": "5ff665feb90296f9dca109634c3dd9f03d9f606ec4bdf62973944216e2143b77",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V004": {
+      "national_park_10_000275-f0": {
+        "frame_id": "national_park_10_000275-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 7000,
+        "relative_path": "frames/national_park_10_000275_f0.jpg",
+        "sha256": "d945e89d6effdd8feed5229fac689e46f0b1d8ec1defeeac4e71d2e5b138eaf0",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V005": {
+      "national_park_10_000371-f0": {
+        "frame_id": "national_park_10_000371-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 6000,
+        "relative_path": "frames/national_park_10_000371_f0.jpg",
+        "sha256": "b5656c95d521a2b7b2922b3f668205ae2a031b501de145581e03e584a36647cd",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V006": {
+      "national_park_10_000455-f0": {
+        "frame_id": "national_park_10_000455-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 6000,
+        "relative_path": "frames/national_park_10_000455_f0.jpg",
+        "sha256": "82653bd26b0c53e95cabb690320d730d35d92717d86a5bfc70b7f8da36200a8f",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V007": {
+      "national_park_10_000551-f0": {
+        "frame_id": "national_park_10_000551-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 7000,
+        "relative_path": "frames/national_park_10_000551_f0.jpg",
+        "sha256": "1c2eeee6461868c8742f20a22cef11a4925f30083f08e8151f9b549f33fc446a",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V008": {
+      "national_park_10_000635-f0": {
+        "frame_id": "national_park_10_000635-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 7000,
+        "relative_path": "frames/national_park_10_000635_f0.jpg",
+        "sha256": "8c75c5a752668319a797ae1a6a3c5e898e5df3d46adfa28b9f6817abdd39e2c3",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V009": {
+      "national_park_10_000719-f0": {
+        "frame_id": "national_park_10_000719-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 9000,
+        "relative_path": "frames/national_park_10_000719_f0.jpg",
+        "sha256": "ec2c3125f9b3da4faa921e75408a929acef4551a4156c09a0fed94f0c2e0ed3d",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V010": {
+      "national_park_10_000815-f0": {
+        "frame_id": "national_park_10_000815-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 9967,
+        "relative_path": "frames/national_park_10_000815_f0.jpg",
+        "sha256": "cc3e0182c8289e1550df58b708be284e99b8026c4dd42a5bb9280f72b8c0ca26",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V011": {
+      "national_park_10_000899-f0": {
+        "frame_id": "national_park_10_000899-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 4000,
+        "relative_path": "frames/national_park_10_000899_f0.jpg",
+        "sha256": "2768e94a972c658e8eaa376f75b862cb3f23d04c2df3c7773355f6983ef33c68",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V012": {
+      "national_park_10_000995-f0": {
+        "frame_id": "national_park_10_000995-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 4000,
+        "relative_path": "frames/national_park_10_000995_f0.jpg",
+        "sha256": "ef4163076f7e96bad34704d2037d9510c8bb4d1d27329d3f57cb1943ebb8fa1a",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V013": {
+      "national_park_10_001079-f0": {
+        "frame_id": "national_park_10_001079-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 5000,
+        "relative_path": "frames/national_park_10_001079_f0.jpg",
+        "sha256": "48c3fa686d1215db2c15680744dbeff9510621a30ed3776f6e5c1f8e8e4245bd",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V014": {
+      "national_park_10_001175-f0": {
+        "frame_id": "national_park_10_001175-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 3000,
+        "relative_path": "frames/national_park_10_001175_f0.jpg",
+        "sha256": "01d7ae82f724361aeb8b7d709ad4eb3a166ba7943955c8c3d2a09d1416f6fbd9",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V015": {
+      "national_park_10_001259-f0": {
+        "frame_id": "national_park_10_001259-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 5000,
+        "relative_path": "frames/national_park_10_001259_f0.jpg",
+        "sha256": "4b84b4650633da480cac45d31787d23d5f91fd7e80336d3033219d7f28b99693",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V016": {
+      "national_park_10_001355-f0": {
+        "frame_id": "national_park_10_001355-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 6000,
+        "relative_path": "frames/national_park_10_001355_f0.jpg",
+        "sha256": "adc946a118b95770c0362ac5381d277dcddfe851a5a96d6d82f63908ddf951c3",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V017": {
+      "national_park_10_001439-f0": {
+        "frame_id": "national_park_10_001439-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 9000,
+        "relative_path": "frames/national_park_10_001439_f0.jpg",
+        "sha256": "a665d6143caa2b4f5a09f0cc585671442ec968fae1a6b2c9df65bd4a8c976cff",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    },
+    "V018": {
+      "national_park_10_001523-f0": {
+        "frame_id": "national_park_10_001523-f0",
+        "window_index": 0,
+        "window_count": 1,
+        "sample_role": "WINDOW_MIDDLE",
+        "canonical_offset_ms": 4500,
+        "source_timestamp_ms": 5000,
+        "relative_path": "frames/national_park_10_001523_f0.jpg",
+        "sha256": "0342e2e86b66cfbadd5eb62269eb4a3fefff30727635c376f7d878700d12e2e2",
+        "width": 768,
+        "height": 1024,
+        "spatial_transform": "ASPECT_FIT_LETTERBOX"
+      }
+    }
+  },
+  "scene_clues": {
+    "candidate_scene_clues": {
+      "P001": [
+        {
+          "scene_observation_id": "FO:P001",
+          "text": "画面显示一条铺装道路，左侧红杉树干上钉有橙色标牌。",
+          "asset_id": "V001",
+          "evidence_frame_ids": [
+            "national_park_10_000011-f0"
+          ],
+          "supported_fact_ids": [
+            "F001"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F001",
+              "support": "VISIBLE",
+              "visible_quote": "左侧树干上钉有一块橙色标牌，写有“Utility Parking Only”。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F001",
+              "support": "VISIBLE",
+              "visible_quote": "左侧树干上钉有一块橙色标牌，写有“Utility Parking Only”。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        }
+      ],
+      "P002": [
+        {
+          "scene_observation_id": "FO:P002",
+          "text": "一名身穿深色衣物的人正背对镜头行走在布满落叶的山径上。",
+          "asset_id": "V002",
+          "evidence_frame_ids": [
+            "national_park_10_000095-f0"
+          ],
+          "supported_fact_ids": [
+            "F002"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F002",
+              "support": "VISIBLE",
+              "visible_quote": "一名身穿深色衣物的人正背对镜头，行走在布满落叶和岩石的狭窄山径上。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F002",
+              "support": "VISIBLE",
+              "visible_quote": "一名身穿深色衣物的人正背对镜头，行走在布满落叶和岩石的狭窄山径上。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        }
+      ],
+      "P003": [
+        {
+          "scene_observation_id": "FO:P003",
+          "text": "崎岖的山间小径，左侧可见陡峭的岩壁与植被。",
+          "asset_id": "V003",
+          "evidence_frame_ids": [
+            "national_park_10_000191-f0"
+          ],
+          "supported_fact_ids": [
+            "F003"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F003",
+              "support": "VISIBLE",
+              "visible_quote": "路面由泥土和碎石构成，左侧可见陡峭的岩壁与植被。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F003",
+              "support": "VISIBLE",
+              "visible_quote": "路面由泥土和碎石构成，左侧可见陡峭的岩壁与植被。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P004": [
+        {
+          "scene_observation_id": "FO:P004",
+          "text": "泥土小径右侧紧邻巨大的灰色岩壁，左侧散落着岩石。",
+          "asset_id": "V004",
+          "evidence_frame_ids": [
+            "national_park_10_000275-f0"
+          ],
+          "supported_fact_ids": [
+            "F004"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F004",
+              "support": "VISIBLE",
+              "visible_quote": "左侧有散落的岩石和植被，右侧为巨大的灰色岩壁。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F004",
+              "support": "VISIBLE",
+              "visible_quote": "左侧有散落的岩石和植被，右侧为巨大的灰色岩壁。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P005": [
+        {
+          "scene_observation_id": "FO:P005",
+          "text": "高处的碎石土路，两侧生长着灌木丛，背景可见天空。",
+          "asset_id": "V005",
+          "evidence_frame_ids": [
+            "national_park_10_000371-f0"
+          ],
+          "supported_fact_ids": [
+            "F005"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F005",
+              "support": "VISIBLE",
+              "visible_quote": "两侧生长着灌木丛，背景可见天空。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F005",
+              "support": "VISIBLE",
+              "visible_quote": "两侧生长着灌木丛，背景可见天空。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P006": [
+        {
+          "scene_observation_id": "FO:P006",
+          "text": "穿过树林的狭窄土径，地面布满枯枝和石块。",
+          "asset_id": "V006",
+          "evidence_frame_ids": [
+            "national_park_10_000455-f0"
+          ],
+          "supported_fact_ids": [
+            "F006"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F006",
+              "support": "VISIBLE",
+              "visible_quote": "地面布满落叶、枯枝和石块。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F006",
+              "support": "VISIBLE",
+              "visible_quote": "地面布满落叶、枯枝和石块。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P007": [
+        {
+          "scene_observation_id": "FO:P007",
+          "text": "两名背着背包的徒步者正沿山脊上的岩石小径行走，左侧可见远处山谷。",
+          "asset_id": "V007",
+          "evidence_frame_ids": [
+            "national_park_10_000551-f0"
+          ],
+          "supported_fact_ids": [
+            "F007"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F007",
+              "support": "VISIBLE",
+              "visible_quote": "两名背着背包的徒步者正背对镜头沿路行走。左侧可见远处的山谷与岩壁景观。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F007",
+              "support": "VISIBLE",
+              "visible_quote": "两名背着背包的徒步者正背对镜头沿路行走。左侧可见远处的山谷与岩壁景观。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        }
+      ],
+      "P008": [
+        {
+          "scene_observation_id": "FO:P008",
+          "text": "第一人称视角的林间土路，两侧分布着针叶树和倒下的枯木。",
+          "asset_id": "V008",
+          "evidence_frame_ids": [
+            "national_park_10_000635-f0"
+          ],
+          "supported_fact_ids": [
+            "F008"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F008",
+              "support": "VISIBLE",
+              "visible_quote": "两侧分布着针叶树和倒下的枯木。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F008",
+              "support": "VISIBLE",
+              "visible_quote": "两侧分布着针叶树和倒下的枯木。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "ACTIVITY_CONTEXT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P009": [
+        {
+          "scene_observation_id": "FO:P009",
+          "text": "森林中的岔路口，左侧立有深色木质指示牌，右侧有巨大花岗岩。",
+          "asset_id": "V009",
+          "evidence_frame_ids": [
+            "national_park_10_000719-f0"
+          ],
+          "supported_fact_ids": [
+            "F009"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F009",
+              "support": "VISIBLE",
+              "visible_quote": "左侧立有一块深色木质指示牌，右侧有一块巨大的灰色花岗岩。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F009",
+              "support": "VISIBLE",
+              "visible_quote": "左侧立有一块深色木质指示牌，右侧有一块巨大的灰色花岗岩。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P010": [
+        {
+          "scene_observation_id": "FO:P010",
+          "text": "山坡上的泥土小径，两侧生长着灌木丛，远处可见连绵山脉。",
+          "asset_id": "V010",
+          "evidence_frame_ids": [
+            "national_park_10_000815-f0"
+          ],
+          "supported_fact_ids": [
+            "F010"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F010",
+              "support": "VISIBLE",
+              "visible_quote": "两侧生长着灌木丛，远处可见连绵的山脉。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F010",
+              "support": "VISIBLE",
+              "visible_quote": "两侧生长着灌木丛，远处可见连绵的山脉。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P011": [
+        {
+          "scene_observation_id": "FO:P011",
+          "text": "穿过树林的碎石土路，周围有针叶树和枯枝，背景是起伏山峦。",
+          "asset_id": "V011",
+          "evidence_frame_ids": [
+            "national_park_10_000899-f0"
+          ],
+          "supported_fact_ids": [
+            "F011"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F011",
+              "support": "VISIBLE",
+              "visible_quote": "周围有针叶树和枯枝，背景是起伏的山峦。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F011",
+              "support": "VISIBLE",
+              "visible_quote": "周围有针叶树和枯枝，背景是起伏的山峦。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P012": [
+        {
+          "scene_observation_id": "FO:P012",
+          "text": "林间小径的一角，路面为沙土混合岩石，两旁树木茂密。",
+          "asset_id": "V012",
+          "evidence_frame_ids": [
+            "national_park_10_000995-f0"
+          ],
+          "supported_fact_ids": [
+            "F012"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F012",
+              "support": "VISIBLE",
+              "visible_quote": "路面为沙土混合岩石，两旁树木茂密，光线较为柔和。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F012",
+              "support": "VISIBLE",
+              "visible_quote": "路面为沙土混合岩石，两旁树木茂密，光线较为柔和。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P013": [
+        {
+          "scene_observation_id": "FO:P013",
+          "text": "位于灌木和针叶林间的碎石土路，远处可见山坡。",
+          "asset_id": "V013",
+          "evidence_frame_ids": [
+            "national_park_10_001079-f0"
+          ],
+          "supported_fact_ids": [
+            "F013"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F013",
+              "support": "VISIBLE",
+              "visible_quote": "远处可见山坡。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F013",
+              "support": "VISIBLE",
+              "visible_quote": "远处可见山坡。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P014": [
+        {
+          "scene_observation_id": "FO:P014",
+          "text": "铺设着不规则石板的登山步道，右侧紧邻巨大的灰色花岗岩巨石。",
+          "asset_id": "V014",
+          "evidence_frame_ids": [
+            "national_park_10_001175-f0"
+          ],
+          "supported_fact_ids": [
+            "F014"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F014",
+              "support": "VISIBLE",
+              "visible_quote": "右侧紧邻巨大的灰色花岗岩巨石。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F014",
+              "support": "VISIBLE",
+              "visible_quote": "右侧紧邻巨大的灰色花岗岩巨石。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P015": [
+        {
+          "scene_observation_id": "FO:P015",
+          "text": "一名背着蓝色背包的徒步者站在山间小径上，面朝镜头方向。",
+          "asset_id": "V015",
+          "evidence_frame_ids": [
+            "national_park_10_001259-f0"
+          ],
+          "supported_fact_ids": [
+            "F015"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F015",
+              "support": "VISIBLE",
+              "visible_quote": "一名背着蓝色背包的徒步者站在山间小径上，面朝镜头方向。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F015",
+              "support": "VISIBLE",
+              "visible_quote": "一名背着蓝色背包的徒步者站在山间小径上，面朝镜头方向。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        }
+      ],
+      "P016": [
+        {
+          "scene_observation_id": "FO:P016",
+          "text": "穿过针叶林山地的碎石土路，左侧有岩石堆砌的路缘。",
+          "asset_id": "V016",
+          "evidence_frame_ids": [
+            "national_park_10_001355-f0"
+          ],
+          "supported_fact_ids": [
+            "F016"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F016",
+              "support": "VISIBLE",
+              "visible_quote": "左侧有岩石堆砌的路缘。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F016",
+              "support": "VISIBLE",
+              "visible_quote": "左侧有岩石堆砌的路缘。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ],
+      "P017": [
+        {
+          "scene_observation_id": "FO:P017",
+          "text": "行人背对镜头在森林小径上行走，左侧矗立着粗壮的红褐色树干。",
+          "asset_id": "V017",
+          "evidence_frame_ids": [
+            "national_park_10_001439-f0"
+          ],
+          "supported_fact_ids": [
+            "F017",
+            "F018"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F017",
+              "support": "VISIBLE",
+              "visible_quote": "身穿浅色上衣和短裤的行人背对镜头沿路行走。",
+              "not_visible_quote": ""
+            },
+            {
+              "fact_id": "F018",
+              "support": "VISIBLE",
+              "visible_quote": "左侧矗立着一棵树皮呈红褐色的粗壮树干。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F017",
+              "support": "VISIBLE",
+              "visible_quote": "身穿浅色上衣和短裤的行人背对镜头沿路行走。",
+              "not_visible_quote": ""
+            },
+            {
+              "fact_id": "F018",
+              "support": "VISIBLE",
+              "visible_quote": "左侧矗立着一棵树皮呈红褐色的粗壮树干。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "READABLE",
+          "occlusion": "NONE"
+        }
+      ],
+      "P018": [
+        {
+          "scene_observation_id": "FO:P018",
+          "text": "光线较暗的林间路径，两侧为密集的树木和植被。",
+          "asset_id": "V018",
+          "evidence_frame_ids": [
+            "national_park_10_001523-f0"
+          ],
+          "supported_fact_ids": [
+            "F019"
+          ],
+          "fact_supports": [
+            {
+              "fact_id": "F019",
+              "support": "VISIBLE",
+              "visible_quote": "两侧为密集的树木和植被。",
+              "not_visible_quote": ""
+            }
+          ],
+          "raw_fact_supports": [
+            {
+              "fact_id": "F019",
+              "support": "VISIBLE",
+              "visible_quote": "两侧为密集的树木和植被。",
+              "not_visible_quote": ""
+            }
+          ],
+          "provenance": "DEDICATED_PER_FRAME_OBSERVATION",
+          "subject_role": "SPECIFIC_SUBJECT",
+          "visibility": "CLEAR",
+          "prominence": "DOMINANT",
+          "occlusion": "NONE"
+        }
+      ]
+    },
+    "issues": [],
+    "evidence_scope": "DEDICATED_PER_IMAGE_MODEL_OBSERVATION_WITH_FACT_QUOTES_NOT_VISUAL_GROUND_TRUTH"
+  },
+  "output": {
+    "chapter_boundaries": [
+      {
+        "basis": "DIFFERENT_ACTIVITY",
+        "evidence_fact_ids": [
+          "F024",
+          "F025"
+        ],
+        "reason": "C01为户外实地步行活动，包含道路、山径及桥梁等物理环境；C02为在屏幕前使用软件查看数字地图界面，属于完全不同的室内操作活动。"
+      }
+    ],
+    "chapters": [
+      {
+        "id": "C01",
+        "theme": "山地林间徒步体验",
+        "fact_ids": [
+          "F001",
+          "F002",
+          "F003",
+          "F004",
+          "F005",
+          "F006",
+          "F007",
+          "F008",
+          "F009",
+          "F010",
+          "F011",
+          "F012",
+          "F013",
+          "F014",
+          "F015",
+          "F016",
+          "F017",
+          "F018",
+          "F019",
+          "F020",
+          "F021",
+          "F022",
+          "F023",
+          "F024"
+        ],
+        "experience_kind": "NATURE_WALK",
+        "focus": "穿越针叶林、岩石地貌及山脊小径的连续步行经历",
+        "focus_fact_ids": [
+          "F002",
+          "F007",
+          "F014",
+          "F022",
+          "F023"
+        ],
+        "grouping_reason": "所有事实均指向同一类持续的自然环境步行活动，涵盖土路、碎石、石板步道及沿途植被和岩壁景观，视角变化不改变核心经历性质。",
+        "hero_candidate_id": "P007"
+      },
+      {
+        "id": "C02",
+        "theme": "行程轨迹回顾与分析",
+        "fact_ids": [
+          "F025"
+        ],
+        "experience_kind": "OTHER",
+        "focus": "通过三维地形图软件查看本次活动的路线数据",
+        "focus_fact_ids": [
+          "F025"
+        ],
+        "grouping_reason": "这是对前述户外经历的数字化复盘或规划行为，发生在非户外的屏幕前，构成独立的活动单元。",
+        "hero_candidate_id": null
+      }
+    ],
+    "moments": [
+      {
+        "id": "M01",
+        "parent_chapter_id": "C01",
+        "fact_id": "F007",
+        "focus": "山脊上的开阔视野与同行者",
+        "revisit_reason": "展示了徒步中较为壮观的地形背景（山谷与岩壁）以及多人同行的状态，区别于普通的林间小路。",
+        "chapter_relations": [
+          {
+            "chapter_id": "C01",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ]
+      },
+      {
+        "id": "M02",
+        "parent_chapter_id": "C01",
+        "fact_id": "F022",
+        "focus": "人与狗在山径上并排前行",
+        "revisit_reason": "捕捉到了徒步过程中具体的伴侣动物互动瞬间，具有独特的生活气息。",
+        "chapter_relations": [
+          {
+            "chapter_id": "C01",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ]
+      }
+    ],
+    "unselected_facts": [],
+    "media_choices": [
+      {
+        "candidate_id": "P001",
+        "chapter_id": "C01",
+        "reason": "画面清晰展示了铺装路面、红杉树干及橙色“Utility Parking Only”标牌，准确对应本章关于入口路段与标识的主题。"
+      },
+      {
+        "candidate_id": "P007",
+        "chapter_id": "C01",
+        "reason": "两名背着背包的徒步者在山脊行走，左侧可见远处山谷，体现了徒步经历中的开阔视野和行进感，适合作为封面。"
+      },
+      {
+        "candidate_id": "P002",
+        "chapter_id": "C01",
+        "reason": "深色衣物行人在落叶山径的背影，典型地代表了林间步行的第一人称或跟随视角，补充了路径细节。"
+      },
+      {
+        "candidate_id": "P014",
+        "chapter_id": "C01",
+        "reason": "铺设着不规则石板的登山步道紧邻巨大花岗岩，展示了人工修筑与自然岩石结合的特殊路况。"
+      },
+      {
+        "candidate_id": "P009",
+        "chapter_id": "C01",
+        "reason": "森林岔路口有木质指示牌和巨石，提供了徒步过程中的方向选择节点和地标信息。"
+      },
+      {
+        "candidate_id": "P015",
+        "chapter_id": "C01",
+        "reason": "一名背着蓝色背包的徒步者站在山间小径上面朝镜头，增加了人物互动的视角变化。"
+      }
+    ],
+    "frame_assessments": [
+      {
+        "candidate_id": "P001",
+        "fact_ids": [
+          "F001"
+        ],
+        "scene_observation_id": "FO:P001",
+        "visible_detail": "画面显示一条铺装道路，左侧红杉树干上钉有橙色标牌。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "READABLE",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P002",
+        "fact_ids": [
+          "F002"
+        ],
+        "scene_observation_id": "FO:P002",
+        "visible_detail": "一名身穿深色衣物的人正背对镜头行走在布满落叶的山径上。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "READABLE",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P003",
+        "fact_ids": [
+          "F003"
+        ],
+        "scene_observation_id": "FO:P003",
+        "visible_detail": "崎岖的山间小径，左侧可见陡峭的岩壁与植被。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P004",
+        "fact_ids": [
+          "F004"
+        ],
+        "scene_observation_id": "FO:P004",
+        "visible_detail": "泥土小径右侧紧邻巨大的灰色岩壁，左侧散落着岩石。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P005",
+        "fact_ids": [
+          "F005"
+        ],
+        "scene_observation_id": "FO:P005",
+        "visible_detail": "高处的碎石土路，两侧生长着灌木丛，背景可见天空。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P006",
+        "fact_ids": [
+          "F006"
+        ],
+        "scene_observation_id": "FO:P006",
+        "visible_detail": "穿过树林的狭窄土径，地面布满枯枝和石块。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P007",
+        "fact_ids": [
+          "F007"
+        ],
+        "scene_observation_id": "FO:P007",
+        "visible_detail": "两名背着背包的徒步者正沿山脊上的岩石小径行走，左侧可见远处山谷。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "READABLE",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P008",
+        "fact_ids": [
+          "F008"
+        ],
+        "scene_observation_id": "FO:P008",
+        "visible_detail": "第一人称视角的林间土路，两侧分布着针叶树和倒下的枯木。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P009",
+        "fact_ids": [
+          "F009"
+        ],
+        "scene_observation_id": "FO:P009",
+        "visible_detail": "森林中的岔路口，左侧立有深色木质指示牌，右侧有巨大花岗岩。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P010",
+        "fact_ids": [
+          "F010"
+        ],
+        "scene_observation_id": "FO:P010",
+        "visible_detail": "山坡上的泥土小径，两侧生长着灌木丛，远处可见连绵山脉。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P011",
+        "fact_ids": [
+          "F011"
+        ],
+        "scene_observation_id": "FO:P011",
+        "visible_detail": "穿过树林的碎石土路，周围有针叶树和枯枝，背景是起伏山峦。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P012",
+        "fact_ids": [
+          "F012"
+        ],
+        "scene_observation_id": "FO:P012",
+        "visible_detail": "林间小径的一角，路面为沙土混合岩石，两旁树木茂密。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P013",
+        "fact_ids": [
+          "F013"
+        ],
+        "scene_observation_id": "FO:P013",
+        "visible_detail": "位于灌木和针叶林间的碎石土路，远处可见山坡。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P014",
+        "fact_ids": [
+          "F014"
+        ],
+        "scene_observation_id": "FO:P014",
+        "visible_detail": "铺设着不规则石板的登山步道，右侧紧邻巨大的灰色花岗岩巨石。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P015",
+        "fact_ids": [
+          "F015"
+        ],
+        "scene_observation_id": "FO:P015",
+        "visible_detail": "一名背着蓝色背包的徒步者站在山间小径上，面朝镜头方向。",
+        "theme_fit": "MAIN_SUBJECT",
+        "visibility": "CLEAR",
+        "prominence": "READABLE",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P016",
+        "fact_ids": [
+          "F016"
+        ],
+        "scene_observation_id": "FO:P016",
+        "visible_detail": "穿过针叶林山地的碎石土路，左侧有岩石堆砌的路缘。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P017",
+        "fact_ids": [
+          "F017",
+          "F018"
+        ],
+        "scene_observation_id": "FO:P017",
+        "visible_detail": "行人背对镜头在森林小径上行走，左侧矗立着粗壮的红褐色树干。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "READABLE",
+        "occlusion": "NONE"
+      },
+      {
+        "candidate_id": "P018",
+        "fact_ids": [
+          "F019"
+        ],
+        "scene_observation_id": "FO:P018",
+        "visible_detail": "光线较暗的林间路径，两侧为密集的树木和植被。",
+        "theme_fit": "SUPPORTING_CONTEXT",
+        "visibility": "CLEAR",
+        "prominence": "DOMINANT",
+        "occlusion": "NONE"
+      }
+    ]
+  },
+  "draft": {
+    "chapter_boundaries": [
+      {
+        "chapter_ids": [
+          "C01",
+          "C02"
+        ],
+        "basis": "DIFFERENT_ACTIVITY",
+        "evidence_fact_ids": [
+          "F001",
+          "F002"
+        ],
+        "reason": "C01为铺装道路与车辆管理设施（F001），C02为野外自然山径徒步（F002起），路面材质与环境性质明显不同。"
+      },
+      {
+        "chapter_ids": [
+          "C01",
+          "C03"
+        ],
+        "basis": "DIFFERENT_ACTIVITY",
+        "evidence_fact_ids": [
+          "F001",
+          "F025"
+        ],
+        "reason": "C01为户外实地观察，C03为室内软件界面操作（F025），属于完全不同的活动场景。"
+      },
+      {
+        "chapter_ids": [
+          "C02",
+          "C03"
+        ],
+        "basis": "DIFFERENT_ACTIVITY",
+        "evidence_fact_ids": [
+          "F002",
+          "F025"
+        ],
+        "reason": "C02为户外实地徒步，C03为数字地图规划或回顾，物理环境与活动性质截然不同。"
+      }
+    ],
+    "chapters": [
+      {
+        "id": "C01",
+        "theme": "公园入口路段与标识",
+        "fact_ids": [
+          "F001"
+        ],
+        "experience_kind": "NATURE_WALK",
+        "focus": "进入景区前的铺装道路及特定的停车限制标牌",
+        "focus_fact_ids": [
+          "F001"
+        ],
+        "grouping_reason": "该事实描述了从城市/停车场过渡到自然环境的特定人工路段，与后续的纯野外地形形成环境对比。"
+      },
+      {
+        "id": "C02",
+        "theme": "山地林间徒步体验",
+        "fact_ids": [
+          "F002",
+          "F003",
+          "F004",
+          "F005",
+          "F006",
+          "F007",
+          "F008",
+          "F009",
+          "F010",
+          "F011",
+          "F012",
+          "F013",
+          "F014",
+          "F015",
+          "F016",
+          "F017",
+          "F018",
+          "F019",
+          "F020",
+          "F021",
+          "F022",
+          "F023",
+          "F024"
+        ],
+        "experience_kind": "NATURE_WALK",
+        "focus": "穿越针叶林、岩石地貌及山脊小径的连续步行经历",
+        "focus_fact_ids": [
+          "F002",
+          "F007",
+          "F014",
+          "F022",
+          "F023"
+        ],
+        "grouping_reason": "所有事实均指向同一类持续的自然环境步行活动，涵盖土路、碎石、石板步道及沿途植被和岩壁景观，虽视角不同但核心经历一致。"
+      },
+      {
+        "id": "C03",
+        "theme": "行程轨迹回顾与分析",
+        "fact_ids": [
+          "F025"
+        ],
+        "experience_kind": "OTHER",
+        "focus": "通过三维地形图软件查看本次活动的路线数据",
+        "focus_fact_ids": [
+          "F025"
+        ],
+        "grouping_reason": "这是对前述户外经历的数字化复盘或规划行为，发生在非户外的屏幕前，构成独立的活动单元。"
+      }
+    ],
+    "moments": [
+      {
+        "id": "M01",
+        "parent_chapter_id": "C02",
+        "fact_id": "F007",
+        "focus": "山脊上的开阔视野与同行者",
+        "revisit_reason": "展示了徒步中较为壮观的地形背景（山谷与岩壁）以及多人同行的状态，区别于普通的林间小路。",
+        "chapter_relations": [
+          {
+            "chapter_id": "C02",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ]
+      },
+      {
+        "id": "M02",
+        "parent_chapter_id": "C02",
+        "fact_id": "F022",
+        "focus": "人与狗在山径上并排前行",
+        "revisit_reason": "捕捉到了徒步过程中具体的伴侣动物互动瞬间，具有独特的生活气息。",
+        "chapter_relations": [
+          {
+            "chapter_id": "C02",
+            "relation": "WITHIN_CHAPTER"
+          }
+        ]
+      }
+    ],
+    "unselected_facts": []
+  }
+}

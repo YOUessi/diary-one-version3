@@ -8,6 +8,7 @@
 - Status at creation: implementation and regression verification pending; no deployment, iOS rebuild, remote push, or changes to main.
 - Evidence and daily work records live outside source in workspace `work_logs/2026-10-23.md` and `work_logs/evidence/`.
 - Local repair verification: R5_19 algorithm 1125 passed / 25 historical-fixture skips / 158 subtests passed; BFF 203 passed / 7 runtime skips. Independent review findings were reproduced and fixed. Recovery behavior and remaining deployment boundaries: [CHAPTER_RECOVERY.md](releases/version4/CHAPTER_RECOVERY.md). No mobile code, main, public deployment or current experiment runner changes.
+- R5_20 follow-up: reserve the fixed 18-image budget by provisional chapter facts and their verified frames; repair chapter boundaries independently of an invalid hero while retaining full publication validation; deduplicate retained failed StageRun records. Recorded phase_10 payload and multiframed-asset regressions added. Algorithm: 1139 passed / 25 historical-fixture skips / 158 subtests passed; independent review passed. A separately pinned, single real phase_10 run is planned; its results are not implied by offline verification.
 
 ## feat/main-algorithms-only · 2026-10-19
 
