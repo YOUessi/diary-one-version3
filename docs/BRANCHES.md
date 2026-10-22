@@ -185,3 +185,5 @@
 - 本轮完成上传证据预检与worker防御、App错误协议/重试提示，BFF115和App199通过；typecheck通过，lint4既有警告。完整历史复盘见 docs/releases/version4/PROGRESS_AND_RETROSPECTIVE.md。这属于构建4之后的本地修复，不代表服务器部署或新TestFlight包。
 
 - 2026-10-22后续：沿用此分支从4758258继续，开始时工作区干净。修复Dev Lite缺归属读取/损坏记录恢复、两套BFF输入指纹、额度幂等补偿与并发保护、暂存发布/原子写入/结果检查点恢复；App补503稳定错误与同任务重试提示。BFF170通过/7不适用运行时组合跳过，App201通过，类型检查通过，lint4既有警告；临时本机PostgreSQL16和MinIO真实服务6组通过，无公网/模型请求。部署兼容、仍需运维核对的双重故障边界见docs/releases/version4/JOB_RELIABILITY.md。未新建分支、推送、部署或打包，版本4交付分支未动。
+
+- 2026-10-22发布阶段：用户授权将此修复部署、重新归档并推送该分支，不动main。以7c6d8fd部署BFF/Worker v4-7c6d8fd-build5-20261022，数据库迁移及源码比对通过；App构建号5，已签名归档并通过27项校验。线上5类异常上传及401鉴权通过且未扣次数/调用模型；本机直连公网TLS异常另列，不算真机通过。详情见docs/releases/version4/BUILD5.md。TestFlight未上传；版本4快照保持f5371df，远端推送提交以分支历史为准。

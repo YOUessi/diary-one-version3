@@ -1,10 +1,10 @@
-# Diary One · 版本4
+# Diary One · 版本4后续修复（iOS 构建5）
 
-> 当前本地开发分支为 `fix/version4-evidence-preflight`，含构建4之后的接口/链路修复。逐版进度、反思及新修复边界见 [第一版到第四版复盘](docs/releases/version4/PROGRESS_AND_RETROSPECTIVE.md)。下方版本4说明描述已交付快照，不表示这些后续修复已打包或部署。
+> 当前分支 `fix/version4-evidence-preflight` 已纳入构建4之后的接口/链路修复。2026-10-22 已部署匹配BFF/Worker并完成 **1.0.0（5）签名归档**；TestFlight上传及新包真机验收尚未执行。见 [构建5交付记录](docs/releases/version4/BUILD5.md)。
 
-> 最新本地修复及验证：[任务归属、重复提交、额度补偿与恢复](docs/releases/version4/JOB_RELIABILITY.md)。BFF170通过、App201通过，本机隔离数据库/对象存储6组通过；部署与打包仍待执行。
+> 修复内容：[任务归属、重复提交、额度补偿与恢复](docs/releases/version4/JOB_RELIABILITY.md)。逐版进度及反思见 [第一版到第四版复盘](docs/releases/version4/PROGRESS_AND_RETROSPECTIVE.md)。下方描述原版本4快照，其GitHub分支保持不变。
 
-本分支 `版本4` 保存 **iOS 1.0.0（构建4）** 的打包源码，来源于 2026-10-21 已完成的签名归档。App 构建入口：`apps/mobile`。
+原分支 `版本4` 保存 **iOS 1.0.0（构建4）** 的打包源码，来源于 2026-10-21 已完成的签名归档。App 构建入口：`apps/mobile`。
 
 - 包含 Chapter 首页摘要、章内高光与原视频定位、历史 Aha 展示，以及完整比例预览、独立控制栏、全屏播放和退出时保留进度。
 - 包含此前照片格式/尺寸归一化与视频导入反馈修复。

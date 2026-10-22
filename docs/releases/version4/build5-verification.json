@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-22",
+  "branch": "fix/version4-evidence-preflight",
+  "ios": {
+    "version": "1.0.0",
+    "build_number": "5",
+    "bundle_id": "com.nexleap.diaryone.dev",
+    "team_id": "P34R385KJ5",
+    "status": "PASS",
+    "checks": {
+      "deep_signature_valid": true,
+      "signature_team_matches_selected_team": true,
+      "bundle_matches": true,
+      "build_number_matches": true,
+      "version_matches": true,
+      "new_submission_error_embedded": true,
+      "new_player_ui_embedded": true,
+      "chapter_highlight_fields_embedded": true,
+      "public_bff_embedded": true,
+      "simulator_fixture_not_embedded": true,
+      "native_photo_normalizer_embedded": true,
+      "native_encoded_image_validation_embedded": true,
+      "photo_error_copy_embedded": true,
+      "import_feedback_embedded": true,
+      "profile_team_matches": true,
+      "signed_app_identifier_matches": true,
+      "profile_app_identifier_matches": true,
+      "apple_sign_in_in_app": true,
+      "apple_sign_in_in_profile": true,
+      "profile_not_expired": true,
+      "iphoneos_arm64": true,
+      "model_and_js_resources": true,
+      "source_did_not_drift": true,
+      "onnx_lifecycle_patch": true,
+      "native_video_encoder": true,
+      "app_debug_symbols_present": true,
+      "app_debug_symbols_match": true
+    },
+    "symbol_coverage": "PARTIAL_DEPENDENCY_SYMBOLS",
+    "app_source_snapshot_sha256": "1f03c336cbe798c67231cd928d6c2a7b07a8599e60ea754057857ec6042fa2ef",
+    "executable_sha256": "b33b3a39ccb47c964f02c9f94e2ef080933b18ab27ee1954ec552ab5e4b28dc7",
+    "exported_ipa": false,
+    "testflight_uploaded": false,
+    "physical_device_tested": false
+  },
+  "cloud": {
+    "status": "PASS",
+    "revision": "v4-7c6d8fd-build5-20261022",
+    "source_commit": "7c6d8fdf4663d11a8c1df1c6155cdaa69eaa205a",
+    "database_fingerprint_column": true,
+    "configuration_preserved": true,
+    "algorithm_unchanged": true,
+    "algorithm_revision": "R5_18"
+  },
+  "public_preflight": {
+    "status": "PASS",
+    "revision": "v4-7c6d8fd-build5-20261022",
+    "cases": [
+      {
+        "case": "dimensions",
+        "http": 422,
+        "detail": {
+          "code": "EVIDENCE_INPUT_INVALID",
+          "reason": "evidence_format_or_dimensions_mismatch",
+          "retryable": false,
+          "action": "reimport",
+          "message": "Evidence failed validation. Select the original media again."
+        }
+      },
+      {
+        "case": "png",
+        "http": 422,
+        "detail": {
+          "code": "EVIDENCE_INPUT_INVALID",
+          "reason": "evidence_format_or_dimensions_mismatch",
+          "retryable": false,
+          "action": "reimport",
+          "message": "Evidence failed validation. Select the original media again."
+        }
+      },
+      {
+        "case": "hash",
+        "http": 422,
+        "detail": {
+          "code": "EVIDENCE_INPUT_INVALID",
+          "reason": "evidence_hash_mismatch",
+          "retryable": false,
+          "action": "reimport",
+          "message": "Evidence failed validation. Select the original media again."
+        }
+      },
+      {
+        "case": "truncated",
+        "http": 422,
+        "detail": {
+          "code": "EVIDENCE_INPUT_INVALID",
+          "reason": "evidence_decode_failed",
+          "retryable": false,
+          "action": "reimport",
+          "message": "Evidence failed validation. Select the original media again."
+        }
+      },
+      {
+        "case": "profile",
+        "http": 422,
+        "detail": {
+          "code": "EVIDENCE_INPUT_INVALID",
+          "reason": "invalid_input_profile",
+          "retryable": false,
+          "action": "reimport"
+        }
+      }
+    ],
+    "unauthenticated_http": 401,
+    "job_count_unchanged": true,
+    "quota_unchanged": true,
+    "objects_unchanged": true,
+    "model_calls": 0
+  },
+  "tests": {
+    "bff": {
+      "passed": 170,
+      "skipped_inapplicable_runtime_combinations": 7,
+      "phase": "preceding_fix_verification_same_runtime_source"
+    },
+    "local_postgres_minio": {
+      "groups": 6,
+      "phase": "preceding_fix_verification"
+    },
+    "app_core": 201,
+    "native_config": 4,
+    "onnx": 21,
+    "typecheck": "PASS",
+    "lint_errors": 0,
+    "lint_existing_warnings": 4
+  },
+  "limitations": [
+    "TestFlight upload and physical iPhone build5 acceptance not performed",
+    "Mac direct HTTPS connection reset; server public HTTPS checks passed",
+    "No new paid model inference or content-quality evaluation",
+    "Three precompiled framework dSYMs missing; app dSYM matches"
+  ]
+}
