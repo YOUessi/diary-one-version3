@@ -1,44 +1,50 @@
+import { appStrings } from '../domain/strings';
+import type { LanguagePreference } from '../domain/appSettings';
+import { useAppStore } from '../store/useAppStore';
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import type { TodayStatus } from '../model';
-import { colors, layout, radius, spacing, type } from '../theme';
+import { colors, radius, spacing, type } from '../theme';
 
 type Banner = {
   title: string;
   subtitle?: string;
-  actionLabel?: string;
   preparing?: boolean;
 };
 
-/** Figma Today banners (40:313 / 40:454 / 40:597 / 40:742). ZERO / NO_RECORDINGS are inline empty copy, not cards. */
-export function getTodayBanner(status: TodayStatus): Banner | null {
+/** Figma Today banners (40:3 Unsynced etc). ZERO / NO_RECORDINGS are inline empty copy, not cards. */
+export function getTodayBanner(status: TodayStatus, language: LanguagePreference = 'en'): Banner | null {
+  const s = appStrings(language);
   switch (status) {
     case 'READY':
       return null;
     case 'UNSYNCED':
     case 'READY_NEW_RECORDINGS':
       return {
-        title: 'New recordings on Diary One',
-        subtitle: "Sync when you're ready",
-        actionLabel: 'Sync',
+        title: s.newRecordings,
+        subtitle: s.syncWhenReady,
       };
     case 'PREPARING':
-      return { title: 'Preparing your memories...', preparing: true };
+      return { title: s.preparing, preparing: true };
     case 'READY_PREPARING':
-      return { title: 'Preparing new memories...', preparing: true };
+      return { title: s.preparingNew, preparing: true };
     case 'ZERO_CURATED':
     case 'NO_RECORDINGS':
       return null;
     case 'PARTIAL':
       return {
-        title: 'Some memories need attention.',
-        subtitle: "You can still browse what's ready.",
+        title: s.partial,
+        subtitle: s.browseReady,
       };
     default:
       return null;
   }
 }
 
+/**
+ * Figma D1/Today Status — white r12 h64, accent mark 4×28, no separate Sync chip.
+ * Whole row is tappable when onSyncPress provided.
+ */
 export function TodayStatusBanner({
   status,
   onSyncPress,
@@ -46,11 +52,13 @@ export function TodayStatusBanner({
   status: TodayStatus;
   onSyncPress?: () => void;
 }) {
-  const banner = getTodayBanner(status);
+  const language = useAppStore((s) => s.language);
+  const banner = getTodayBanner(status, language);
   if (!banner) return null;
-  const onAction = banner.actionLabel === 'Sync' ? onSyncPress : undefined;
-  return (
-    <View style={styles.banner}>
+
+  const body = (
+    <>
+      <View style={styles.mark} />
       <View style={styles.copy}>
         <View style={styles.titleRow}>
           {banner.preparing ? (
@@ -60,42 +68,46 @@ export function TodayStatusBanner({
         </View>
         {banner.subtitle ? <Text style={styles.sub}>{banner.subtitle}</Text> : null}
       </View>
-      {banner.actionLabel && onAction ? (
-        <Pressable
-          onPress={onAction}
-          style={styles.action}
-          hitSlop={8}
-          accessibilityRole="button"
-          accessibilityLabel={banner.actionLabel}
-        >
-          <Text style={styles.actionText}>{banner.actionLabel}</Text>
-        </Pressable>
-      ) : null}
-    </View>
+    </>
   );
+
+  if (onSyncPress && (status === 'UNSYNCED' || status === 'READY_NEW_RECORDINGS')) {
+    return (
+      <Pressable
+        onPress={onSyncPress}
+        style={styles.banner}
+        accessibilityRole="button"
+        accessibilityLabel={`${banner.title}. ${banner.subtitle ?? ''}`}
+      >
+        {body}
+      </Pressable>
+    );
+  }
+
+  return <View style={styles.banner}>{body}</View>;
 }
 
 const styles = StyleSheet.create({
   banner: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.surface,
-    borderRadius: radius.control,
-    paddingVertical: spacing.md,
+    gap: spacing.sm,
+    backgroundColor: colors.card,
+    borderRadius: radius.card,
+    paddingVertical: 10,
     paddingHorizontal: spacing.md,
-    minHeight: layout.minTouch,
+    height: 64,
+    width: '100%',
   },
-  copy: { flex: 1, paddingRight: spacing.sm },
+  mark: {
+    width: 4,
+    height: 28,
+    borderRadius: radius.pill,
+    backgroundColor: colors.accent,
+  },
+  copy: { flex: 1, gap: 2 },
   titleRow: { flexDirection: 'row', alignItems: 'center' },
   spinner: { marginRight: spacing.sm },
   title: { ...type.captionEmphasis, color: colors.ink, flexShrink: 1 },
-  sub: { ...type.metadata, color: colors.secondary, marginTop: 2 },
-  action: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-    minHeight: layout.minTouch,
-    justifyContent: 'center',
-  },
-  actionText: { ...type.captionEmphasis, color: colors.accent },
+  sub: { ...type.caption, color: colors.secondary },
 });

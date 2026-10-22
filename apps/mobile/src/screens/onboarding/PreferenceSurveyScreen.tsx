@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import { appStrings, appLocale } from '../../domain/strings';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -6,8 +7,11 @@ import {
   TextInput,
   View,
   ScrollView,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,634 +19,825 @@ import { colors, layout, radius, spacing, type } from '../../theme';
 import type { OnboardingStackParamList } from '../../navigation/types';
 import {
   EMPTY_SURVEY_ANSWERS,
-  PREFERENCE_SURVEY_STEPS,
-  SURVEY_OPEN_TEXT_MAX,
+  INTRO_POINTS,
+  MOMENT_OPTIONS,
+  SHOW_LESS_OPTIONS,
+  type QuestionnaireStepId,
   type SurveyAnswers,
+  momentById,
+  nextQuestionnaireStep,
+  showLessChipLabel,
+  stageMeta,
+  stepIndexToId,
+  suggestLabelsFromCustom,
+  SURVEY_OPEN_TEXT_MAX,
+  togglePrefOption,
+  clearCustomAnswers,
+  surveyHasAnswers,
 } from '../../onboarding/preferenceSurvey';
 import {
   applyPreferenceSurveyAndFinish,
   applyPreferenceSurveyFromAccount,
-  skipPreferenceSurveyAndFinish,
 } from '../../onboarding/applyPreferenceSurvey';
-import {
-  AVOID_TOPICS,
-  TAG_CATEGORIES,
-  WRITING_STYLES,
-  categoryLabel,
-  styleById,
-  tagById,
-  tagsForCategories,
-  type TagCategoryId,
-} from '../../onboarding/tagLibrary';
-import { SurveyCategoryIcon, SurveyCheckMark } from '../../components/SurveyIcons';
+import { searchSurveyTags } from '../../onboarding/surveyTagLibrary';
+import { useAppStore } from '../../store/useAppStore';
 
 type SurveyParams = OnboardingStackParamList['PreferenceSurvey'];
 type Route = RouteProp<{ PreferenceSurvey: SurveyParams }, 'PreferenceSurvey'>;
 type Nav = NativeStackNavigationProp<{ PreferenceSurvey: SurveyParams }>;
 
-let sessionAnswers: SurveyAnswers = { ...EMPTY_SURVEY_ANSWERS };
 
-const INTRO_POINTS = [
-  'Takes about 1–2 minutes',
-  'You can skip this step',
-  'You can change these preferences anytime',
-] as const;
+function resolveStepId(raw: SurveyParams['step']): QuestionnaireStepId {
+  if (typeof raw === 'string' && raw.length) {
+    const allowed: QuestionnaireStepId[] = [
+      'welcome',
+      'moments',
+      'custom',
+      'custom_review',
+      'show_less',
+      'summary',
+    ];
+    if (allowed.includes(raw as QuestionnaireStepId)) return raw as QuestionnaireStepId;
+  }
+  if (typeof raw === 'number' && Number.isFinite(raw)) return stepIndexToId(raw);
+  return 'welcome';
+}
+
+function OptionCard({
+  label,
+  description,
+  selected,
+  onPress,
+  compact,
+}: {
+  label: string;
+  description: string;
+  selected: boolean;
+  onPress: () => void;
+  compact?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[
+        styles.optionCard,
+        compact && styles.optionCardCompact,
+        !compact && styles.gridCard,
+        selected && styles.optionCardOn,
+      ]}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+    >
+      <View style={styles.optionCopy}>
+        <Text style={[styles.optionLabel, !compact && styles.gridLabel]}>{label}</Text>
+        <Text style={styles.optionDesc}>{description}</Text>
+      </View>
+      <View style={[styles.check, selected && styles.checkOn]}>
+        {selected ? <Text style={styles.checkMark}>✓</Text> : null}
+      </View>
+    </Pressable>
+  );
+}
+
+function ChipRow({ labels, onRemove }: { labels: string[]; onRemove?: (label: string) => void }) {
+  return (
+    <View style={styles.chipRow}>
+      {labels.map((label) => (
+        onRemove ? (
+          <Pressable key={label} style={styles.chip} hitSlop={7} onPress={() => onRemove(label)}
+            accessibilityRole="button" accessibilityLabel={`Remove ${label}`}>
+            <Text style={styles.chipText}>{label} ×</Text>
+          </Pressable>
+        ) : (
+          <View key={label} style={styles.chip}><Text style={styles.chipText}>{label}</Text></View>
+        )
+      ))}
+    </View>
+  );
+}
 
 export default function PreferenceSurveyScreen() {
-  const params = useRoute<Route>().params;
-  const step = Number.isFinite(params?.step) ? Math.max(0, Math.floor(params.step)) : 0;
+  const language = useAppStore((s) => s.language);
+  const strings = appStrings(language);
+  const chinese = appLocale(language) === 'zh-CN';
+  const route = useRoute<Route>();
+  const params = route.params;
+  const stepId = resolveStepId(params?.step);
   const mode = params?.mode === 'account' ? 'account' : 'onboarding';
   const navigation = useNavigation<Nav>();
-  const page = PREFERENCE_SURVEY_STEPS[step];
-  const [answers, setAnswers] = useState<SurveyAnswers>(() => ({
-    ...sessionAnswers,
-    categories: [...sessionAnswers.categories],
-    interestTags: [...sessionAnswers.interestTags],
-    avoidTopics: [...sessionAnswers.avoidTopics],
-  }));
+  const meta = stageMeta(stepId);
+  const answers = params?.answers ?? EMPTY_SURVEY_ANSWERS;
+  const [tagSearch, setTagSearch] = useState('');
+  const [saving, setSaving] = useState(false);
+  const saveLock = useRef(false);
+  const owner = useRef({ token: useAppStore.getState().sessionToken, email: useAppStore.getState().localProfile.email });
+  const emptySummary = !surveyHasAnswers(answers);
 
-  const visibleTags = useMemo(
-    () => tagsForCategories(answers.categories),
-    [answers.categories],
-  );
+  // Also preserve edits when the user uses the native back action.
+  useEffect(() => {
+    return navigation.addListener('beforeRemove', (event) => {
+      if (!['GO_BACK', 'POP'].includes(event.data.action.type)) return;
+      const state = navigation.getState();
+      if (state.routes[state.index]?.key !== route.key) return;
+      const previous = state.routes[state.index - 1];
+      if (previous?.name === 'PreferenceSurvey') {
+        navigation.dispatch({ ...CommonActions.setParams({ answers }), source: previous.key });
+      }
+    });
+  }, [answers, navigation, route.key]);
 
   const canContinue = useMemo(() => {
-    if (!page) return false;
-    switch (page.kind) {
-      case 'intro':
-      case 'text':
-      case 'review':
+    switch (stepId) {
+      case 'welcome':
+      case 'custom':
+      case 'custom_review':
+      case 'summary':
         return true;
-      case 'category_grid':
-        return answers.categories.length > 0;
-      case 'tag_chips':
-        return answers.interestTags.length > 0;
-      case 'style_list':
-        return Boolean(answers.styleId);
-      case 'avoid_chips':
+      case 'moments':
+      case 'show_less':
         return true;
-      case 'consent':
-        return answers.consent === 'agree' || answers.consent === 'local';
       default:
         return false;
     }
-  }, [page, answers]);
+  }, [stepId]);
 
-  if (!page) {
-    navigation.replace('PreferenceSurvey', { step: 0, mode });
-    return null;
-  }
+  const tagHits = useMemo(() => {
+    return searchSurveyTags(tagSearch);
+  }, [tagSearch]);
 
-  const persist = (next: SurveyAnswers) => {
-    sessionAnswers = { ...next };
-    setAnswers(next);
-  };
+  const persist = (next: SurveyAnswers) => navigation.setParams({ answers: next });
 
   const leaveAccountSurvey = () => {
-    sessionAnswers = { ...EMPTY_SURVEY_ANSWERS };
-    if (navigation.canGoBack()) {
-      navigation.pop(step + 1);
+    const state = navigation.getState();
+    let count = 0;
+    for (let i = state.index; i >= 0 && state.routes[i].name === 'PreferenceSurvey'; i--) count++;
+    if (navigation.canGoBack()) navigation.pop(Math.min(count, state.index));
+  };
+
+  const go = (next: QuestionnaireStepId, nextAnswers = answers) => {
+    navigation.push('PreferenceSurvey', { step: next, mode, answers: nextAnswers });
+  };
+
+  const saveAndLeave = async (nextAnswers: SurveyAnswers) => {
+    if (saveLock.current) return;
+    saveLock.current = true;
+    setSaving(true);
+    try {
+      const current = useAppStore.getState();
+      if (current.sessionToken !== owner.current.token || current.localProfile.email !== owner.current.email) {
+        throw new Error('Account changed. Please reopen preferences.');
+      }
+      if (mode === 'account') {
+        await applyPreferenceSurveyFromAccount(nextAnswers);
+        leaveAccountSurvey();
+      } else await applyPreferenceSurveyAndFinish(nextAnswers);
+    } catch (error) {
+      Alert.alert('Preferences not saved', error instanceof Error ? error.message : 'Please try again.');
+    } finally {
+      saveLock.current = false;
+      setSaving(false);
     }
   };
 
-  const toggleCategory = (id: TagCategoryId) => {
-    const on = answers.categories.includes(id);
-    const categories = on
-      ? answers.categories.filter((c) => c !== id)
-      : [...answers.categories, id];
-    const allowed = new Set(tagsForCategories(categories).map((t) => t.id));
-    const interestTags = answers.interestTags.filter((t) => allowed.has(t));
-    persist({ ...answers, categories, interestTags });
-  };
-
-  const toggleTag = (id: string) => {
-    const on = answers.interestTags.includes(id);
-    persist({
-      ...answers,
-      interestTags: on
-        ? answers.interestTags.filter((t) => t !== id)
-        : [...answers.interestTags, id],
-    });
-  };
-
-  const toggleAvoid = (id: string) => {
-    const on = answers.avoidTopics.includes(id);
-    persist({
-      ...answers,
-      avoidTopics: on
-        ? answers.avoidTopics.filter((t) => t !== id)
-        : [...answers.avoidTopics, id],
-    });
-  };
-
-  const onPrimary = () => {
-    sessionAnswers = { ...answers };
-    if (step >= PREFERENCE_SURVEY_STEPS.length - 1) {
-      if (mode === 'account') {
-        applyPreferenceSurveyFromAccount(sessionAnswers);
-        leaveAccountSurvey();
-      } else {
-        applyPreferenceSurveyAndFinish(sessionAnswers);
-        sessionAnswers = { ...EMPTY_SURVEY_ANSWERS };
-      }
+  const onPrimary = async () => {
+    if (saveLock.current) return;
+    let nextAnswers = answers;
+    if (stepId === 'custom') {
+      const fromWords = answers.reviewedText === answers.customText ? [] : suggestLabelsFromCustom(answers.customText);
+      nextAnswers = { ...answers, reviewedText: answers.customText,
+        suggestedLabels: [...new Set([...answers.suggestedLabels, ...fromWords])] };
+      persist(nextAnswers);
+    }
+    const next = nextQuestionnaireStep(stepId, nextAnswers);
+    if (next === 'done') {
+      await saveAndLeave(nextAnswers);
       return;
     }
-    navigation.push('PreferenceSurvey', { step: step + 1, mode });
+    go(next, nextAnswers);
   };
 
   const onSkipAll = () => {
-    sessionAnswers = { ...EMPTY_SURVEY_ANSWERS };
     if (mode === 'account') {
       leaveAccountSurvey();
       return;
     }
-    skipPreferenceSurveyAndFinish();
+    void saveAndLeave({ ...EMPTY_SURVEY_ANSWERS });
+  };
+
+  const onSkipStep = () => {
+    if (stepId === 'custom' || stepId === 'custom_review') {
+      const cleared = clearCustomAnswers(answers);
+      persist(cleared);
+      go('show_less', cleared);
+      return;
+    }
+    onSkipAll();
   };
 
   const onBack = () => {
-    if (step > 0) {
+    if (stepId === 'welcome') {
+      if (mode === 'account') {
+        leaveAccountSurvey();
+        return;
+      }
+      if (navigation.canGoBack()) navigation.goBack();
+      return;
+    }
+    if (navigation.canGoBack()) {
+      // Carry later edits back to the preceding step without a shared mutable draft.
+      const state = navigation.getState();
+      const previous = state.routes[state.index - 1];
+      if (previous?.name === 'PreferenceSurvey') navigation.dispatch({ ...CommonActions.setParams({ answers }), source: previous.key });
       navigation.goBack();
-      return;
     }
-    if (mode === 'account') {
-      leaveAccountSurvey();
-      return;
-    }
-    if (navigation.canGoBack()) navigation.goBack();
   };
 
-  const progress = (step + 1) / PREFERENCE_SURVEY_STEPS.length;
-  /** Figma 2145: Get started → Next (mid) → Continue (review) → Finish / Save. */
-  const primaryLabel =
-    page.kind === 'intro'
-      ? 'Get started'
-      : step >= PREFERENCE_SURVEY_STEPS.length - 1
-        ? mode === 'account'
-          ? 'Save preferences'
-          : 'Finish and personalize'
-        : page.kind === 'review'
-          ? 'Continue'
-          : 'Next';
+  /** Figma “Go back and edit” → return to Moments (stage 1). */
+  const onEditFromSummary = () => {
+    const state = navigation.getState();
+    const index = state.routes.findLastIndex(r => r.name === 'PreferenceSurvey' &&
+      resolveStepId(r.params?.step) === 'moments');
+    if (index >= 0) {
+      const routes = state.routes.slice(0, index + 1).map((r, i) => i === index
+        ? { ...r, params: { ...r.params, answers } } : r);
+      navigation.dispatch(CommonActions.reset({ ...state, routes, index }));
+    } else go('moments');
+  };
 
-  const showBack = step > 0 || mode === 'account';
+  const primaryLabel =
+    stepId === 'welcome'
+      ? strings.getStarted
+      : stepId === 'custom_review' || stepId === 'summary'
+        ? stepId === 'summary' && emptySummary ? strings.withoutPreferences : strings.confirmContinue
+        : strings.continue;
+
+  const secondaryLabel =
+    stepId === 'welcome'
+      ? mode === 'account'
+        ? strings.cancel
+        : strings.skipNow
+      : stepId === 'custom' || stepId === 'custom_review'
+        ? strings.skipStep
+        : stepId === 'summary'
+          ? null
+          : strings.skipSetup;
+
+  /** NOTICE MORE chips — moments only (custom goes to SPECIFIC card). */
+  const noticeMoreChips = useMemo(() => {
+    if (answers.momentIds.includes('follow_day')) {
+      return ['No preference — follow my day'];
+    }
+    return answers.momentIds
+      .filter((id) => id !== 'something_else' && id !== 'follow_day')
+      .map((id) => momentById(id)?.label)
+      .filter((x): x is string => Boolean(x));
+  }, [answers.momentIds]);
+
+  const showLessChips = useMemo(() => {
+    if (answers.showLessIds.includes('nothing')) {
+      return ['Nothing for now'];
+    }
+    return answers.showLessIds.map((id) => showLessChipLabel(id));
+  }, [answers.showLessIds]);
+
+  const specificChips = answers.momentIds.includes('something_else') ? answers.suggestedLabels : [];
+  const removeSuggested = (label: string) => persist({ ...answers,
+    suggestedLabels: answers.suggestedLabels.filter(l => l !== label),
+    searchedLabels: answers.searchedLabels?.filter(l => l !== label) });
+
+  const addSuggested = (label: string) => {
+    if (answers.suggestedLabels.includes(label)) return;
+    persist({
+      ...answers,
+      suggestedLabels: [...answers.suggestedLabels, label],
+      searchedLabels: [...new Set([...(answers.searchedLabels ?? []), label])],
+    });
+  };
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      {/* Figma 2145: ‹ left · progress · ✕ right */}
-      <View style={styles.topBar}>
-        {showBack ? (
-          <Pressable onPress={onBack} style={styles.iconBtn} hitSlop={12} accessibilityLabel="Back">
-            <Text style={styles.backText}>‹</Text>
+    <SafeAreaView
+      style={[styles.safe, mode === 'account' && { paddingBottom: layout.tabBarHeight + spacing.md }]}
+      edges={['top', 'bottom']}
+    >
+      <KeyboardAvoidingView style={styles.safe} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      {stepId === 'welcome' ? (
+        <>
+          <View style={styles.welcomeNav} />
+          <View style={styles.welcomeTop} />
+        </>
+      ) : (
+        <View style={styles.topNav}>
+          <Text style={styles.stageLabel}>{meta.stageLabel}</Text>
+          <Pressable onPress={onBack} disabled={saving} hitSlop={12} accessibilityLabel={strings.back}>
+            <Text style={styles.backText}>{strings.back}</Text>
           </Pressable>
-        ) : (
-          <View style={styles.iconBtn} />
-        )}
-        <View style={styles.progressTrack}>
-          <View style={[styles.progressFill, { width: `${Math.round(progress * 100)}%` }]} />
         </View>
-        <Pressable onPress={onSkipAll} style={styles.iconBtn} hitSlop={12} accessibilityLabel="Close">
-          <Text style={styles.closeText}>✕</Text>
-        </Pressable>
-      </View>
+      )}
+
+      {stepId !== 'welcome' ? (
+        <View style={styles.segments}>
+          {[0, 1, 2].map((i) => (
+            <View
+              key={i}
+              style={[styles.segment, i < meta.filledSegments && styles.segmentOn]}
+            />
+          ))}
+        </View>
+      ) : null}
 
       <ScrollView
+        style={styles.scrollViewport}
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {page.kind === 'intro' ? (
-          <Text style={styles.welcomeEyebrow}>WELCOME TO DIARY</Text>
-        ) : null}
-        <Text style={styles.title}>{page.title}</Text>
-        {page.lead ? <Text style={styles.lead}>{page.lead}</Text> : null}
-
-        {page.kind === 'intro' ? (
-          <View style={styles.bullets}>
-            {INTRO_POINTS.map((line) => (
-              <View key={line} style={styles.bulletRow}>
-                <SurveyCheckMark />
-                <Text style={styles.bullet}>{line}</Text>
-              </View>
-            ))}
-          </View>
-        ) : null}
-
-        {page.kind === 'category_grid' ? (
-          <View style={styles.grid}>
-            {TAG_CATEGORIES.map((cat) => {
-              const on = answers.categories.includes(cat.id);
-              return (
-                <Pressable
-                  key={cat.id}
-                  onPress={() => toggleCategory(cat.id)}
-                  style={[styles.tile, on && styles.tileOn]}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: on }}
-                >
-                  <SurveyCategoryIcon id={cat.id} />
-                  <Text style={[styles.tileLabel, on && styles.tileLabelOn]}>{cat.label}</Text>
-                  {on ? (
-                    <View style={styles.checkCorner}>
-                      <Text style={styles.checkMark}>✓</Text>
-                    </View>
-                  ) : (
-                    <View style={styles.radioCorner} />
-                  )}
-                </Pressable>
-              );
-            })}
-          </View>
+        {stepId === 'welcome' ? (
+          <>
+            <Text style={styles.welcomeEyebrow}>{strings.welcome}</Text>
+            <View style={styles.welcomeHeadingGap} />
+            <View style={styles.welcomeHeadingBlock}>
+              <Text style={styles.titleWelcome}>{strings.preferencesTitle}</Text>
+              <Text style={styles.leadWelcome}>
+                {strings.preferencesLead}
+              </Text>
+            </View>
+            <View style={styles.bullets}>
+              {(chinese ? ['你可以随时修改偏好。', '不设置偏好也可以使用日记。', '偏好不会改变素材中实际发生的事。'] : INTRO_POINTS).map((line) => (
+                <Text key={line} style={styles.bullet}>{`•  ${line}`}</Text>
+              ))}
+            </View>
+          </>
         ) : null}
 
-        {page.kind === 'text' ? (
-          <TextInput
-            value={answers.openText}
-            onChangeText={(t) =>
-              persist({ ...answers, openText: t.slice(0, SURVEY_OPEN_TEXT_MAX) })
-            }
-            placeholder="e.g. quiet mornings…"
-            placeholderTextColor={colors.tertiary}
-            multiline
-            style={styles.textArea}
-            maxLength={SURVEY_OPEN_TEXT_MAX}
-          />
-        ) : null}
-
-        {page.kind === 'tag_chips' ? (
-          <View style={styles.chipSections}>
-            {(answers.categories.length ? answers.categories : TAG_CATEGORIES.map((c) => c.id)).map(
-              (catId) => {
-                const tags = visibleTags.filter((t) => t.categoryId === catId);
-                if (!tags.length) return null;
-                return (
-                  <View key={catId} style={styles.chipBlock}>
-                    <Text style={styles.chipSectionTitle}>{categoryLabel(catId)}</Text>
-                    <View style={styles.chipRow}>
-                      {tags.map((tag) => {
-                        const on = answers.interestTags.includes(tag.id);
-                        return (
-                          <Pressable
-                            key={tag.id}
-                            onPress={() => toggleTag(tag.id)}
-                            style={[styles.chip, on && styles.chipOn]}
-                          >
-                            <Text style={[styles.chipText, on && styles.chipTextOn]}>
-                              {tag.label}
-                            </Text>
-                          </Pressable>
-                        );
-                      })}
-                    </View>
-                  </View>
-                );
-              },
-            )}
-          </View>
-        ) : null}
-
-        {page.kind === 'style_list' ? (
-          <View style={styles.styleList}>
-            {WRITING_STYLES.map((style) => {
-              const on = answers.styleId === style.id;
-              return (
-                <Pressable
-                  key={style.id}
-                  onPress={() => persist({ ...answers, styleId: style.id })}
-                  style={[styles.styleCard, on && styles.styleCardOn]}
-                >
-                  <View style={styles.styleCopy}>
-                    <Text style={[styles.styleTitle, on && styles.styleTitleOn]}>{style.label}</Text>
-                    <Text style={styles.styleDesc}>{style.description}</Text>
-                  </View>
-                  <View style={[styles.radio, on && styles.radioOn]}>
-                    {on ? <View style={styles.radioDot} /> : null}
-                  </View>
-                </Pressable>
-              );
-            })}
-          </View>
-        ) : null}
-
-        {page.kind === 'avoid_chips' ? (
-          <View style={styles.chipRow}>
-            {AVOID_TOPICS.map((topic) => {
-              const on = answers.avoidTopics.includes(topic.id);
-              return (
-                <Pressable
-                  key={topic.id}
-                  onPress={() => toggleAvoid(topic.id)}
-                  style={[styles.chip, on && styles.chipAvoidOn]}
-                >
-                  <Text style={[styles.chipText, on && styles.chipTextOn]}>{topic.label}</Text>
-                  {on ? <Text style={styles.chipX}> ×</Text> : null}
-                </Pressable>
-              );
-            })}
-          </View>
-        ) : null}
-
-        {page.kind === 'review' ? (
-          <View style={styles.review}>
-            <ReviewRow
-              label="Preferred categories"
-              value={
-                answers.categories.length
-                  ? answers.categories.map(categoryLabel).join(', ')
-                  : 'None'
-              }
-            />
-            <ReviewRow
-              label="Interest tags"
-              value={
-                answers.interestTags.length
-                  ? answers.interestTags.map((id) => tagById(id)?.label ?? id).join(', ')
-                  : 'None'
-              }
-            />
-            <ReviewRow
-              label="Writing style"
-              value={answers.styleId ? styleById(answers.styleId)?.label ?? '—' : 'None'}
-            />
-            <ReviewRow
-              label="Topics to avoid"
-              value={
-                answers.avoidTopics.length
-                  ? answers.avoidTopics
-                      .map((id) => AVOID_TOPICS.find((a) => a.id === id)?.label ?? id)
-                      .join(', ')
-                  : 'None'
-              }
-            />
-            {answers.openText.trim() ? (
-              <ReviewRow label="Anything else" value={answers.openText.trim()} />
-            ) : null}
-          </View>
-        ) : null}
-
-        {page.kind === 'consent' ? (
-          <View style={styles.styleList}>
-            {(
-              [
-                {
-                  id: 'agree' as const,
-                  label: 'Agree and continue',
-                  description: 'Allow cloud evidence upload for memory generation.',
-                },
-                {
-                  id: 'local' as const,
-                  label: 'Browse on this device only for now',
-                  description: 'You can turn cloud processing on later in Privacy & Data.',
-                },
-              ] as const
-            ).map((opt) => {
-              const on = answers.consent === opt.id;
-              return (
-                <Pressable
+        {stepId === 'moments' ? (
+          <>
+            <View style={styles.headingBlock}>
+              <Text style={styles.title}>
+                Which kinds of moments would you like Diary to notice more?
+              </Text>
+              <Text style={styles.lead}>
+                Choose as many as you like. You can change these anytime.
+              </Text>
+            </View>
+            <View style={styles.momentGrid}>
+              {MOMENT_OPTIONS.map((opt) => (
+                <OptionCard
                   key={opt.id}
-                  onPress={() => persist({ ...answers, consent: opt.id })}
-                  style={[styles.styleCard, on && styles.styleCardOn]}
-                >
-                  <View style={styles.styleCopy}>
-                    <Text style={[styles.styleTitle, on && styles.styleTitleOn]}>{opt.label}</Text>
-                    <Text style={styles.styleDesc}>{opt.description}</Text>
-                  </View>
-                  <View style={[styles.radio, on && styles.radioOn]}>
-                    {on ? <View style={styles.radioDot} /> : null}
-                  </View>
-                </Pressable>
-              );
-            })}
-            <Text style={styles.footnote}>
-              You can change cloud processing later in Privacy & Data. Signing in is not the same as
-              this consent.
+                  label={opt.label}
+                  description={opt.description}
+                  selected={answers.momentIds.includes(opt.id)}
+                  onPress={() =>
+                    {
+                      const momentIds = togglePrefOption(answers.momentIds, opt, MOMENT_OPTIONS);
+                      persist({ ...(momentIds.includes('something_else') ? answers : clearCustomAnswers(answers)), momentIds });
+                    }
+                  }
+                />
+              ))}
+            </View>
+          </>
+        ) : null}
+
+        {stepId === 'custom' ? (
+          <>
+            <View style={styles.headingBlock}>
+              <Text style={styles.title}>Anything else you’d like Diary to remember?</Text>
+              <Text style={styles.lead}>
+                Add an activity, interest, or place in your own words. You can skip this.
+              </Text>
+            </View>
+            <View style={styles.noteCard}>
+              <Text style={styles.noteLabel}>YOUR WORDS (OPTIONAL)</Text>
+              <TextInput
+                value={answers.customText}
+                onChangeText={(t) =>
+                  persist({ ...answers, customText: t.slice(0, SURVEY_OPEN_TEXT_MAX),
+                    suggestedLabels: answers.searchedLabels ?? [], reviewedText: undefined })
+                }
+                placeholder="e.g. fishing by the water, city walks, or model-building"
+                placeholderTextColor={colors.tertiary}
+                multiline
+                style={styles.noteInput}
+                maxLength={SURVEY_OPEN_TEXT_MAX}
+                accessibilityLabel="Your words (optional)"
+              />
+            </View>
+            <Text style={styles.searchLabel}>OR SEARCH A TAG</Text>
+            <TextInput
+              value={tagSearch}
+              onChangeText={setTagSearch}
+              placeholder="Search an activity or place"
+              placeholderTextColor={colors.tertiary}
+              style={styles.searchInput}
+              accessibilityLabel="Search an activity or place"
+            />
+            {tagHits.length ? (
+              <View style={[styles.chipRow, styles.tagHits]}>
+                {tagHits.map((t) => (
+                  <Pressable
+                    key={t.id}
+                    onPress={() => {
+                      addSuggested(t.label);
+                      setTagSearch('');
+                    }}
+                    style={styles.chip}
+                  >
+                    <Text style={styles.chipText}>{t.label}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            ) : null}
+            {answers.suggestedLabels.length ? (
+              <>
+                <Text style={[styles.searchLabel, styles.tagHits]}>ADDED</Text>
+                <ChipRow labels={answers.suggestedLabels} onRemove={removeSuggested} />
+              </>
+            ) : null}
+          </>
+        ) : null}
+
+        {stepId === 'custom_review' ? (
+          <>
+            <View style={styles.headingBlock}>
+              <Text style={styles.title}>Review what Diary understood</Text>
+              <Text style={styles.lead}>
+                These are suggestions, not facts from your recordings. You can edit or skip them.
+              </Text>
+            </View>
+            {answers.customText.trim() ? <View style={[styles.noteCard, styles.noteCardReview]}>
+              <Text style={styles.noteLabel}>YOUR WORDS</Text>
+              <Text style={styles.noteBody}>{answers.customText.trim()}</Text>
+            </View> : null}
+            <Text style={styles.searchLabel}>SUGGESTED PREFERENCES</Text>
+            <ChipRow labels={answers.suggestedLabels} onRemove={removeSuggested} />
+            <Pressable onPress={onBack} style={styles.editLink} accessibilityRole="button">
+              <Text style={styles.editLinkText}>Edit words or search tags</Text>
+            </Pressable>
+          </>
+        ) : null}
+
+        {stepId === 'show_less' ? (
+          <>
+            <View style={styles.headingBlock}>
+              <Text style={styles.title}>What would you like to see less often?</Text>
+              <Text style={styles.lead}>
+                This only makes these moments less likely to become featured memories. It will not
+                delete your original content.
+              </Text>
+            </View>
+            <View style={styles.listCol}>
+              {SHOW_LESS_OPTIONS.map((opt) => (
+                <OptionCard
+                  key={opt.id}
+                  compact
+                  label={opt.label}
+                  description={opt.description}
+                  selected={answers.showLessIds.includes(opt.id)}
+                  onPress={() =>
+                    persist({
+                      ...answers,
+                      showLessIds: togglePrefOption(
+                        answers.showLessIds,
+                        opt,
+                        SHOW_LESS_OPTIONS,
+                      ),
+                    })
+                  }
+                />
+              ))}
+            </View>
+          </>
+        ) : null}
+
+        {stepId === 'summary' ? (
+          <>
+            <View style={styles.headingBlock}>
+              <Text style={styles.title}>{emptySummary ? 'Review your preferences' : 'Here is what Diary will look out for'}</Text>
+              <Text style={styles.lead}>
+                {emptySummary ? 'Nothing is set yet. You can add preferences anytime in Settings.' : 'You can change these preferences anytime in Settings.'}
+              </Text>
+            </View>
+            <View style={styles.summaryCard}>
+              <Text style={styles.summaryEyebrow}>NOTICE MORE</Text>
+              {noticeMoreChips.length ? <ChipRow labels={noticeMoreChips} /> : <Text style={styles.unset}>Not set yet</Text>}
+            </View>
+            <View style={[styles.summaryCard, styles.summaryCardGap]}>
+              <Text style={[styles.summaryEyebrow, styles.summaryEyebrowMuted]}>
+                SHOW LESS OFTEN
+              </Text>
+              {showLessChips.length ? <ChipRow labels={showLessChips} /> : <Text style={styles.unset}>Not set yet</Text>}
+            </View>
+            {specificChips.length || (answers.momentIds.includes('something_else') && answers.customText.trim()) ? (
+              <View style={[styles.summaryCard, styles.summaryCardGap]}>
+                <Text style={[styles.summaryEyebrow, styles.summaryEyebrowMuted]}>
+                  SPECIFIC THINGS YOU ADDED
+                </Text>
+                <ChipRow labels={specificChips} />
+                {!specificChips.length && answers.customText.trim() ? <Text style={styles.noteBody}>{answers.customText.trim()}</Text> : null}
+              </View>
+            ) : null}
+            <Text style={styles.promise}>
+              {emptySummary ? 'Diary will follow what was actually captured. You can set preferences later.' :
+                'These preferences only affect how your content is selected and presented. Diary only uses moments that were actually captured.'}
             </Text>
-          </View>
+            <Pressable onPress={onEditFromSummary} disabled={saving} style={styles.editLink}>
+              <Text style={styles.editLinkText}>Go back and edit</Text>
+            </Pressable>
+          </>
         ) : null}
       </ScrollView>
 
       <View style={styles.footer}>
         <Pressable
           onPress={onPrimary}
-          disabled={!canContinue}
+          disabled={!canContinue || saving}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: !canContinue || saving, busy: saving }}
           style={[styles.primary, !canContinue && styles.primaryDisabled]}
         >
-          <Text style={styles.primaryLabel}>{primaryLabel}</Text>
+          <Text style={styles.primaryLabel}>{saving ? strings.saving : primaryLabel}</Text>
         </Pressable>
-        <Pressable onPress={onSkipAll} style={styles.secondary}>
-          <Text style={styles.secondaryLabel}>
-            {mode === 'account' ? 'Cancel' : 'Skip for now'}
-          </Text>
-        </Pressable>
+        {secondaryLabel ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={
+              stepId === 'custom' || stepId === 'custom_review' ? onSkipStep : onSkipAll
+            }
+            style={styles.secondary}
+            disabled={saving}
+          >
+            <Text style={styles.secondaryLabel}>{secondaryLabel}</Text>
+          </Pressable>
+        ) : (
+          <Text style={styles.footerHint}>You can change this anytime in Settings.</Text>
+        )}
       </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
-  );
-}
-
-function ReviewRow({ label, value }: { label: string; value: string }) {
-  return (
-    <View style={styles.reviewRow}>
-      <Text style={styles.reviewLabel}>{label}</Text>
-      <Text style={styles.reviewValue}>{value}</Text>
-    </View>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
-  topBar: {
+  /** Figma Welcome: empty Top navigation 22 + Top spacing 54 */
+  welcomeNav: { height: 22, marginHorizontal: layout.gutterDiary },
+  welcomeTop: { height: 54 },
+  /** Figma: Progress spacing 14 + Heading spacing 18 → eyebrow 后间距 */
+  welcomeHeadingGap: { height: 32 },
+  topNav: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: spacing.sm,
-    paddingBottom: spacing.md,
-    gap: spacing.sm,
+    justifyContent: 'space-between',
+    paddingHorizontal: layout.gutterDiary,
+    minHeight: 22,
+    marginBottom: 6,
   },
-  iconBtn: {
-    width: layout.minTouch,
-    height: layout.minTouch,
-    alignItems: 'center',
-    justifyContent: 'center',
+  stageLabel: {
+    ...type.metadata,
+    color: colors.tertiary,
+    textTransform: 'uppercase',
   },
-  closeText: { fontSize: 16, color: colors.ink, fontWeight: '500' },
-  backText: { fontSize: 28, color: colors.ink, fontWeight: '300', marginTop: -2 },
-  progressTrack: {
+  backText: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '500',
+    color: colors.secondary,
+  },
+  segments: {
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: layout.gutterDiary,
+    marginBottom: 18,
+  },
+  segment: {
     flex: 1,
-    height: 3,
-    borderRadius: 2,
+    height: 4,
+    borderRadius: 999,
     backgroundColor: colors.divider,
-    overflow: 'hidden',
   },
-  progressFill: { height: 3, backgroundColor: colors.ink, borderRadius: 2 },
+  segmentOn: { backgroundColor: colors.ink },
   scroll: {
     paddingHorizontal: layout.gutterDiary,
     paddingBottom: spacing.xl,
     flexGrow: 1,
   },
+  scrollViewport: { flex: 1 },
   welcomeEyebrow: {
     ...type.metadata,
+    color: colors.tertiary,
+  },
+  /** Figma 2174:127 Heading block — title 28 + guidance 16/18, gap 4 */
+  welcomeHeadingBlock: {
+    gap: 4,
+    marginBottom: 0,
+  },
+  titleWelcome: {
+    fontSize: 28,
+    lineHeight: 28,
     fontWeight: '600',
-    color: colors.accent,
-    letterSpacing: 0.8,
-    marginBottom: spacing.md,
+    letterSpacing: -0.1,
+    color: colors.ink,
+  },
+  leadWelcome: {
+    fontSize: 16,
+    lineHeight: 18,
+    color: colors.secondary,
+  },
+  /** Figma 2174:130 What to expect — gap 20 */
+  bullets: { gap: 20, marginTop: 80 },
+  bullet: { fontSize: 15, lineHeight: 18, color: colors.secondary },
+  headingBlock: {
+    minHeight: 122,
+    marginBottom: spacing.sm,
+    gap: 4,
   },
   title: {
-    ...type.titleSection,
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: '600',
+    letterSpacing: -0.1,
     color: colors.ink,
-    marginBottom: spacing.sm,
   },
-  lead: { ...type.bodyStory, color: colors.secondary, marginBottom: spacing.xl },
-  bullets: { gap: spacing.md, marginBottom: spacing.lg },
-  bulletRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  bullet: { ...type.bodyStory, color: colors.ink, flex: 1 },
-  grid: {
+  lead: {
+    fontSize: 15,
+    lineHeight: 18,
+    color: colors.secondary,
+  },
+  momentGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing.sm,
-    marginBottom: spacing.md,
+    gap: 8,
   },
-  tile: {
-    width: '48%',
-    flexGrow: 1,
-    minHeight: 108,
+  gridCard: { flexBasis: '47%', flexGrow: 1 },
+  gridLabel: { maxWidth: 116 },
+  listCol: { gap: 8 },
+  /** Figma Preference Option Card — unselected 1px divider; selected 1.5 ink */
+  optionCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    minHeight: 112,
+    backgroundColor: colors.card,
     borderWidth: 1,
     borderColor: colors.divider,
-    borderRadius: radius.media,
-    backgroundColor: colors.card,
-    padding: spacing.md,
-    justifyContent: 'flex-end',
-    gap: spacing.sm,
+    borderRadius: radius.card,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
   },
-  tileOn: {
-    borderColor: colors.ink,
-    backgroundColor: colors.card,
+  optionCardCompact: { minHeight: 54, width: '100%' },
+  optionCardOn: { borderWidth: 1.5, borderColor: colors.ink },
+  optionCopy: { flex: 1, gap: 4 },
+  optionLabel: {
+    fontSize: 15,
+    lineHeight: 18,
+    fontWeight: '500',
+    color: colors.ink,
   },
-  tileLabel: { ...type.captionEmphasis, color: colors.ink },
-  tileLabelOn: { fontWeight: '700' },
-  radioCorner: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
+  optionDesc: {
+    fontSize: 12,
+    lineHeight: 14,
+    color: colors.secondary,
+    letterSpacing: 0.1,
+  },
+  check: {
     width: 20,
     height: 20,
     borderRadius: 10,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.divider,
-  },
-  checkCorner: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: colors.ink,
+    backgroundColor: colors.card,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  checkMark: { color: colors.paper, fontSize: 12, fontWeight: '700', lineHeight: 14 },
-  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.ink },
-  textArea: {
+  checkOn: {
+    backgroundColor: colors.ink,
+    borderColor: colors.ink,
+  },
+  checkMark: { color: colors.paper, fontSize: 11, lineHeight: 14 },
+  noteCard: {
     borderWidth: 1,
     borderColor: colors.divider,
-    borderRadius: radius.media,
-    padding: spacing.md,
-    minHeight: 148,
-    ...type.bodyStory,
-    color: colors.ink,
-    textAlignVertical: 'top',
-    backgroundColor: colors.card,
-    marginBottom: spacing.md,
+    borderRadius: radius.card,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    gap: 4,
+    marginBottom: 14,
+    height: 140,
+    backgroundColor: colors.paper,
   },
-  chipSections: { gap: spacing.lg, marginBottom: spacing.md },
-  chipBlock: { gap: spacing.sm },
-  chipSectionTitle: {
+  noteCardReview: { height: 102 },
+  noteLabel: {
     ...type.metadata,
-    fontWeight: '700',
     color: colors.tertiary,
-    letterSpacing: 0.6,
+  },
+  noteInput: {
+    fontSize: 16,
+    lineHeight: 23,
+    color: colors.ink,
+    flex: 1,
+    textAlignVertical: 'top',
+    padding: 0,
+  },
+  noteBody: { fontSize: 16, lineHeight: 23, color: colors.ink },
+  searchLabel: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '500',
+    color: colors.secondary,
+    marginBottom: 0,
+  },
+  searchInput: {
+    height: 52,
+    borderWidth: 1,
+    borderColor: colors.divider,
+    borderRadius: 10,
+    backgroundColor: colors.card,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    color: colors.ink,
+  },
+  tagHits: { marginTop: 12 },
+  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4 },
+  chip: {
+    backgroundColor: colors.accentSoft,
+    borderRadius: 999,
+    paddingHorizontal: 11,
+    paddingVertical: 5,
+    minHeight: 30,
+    justifyContent: 'center',
+  },
+  chipText: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '500',
+    color: colors.ink,
+  },
+  unset: { fontSize: 15, lineHeight: 18, color: colors.secondary },
+  summaryCard: {
+    borderWidth: 1,
+    borderColor: colors.divider,
+    borderRadius: radius.card,
+    padding: 14,
+    gap: 8,
+    minHeight: 98,
+    backgroundColor: colors.paper,
+  },
+  summaryCardGap: { marginTop: 10 },
+  summaryEyebrow: {
+    ...type.metadata,
+    color: colors.ink,
     textTransform: 'uppercase',
   },
-  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.divider,
-    borderRadius: radius.pill,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    backgroundColor: colors.card,
-  },
-  chipOn: {
-    borderColor: colors.accentSoft,
-    backgroundColor: colors.accentSoft,
-  },
-  chipAvoidOn: {
-    borderColor: colors.accentSoft,
-    backgroundColor: colors.accentSoft,
-  },
-  chipText: { ...type.caption, color: colors.ink },
-  chipTextOn: { fontWeight: '700', color: colors.ink },
-  chipX: { ...type.caption, color: colors.secondary },
-  styleList: { gap: spacing.sm, marginBottom: spacing.md },
-  styleCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    borderWidth: 1,
-    borderColor: colors.divider,
-    borderRadius: radius.media,
-    padding: spacing.md,
-    backgroundColor: colors.card,
-  },
-  styleCardOn: { borderColor: colors.ink, backgroundColor: colors.card },
-  styleCopy: { flex: 1 },
-  styleTitle: { ...type.bodyStory, fontWeight: '600', color: colors.ink },
-  styleTitleOn: { fontWeight: '700' },
-  styleDesc: { ...type.caption, color: colors.secondary, marginTop: 4 },
-  radio: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    borderWidth: 1.5,
-    borderColor: colors.divider,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  radioOn: { borderColor: colors.ink },
-  review: { gap: spacing.lg, marginBottom: spacing.md },
-  reviewRow: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.divider,
-    paddingBottom: spacing.md,
-  },
-  reviewLabel: {
+  summaryEyebrowMuted: { color: colors.tertiary },
+  promise: {
     ...type.caption,
-    fontWeight: '600',
-    color: colors.tertiary,
-    marginBottom: 6,
+    color: colors.secondary,
+    marginTop: 18,
+    marginBottom: 0,
   },
-  reviewValue: { ...type.bodyStory, color: colors.ink },
-  footnote: {
-    ...type.metadata,
-    color: colors.tertiary,
+  editLink: { alignItems: 'center', minHeight: 44, justifyContent: 'center' },
+  editLinkText: {
+    fontSize: 13,
     lineHeight: 18,
-    marginTop: spacing.sm,
+    fontWeight: '500',
+    color: colors.ink,
   },
   footer: {
     paddingHorizontal: layout.gutterDiary,
-    paddingBottom: spacing.md,
-    gap: spacing.sm,
+    paddingBottom: 18,
+    gap: 10,
   },
-  /** Align with onboarding CTA metrics — 52×r12 */
   primary: {
     backgroundColor: colors.ink,
-    borderRadius: 12,
-    minHeight: 52,
+    borderRadius: radius.control,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
   },
   primaryDisabled: { opacity: 0.4 },
-  primaryLabel: { fontSize: 15, lineHeight: 20, color: colors.paper, fontWeight: '600' },
-  secondary: { minHeight: layout.minTouch, alignItems: 'center', justifyContent: 'center' },
-  secondaryLabel: { ...type.bodyStory, color: colors.accent, fontWeight: '600' },
+  primaryLabel: {
+    fontSize: 15,
+    lineHeight: 20,
+    color: colors.paper,
+    fontWeight: '600',
+  },
+  secondary: {
+    minHeight: 18,
+    paddingVertical: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  secondaryLabel: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '500',
+    color: colors.secondary,
+  },
+  footerHint: {
+    ...type.metadata,
+    color: colors.tertiary,
+    textAlign: 'center',
+    minHeight: 26,
+    paddingVertical: 6,
+  },
 });

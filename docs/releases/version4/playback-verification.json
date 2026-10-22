@@ -1,0 +1,14 @@
+{
+  "scope": "Chapter video preview layout and native fullscreen",
+  "core": {"passed": 189, "failed": 0},
+  "typecheck": "passed",
+  "lint": {"errors": 0, "existing_warnings": 4},
+  "simulator_build": "Release arm64 succeeded",
+  "automated_native_observations": ["complete inline hero image", "fullscreen entry", "native full-screen controls visible", "native skip back from 10 to 0 seconds", "inline pause"],
+  "user_reported_validation": {"exit_fullscreen_preserves_position": "confirmed by user in conversation", "device": "not explicitly specified by user; no claim of new TestFlight phone test"},
+  "unit_regressions": ["same player and source during fullscreen", "seek preserved on exit", "native playback and mute synchronization", "repeat-tap guard", "fullscreen failure and retry", "media error disables fullscreen", "highlight seek bounds and replay", "background and blur pause", "safe disposal"],
+  "unverified": ["native touch scrubbing via automation", "rotation", "new physical-phone build"],
+  "sample": {"fixture": "historical R5_14 zoo replay, 8 video sources and 14 evidence frames", "cloud_calls": 0},
+  "testflight_updated": false,
+  "server_updated": false
+}

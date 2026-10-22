@@ -1,6 +1,9 @@
 # 内测（TestFlight）· Figma 04 验收标准
 
-**定位：** 这一版走 **内测**，但 **UI/状态机按上架级** 对照 Figma 0916「04 Screens」，不是「能点通就行」的 dev 包。
+**定位：** 走 **EAS `preview` → TestFlight**；UI/状态机按 Figma 0916「04 Screens」对照。  
+**本轮成功定义（PRD V0.1）：** 内部相册选图 → 手机 Evidence → 云端算法 → Diary 回写；硬件未接入时 **诚实未连接**。
+
+这不等于「全量 PRD + 真 BLE + 正式上架」。
 
 ---
 
@@ -9,52 +12,62 @@
 | Profile | 环境变量 | 用途 |
 |---------|----------|------|
 | `development` | 默认 | Metro + Dev Client，可出现 Internal Lab |
-| **`preview`** | `EXPO_PUBLIC_INTERNAL_BETA=1` · `STORE_RELEASE=0` | **TestFlight 内测主包**：Figma 完整 Sign In（含 Apple/Google 占位）、**无 Lab** |
-| `production` | `EXPO_PUBLIC_STORE_RELEASE=1` | App Store 审核向：隐藏未接线 OAuth，仅邮箱 |
+| **`preview`** | `EXPO_PUBLIC_INTERNAL_BETA=1` · `STORE_RELEASE=0` · Vision | **TestFlight 内测主包**：**仅邮箱 OTP**、无 Lab、无假 BLE |
+| `production` | `EXPO_PUBLIC_STORE_RELEASE=1` | App Store 审核向 |
 
 ```bash
-cd diary-one-app
-npm run eas:build:ios:preview
-# 或
-eas build --platform ios --profile preview
+cd apps/mobile
+npx eas-cli build --profile preview --platform ios
 ```
 
-`showInternalLabTools` 仅在 `__DEV__` 为真时开启；**preview 的 release 包不会带 Lab**（见 `src/config/buildProfile.ts`）。
+`showInternalLabTools` 在正式消费者构建中**永久关闭**；**preview release 包不带 Lab**（见 `src/config/buildProfile.ts`）。
 
 ---
 
-## 2. 内测必过项（对照 `FIGMA_04_COVERAGE.md`）
+## 2. 内测边界（写进 TestFlight 说明）
 
-1. **四 Tab** 与 PRD 纪律：Tag 不可点、Small Memory 无详情、Sync ≠ 云端处理、未连接设备不造假电量。
-2. **Onboarding / Sign In（127:1179）**：preview 包为 Apple → Google → or → Email → 底栏 **Continue with Email**（`SignInScreen` + `OnboardingScaffold`）。
-3. **Share（R6-S4）**：**Preparing** 顶栏有 **Cancel**；**Preview** 无 Cancel（与 Figma / `FIGMA_04_COVERAGE` 一致）。透明 modal 下章节仍可见。
-4. **Diary 日历 / Today 各状态**：含 Calendar Preparing、History load、Empty past day。
-5. **Device**：断开态诚实；Automatic Capture 选中态为描边/✓，无画板外的 “Selected” 文案。
-6. **Account**：内测包顶区 **Internal beta** 说明（`isInternalBetaBuild`）；About 版本与 `app.json` 一致。
-
-仍标 **⚠️** 的项（Motion 真资源、Share 像素 diff、全稿 token 逐帧）内测也应记录差距，但不阻塞「主流程可验收」。
-
----
-
-## 3. 与上架清单的关系
-
-内测 UI 按 Figma；**账号/云/硬件** 仍见 `APP_STORE_RELEASE.md` A1–A8。建议在 TestFlight 说明中写清：邮箱 OTP、OAuth、量产云、真 BLE 的边界。
+| 能力 | 内测包行为 |
+|------|------------|
+| 登录 | **Apple / Google / 邮箱 OTP**（Figma 127:1179；云端 `/v1/auth/oauth` + SMTP OTP） |
+| 真 BLE | **无** — Pairing Searching 会提示未找到设备；请用 **Continue without a device** |
+| Device | 默认 **Disconnected**；不造假电量 % |
+| 主路径 | **Device → Upload photos & videos**（或 Diary 空态同按钮）→ 相册选图/视频 → Evidence → 云 → Diary |
+| 云模型 | App **不持**模型 Key；BFF 后 X02 用**一把** `DASHSCOPE_API_KEY` 直接调通义 |
+| 隐私/条款 | 未配置 `EXPO_PUBLIC_PRIVACY_POLICY_URL` / `EXPO_PUBLIC_TERMS_URL` 时显示友好占位，**不死链** |
 
 ---
 
-## 4. 建议验收流程
+## 3. 验收最短路径（必过）
 
 1. 安装 **preview** IPA（非 development client）。
-2. 按 `page_04.txt` 分组截屏：Diary 状态矩阵 → Memory 搜索/Captured → Share 四条 flow → Device → Account。
-3. 与 Figma 并排；⚠️ 项记入 issue，带 frame id。
-4. 需要联调云时配置 BFF（见 `BACKEND_INTEGRATION.md`），勿用 Lab 导入冒充用户路径。
+2. **登录**：Continue with Apple，或邮箱 OTP（需公网 BFF；OTP 需 SMTP）。
+3. **Account → Privacy & Data** → 同意云 Evidence 上传。
+4. **Device → Choose from Photos**（或 Diary 空态 **Upload photos & videos**）→ 选图片/视频。
+5. **Diary**：Preparing → Ready / Chapter。
+6. **Memory** 本地搜索；**Share** 拼贴预览。
+7. **Device** 保持 **Disconnected**（勿期望真耳机同步）。
+
+对照全表：[`FIGMA_04_COVERAGE.md`](./FIGMA_04_COVERAGE.md)。
+
+像素：消费者主屏已按节点度量收紧（见 `FIGMA_04_COVERAGE.md`）。  
+有意识偏差保留：无假电量、「Continue without a device」、CLOUD EVIDENCE、相册导入入口（非画板）。  
+真机侧需再做一次截图对照；真 BLE / 高清 Motion 资源延后。
 
 ---
 
-## 5. 已知内测与 Store 画板差异（刻意）
+## 4. 与上架 / 运维清单
+
+- 账号 / 云 / 硬件门禁：[`APP_STORE_RELEASE.md`](./APP_STORE_RELEASE.md) A1–A8（后置）。
+- 公网 BFF / SMTP / DashScope / EAS：[`INTERNAL_BETA_OPS_CHECKLIST.md`](../../../docs/INTERNAL_BETA_OPS_CHECKLIST.md)  
+  与逐步操作单：[`INTERNAL_BETA_USER_RUNBOOK.md`](../../../docs/INTERNAL_BETA_USER_RUNBOOK.md)。
+
+---
+
+## 5. preview vs production（刻意差异）
 
 | 区域 | preview（内测） | production（上架） |
 |------|-----------------|------------------|
-| Sign In | Figma 含 Apple/Google（stub 弹窗） | 仅邮箱 + 说明文案 |
-| Internal Lab | 无 | 无 |
-| Account 横幅 | Internal beta 说明 | 无 |
+| Sign In | 仅邮箱 OTP | 仅邮箱 + 审核说明 |
+| OAuth | 无（非 Lab） | 无（未接线前） |
+| Account 横幅 | Internal beta | 无 |
+| BLE | stub / Searching 诚实失败 | 同左直至硬件接入 |

@@ -43,3 +43,8 @@ export function hydrateAssetLedger(saved: AssetLedgerEntry[] | undefined) {
 export function serializeAssetLedger(): AssetLedgerEntry[] {
   return [...entries];
 }
+
+/** PRI03 — clear in-memory pipeline ledger on local wipe. */
+export function clearAssetLedger(): void {
+  entries = [];
+}

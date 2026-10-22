@@ -1,5 +1,4 @@
 import ExpoModulesCore
-import Vision
 import UIKit
 import AVFoundation
 
@@ -9,58 +8,51 @@ public class DiaryOneVisionModule: Module {
 
     Constant("isAvailable") { true }
 
-    AsyncFunction("analyzeImages") { (uris: [String]) -> [String: Any] in
-      let modelId = "APPLE_VISION_FEATURE_PRINT_REVISION_\(VNGenerateImageFeaturePrintRequestRevision2)"
-      var vectors: [[Double]] = []
-      var classifications: [[[String: Any]]] = []
-
-      for uri in uris {
-        let uiImage = try Self.loadUIImage(uri: uri)
-        guard let cgImage = uiImage.cgImage else {
-          throw Self.err(2, "cannot load image")
-        }
-        let orientation = Self.cgOrientation(uiImage.imageOrientation)
-
-        let featureRequest = VNGenerateImageFeaturePrintRequest()
-        featureRequest.revision = VNGenerateImageFeaturePrintRequestRevision2
-        let classifyRequest = VNClassifyImageRequest()
-        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
-        try handler.perform([featureRequest, classifyRequest])
-
-        guard let observation = featureRequest.results?.first as? VNFeaturePrintObservation,
-              observation.elementType == .float else {
-          throw Self.err(3, "missing feature print")
-        }
-        let count = observation.elementCount
-        var vector: [Double] = []
-        vector.reserveCapacity(Int(count))
-        observation.data.withUnsafeBytes { raw in
-          let floats = raw.bindMemory(to: Float.self)
-          for i in 0..<Int(count) {
-            vector.append(Double(floats[i]))
-          }
-        }
-        vectors.append(vector)
-
-        var labels: [[String: Any]] = []
-        if let results = classifyRequest.results {
-          let limit = min(10, results.count)
-          for i in 0..<limit {
-            let item = results[i]
-            labels.append([
-              "identifier": item.identifier,
-              "confidence": item.confidence,
-            ])
-          }
-        }
-        classifications.append(labels)
+    AsyncFunction("extractVideoWindowFrames") { (videoUri: String, timestampsMs: [Double], destDir: String, bounds: [Double]) -> [[String: Any]] in
+      guard bounds.count == 2, timestampsMs.count > 0, timestampsMs.count <= 12 else {
+        throw Self.err(7, "Invalid video frame request")
       }
+      let source = try Self.fileURL(from: videoUri)
+      let destination = try Self.fileURL(from: destDir)
+      try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
+      let asset = AVURLAsset(url: source)
+      let times = try VideoFrameTimeline.presentationTimes(asset: asset, bounds: (bounds[0], bounds[1]))
+      let generator = AVAssetImageGenerator(asset: asset)
+      generator.appliesPreferredTrackTransform = true
+      generator.requestedTimeToleranceBefore = .zero
+      generator.requestedTimeToleranceAfter = .zero
+      generator.maximumSize = CGSize(width: 1280, height: 1280)
+      var rows: [[String: Any]] = []
+      for (index, requested) in timestampsMs.enumerated() {
+        let selected = try VideoFrameTimeline.nearest(requested, in: times, startMs: bounds[0], endMs: bounds[1])
+        var actual = CMTime.invalid
+        let cgImage: CGImage
+        do { cgImage = try generator.copyCGImage(at: selected, actualTime: &actual) }
+        catch { throw Self.err(8, "Cannot decode video at \(selected.seconds * 1000) ms: \((error as NSError).localizedDescription)") }
+        let pts = actual.seconds * 1000
+        guard pts.isFinite, pts.rounded() >= bounds[0], pts.rounded() < bounds[1],
+              abs(pts - selected.seconds * 1000) < 0.5 else {
+          throw Self.err(9, "Video decoder returned an unexpected presentation timestamp")
+        }
+        guard let jpeg = UIImage(cgImage: cgImage).jpegData(compressionQuality: 0.85) else {
+          throw Self.err(4, "jpeg encode failed")
+        }
+        let file = destination.appendingPathComponent(String(format: "vframe_%03d_%d.jpg", index, Int(requested.rounded())))
+        try jpeg.write(to: file, options: .atomic)
+        rows.append(["uri": file.absoluteString, "requestedMs": requested,
+                     "actualPtsMs": pts, "decodeTimeMs": selected.seconds * 1000])
+      }
+      return rows
+    }
 
-      return [
-        "modelId": modelId,
-        "vectors": vectors,
-        "classifications": classifications,
-      ]
+    AsyncFunction("normalizeEvidenceFrame") { (sourceUri: String, destUri: String) in
+      _ = try EvidenceFrameNormalizer.normalize(source: Self.fileURL(from: sourceUri),
+                                                destination: Self.fileURL(from: destUri))
+    }
+
+    AsyncFunction("normalizePhotoEvidenceFrame") { (sourceUri: String, destUri: String, spatial: String) -> [String: Any] in
+      try EvidenceFrameNormalizer.normalize(source: Self.fileURL(from: sourceUri),
+                                             destination: Self.fileURL(from: destUri), spatial: spatial)
     }
 
     AsyncFunction("extractVideoFrames") { (videoUri: String, timestampsMs: [Double], destDir: String) -> [[String: Any]] in
@@ -115,25 +107,4 @@ public class DiaryOneVisionModule: Module {
     throw err(1, "file uri required")
   }
 
-  private static func loadUIImage(uri: String) throws -> UIImage {
-    let url = try fileURL(from: uri)
-    guard let image = UIImage(contentsOfFile: url.path) else {
-      throw err(2, "cannot load image")
-    }
-    return image
-  }
-
-  private static func cgOrientation(_ o: UIImage.Orientation) -> CGImagePropertyOrientation {
-    switch o {
-    case .up: return .up
-    case .down: return .down
-    case .left: return .left
-    case .right: return .right
-    case .upMirrored: return .upMirrored
-    case .downMirrored: return .downMirrored
-    case .leftMirrored: return .leftMirrored
-    case .rightMirrored: return .rightMirrored
-    @unknown default: return .up
-    }
-  }
 }

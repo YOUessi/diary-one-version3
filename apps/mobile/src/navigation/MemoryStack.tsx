@@ -10,11 +10,24 @@ import OriginalViewerScreen from '../screens/memory/OriginalViewerScreen';
 import OriginalDeleteConfirmScreen from '../screens/memory/OriginalDeleteConfirmScreen';
 import { transparentModalSheetOptions } from './transparentModalOptions';
 
+import ChapterDetailScreen from '../screens/diary/ChapterDetailScreen';
+import YourStoryRemoveConfirmScreen from '../screens/diary/YourStoryRemoveConfirmScreen';
+import YourStoryRemoveFailedScreen from '../screens/diary/YourStoryRemoveFailedScreen';
+import ShareMemorySelectorScreen from '../screens/share/ShareMemorySelectorScreen';
+import PhotoCollageFlowScreen from '../screens/share/PhotoCollageFlowScreen';
+import IllustratedShareFlowScreen from '../screens/share/IllustratedShareFlowScreen';
+
 const Stack = createNativeStackNavigator<MemoryStackParamList>();
 
 export default function MemoryStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="MemoryHome" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ChapterDetail" component={ChapterDetailScreen} />
+      <Stack.Screen name="ShareMemorySelector" component={ShareMemorySelectorScreen} options={transparentModalSheetOptions} />
+      <Stack.Screen name="YourStoryRemoveConfirm" component={YourStoryRemoveConfirmScreen} options={transparentModalSheetOptions} />
+      <Stack.Screen name="YourStoryRemoveFailed" component={YourStoryRemoveFailedScreen} options={transparentModalSheetOptions} />
+      <Stack.Screen name="PhotoCollageFlow" component={PhotoCollageFlowScreen} />
+      <Stack.Screen name="IllustratedShareFlow" component={IllustratedShareFlowScreen} />
       <Stack.Screen name="MemoryHome" component={MemoryHomeScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="CapturedByYou" component={CapturedByYouScreen} />

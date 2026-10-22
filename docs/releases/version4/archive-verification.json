@@ -1,0 +1,81 @@
+{
+  "verified_at": "2026-10-21T18:22:45.348741+08:00",
+  "status": "PASS",
+  "checks": {
+    "deep_signature_valid": true,
+    "signature_team_matches_selected_team": true,
+    "bundle_matches": true,
+    "build_number_matches": true,
+    "version_matches": true,
+    "new_player_ui_embedded": true,
+    "chapter_highlight_fields_embedded": true,
+    "public_bff_embedded": true,
+    "simulator_fixture_not_embedded": true,
+    "native_photo_normalizer_embedded": true,
+    "native_encoded_image_validation_embedded": true,
+    "photo_error_copy_embedded": true,
+    "import_feedback_embedded": true,
+    "profile_team_matches": true,
+    "signed_app_identifier_matches": true,
+    "profile_app_identifier_matches": true,
+    "apple_sign_in_in_app": true,
+    "apple_sign_in_in_profile": true,
+    "profile_not_expired": true,
+    "iphoneos_arm64": true,
+    "model_and_js_resources": true,
+    "source_did_not_drift": true,
+    "onnx_lifecycle_patch": true,
+    "native_video_encoder": true,
+    "app_debug_symbols_present": true,
+    "app_debug_symbols_match": true
+  },
+  "archive_bytes": 205782321,
+  "bundle_id": "com.nexleap.diaryone.dev",
+  "version": "1.0.0",
+  "build_number": "4",
+  "minimum_ios": "16.4",
+  "app_source_snapshot_sha256": "b606be0d41ec0d67ffb94e2e9613a972c70a8218e8f95d2d63b57b86b6e859ca",
+  "executable_sha256": "2ea8b5c9d88829e3bedd95e551267e60624022359ca7298f8c72e2baaca59394",
+  "exported_ipa": false,
+  "testflight_uploaded": false,
+  "physical_device_tested": false,
+  "note": "Development-signed Release device archive. App Store distribution signing/export and TestFlight upload are separate steps. No new cloud or physical-device test.",
+  "framework_symbols": [
+    {
+      "framework": "React",
+      "binary_present": true,
+      "matching_dsym": false,
+      "uuids": [
+        [
+          "EE15B752-FB46-35F2-B0BB-A46636572385",
+          "arm64"
+        ]
+      ]
+    },
+    {
+      "framework": "ReactNativeDependencies",
+      "binary_present": true,
+      "matching_dsym": false,
+      "uuids": [
+        [
+          "DB4E1216-70C6-36F0-8A46-FDD48FCAE1F2",
+          "arm64"
+        ]
+      ]
+    },
+    {
+      "framework": "hermesvm",
+      "binary_present": true,
+      "matching_dsym": false,
+      "uuids": [
+        [
+          "BE274A23-47CC-3F5A-9E98-8474553DF5A8",
+          "arm64"
+        ]
+      ]
+    }
+  ],
+  "symbol_coverage": "PARTIAL_DEPENDENCY_SYMBOLS",
+  "signing_type": "Apple Development (Release archive); distribution signing is a separate step",
+  "record_scope": "Archive verification at 2026-10-21; not a live TestFlight status query"
+}

@@ -1,3 +1,5 @@
+import { appStrings } from '../domain/strings';
+import { useAppStore } from '../store/useAppStore';
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, layout, radius, type } from '../theme';
@@ -12,19 +14,21 @@ type Props = {
   uri: string;
   /** Local or remote MP4 when this moment is Motion; falls back to `uri`. */
   playbackUri?: string;
+  focusTimeSec?: number;
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
 };
 
 /** Figma 176:1966 / 176:2021 — idle poster; playing = accent stroke + Playing badge; tap to stop. */
-export function MomentMedia({ uri, playbackUri, playing, onPlay, onStop }: Props) {
+export function MomentMedia({ uri, playbackUri, focusTimeSec, playing, onPlay, onStop }: Props) {
+  const strings = appStrings(useAppStore((s) => s.language));
   const playSource = playbackUri ?? uri;
   const isMotion = isVideoUri(playSource);
 
   if (!playing) {
     return (
-      <Pressable onPress={onPlay} style={styles.poster} accessibilityLabel="Play moment">
+      <Pressable onPress={onPlay} style={styles.poster} accessibilityLabel={isMotion ? strings.playVideo : strings.showImage}>
         <Image source={{ uri }} style={styles.posterImage} resizeMode="cover" />
         <View style={styles.posterOverlay}>
           {isMotion ? <Text style={styles.playGlyph}>▶</Text> : null}
@@ -34,19 +38,19 @@ export function MomentMedia({ uri, playbackUri, playing, onPlay, onStop }: Props
   }
 
   if (isMotion) {
-    return <MomentPlayer uri={playSource} playing onStop={onStop} />;
+    return <MomentPlayer uri={playSource} focusTimeSec={focusTimeSec} playing onStop={onStop} />;
   }
 
   return (
     <Pressable
       onPress={onStop}
       style={styles.stillPlaying}
-      accessibilityLabel="Stop playback"
+      accessibilityLabel={strings.close}
       accessibilityState={{ selected: true }}
     >
       <Image source={{ uri }} style={styles.stillImage} resizeMode="cover" />
       <View style={styles.playingBadge}>
-        <Text style={styles.playingText}>Playing</Text>
+        <Text style={styles.playingText}>{strings.showImage}</Text>
       </View>
     </Pressable>
   );
@@ -61,7 +65,7 @@ const styles = StyleSheet.create({
   },
   posterImage: { width: '100%', height: '100%' },
   posterOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.08)',

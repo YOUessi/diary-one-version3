@@ -15,6 +15,9 @@ export default function MainTabs() {
       tabBar={(props) => <AppTabBar {...props} />}
       screenOptions={{
         headerShown: false,
+        // NAV01 — keep each tab's stack & scroll; do not unmount inactive tabs.
+        lazy: false,
+        freezeOnBlur: true,
         sceneStyle: { backgroundColor: '#FAF9F6' },
       }}
     >

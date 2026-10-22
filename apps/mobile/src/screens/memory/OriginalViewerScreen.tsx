@@ -57,7 +57,7 @@ export default function OriginalViewerScreen() {
   };
 
   const videoUri = item?.kind === 'video' ? item.playbackUri : undefined;
-  const imageUri = item?.posterUri ?? (item?.kind === 'photo' ? item.playbackUri : undefined);
+  const imageUri = item?.kind === 'photo' ? item.playbackUri ?? item.posterUri : item?.posterUri;
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
@@ -68,7 +68,6 @@ export default function OriginalViewerScreen() {
         <Text style={styles.viewerMeta} numberOfLines={1}>
           {item?.capturedAtLabel ?? 'Captured by You'}
         </Text>
-        <View style={styles.back} />
       </View>
 
       <View style={styles.viewer}>
@@ -110,25 +109,29 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: spacing.sm,
+    paddingLeft: spacing.sm,
+    paddingRight: layout.gutterDiary,
     minHeight: 44,
+    gap: 4,
   },
   back: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
-  backText: { fontSize: 34, color: colors.paper, fontWeight: '300', lineHeight: 36 },
+  backText: { fontSize: 34, color: colors.paper, fontWeight: '600', lineHeight: 36 },
+  /** Figma — meta left of center, opacity 72% */
   viewerMeta: {
     flex: 1,
     fontSize: 13,
     lineHeight: 18,
     color: colors.paper,
-    textAlign: 'center',
+    opacity: 0.72,
+    textAlign: 'left',
   },
-  /** Figma 65:1042 — media r12 cream; Viewer Actions 353×72, buttons 112×64 */
+  /** Figma 65:1042 — media cream; Viewer Actions 353×72, buttons 112×64 */
   viewer: {
     flex: 1,
     marginHorizontal: layout.gutterDiary,
     marginTop: spacing.md,
     marginBottom: spacing.lg,
-    borderRadius: 12,
+    borderRadius: 16,
     backgroundColor: colors.surface,
     overflow: 'hidden',
     alignItems: 'center',
@@ -160,16 +163,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: layout.gutterDiary,
     paddingBottom: spacing.md,
     minHeight: 72,
-    gap: spacing.sm,
   },
   actionBtn: {
-    flex: 1,
-    maxWidth: 112,
+    width: 112,
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 64,
-    gap: 6,
+    gap: 4,
   },
-  actionIcon: { fontSize: 17, color: colors.paper },
-  actionText: { fontSize: 11, lineHeight: 14, color: colors.paper, textAlign: 'center' },
+  actionIcon: { fontSize: 17, lineHeight: 24, fontWeight: '500', color: colors.paper },
+  actionText: {
+    fontSize: 11,
+    lineHeight: 14,
+    letterSpacing: 0.1,
+    color: colors.paper,
+    opacity: 0.68,
+    textAlign: 'center',
+  },
 });

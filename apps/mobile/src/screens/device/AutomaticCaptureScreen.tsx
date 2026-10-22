@@ -47,11 +47,13 @@ export default function AutomaticCaptureScreen() {
             accessibilityRole="radio"
             accessibilityState={{ selected, disabled }}
           >
+            <View style={[styles.radio, selected && styles.radioOn]}>
+              {selected ? <View style={styles.radioDot} /> : null}
+            </View>
             <View style={styles.optionCopy}>
               <Text style={styles.optionTitle}>{opt.title}</Text>
               <Text style={styles.optionSub}>{opt.subtitle}</Text>
             </View>
-            {selected ? <Text style={styles.check}>✓</Text> : null}
           </Pressable>
         );
       })}
@@ -101,10 +103,25 @@ const styles = StyleSheet.create({
     borderColor: colors.ink,
   },
   optionDisabled: { opacity: 0.45 },
+  radio: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    borderWidth: 1.5,
+    borderColor: colors.divider,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  radioOn: { borderColor: colors.ink },
+  radioDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: colors.ink,
+  },
   optionCopy: { flex: 1 },
   optionTitle: { ...type.bodyStory, fontWeight: '500', color: colors.ink },
   optionSub: { ...type.caption, color: colors.secondary, marginTop: 3 },
-  check: { ...type.titleChapter, color: colors.ink, fontWeight: '600', lineHeight: 28 },
   footer: {
     ...type.caption,
     color: colors.secondary,

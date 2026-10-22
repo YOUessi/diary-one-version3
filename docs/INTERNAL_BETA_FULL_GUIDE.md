@@ -22,15 +22,15 @@
 | 能力 | 状态 | 说明 |
 |------|------|------|
 | Expo Go 四 Tab + 入门/问卷 UI | ✅ 可测 | 细节见 `EXPO_GO_FULL_TEST_GUIDE.md` |
-| 相册/Demo → Bundle → BFF → Diary chapter | ✅ 可测 | Lab A / A2 / B |
+| 相册/Demo → Bundle → BFF → Diary chapter | ✅ 可测 | Expo Go：Lab A/B；**TestFlight 内测包：Device → Import photos（须 OTP）** |
 | 本机 Docker 量产栈（Postgres/Redis/MinIO/BFF/Worker） | ✅ 代码齐 | `up-docker-stack.ps1` |
 | 本机 Dev Lite（无 Docker 也行） | ✅ | 仅同 Wi‑Fi 几台手机 |
 | DashScope / 真 qwen | ⚠️ 看 Key | `set-dashscope-key.ps1`；无 Key 常走 mock |
 | MobileCLIP 权重（本机） | ✅ 已可部署 | 权重在参考包 `checkpoints/`；Ping 看 `mc=yes` |
-| 公网 HTTPS BFF | ❌ 你还没立 | **几十人卡在这里** |
-| 每用户日配额 | ❌ 待补小补丁 | 防打爆百炼 |
-| TestFlight / EAS preview | ⏳ 配置在 `eas.json` | 需 Apple 账号 + `eas build` |
-| 「大量用户各自稳定 chapter」 | ❌ 未成立 | 完成 **阶段 C** 后才算 |
+| 公网 HTTPS BFF | ❌ 你还没立 | **几十人卡在这里**（代码/脚本已齐，缺部署） |
+| 每用户日配额 | ✅ 已落地 | `DAY_REVISION_DAILY_LIMIT` 默认 8；超限 429 |
+| TestFlight / EAS preview | ⏳ `eas.json` 已留公网 URL 占位 | 需填域名 + Apple 账号 + `eas build` |
+| 「大量用户各自稳定 chapter」 | ❌ 未成立 | 完成 **阶段 C**（公网 HTTPS）后才算 |
 
 **两句话：**
 
@@ -282,8 +282,8 @@ PC -RequireGrounded pack（可选）：□
 | `session_token` Bearer | ✅ | 内测员必须 OTP 登录，禁用共用裸 `dev-token` |
 | 公网 HTTPS | ❌ | 云主机 443 或 Cloudflare Tunnel / frp |
 | App `EXPO_PUBLIC_BFF_BASE_URL` | ✅ 读 .env | 改成 `https://你的域名` |
-| 每用户日配额 | ❌ | **补丁**（见 C4） |
-| Worker 并发限制 | ⚠️ 弱 | 配 1～2 并发，排队即可 |
+| 每用户日配额 | ✅ | `DAY_REVISION_DAILY_LIMIT`（默认 8）→ 超限 **429** |
+| Worker 并发限制 | ✅ | `WORKER_MAX_CONCURRENT`（默认 1） |
 | MobileCLIP 公网 | 可选 | 不装则视频 degraded；照片主路径不受影响 |
 
 ## C2 · 云主机部署清单（D1–D2）
@@ -300,10 +300,16 @@ PC -RequireGrounded pack（可选）：□
     API_TOKEN=<长随机串，勿用 dev-token>
     SMTP_* = 可用发信账号
     EXPOSE_OTP_IN_RESPONSE=false
-□ docker compose up -d --build
+    DAY_REVISION_DAILY_LIMIT=8
+    DAY_REVISION_MAX_INFLIGHT=2
+    WORKER_MAX_CONCURRENT=1
+□ 质量栈一键：
+    cd services/bff
+    .\scripts\prepare-multiuser-beta.ps1 -Up
+    （或 `docker compose -f docker-compose.yml -f docker-compose.quality.yml --env-file .env up -d --build`）
 □ 同机或旁路启动 X02（compose 已用 host.docker.internal:8787）
 □ 域名 + HTTPS（Caddy / Nginx / Cloudflare）反代到 8790
-□ 浏览器打开 https://你的域名/health → JSON
+□ 浏览器打开 https://你的域名/health → JSON（`allow_mock_preview=false`，可见 `day_revision_daily_limit`）
 □ PC：smoke-cloud-pack.ps1 -RequireGrounded → 有 chapters
 ```
 
@@ -314,8 +320,9 @@ PC -RequireGrounded pack（可选）：□
 `apps/mobile/.env`（示例）：
 
 ```text
-EXPO_PUBLIC_BFF_BASE_URL=https://bff.your-domain.com
-EXPO_PUBLIC_API_TOKEN=<与服务器 API_TOKEN 一致，或仅用 session>
+EXPO_PUBLIC_DEV_BFF_URL=https://bff.your-domain.com
+# 可选别名（同义）：EXPO_PUBLIC_BFF_BASE_URL=https://bff.your-domain.com
+EXPO_PUBLIC_DEV_BFF_TOKEN=<与服务器 API_TOKEN 一致；内测员优先 OTP，可不依赖此 token>
 ```
 
 然后：
@@ -328,24 +335,25 @@ npx expo start --go --lan
 内测员 Lab：**1 Apply → 2 Ping**。  
 通过标准：Ping **OK**，URL 是 **https 公网**，不是 `192.168`。
 
-TestFlight 包要把同一 URL **打进 EAS `env`**（`eas.json` → `preview.env`），不能指望每人改 .env。
+TestFlight：改 `eas.json` → `preview.env` 里的 `EXPO_PUBLIC_DEV_BFF_URL` / token 占位，再 `eas build --profile preview`。`EXPO_PUBLIC_INTERNAL_BETA=1` 会强制灌入该 URL（覆盖手机里旧的 LAN 地址）。
 
-## C4 · 粗配额（待开发补丁 · 挡打爆）
+## C4 · 粗配额（已落地）
 
-当前代码**还没有**完善的每用户日限额。内测前在 BFF 补最小逻辑即可：
-
-| 规则 | 建议值 | 实现位置（建议） |
-|------|--------|------------------|
-| 每用户每天 day-revision 次数 | 5～10 | `bff/routes/day_revisions.py` 入口按 session/email 计数 |
-| 超限响应 | `429` + 明确文案 | App Active tasks 展示错误 |
-| Worker 并发 | 1～2 | worker 配置 / 队列 |
-| 单日 assets | 沿用 ≤240 | 已有合同 |
+| 规则 | 默认 | 实现 |
+|------|------|------|
+| 每用户每天 day-revision | 8 | `shared/quota.py` + Dev Lite / Docker BFF；按 OTP email（或 lab API token）计数 |
+| 超限 | **429** + `day_revision_quota_exceeded` | App 显示 `Upload limit (429): …` |
+| 每用户 inflight | 2 | pending+processing 超限同样 429 |
+| Worker 并发 | 1 | `WORKER_MAX_CONCURRENT`（ThreadPool） |
+| Job 归属 | OTP email | `CloudJob.owner_email`；jobs GET 校验 |
+| 单日 assets | ≤240 | 已有合同 |
 
 验收：
 
 ```
 同一账号连续上传超过日限 → 被拒且不扣死机器：□
 两个邮箱各上传 1 次 → 各有自己的 job/chapter：□
+/health 含 day_revision_daily_limit：□
 ```
 
 ## C5 · 账号纪律（几十人）
@@ -358,7 +366,7 @@ TestFlight 包要把同一 URL **打进 EAS `env`**（`eas.json` → `preview.en
 □ 日记展示以手机本地为准；云端保证 job 成功回写
 ```
 
-若发现 job 串号：给 `CloudJob` 绑 `user_id` / email，jobs GET 校验归属（优先查现有表，缺列再补）。
+`CloudJob.owner_email` 已绑 OTP 邮箱；session 用户 GET 他人 job → 404。
 
 ## C6 · MobileCLIP 在几十人场景
 
@@ -376,6 +384,7 @@ TestFlight 包要把同一 URL **打进 EAS `env`**（`eas.json` → `preview.en
 公网 https://…/health：□
 ALLOW_MOCK_PREVIEW=false + Key：□
 API_TOKEN 已换非 dev-token：□
+DAY_REVISION_DAILY_LIMIT + Worker 并发已配：□
 外网手机 Ping OK：□
 邮箱 A OTP → 真图 → chapter：□
 邮箱 B OTP → 真图 → chapter（互不覆盖）：□
@@ -412,17 +421,23 @@ Windows 出 iOS 包靠 **EAS 云构建**，不需本机 Xcode。
 ## D2 · 发给内测员的最短说明（可复制）
 
 ```text
-1. 安装：TestFlight 链接 / 或 Expo Go + 我们发的入口
+1. 安装：TestFlight 链接（推荐）/ 或 Expo Go + 我们发的入口
 2. 语言：Account → Language → English（对照手册时）
 3. 登录：Continue with Email → 收 6 位码（查垃圾箱）
+   ※ 内测包禁止共用 API token；必须每人自己的邮箱 OTP
 4. 配对：Continue without a device → 权限 Continue → 问卷最后一屏选 Agree and continue
-5. 隐私：Account → Privacy → Allow cloud evidence upload
-6. 上传：Device 或 Lab → 选今天拍的 2～5 张真实照片（不要纯色图）
+5. 登录：Account → **Continue with Email** → OTP（不必重跑硬件 onboarding）
+6. 隐私：**必须** Account → Privacy & Data → Allow cloud evidence，或跑 Preference / cloud consent survey（选 Agree）
+7. 上传（TestFlight）：Device →「Import photos → cloud → Diary」→ 选 2～5 张真实照片（Android 会逐张「Add another」）
+   （Expo Go 技术联调才用 Lab A/B；不要让普通内测员进 Lab）
 7. 等待：Active tasks 成功 → Diary 看当天 chapter（真 qwen 可能要几分钟）
-8. 出问题：截图 Lab Ping 整行 + 任务失败原文 + 邮箱（打码）发回
+8. 换人测同一手机：先 Account → Log Out（会清空本机记忆，避免串号）
+9. 出问题：截图失败原文 + 邮箱（打码）发回；不要截 Lab（TestFlight 没有 Lab）
 ```
 
-**不要测：** 真耳机、假电量、未开放的 Google 登录。
+**部署方务必：** `eas.json` preview 填公网 `EXPO_PUBLIC_DEV_BFF_URL`；`EXPO_PUBLIC_DEV_BFF_TOKEN` 留空；BFF `ALLOW_MOCK_PREVIEW=false` + SMTP + `API_TOKEN≠dev-token`。
+
+**不要测：** 真耳机、假电量、未开放的 Google 登录、共享 Bearer 冒充多人。
 
 ## D3 · 你侧值守
 
@@ -519,6 +534,7 @@ TestFlight 或 Expo 入口：□
 | 项 | 几十人内测 |
 |----|------------|
 | V1.75 筛选/出稿合同 | **不用重写**；与 eval / App Bundle 同合同 |
+| 偏好 → 云端软筛选 | **已接通** `APP_CLIENT_PROFILE_V01`（见 `ALGORITHM_CLIENT_PROFILE.md`） |
 | Docker BFF + Worker | **部署 + 关 mock**，不是新算法 |
 | 粗配额 | **小补丁**（产品纪律），不是新模型 |
 | MobileCLIP | **上云前轻处理**；照片主路径可先不依赖 |

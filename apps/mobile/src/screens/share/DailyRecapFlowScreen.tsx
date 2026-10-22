@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
@@ -6,7 +6,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, radius, spacing } from '../../theme';
 import { chaptersForDate, useAppStore } from '../../store/useAppStore';
-import { buildDailyRecapAsset, type DailyRecapAsset } from '../../share/buildDailyRecap';
+import { buildDailyRecapAsset } from '../../share/buildDailyRecap';
 import { saveVideoToPhotos, shareVideoUri } from '../../share/shareActions';
 import { shouldSimulateSharePrepareFailure } from '../../share/sharePrepareFail';
 import { isDailyRecapBlockedForDate } from '../../domain/dailyRecapReadiness';
@@ -20,15 +20,11 @@ import { formatShortDay } from '../../domain/formatMedia';
 type Route = RouteProp<DiaryStackParamList, 'DailyRecapFlow'>;
 type Nav = NativeStackNavigationProp<DiaryStackParamList, 'DailyRecapFlow'>;
 
-const recapCache = new Map<string, DailyRecapAsset>();
 
 export default function DailyRecapFlowScreen() {
-  const { dateKey, phase, errorHint } = useRoute<Route>().params;
+  const { dateKey, phase, errorHint, asset } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
   const chapters = useAppStore((s) => chaptersForDate(s.chapters, dateKey));
-  const [asset, setAsset] = useState<DailyRecapAsset | null>(recapCache.get(dateKey) ?? null);
-  /** Figma Preview shows ▶ idle; tap to play. */
-  const [playing, setPlaying] = useState(false);
   const prepareForKey = useRef(dateKey);
 
   const dismissWithReadinessChanged = useCallback(() => {
@@ -36,10 +32,9 @@ export default function DailyRecapFlowScreen() {
     navigation.popToTop();
   }, [navigation]);
 
-  const runPrepare = useCallback(async () => {
+  const runPrepare = useCallback(async (isCurrent: () => boolean) => {
     prepareForKey.current = dateKey;
     try {
-      await new Promise((r) => setTimeout(r, 400));
       const dayChanged = useAppStore.getState().selectedDateKey !== prepareForKey.current;
       const blocked = isDailyRecapBlockedForDate(dateKey, useAppStore.getState().todayStatus);
       if (dayChanged || blocked) {
@@ -47,15 +42,14 @@ export default function DailyRecapFlowScreen() {
         return;
       }
       const out = await buildDailyRecapAsset(chapters);
+      if (!isCurrent()) return;
       if (!out || shouldSimulateSharePrepareFailure()) {
         navigation.replace('DailyRecapFlow', { dateKey, phase: 'failed' });
         return;
       }
-      recapCache.set(dateKey, out);
-      setAsset(out);
-      setPlaying(true);
-      navigation.replace('DailyRecapFlow', { dateKey, phase: 'preview' });
+      navigation.replace('DailyRecapFlow', { dateKey, phase: 'preview', asset: out });
     } catch (e) {
+      if (!isCurrent()) return;
       const msg = e instanceof Error ? e.message : String(e);
       if (msg.includes('ffmpeg_not_installed') || msg.includes('bff_url_required')) {
         navigation.replace('DailyRecapFlow', { dateKey, phase: 'failed', errorHint: msg });
@@ -66,7 +60,10 @@ export default function DailyRecapFlowScreen() {
   }, [chapters, dateKey, dismissWithReadinessChanged, navigation]);
 
   useEffect(() => {
-    if (phase === 'preparing') void runPrepare();
+    let active = true;
+    const token = useAppStore.getState().sessionToken;
+    if (phase === 'preparing') void runPrepare(() => active && useAppStore.getState().sessionToken === token);
+    return () => { active = false; };
   }, [phase, runPrepare]);
 
   const back = () => navigation.goBack();
@@ -95,9 +92,9 @@ export default function DailyRecapFlowScreen() {
           {errorHint ? (
             <Text style={styles.errorHint}>
               {errorHint.includes('ffmpeg')
-                ? 'Install ffmpeg on your PC and restart Dev Lite. See docs/DAILY_RECAP_VIDEO.md.'
+                ? 'Recap video processing is unavailable. Please try again later.'
                 : errorHint.includes('bff_url')
-                  ? 'Set Production BFF URL in Lab (same as cloud processing).'
+                  ? 'The sharing service is unavailable. Please try again later.'
                   : errorHint.slice(0, 280)}
             </Text>
           ) : null}
@@ -106,7 +103,7 @@ export default function DailyRecapFlowScreen() {
     );
   }
 
-  const preview = asset ?? recapCache.get(dateKey);
+  const preview = asset;
 
   return (
     <SharePreviewShell
@@ -119,8 +116,6 @@ export default function DailyRecapFlowScreen() {
             <RecapVideoPreview
               videoUri={preview.videoUri}
               posterUri={preview.posterUri}
-              playing={playing}
-              onTogglePlay={() => setPlaying((p) => !p)}
             />
           ) : (
             <Text style={styles.missing}>No preview</Text>

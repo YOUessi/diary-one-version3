@@ -53,26 +53,38 @@ export default function AccountHomeScreen() {
   const todayStatus = useAppStore((s) => s.todayStatus);
   const setTodayStatus = useAppStore((s) => s.setTodayStatus);
   const language = useAppStore((s) => s.language);
+  const sessionToken = useAppStore((s) => s.sessionToken);
 
   const profileSub = localProfile.email ?? 'Local test profile';
   const initial = localProfile.nickname.slice(0, 1).toUpperCase();
+  const signedInCloud = Boolean(sessionToken.trim());
 
   const logOut = () => {
+    const wipeLocal =
+      isInternalBetaBuild ||
+      (process.env.EXPO_PUBLIC_STORE_RELEASE ?? '').trim() === '1';
     Alert.alert(
       'Log out',
-      'Diary One keeps your memories on this device. Logging out clears only local profile in this test build.',
+      wipeLocal
+        ? 'This clears your OTP session and wipes local memories / pipeline on this device so the next tester starts empty (multi-user beta).'
+        : 'Diary One keeps your memories on this device. Logging out clears only local profile in this test build.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Log out',
           style: 'destructive',
           onPress: () => {
-            const store = useAppStore.getState();
-            store.setSessionToken('');
-            store.setLocalProfile({
-              nickname: 'Guest',
-              email: undefined,
-            });
+            void (async () => {
+              try {
+                if (wipeLocal) {
+                  const { resetLocalAppData } = await import('../../store/hydrate');
+                  await resetLocalAppData();
+                } else useAppStore.getState().setSessionToken('');
+              } catch {
+                Alert.alert('Cleanup not complete', 'Please retry. Pending local cleanup also resumes when the app restarts.');
+              }
+            })();
+
           },
         },
       ],
@@ -181,13 +193,54 @@ export default function AccountHomeScreen() {
           )}
         </View>
 
-        <FigmaEyebrow>Plan</FigmaEyebrow>
-        <SettingsRow label="Current Plan" value="Basic" onPress={() => navigation.navigate('Plan')} />
+        {isInternalBetaBuild ? (
+          <>
+            <FigmaEyebrow>Cloud account</FigmaEyebrow>
+            <SettingsRow
+              label={signedInCloud ? 'Signed in' : 'Sign in to Diary One'}
+              value={signedInCloud ? localProfile.email ?? 'Session active' : 'Required for import'}
+              onPress={() => {
+                if (signedInCloud) {
+                  Alert.alert(
+                    'Cloud session',
+                    `Signed in as ${localProfile.email ?? 'your email'}. Log out to switch testers.`,
+                  );
+                  return;
+                }
+                navigation.navigate('SignIn', { mode: 'account' });
+              }}
+            />
+            <SettingsRow
+              label="Preference questionnaire"
+              onPress={() => navigation.navigate('PreferenceSurvey', { step: 0, mode: 'account' })}
+            />
+          </>
+        ) : null}
 
-        <FigmaEyebrow>Privacy & data</FigmaEyebrow>
+        <FigmaEyebrow>PLAN</FigmaEyebrow>
+        {isInternalBetaBuild || showInternalLabTools ? (
+          <SettingsRow
+            label="Billing"
+            value="Not available"
+            onPress={() =>
+              Alert.alert(
+                'Billing not available',
+                'Plan tiers in Figma are placeholders. This build does not sell subscriptions (PRD ACC / D11).',
+              )
+            }
+          />
+        ) : (
+          <SettingsRow
+            label="Current Plan"
+            value="Basic"
+            onPress={() => navigation.navigate('Plan')}
+          />
+        )}
+
+        <FigmaEyebrow>PRIVACY & DATA</FigmaEyebrow>
         <SettingsRow label="Privacy & Data" onPress={() => navigation.navigate('PrivacyData')} />
 
-        <FigmaEyebrow>App settings</FigmaEyebrow>
+        <FigmaEyebrow>APP SETTINGS</FigmaEyebrow>
         <SettingsRow label="Notifications" onPress={() => navigation.navigate('Notifications')} />
         <SettingsRow
           label="Language"
@@ -214,10 +267,10 @@ export default function AccountHomeScreen() {
           </>
         ) : null}
 
-        <FigmaEyebrow>Support</FigmaEyebrow>
+        <FigmaEyebrow>SUPPORT</FigmaEyebrow>
         <SettingsRow label="Help & Feedback" onPress={() => navigation.navigate('HelpFeedback')} />
 
-        <FigmaEyebrow>About</FigmaEyebrow>
+        <FigmaEyebrow>ABOUT</FigmaEyebrow>
         <View style={styles.rowStatic}>
           <Text style={styles.rowLabel}>App Version</Text>
           <Text style={styles.rowValue}>{APP_VERSION}</Text>
@@ -256,38 +309,39 @@ const styles = StyleSheet.create({
     paddingHorizontal: layout.gutterDiary,
     paddingBottom: layout.tabBarHeight + spacing.xxxl,
   },
+  /** Figma Memory Profile Hero — r16 sheet, p20 */
   profileCard: {
     backgroundColor: colors.card,
-    borderRadius: 20,
-    padding: spacing.md,
+    borderRadius: radius.sheet,
+    padding: layout.gutterDiary,
     marginBottom: spacing.sm,
+    gap: spacing.md,
   },
   profileRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.md,
-    minHeight: layout.minTouch,
+    gap: 14,
+    minHeight: 64,
   },
   avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarImage: { width: 52, height: 52, borderRadius: 26 },
+  avatarImage: { width: 56, height: 56, borderRadius: 28 },
   avatarLetter: { ...type.titleChapter, color: colors.ink },
-  profileCopy: { flex: 1 },
-  profileName: { ...type.titleChapter, color: colors.ink },
-  profileSub: { ...type.caption, color: colors.secondary, marginTop: 2 },
-  editRow: { flexDirection: 'row', alignItems: 'center', gap: 2 },
-  editTrailing: { ...type.caption, color: colors.secondary },
-  editChevron: { ...type.caption, color: colors.tertiary },
+  profileCopy: { flex: 1, gap: 2 },
+  profileName: { ...type.bodyEmphasis, color: colors.ink },
+  profileSub: { ...type.caption, color: colors.secondary },
+  editRow: { flexDirection: 'row', alignItems: 'center', gap: 4, width: 72, justifyContent: 'flex-end' },
+  editTrailing: { ...type.captionEmphasis, color: colors.secondary, textAlign: 'right' },
+  editChevron: { ...type.bodyStory, color: colors.secondary },
   cardDivider: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.divider,
-    marginVertical: spacing.md,
   },
   cardEyebrow: {
     ...type.metadata,
@@ -296,9 +350,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
     marginBottom: spacing.sm,
   },
-  prefHint: { ...type.bodyStory, color: colors.ink, marginBottom: spacing.sm },
+  prefHint: { ...type.caption, color: colors.secondary, marginBottom: spacing.sm },
   addHit: { minHeight: layout.minTouch, justifyContent: 'center' },
-  addPref: { ...type.bodyStory, fontWeight: '500', color: colors.ink },
+  addPref: { ...type.captionEmphasis, color: colors.secondary },
   addPrefMuted: { ...type.caption, color: colors.accent },
   prefChips: {
     flexDirection: 'row',
@@ -332,25 +386,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: 48,
+    minHeight: 52,
   },
   rowStatic: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: 48,
+    minHeight: 52,
   },
-  rowLabel: { ...type.bodyStory, color: colors.ink },
-  rowTrailingWrap: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  rowValue: { ...type.bodyStory, color: colors.secondary },
-  rowChevron: { fontSize: 20, color: colors.tertiary, fontWeight: '300' },
+  rowLabel: { ...type.bodyEmphasis, color: colors.ink },
+  rowTrailingWrap: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  rowValue: { ...type.caption, color: colors.secondary, textAlign: 'right' },
+  rowChevron: { fontSize: 17, color: colors.secondary, fontWeight: '500', lineHeight: 24 },
   logout: {
-    marginTop: spacing.xl,
-    minHeight: layout.minTouch,
-    alignItems: 'center',
+    marginTop: spacing.md,
+    minHeight: 52,
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
-  logoutText: { ...type.bodyStory, fontWeight: '600', color: colors.accent },
+  /** Figma Log Out — secondary, not accent */
+  logoutText: { ...type.bodyEmphasis, color: colors.secondary },
   chips: {
     flexDirection: 'row',
     flexWrap: 'wrap',

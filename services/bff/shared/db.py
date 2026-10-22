@@ -1,7 +1,7 @@
 from collections.abc import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from shared.config import settings
@@ -34,3 +34,7 @@ def get_sync_session() -> Session:
 async def init_db_async() -> None:
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # Existing volumes may predate owner_email; create_all won't ALTER.
+        await conn.execute(
+            text("ALTER TABLE cloud_jobs ADD COLUMN IF NOT EXISTS owner_email VARCHAR(320)")
+        )

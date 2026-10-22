@@ -14,7 +14,7 @@ export const DEFAULT_NOTIFICATION_SETTINGS: NotificationSettings = {
   deviceAlerts: false,
 };
 
-export const DEFAULT_LANGUAGE: LanguagePreference = 'en';
+export const DEFAULT_LANGUAGE: LanguagePreference = 'zh-Hans';
 
 export const DEFAULT_MEMORY_LANGUAGE: MemoryLanguagePreference = 'same_as_app';
 

@@ -5,7 +5,7 @@ import { FigmaBackHeader } from '../../components/FigmaBackHeader';
 import { colors, layout, spacing, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 
-/** Figma 71:1021 */
+/** Figma 71:1021 — title 28; rows h74; battery note as page footer. */
 export default function NotificationsScreen() {
   const settings = useAppStore((s) => s.notificationSettings);
   const setNotificationSettings = useAppStore((s) => s.setNotificationSettings);
@@ -37,10 +37,6 @@ export default function NotificationsScreen() {
             <Text style={styles.desc}>
               Storage almost full or a critical device/firmware error.
             </Text>
-            <Text style={styles.note}>
-              Low battery is handled primarily by Diary One hardware feedback in V1 and is not a
-              default phone push notification.
-            </Text>
           </View>
           <Switch
             value={settings.deviceAlerts}
@@ -51,6 +47,11 @@ export default function NotificationsScreen() {
             thumbColor={colors.card}
           />
         </View>
+
+        <Text style={styles.footer}>
+          Low battery is handled primarily by Diary One hardware feedback in V1 and is not a default
+          phone push notification.
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -59,17 +60,21 @@ export default function NotificationsScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
   scroll: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
-  /** Figma 71:1021 — title 28; row gap 12; label 17/510 */
-  title: { ...type.titleSection, color: colors.ink, marginBottom: spacing.xxxl },
+  title: { ...type.titleSection, color: colors.ink, marginBottom: spacing.xl },
   row: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: spacing.xxxl,
+    minHeight: 74,
     gap: 12,
   },
-  copy: { flex: 1, gap: 2 },
-  label: { ...type.bodyStory, fontWeight: '500', color: colors.ink },
-  desc: { ...type.caption, color: colors.secondary, lineHeight: 20 },
-  note: { ...type.caption, color: colors.tertiary, lineHeight: 18, marginTop: spacing.sm },
+  copy: { flex: 1, gap: 2, maxWidth: 270 },
+  label: { fontSize: 17, lineHeight: 24, fontWeight: '500', color: colors.ink },
+  desc: { fontSize: 13, lineHeight: 18, color: colors.secondary },
+  footer: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.tertiary,
+    marginTop: spacing.md,
+  },
 });

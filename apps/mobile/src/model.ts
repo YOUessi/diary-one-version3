@@ -10,45 +10,83 @@ export type TodayStatus =
   | 'NO_RECORDINGS'
   | 'PARTIAL';
 
-export type Chapter = {
+/** Optional local ordering evidence; old saved memories may have neither. */
+export type MemoryOrder = { capturedAtMs?: number; sourceSequenceIndex?: number };
+
+export type MemoryMedia = {
   id: string;
+  label: string;
+  capturedByYou?: boolean;
+  posterUri?: string;
+  playbackUri?: string;
+  /** Seek into the original video, not a claim that a short clip was exported. */
+  focusTimeSec?: number;
+};
+
+export type Chapter = MemoryOrder & {
+  id: string;
+  /** Local ingestion provenance, not an AI/public payload field. */
+  sourceBatchId?: string;
+  yourStoryRevision?: number;
   title: string;
   dateKey: string;
   dateLabel: string;
   weakTime?: string;
   aiStory: string;
+  previewStory?: string;
+  highlights?: { id: string; text: string; media?: MemoryMedia[] }[];
   tags: string[];
   detailTags?: string[];
   heroUri?: string;
-  moments: {
-    id: string;
-    label: string;
-    capturedByYou?: boolean;
-    posterUri?: string;
-    playbackUri?: string;
-  }[];
+  moments: MemoryMedia[];
   yourStory?: string;
 };
 
-export type SmallMemory = {
+export type SmallMemory = MemoryOrder & {
   id: string;
+  sourceBatchId?: string;
   text: string;
+  posterUri?: string;
 };
+
+/** Soft topic facet for Memory · Your Topics (人 / 事 / 地 / other). */
+export type TopicFacet = 'person' | 'event' | 'place' | 'other';
 
 export type Topic = {
   id: string;
   name: string;
   chapterIds: string[];
+  /** Heuristic from tag vocabulary — not a hard cloud ontology. */
+  facet?: TopicFacet;
 };
 
 export type MemoryPreference = {
   id: string;
   title: string;
   text: string;
+  /** Questionnaire provenance and scope, separate from captured-content tags. */
+  survey?: {
+    source: 'preference_survey';
+    polarity: 'like' | 'avoid';
+    theme_id?: string;
+    tag_id?: string;
+    preference_reason_id?: string;
+    target_scope: string;
+    strength: number;
+    updated_at: string;
+  };
+};
+
+export type PreferenceSurveyResponse = {
+  question_1_response: 'selected' | 'no_preference' | 'skipped';
+  question_2_response: 'selected' | 'nothing_for_now' | 'skipped';
+  updated_at: string;
 };
 
 export type CapturedOriginal = {
   id: string;
+  /** Only trusted device Manual capture may appear in Captured by You. */
+  intakeSource?: 'DEVICE_MANUAL' | import('./domain/mediaIntake').MediaIntakeSource;
   dateKey: string;
   kind: 'photo' | 'video';
   durationSec?: number;

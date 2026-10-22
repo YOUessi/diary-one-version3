@@ -4,7 +4,6 @@
   "main": "src/index.ts",
   "app.plugin.js": "./app.plugin.js",
   "peerDependencies": {
-    "expo": "*",
-    "expo-modules-core": "*"
+    "expo": "*"
   }
 }

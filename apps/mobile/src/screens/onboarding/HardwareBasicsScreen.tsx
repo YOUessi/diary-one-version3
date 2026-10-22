@@ -6,7 +6,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { OnboardingHeroArt } from '../../components/OnboardingHeroArt';
 import { HARDWARE_BASICS } from './hardwareBasicsContent';
-import { colors, layout, radius, spacing, type } from '../../theme';
+import { colors, layout, spacing, type } from '../../theme';
 import type { OnboardingStackParamList } from '../../navigation/types';
 
 type Route = RouteProp<OnboardingStackParamList, 'HardwareBasics'>;

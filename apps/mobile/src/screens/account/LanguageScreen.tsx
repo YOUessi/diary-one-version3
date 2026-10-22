@@ -83,26 +83,25 @@ export default function LanguageScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
   scroll: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
-  /** Figma 71:1050 — title 28; rows h54; accessory gap 6 */
-  title: { ...type.titleSection, color: colors.ink, marginBottom: spacing.xxxl },
+  /** Figma 71:1050 — title 28; rows h54 gap16; values 13 regular */
+  title: { ...type.titleSection, color: colors.ink, marginBottom: spacing.xl },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     minHeight: 54,
-    marginBottom: spacing.md,
+    marginBottom: 16,
   },
-  rowLabel: { ...type.bodyStory, color: colors.ink },
+  rowLabel: { fontSize: 17, lineHeight: 24, fontWeight: '500', color: colors.ink },
   trailing: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  rowValue: { fontSize: 13, lineHeight: 18, fontWeight: '500', color: colors.secondary },
-  chevron: { fontSize: 17, color: colors.secondary, fontWeight: '300' },
+  rowValue: { fontSize: 13, lineHeight: 18, fontWeight: '400', color: colors.secondary },
+  chevron: { fontSize: 17, color: colors.secondary, fontWeight: '500' },
   picker: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
     paddingBottom: spacing.md,
   },
-  /** Lab/local picker — not a Figma frame; keep compact chips */
   pill: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
@@ -111,5 +110,5 @@ const styles = StyleSheet.create({
   },
   pillOn: { backgroundColor: colors.accentSoft },
   pillText: { ...type.captionEmphasis, color: colors.ink },
-  footer: { ...type.caption, color: colors.tertiary, lineHeight: 18, marginTop: spacing.xl },
+  footer: { fontSize: 13, lineHeight: 18, color: colors.secondary, marginTop: spacing.sm },
 });

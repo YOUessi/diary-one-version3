@@ -122,3 +122,10 @@ export async function upsertRawAsset(input: {
     },
   };
 }
+
+/** PRI03 / multi-user beta — wipe raw-asset dedupe ledger on logout. */
+export async function clearRawAssetLedger(): Promise<void> {
+  await initRawAssetLedger();
+  const db = await getDb();
+  await db.runAsync('DELETE FROM raw_assets');
+}

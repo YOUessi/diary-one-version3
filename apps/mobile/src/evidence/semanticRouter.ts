@@ -1,3 +1,4 @@
+import { endpointV05 } from './mobileclip/endpointV05';
 import { pairwiseRelation } from './similarity';
 import type {
   EvidenceFrameLevel,
@@ -7,6 +8,11 @@ import type {
   SemanticRoutingProfile,
   WithinClipSemanticRelations,
 } from './types';
+
+function compareRank(a: number[], b: number[]): number {
+  for (let i = 0; i < a.length; i++) { if (a[i] !== b[i]) return a[i] - b[i]; }
+  return 0;
+}
 
 function contextKind(point: SemanticProbePoint): string | null {
   const labels = new Set(point.classifications.slice(0, 5).map((c) => c.identifier));
@@ -73,7 +79,7 @@ function bestCumulativeChange(
     if (
       !best ||
       candidate.separation > best.separation ||
-      (candidate.separation === best.separation && candidate.negCross > best.negCross)
+      (candidate.separation === best.separation && (candidate.negCross > best.negCross || (candidate.negCross === best.negCross && candidate.split > best.split)))
     ) {
       best = candidate;
     }
@@ -280,21 +286,14 @@ function semanticAnchorRecommendations(
     }
     if (pairwiseSimilarities) {
       const candidates = combinations(indices, count);
-      let bestSubset = candidates[0];
-      let bestMax = Infinity;
-      for (const subset of candidates) {
-        let maxSim = -Infinity;
-        for (let i = 0; i < subset.length; i++) {
-          for (let j = i + 1; j < subset.length; j++) {
-            maxSim = Math.max(maxSim, pairwiseSimilarities[subset[i]][subset[j]]);
-          }
-        }
-        if (maxSim < bestMax) {
-          bestMax = maxSim;
-          bestSubset = subset;
-        }
-      }
-      return bestSubset;
+      const rank = (subset: number[]) => {
+        const sims: number[] = [];
+        for (let i = 0; i < subset.length; i++) for (let j = i + 1; j < subset.length; j++) sims.push(pairwiseSimilarities[subset[i]][subset[j]]);
+        return [Math.max(...sims), sims.reduce((a, b) => a + b, 0),
+          -subset.reduce((sum, i) => sum + representativeDurations[i], 0),
+          -(probePoints[subset[subset.length - 1]].actualPtsMs - probePoints[subset[0]].actualPtsMs), ...subset];
+      };
+      return candidates.reduce((best, subset) => compareRank(rank(subset), rank(best)) < 0 ? subset : best, candidates[0]);
     }
     const positions = Array.from({ length: count }, (_, i) =>
       Math.round((i * (indices.length - 1)) / (count - 1)),
@@ -308,56 +307,21 @@ function semanticAnchorRecommendations(
     let selected: number[];
     if (targetCount === 1 && pairwiseSimilarities) {
       const candidates = probePoints.map((_, index) => index);
-      selected = [
-        candidates.reduce((best, index) => {
-          const others = candidates.filter((o) => o !== index);
-          const meanSim =
-            others.reduce((s, o) => s + pairwiseSimilarities[index][o], 0) /
-            Math.max(1, others.length);
-          const score =
-            meanSim * 1e6 +
-            (1 - (probePoints[index].darkPixelRatio ?? 0)) * 1e3 +
-            (probePoints[index].sharpness ?? 0) -
-            index * 1e-6;
-          const bestMean =
-            candidates
-              .filter((o) => o !== best)
-              .reduce((s, o) => s + pairwiseSimilarities[best][o], 0) /
-            Math.max(1, candidates.length - 1);
-          const bestScore =
-            bestMean * 1e6 +
-            (1 - (probePoints[best].darkPixelRatio ?? 0)) * 1e3 +
-            (probePoints[best].sharpness ?? 0) -
-            best * 1e-6;
-          return score > bestScore ? index : best;
-        }, candidates[0]),
+      const rank = (index: number) => [
+        candidates.filter(o => o !== index).reduce((sum, o) => sum + pairwiseSimilarities[index][o], 0) / Math.max(1, candidates.length - 1),
+        1 - (probePoints[index].darkPixelRatio ?? 0), probePoints[index].sharpness ?? 0, -index,
       ];
+      selected = [candidates.reduce((best, i) => compareRank(rank(i), rank(best)) > 0 ? i : best, candidates[0])];
     } else {
       selected = spreadSubset(sceneRepresentatives, targetCount);
     }
     while (selected.length < targetCount) {
       const remaining = probePoints.map((_, i) => i).filter((i) => !selected.includes(i));
-      const candidate = remaining.reduce((best, index) => {
-        const maxSim = pairwiseSimilarities
-          ? Math.max(...selected.map((chosen) => pairwiseSimilarities[index][chosen]))
-          : 0;
-        const minDist = Math.min(
-          ...selected.map((chosen) =>
-            Math.abs(probePoints[index].actualPtsMs - probePoints[chosen].actualPtsMs),
-          ),
-        );
-        const score = -maxSim * 1e6 + minDist * 1e3 - index;
-        const bestMaxSim = pairwiseSimilarities
-          ? Math.max(...selected.map((chosen) => pairwiseSimilarities[best][chosen]))
-          : 0;
-        const bestMinDist = Math.min(
-          ...selected.map((chosen) =>
-            Math.abs(probePoints[best].actualPtsMs - probePoints[chosen].actualPtsMs),
-          ),
-        );
-        const bestScore = -bestMaxSim * 1e6 + bestMinDist * 1e3 - best;
-        return score > bestScore ? index : best;
-      }, remaining[0]);
+      const rank = (index: number) => [
+        pairwiseSimilarities ? -Math.max(...selected.map(chosen => pairwiseSimilarities[index][chosen])) : 0,
+        Math.min(...selected.map(chosen => Math.abs(probePoints[index].actualPtsMs - probePoints[chosen].actualPtsMs))), -index,
+      ];
+      const candidate = remaining.reduce((best, i) => compareRank(rank(i), rank(best)) > 0 ? i : best, remaining[0]);
       selected.push(candidate);
     }
     recommended[String(targetCount)] = selected
@@ -566,6 +530,7 @@ export function routeSemanticClip(input: RouteSemanticInput): SemanticRouteDecis
   let endpointEdges = new Set<number>();
   if (profile.endpointContextChangeEnabled) {
     endpointEdges = endpointContextEdges(eligibleProbePoints);
+    if (profile.profileId === 'MOBILECLIP_S0_FP16_COVERAGE_V07') endpointEdges = endpointV05(eligibleEmbeddings, endpointEdges);
     if (endpointEdges.size) validComponents.push('SEMANTIC_ENDPOINT_CONTEXT');
   }
 

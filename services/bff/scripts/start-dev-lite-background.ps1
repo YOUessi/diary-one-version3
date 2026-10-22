@@ -1,4 +1,14 @@
-# Start X02 + BFF without Conda pop-up windows (hidden processes)
+# Start X02 + Dev Lite BFF as hidden processes (no Conda pop-ups).
+# Default: real qwen when DASHSCOPE_API_KEY is set; fixture only with -Adapter fixture.
+#
+#   .\scripts\start-dev-lite-background.ps1              # quality path (qwen if key present)
+#   .\scripts\start-dev-lite-background.ps1 -Adapter fixture -AllowMockPreview  # UI only
+param(
+  [ValidateSet("qwen", "fixture")]
+  [string]$Adapter = "qwen",
+  [switch]$AllowMockPreview
+)
+
 $ErrorActionPreference = "Stop"
 $ServerRoot = Split-Path -Parent $PSScriptRoot
 
@@ -14,7 +24,45 @@ elseif (Test-Path "C:\Python314\python.exe") { $Py = "C:\Python314\python.exe" }
 else { $Py = (Get-Command python -ErrorAction Stop).Source }
 
 $AlgoRoot = (Resolve-Path (Join-Path $ServerRoot "..\algorithm\algorithm")).Path
-Get-NetTCPConnection -LocalPort 8787,8790 -ErrorAction SilentlyContinue | ForEach-Object {
+
+# Load User env + .env into this process
+foreach ($name in @(
+  "DASHSCOPE_API_KEY", "API_TOKEN", "ALLOW_MOCK_PREVIEW", "EXPOSE_OTP_IN_RESPONSE",
+  "SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM", "SMTP_SECURITY",
+  "DAY_REVISION_DAILY_LIMIT", "DAY_REVISION_MAX_INFLIGHT"
+)) {
+  if (-not [Environment]::GetEnvironmentVariable($name, "Process")) {
+    $v = [Environment]::GetEnvironmentVariable($name, "User")
+    if ($v) { Set-Item -Path "Env:$name" -Value $v }
+  }
+}
+$envFile = Join-Path $ServerRoot ".env"
+if (Test-Path $envFile) {
+  foreach ($line in Get-Content $envFile) {
+    if ($line -match "^\s*#" -or $line -notmatch "=") { continue }
+    $k, $val = $line.Split("=", 2)
+    $k = $k.Trim()
+    $val = $val.Trim().Trim('"').Trim("'")
+    if ($k -and $val -ne "") {
+      Set-Item -Path "Env:$k" -Value $val
+    }
+  }
+}
+
+if (-not $env:DASHSCOPE_API_KEY) {
+  $userKey = [Environment]::GetEnvironmentVariable("DASHSCOPE_API_KEY", "User")
+  if ($userKey) { $env:DASHSCOPE_API_KEY = $userKey }
+}
+
+if ($Adapter -eq "qwen" -and -not $env:DASHSCOPE_API_KEY) {
+  Write-Host "FIX: no DASHSCOPE_API_KEY - consumer App requires real qwen." -ForegroundColor Red
+  Write-Host "  .\scripts\set-dashscope-key.ps1 -Key 'sk-...'" -ForegroundColor Yellow
+  Write-Host "  Lab/UI only: .\scripts\start-dev-lite-background.ps1 -Adapter fixture -AllowMockPreview" -ForegroundColor DarkYellow
+  exit 1
+}
+
+# Stop old listeners
+Get-NetTCPConnection -LocalPort 8787, 8790 -ErrorAction SilentlyContinue | ForEach-Object {
   Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue
 }
 Start-Sleep -Seconds 1
@@ -56,25 +104,51 @@ if (-not $env:DIARY_ONE_MOBILECLIP_CHECKPOINT -and $EvidenceRouterRoot) {
 }
 $EvidenceSrc = if ($env:DIARY_ONE_EVIDENCE_ROUTER_ROOT) { Join-Path $env:DIARY_ONE_EVIDENCE_ROUTER_ROOT "src" } else { "" }
 
+if (-not $env:API_TOKEN -or $env:API_TOKEN -eq "") { $env:API_TOKEN = "dev-token" }
+$env:X02_BASE_URL = "http://127.0.0.1:8787"
+
+if ($AllowMockPreview) {
+  $env:ALLOW_MOCK_PREVIEW = "true"
+} elseif ($env:ALLOW_MOCK_PREVIEW -ne "true") {
+  $env:ALLOW_MOCK_PREVIEW = "false"
+}
+
+if ($env:SMTP_HOST) {
+  if (-not $env:EXPOSE_OTP_IN_RESPONSE -or $env:EXPOSE_OTP_IN_RESPONSE -eq "") {
+    $env:EXPOSE_OTP_IN_RESPONSE = "false"
+  }
+} elseif (-not $env:EXPOSE_OTP_IN_RESPONSE) {
+  $env:EXPOSE_OTP_IN_RESPONSE = "true"
+}
+
+if (-not $env:DIARY_ONE_MOBILECLIP_DEVICE) { $env:DIARY_ONE_MOBILECLIP_DEVICE = "auto" }
+if (-not $env:DIARY_ONE_MOBILECLIP_PROMPTS) { $env:DIARY_ONE_MOBILECLIP_PROMPTS = "1" }
+
 $env:PYTHONPATH = "$AlgoRoot\src"
-Start-Process -WindowStyle Hidden -FilePath $Py -ArgumentList "-m","diary_one_ci.x01_server","--adapter","fixture","--host","127.0.0.1","--port","8787" -WorkingDirectory $AlgoRoot
+$x02Args = @("-m", "diary_one_ci.x01_server", "--adapter", $Adapter, "--host", "127.0.0.1", "--port", "8787")
+Start-Process -WindowStyle Hidden -FilePath $Py -ArgumentList $x02Args -WorkingDirectory $AlgoRoot
 
 Start-Sleep -Seconds 2
 $env:PYTHONPATH = if ($EvidenceSrc -and (Test-Path $EvidenceSrc)) { "$ServerRoot;$EvidenceSrc" } else { $ServerRoot }
-$env:API_TOKEN = "dev-token"
-$env:X02_BASE_URL = "http://127.0.0.1:8787"
-$env:EXPOSE_OTP_IN_RESPONSE = "true"
-# Fixture Expo Go loop: mock Diary write-back if X02 rejects empty/minimal bundles
-$env:ALLOW_MOCK_PREVIEW = "true"
-if (-not $env:DIARY_ONE_MOBILECLIP_DEVICE) { $env:DIARY_ONE_MOBILECLIP_DEVICE = "auto" }
-if (-not $env:DIARY_ONE_MOBILECLIP_PROMPTS) { $env:DIARY_ONE_MOBILECLIP_PROMPTS = "1" }
-Start-Process -WindowStyle Hidden -FilePath $Py -ArgumentList "-m","uvicorn","dev_lite.app:app","--host","0.0.0.0","--port","8790" -WorkingDirectory $ServerRoot
+Start-Process -WindowStyle Hidden -FilePath $Py -ArgumentList "-m", "uvicorn", "dev_lite.app:app", "--host", "0.0.0.0", "--port", "8790" -WorkingDirectory $ServerRoot
 
 Start-Sleep -Seconds 5
 . (Join-Path $PSScriptRoot "_lan-ip.ps1")
 $lan = $DiaryLanIPv4
-Write-Host "Dev Lite background: http://${lan}:8790  X02:127.0.0.1:8787  Python: $Py" -ForegroundColor Green
-Write-Host "Phone Lab URL: http://${lan}:8790   Token: dev-token   (ALLOW_MOCK_PREVIEW=true)" -ForegroundColor Cyan
-$h = Invoke-RestMethod "http://127.0.0.1:8790/health" -Headers @{ Authorization = "Bearer dev-token" }
+$tokenHint = if ($env:API_TOKEN -eq "dev-token") { "dev-token" } else { ($env:API_TOKEN.Substring(0, [Math]::Min(6, $env:API_TOKEN.Length)) + "...") }
+
+Write-Host "Dev Lite background: http://${lan}:8790  X02:127.0.0.1:8787  adapter=$Adapter  Python: $Py" -ForegroundColor Green
+Write-Host "Phone Lab URL: http://${lan}:8790   Token: $tokenHint   mock=$($env:ALLOW_MOCK_PREVIEW)  expose_otp=$($env:EXPOSE_OTP_IN_RESPONSE)" -ForegroundColor Cyan
+
+$h = Invoke-RestMethod "http://127.0.0.1:8790/health" -Headers @{ Authorization = "Bearer $($env:API_TOKEN)" }
 $mc = if ($h.mobileclip.available) { "yes" } else { "no ($($h.mobileclip.reason))" }
-Write-Host "health: x02=$($h.x02.reachable) ffmpeg=$($h.ffmpeg_available) mc=$mc mock=$($h.allow_mock_preview)"
+$provider = $null
+try { $provider = $h.x02.detail.provider } catch { }
+Write-Host "health: x02=$($h.x02.reachable) ffmpeg=$($h.ffmpeg_available) mc=$mc mock=$($h.allow_mock_preview) provider=$provider"
+
+if ($Adapter -eq "qwen" -and "$provider" -eq "fixture") {
+  Write-Host "WARN: requested qwen but X02 still reports fixture - check DASHSCOPE_API_KEY and X02 logs." -ForegroundColor Yellow
+}
+if ($Adapter -eq "qwen" -and $h.allow_mock_preview -eq $true) {
+  Write-Host "WARN: mock=true on quality path - App internal beta will reject. Harden .env and restart." -ForegroundColor Yellow
+}

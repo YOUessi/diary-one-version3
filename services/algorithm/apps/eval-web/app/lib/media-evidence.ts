@@ -27,13 +27,16 @@ const RUN_SIDECAR_TIMEOUT_MS = 5_000;
 const CLIENT_TRACE_SCHEMA_VERSION = "DIARY_ONE_WEB_CLIENT_TRACE_V01" as const;
 const RUN_SIDECAR_SCHEMA_VERSION = "DIARY_ONE_X01_RUN_SIDECAR_V01" as const;
 const V041_SEMANTIC_DAY_STATES = new Set(["CHAPTER_DAY", "HIGHLIGHT_DAY", "EMPTY_DAY", "UNRESOLVED_DAY"]);
+/** Align with BFF result_admit / App deliveryAdmit (ready + honest empty). */
 const V041_DELIVERY_STATES = new Set([
   "READY_PRIMARY_COPY",
   "READY_WITH_GROUNDED_COPY_FALLBACK",
   "READY_WITH_ITEM_BLOCKS",
-  "PIPELINE_BLOCKED",
+  "STAGED_PREVIEW_DELIVERED",
   "NO_GROUNDED_MEMORY",
 ]);
+/** Diagnostic-only — never treat as consumer-ready (AI03). */
+const V041_BLOCKED_DELIVERY_STATES = new Set(["PIPELINE_BLOCKED"]);
 const SHA256_ROUND_CONSTANTS = new Uint32Array([
   0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
   0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -858,7 +861,9 @@ export async function runResearchPreview(
     || result.cross_run_semantic_cache_used !== false
     || result.trace?.input_bundle_version !== bundle.manifest.bundle_version
     || !V041_SEMANTIC_DAY_STATES.has(String(result.semantic_day_state))
+    || V041_BLOCKED_DELIVERY_STATES.has(String(result.delivery_state))
     || !V041_DELIVERY_STATES.has(String(result.delivery_state))
+    || (result as { _publish?: { publish_admit?: boolean } })._publish?.publish_admit === false
     || (result.coverage_status !== "COMPLETE" && result.coverage_status !== "PARTIAL_UNRESOLVED")
     || !Array.isArray(result.unresolved_asset_ids)
     || !coverageStateConsistent

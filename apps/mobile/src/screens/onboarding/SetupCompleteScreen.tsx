@@ -1,47 +1,90 @@
 import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { OnboardingScaffold } from '../../components/OnboardingScaffold';
-import { colors, spacing, type } from '../../theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { FigmaBackHeader } from '../../components/FigmaBackHeader';
+import { colors, layout, spacing, type } from '../../theme';
 import type { OnboardingStackParamList } from '../../navigation/types';
+import { useAppStore } from '../../store/useAppStore';
+import { appStrings } from '../../domain/strings';
 
 type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'SetupComplete'>;
 
-/** Figma 201:2102 — title 34; duration 13; hardware placeholder r16×220; CTA 52×r12. */
+/**
+ * Figma 201:2102 — eyebrow → title 34 → lead → duration → placeholder r16×220 → CTA 52.
+ * (Standalone so duration sits above the hardware card, not inside OnboardingScaffold.visual.)
+ */
 export default function SetupCompleteScreen() {
   const navigation = useNavigation<Nav>();
+  const connected = useAppStore((s) => s.deviceLinkState === 'hardware_linked');
+  const strings = appStrings(useAppStore((s) => s.language));
   return (
-    <OnboardingScaffold
-      eyebrow="SETUP COMPLETE"
-      showBack
-      onBack={() => navigation.goBack()}
-      title="Diary One is connected"
-      lead="Next, we’ll show you the key controls for wearing, capturing, and syncing."
-      visual={
-        <View>
-          <Text style={styles.duration}>Takes about 30 seconds.</Text>
-          <View style={styles.card}>
-            <Text style={styles.cardLabel}>Device basics · 7 short steps</Text>
-          </View>
+    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+      <FigmaBackHeader />
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Text style={styles.eyebrow}>{strings.setupComplete}</Text>
+        <Text style={styles.title}>{connected ? strings.deviceConnected : strings.deviceDisconnected}</Text>
+        {connected ? <>
+        <Text style={styles.lead}>
+          {strings.deviceBasicsLead}
+        </Text>
+        <Text style={styles.duration}>{strings.deviceBasicsDuration}</Text>
+        <View style={styles.card}>
+          <Text style={styles.cardLabel}>{strings.deviceBasicsSteps}</Text>
         </View>
-      }
-      primaryLabel="Start device basics"
-      onPrimary={() => navigation.navigate('HardwareBasics', { step: 0 })}
-    />
+        </> : <Text style={styles.lead}>{strings.setupLead}</Text>}
+      </ScrollView>
+      <View style={styles.footer}>
+        <Pressable
+          style={styles.primary}
+          onPress={() => connected
+            ? navigation.navigate('HardwareBasics', { step: 0 })
+            : navigation.navigate('PreferenceSurvey', { step: 'welcome' })}
+        >
+          <Text style={styles.primaryLabel}>{connected ? strings.deviceBasics : strings.preferences}</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  duration: { ...type.caption, color: colors.secondary, marginBottom: spacing.lg },
+  safe: { flex: 1, backgroundColor: colors.paper },
+  scroll: {
+    paddingHorizontal: layout.gutterDiary,
+    paddingBottom: spacing.xl,
+    gap: 18,
+  },
+  eyebrow: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '600',
+    color: colors.secondary,
+    letterSpacing: 0.8,
+  },
+  title: { ...type.titleLarge, color: colors.ink },
+  lead: { ...type.bodyStory, color: colors.secondary },
+  duration: { fontSize: 13, lineHeight: 18, color: colors.secondary },
   card: {
-    minHeight: 220,
+    height: 220,
     backgroundColor: colors.surface,
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: spacing.lg,
     padding: spacing.md,
   },
   cardLabel: { ...type.caption, color: colors.tertiary, textAlign: 'center' },
+  footer: {
+    paddingHorizontal: layout.gutterDiary,
+    paddingBottom: spacing.lg,
+  },
+  primary: {
+    backgroundColor: colors.ink,
+    borderRadius: 12,
+    minHeight: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  primaryLabel: { fontSize: 15, lineHeight: 20, color: colors.paper, fontWeight: '600' },
 });

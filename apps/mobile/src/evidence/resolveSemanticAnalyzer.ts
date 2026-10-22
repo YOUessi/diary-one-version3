@@ -1,37 +1,11 @@
-import { createFallbackSemanticAnalyzer } from './fallbackAnalyzer';
-import { createNativeVisionAnalyzer } from './nativeVisionAnalyzer';
-import { createRemoteSemanticAnalyzer } from './remoteSemanticAnalyzer';
+import { analyzeMobileClip } from './mobileclip/analyzer';
 import type { SemanticAnalyzer } from './semanticAnalyzer';
-import { resolveProductionBearer } from '../backend/resolveProductionBearer';
-import { useAppStore } from '../store/useAppStore';
 
-export function resolveSemanticAnalyzer(options?: {
-  bffBaseUrl?: string;
-  bffToken?: string;
-  preferRemote?: boolean;
-}): SemanticAnalyzer {
-  const state = useAppStore.getState();
-  const bffUrl = (options?.bffBaseUrl ?? state.productionApiBaseUrl ?? '').trim();
-  const token = options?.bffToken ?? resolveProductionBearer();
-
-  const native = createNativeVisionAnalyzer();
-  if (native && !options?.preferRemote) {
-    return native;
-  }
-  if (bffUrl) {
-    try {
-      return createRemoteSemanticAnalyzer(bffUrl, token);
-    } catch {
-      /* fall through */
-    }
-  }
-  if (native) return native;
-  return createFallbackSemanticAnalyzer();
+/** No Apple Vision, BFF inference, or synthetic descriptor fallback. */
+export function resolveSemanticAnalyzer(): SemanticAnalyzer {
+  return { kind: 'mobileclip_onnx', degraded: false,
+    analyzeImageUris: analyzeMobileClip,
+    async analyzeImageUri(uri: string) { return (await analyzeMobileClip([uri]))[0]; },
+  };
 }
-
-export function describeAnalyzer(analyzer: SemanticAnalyzer): string {
-  if (analyzer.degraded) {
-    return `${analyzer.kind} (degraded — not Vision quality)`;
-  }
-  return analyzer.kind;
-}
+export function describeAnalyzer(analyzer: SemanticAnalyzer): string { return analyzer.kind; }

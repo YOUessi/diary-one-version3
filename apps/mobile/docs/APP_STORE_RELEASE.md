@@ -12,7 +12,7 @@
 | # | 项 | 状态 | 说明 |
 |---|-----|------|------|
 | A1 | **Apple 开发者账号 + Bundle ID** | 你方 | production 使用 `com.nexleap.diaryone` |
-| A2 | **Sign in with Apple** | 待做 | 若上架版展示 Google/第三方登录，必须同时接 Apple；当前 Store 版 **仅邮箱**（见 SignIn） |
+| A2 | **Sign in with Apple** | 代码已接 | UI+BFF `/v1/auth/oauth` 已开；Apple Developer 需为 Bundle ID 勾选 Sign in with Apple，并重新 eas build |
 | A3 | **真实账号服务** | 🔄 联调中 | Dev Lite 已接 OTP API；内测弹窗 `dev_code`。上架需真实 SMTP + 关 expose |
 | A4 | **隐私政策 / 条款 URL** | 待填 | Account 内链到可访问 HTTPS 页面 |
 | A5 | **App Privacy（营养标签）** | 待填 | App Store Connect 与 PRD 数据流一致 |

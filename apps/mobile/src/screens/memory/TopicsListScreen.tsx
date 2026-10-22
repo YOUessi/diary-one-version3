@@ -4,13 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
-import { colors, layout, spacing } from '../../theme';
+import { colors, layout, spacing, type } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 import type { MemoryStackParamList } from '../../navigation/types';
 
 type Nav = NativeStackNavigationProp<MemoryStackParamList, 'TopicsList'>;
 
-/** Figma 67:936 — 2-col covers 171×82 r12 + label 17 under. */
+/** Figma 67:936 — title 28; 2-col 171×82 r12 + label 17; gap 12. */
 export default function TopicsListScreen() {
   const navigation = useNavigation<Nav>();
   const topics = useAppStore((s) => s.topics);
@@ -32,7 +32,9 @@ export default function TopicsListScreen() {
                 <View style={styles.coverOrb} />
                 <View style={styles.coverWave} />
               </View>
-              <Text style={styles.cardTitle}>{t.name}</Text>
+              <Text style={styles.cardTitle} numberOfLines={1}>
+                {t.name}
+              </Text>
             </Pressable>
           ))}
         </View>
@@ -53,18 +55,27 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     paddingHorizontal: layout.gutterDiary,
     marginTop: spacing.xs,
-    marginBottom: spacing.xl,
+    marginBottom: 24,
   },
-  scroll: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: spacing.md },
-  card: { width: '48%' },
+  scroll: { paddingHorizontal: layout.gutterDiary, paddingBottom: 120 },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  /** ~171 wide on 353 content; flex basis for 2-col with gap 12 */
+  card: {
+    width: '47.5%',
+    flexGrow: 1,
+    maxWidth: '48.5%',
+  },
   cover: {
     width: '100%',
-    aspectRatio: 171 / 82,
+    height: 82,
     borderRadius: 12,
     backgroundColor: colors.surface,
     overflow: 'hidden',
-    marginBottom: spacing.sm,
+    marginBottom: 10,
   },
   coverOrb: {
     position: 'absolute',

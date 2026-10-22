@@ -5,7 +5,11 @@ import type { AppLibraryBundle } from '../pipeline/bundleTypes';
 import type { ResearchHealth, X02PreviewResult } from './types';
 
 import { useAppStore } from '../store/useAppStore';
-import { memoryPreferencesForUpload } from '../domain/memoryPreferencesCloud';
+import {
+  buildAppClientProfile,
+  profileHasSignals,
+  type AppClientProfileV01,
+} from '../domain/memoryPreferencesCloud';
 import { ALGORITHM_LOCK } from '../config/algorithmLock';
 import { appendRnFile, postMultipartText } from './rnFormData';
 
@@ -72,7 +76,7 @@ type FrameRef = { frame_id: string; relative_path: string };
 export async function buildBundleMultipartForm(
   bundleDir: string,
   manifest: AppLibraryBundle,
-  clientProfile?: { memory_preferences: string[] },
+  clientProfile?: AppClientProfileV01 | { memory_preferences: string[] },
   extraFields?: { day_revision_id?: string },
 ): Promise<FormData> {
   const form = new FormData();
@@ -81,8 +85,21 @@ export async function buildBundleMultipartForm(
     form.append('day_revision_id', extraFields.day_revision_id);
   }
 
-  if (clientProfile?.memory_preferences.length) {
-    form.append('app_client_profile', JSON.stringify(clientProfile));
+  if (clientProfile) {
+    const full: AppClientProfileV01 =
+      'schema_version' in clientProfile
+        ? clientProfile
+        : {
+            schema_version: 'APP_CLIENT_PROFILE_V01',
+            memory_preferences: clientProfile.memory_preferences,
+            boost_tags: [],
+            avoid_topics: [],
+            writing_style: null,
+            preferred_categories: [],
+          };
+    if (profileHasSignals(full)) {
+      form.append('app_client_profile', JSON.stringify(full));
+    }
   }
 
   form.append('manifest', JSON.stringify(manifest));
@@ -117,11 +134,9 @@ export async function runResearchPreview(
 
   const manifest = JSON.parse(raw) as AppLibraryBundle;
 
-  const prefs = memoryPreferencesForUpload(useAppStore.getState().preferences);
+  const profile = buildAppClientProfile(useAppStore.getState().preferences);
 
-  const form = await buildBundleMultipartForm(bundleDir, manifest, {
-    memory_preferences: prefs,
-  });
+  const form = await buildBundleMultipartForm(bundleDir, manifest, profile);
 
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { colors, radius } from '../theme';
+import { colors } from '../theme';
 
 type ArtKind =
   | 'wear'
@@ -128,8 +128,8 @@ function RadarRing({ active }: { active?: boolean }) {
 
 const styles = StyleSheet.create({
   frame: {
-    minHeight: 160,
-    borderRadius: radius.media,
+    minHeight: 188,
+    width: '100%',
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',

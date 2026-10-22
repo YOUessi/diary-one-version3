@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from './src/theme';
 import { AppBootstrap } from './src/bootstrap/AppBootstrap';
 import RootNavigator from './src/navigation/RootNavigator';
+import { ImportFeedbackPanel } from './src/components/ImportFeedbackPanel';
 
 const navTheme: Theme = {
   ...DefaultTheme,
@@ -28,6 +29,7 @@ export default function App() {
           <NavigationContainer theme={navTheme}>
             <StatusBar style="dark" />
             <RootNavigator />
+            <ImportFeedbackPanel />
           </NavigationContainer>
         </AppBootstrap>
       </SafeAreaProvider>

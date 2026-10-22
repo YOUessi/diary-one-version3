@@ -17,7 +17,11 @@ class Settings(BaseSettings):
     x02_base_url: str = "http://127.0.0.1:8787"
     x02_token: str = ""
     queue_key: str = "diary:cloud_jobs"
-    expose_otp_in_response: bool = True
+    deployment_revision: str = "unversioned"
+    google_client_ids: str = ""
+    worker_recovery_grace_seconds: int = 120
+    # Default false — OTP in JSON is a lab convenience only (PRI04).
+    expose_otp_in_response: bool = False
     otp_ttl_seconds: int = 600
     smtp_host: str = ""
     smtp_port: int = 465
@@ -25,7 +29,11 @@ class Settings(BaseSettings):
     smtp_password: str = ""
     smtp_from: str = ""
     smtp_security: str = "ssl"
-    allow_mock_preview: bool = True
+    # PRD AI03 — mock chapters must never be the commercial default.
+    allow_mock_preview: bool = False
+    day_revision_daily_limit: int = 8
+    day_revision_max_inflight: int = 2
+    worker_max_concurrent: int = 1
 
 
 settings = Settings()

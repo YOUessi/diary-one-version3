@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, layout, type } from '../theme';
+import { layout, type } from '../theme';
 
 /**
  * Figma R6-S4 Cancel — call sites already wrap SafeAreaView edges=['top'].

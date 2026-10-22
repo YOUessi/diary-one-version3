@@ -63,7 +63,7 @@ export function DiscardConfirmCard({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(0,0,0,0.18)',
     justifyContent: 'flex-end',
   },
   sheetPad: {
@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
   },
   inlineWrap: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(0,0,0,0.18)',
     justifyContent: 'flex-end',
     paddingHorizontal: 16,
     paddingBottom: 18,

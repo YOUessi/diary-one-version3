@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, layout, radius, spacing, type } from '../theme';
+import { colors, elevation, layout, radius, spacing, type } from '../theme';
 import { useAppStore } from '../store/useAppStore';
 import { appStrings } from '../domain/strings';
 
@@ -106,11 +106,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     backgroundColor: colors.card,
     borderRadius: radius.pill,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 8,
+    ...elevation.floating,
   },
   tab: {
     width: 76,

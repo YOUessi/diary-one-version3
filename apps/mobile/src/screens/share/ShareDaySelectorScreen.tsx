@@ -12,6 +12,7 @@ import type { DiaryStackParamList } from '../../navigation/types';
 type Route = RouteProp<DiaryStackParamList, 'ShareDaySelector'>;
 type Nav = NativeStackNavigationProp<DiaryStackParamList, 'ShareDaySelector'>;
 
+/** Figma Share Day — same sheet language as Share Memory Selector (184:1976). */
 export default function ShareDaySelectorScreen() {
   const { dateKey } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
@@ -24,9 +25,9 @@ export default function ShareDaySelectorScreen() {
       <Pressable style={styles.dim} onPress={close} accessibilityLabel="Dismiss share day" />
       <SafeAreaView edges={['bottom']} style={styles.sheet}>
         <View style={styles.handle} />
-        <View style={styles.handleRow}>
+        <View style={styles.titleBlock}>
           <Text style={styles.sheetTitle}>Share day</Text>
-          <Pressable onPress={close} hitSlop={12} style={styles.closeHit}>
+          <Pressable onPress={close} hitSlop={12} style={styles.closeHit} accessibilityLabel="Close">
             <Text style={styles.close}>×</Text>
           </Pressable>
         </View>
@@ -39,15 +40,19 @@ export default function ShareDaySelectorScreen() {
           style={styles.option}
           onPress={() => navigation.replace('DailyRecapFlow', { dateKey, phase: 'preparing' })}
         >
-          <Text style={styles.optionTitle}>Daily Recap</Text>
-          <Text style={styles.optionBody}>A 9:16 video-style recap of your day.</Text>
+          <View style={styles.optionCopy}>
+            <Text style={styles.optionTitle}>Daily Recap</Text>
+            <Text style={styles.optionBody}>A 9:16 video-style recap of your day.</Text>
+          </View>
         </Pressable>
         <Pressable
           style={styles.option}
           onPress={() => navigation.replace('DayPhotoCollageFlow', { dateKey, phase: 'preparing' })}
         >
-          <Text style={styles.optionTitle}>Photo collage</Text>
-          <Text style={styles.optionBody}>A clean layout using moments from this day.</Text>
+          <View style={styles.optionCopy}>
+            <Text style={styles.optionTitle}>Photo collage</Text>
+            <Text style={styles.optionBody}>A clean layout using moments from this day.</Text>
+          </View>
         </Pressable>
       </SafeAreaView>
     </View>
@@ -56,55 +61,59 @@ export default function ShareDaySelectorScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'transparent' },
-  dim: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.35)' },
+  dim: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.18)' },
   sheet: {
-    backgroundColor: colors.paper,
+    backgroundColor: colors.card,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingHorizontal: layout.gutterDiary,
-    paddingTop: spacing.sm,
+    paddingTop: 10,
     paddingBottom: spacing.lg,
   },
   handle: {
     alignSelf: 'center',
-    width: 36,
+    width: 41,
     height: 4,
     borderRadius: 2,
     backgroundColor: colors.divider,
-    marginBottom: spacing.md,
+    marginBottom: 20,
   },
-  handleRow: {
+  titleBlock: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: spacing.sm,
+    minHeight: 44,
   },
   sheetTitle: {
-    fontSize: 28,
-    lineHeight: 34,
-    fontWeight: '600',
-    letterSpacing: -0.2,
+    ...type.titleSection,
     color: colors.ink,
+    flex: 1,
+    paddingRight: spacing.md,
   },
   closeHit: {
+    position: 'absolute',
+    right: -4,
+    top: -18,
     width: layout.minTouch,
     height: layout.minTouch,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  close: { fontSize: 26, color: colors.ink, fontWeight: '300', lineHeight: 32 },
+  close: { fontSize: 26, color: '#404040', fontWeight: '400', lineHeight: 32 },
   dateTitle: { ...type.titleChapter, color: colors.ink },
   meta: { ...type.caption, color: colors.tertiary, marginBottom: spacing.lg, marginTop: 2 },
   option: {
     borderWidth: 1,
     borderColor: colors.divider,
     borderRadius: 14,
-    backgroundColor: colors.card,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-    minHeight: 72,
+    backgroundColor: colors.paper,
+    padding: 13,
+    marginBottom: 14,
+    minHeight: 88,
     justifyContent: 'center',
   },
-  optionTitle: { ...type.bodyStory, fontWeight: '600', color: colors.ink, marginBottom: 4 },
-  optionBody: { ...type.caption, color: colors.secondary, lineHeight: 18 },
+  optionCopy: { paddingRight: spacing.sm },
+  optionTitle: { fontSize: 17, lineHeight: 24, fontWeight: '600', color: colors.ink, marginBottom: 8 },
+  optionBody: { fontSize: 13, lineHeight: 18, color: colors.secondary },
 });

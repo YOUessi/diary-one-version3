@@ -1,3 +1,5 @@
+import { appStrings } from '../domain/strings';
+import { pipelineStatusLabel } from '../domain/pipelineCopy';
 import React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { colors, font, radius, spacing } from '../theme';
@@ -6,18 +8,16 @@ import { useAppStore } from '../store/useAppStore';
 
 /** Shown on Diary while S6–S7 pipeline runs (distinct from device Sync). */
 export function CloudProcessingBanner({ task }: { task: PipelineTask }) {
-  const target = useAppStore((s) => s.cloudProcessingTarget);
-  const hint =
-    target === 'production'
-      ? 'Production BFF job — usually under a minute on Dev Lite. Keep the app open.'
-      : 'Research preview can take 3–9 minutes. Keep the app open.';
+  const language = useAppStore((s) => s.language);
+  const strings = appStrings(language);
+  const hint = strings.cloudWait;
 
   return (
     <View style={styles.banner} accessibilityLiveRegion="polite">
       <ActivityIndicator color={colors.accent} size="small" />
       <View style={styles.copy}>
-        <Text style={styles.title}>Cloud processing</Text>
-        <Text style={styles.sub}>{task.message}</Text>
+        <Text style={styles.title}>{strings.cloudProcessing}</Text>
+        <Text style={styles.sub}>{pipelineStatusLabel(task.status, language)}</Text>
         {task.status === 'cloud_processing' || task.status === 'uploading' ? (
           <Text style={styles.hint}>{hint}</Text>
         ) : null}

@@ -19,6 +19,7 @@ import type {
 import type { PipelineTask } from '../pipeline/types';
 
 import { diaryTodayKey } from '../domain/dayKey';
+import { historyDateKeys } from '../diary/buildDiaryFeed';
 
 import { DEFAULT_LOCAL_PROFILE, type LocalProfile } from '../domain/localProfile';
 
@@ -46,22 +47,6 @@ import type { BundleExportVersion } from '../pipeline/bundleTypes';
 import type { CloudProcessingTarget } from '../backend/types';
 import { CLOUD_EVIDENCE_CONSENT_VERSION } from '../onboarding/preferenceSurvey';
 import { isDevFailSimulationEnabled } from '../config/devFailSimulation';
-
-import {
-
-  seedChapters,
-
-  seedSmallMemories,
-
-  seedTopics,
-
-  seedPreferences,
-
-  seedCaptured,
-
-} from '../model';
-
-
 
 export type DeviceLinkState = 'disconnected' | 'lab_linked' | 'hardware_linked';
 
@@ -131,6 +116,7 @@ type AppState = {
 
   /** Meeting 2026-09-23 preference survey finished or skipped. */
   preferenceSurveyComplete: boolean;
+  preferenceSurveyResponse: import('../model').PreferenceSurveyResponse | null;
 
   /** Explicit cloud evidence upload consent (separate from login). */
   cloudEvidenceConsent: boolean | null;
@@ -204,21 +190,22 @@ type AppState = {
 
 export const useAppStore = create<AppState>((set) => ({
 
-  todayStatus: 'READY',
+  // Cold module state before hydrate — empty (PRD DIA02). Demo seed only via Lab.
+  todayStatus: 'NO_RECORDINGS',
 
   calendarExpanded: false,
 
   selectedDateKey: diaryTodayKey(),
 
-  chapters: seedChapters,
+  chapters: [],
 
-  smallMemoriesByDate: seedSmallMemories,
+  smallMemoriesByDate: {},
 
-  topics: seedTopics,
+  topics: [],
 
-  preferences: seedPreferences,
+  preferences: [],
 
-  capturedOriginals: seedCaptured,
+  capturedOriginals: [],
 
   pipelineTasks: [],
 
@@ -263,6 +250,7 @@ export const useAppStore = create<AppState>((set) => ({
   onboardingComplete: true,
 
   preferenceSurveyComplete: true,
+  preferenceSurveyResponse: null,
 
   cloudEvidenceConsent: null,
 
@@ -333,7 +321,7 @@ export const useAppStore = create<AppState>((set) => ({
 
       const todayKey = diaryTodayKey();
 
-      const pastCount = s.chapters.filter((c) => c.dateKey !== todayKey).length;
+      const pastCount = historyDateKeys(s.chapters, s.smallMemoriesByDate, todayKey).length;
 
       if (s.historyVisibleCount >= pastCount) {
 
@@ -427,7 +415,7 @@ export const useAppStore = create<AppState>((set) => ({
 
       preferences: state.preferences.map((p) =>
 
-        p.id === id ? { ...p, title: title.trim(), text: text.trim() } : p,
+        p.id === id ? { ...p, title: title.trim(), text: text.trim(), survey: undefined } : p,
 
       ),
 
@@ -524,6 +512,7 @@ export function buildPersistedSlice(state: AppState) {
     onboardingComplete: state.onboardingComplete,
 
     preferenceSurveyComplete: state.preferenceSurveyComplete,
+    preferenceSurveyResponse: state.preferenceSurveyResponse,
 
     cloudEvidenceConsent: state.cloudEvidenceConsent,
 

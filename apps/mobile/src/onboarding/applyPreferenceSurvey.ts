@@ -1,101 +1,51 @@
 import { useAppStore } from '../store/useAppStore';
-import {
-  CLOUD_EVIDENCE_CONSENT_VERSION,
-  type SurveyAnswers,
-} from './preferenceSurvey';
-import { avoidById, categoryLabel, styleById, tagById } from './tagLibrary';
+import { flushPersist } from '../store/hydrate';
+import { EMPTY_SURVEY_ANSWERS, type SurveyAnswers } from './preferenceSurvey';
+import { buildSurveyProfile, mergeSurveyPreferences } from './surveyProfile';
 
 export function buildPreferenceLines(answers: SurveyAnswers): { title: string; text: string }[] {
-  const lines: { title: string; text: string }[] = [];
+  return buildSurveyProfile(answers).preferences.map(({ title, text }) => ({ title, text }));
+}
 
-  if (answers.categories.length) {
-    lines.push({
-      title: 'Preferred content',
-      text: `Prefer writing about: ${answers.categories.map(categoryLabel).join(', ')}.`,
-    });
-  }
-
-  const tagLabels = answers.interestTags
-    .map((id) => tagById(id)?.label)
-    .filter((x): x is string => Boolean(x));
-  if (tagLabels.length) {
-    lines.push({
-      title: 'Interest tags',
-      text: `Boost these tags when evidence exists: ${tagLabels.join(', ')}.`,
-    });
-  }
-
-  const style = answers.styleId ? styleById(answers.styleId) : undefined;
-  if (style) {
-    lines.push({
-      title: 'Writing style',
-      text: `Writing style: ${style.label}. ${style.description}`,
-    });
-  }
-
-  for (const id of answers.avoidTopics) {
-    const avoid = avoidById(id);
-    if (avoid) {
-      lines.push({
-        title: `Avoid: ${avoid.label}`,
-        text: avoid.negativePrompt,
-      });
+async function writeSurveyPreferences(answers: SurveyAnswers, finish: boolean) {
+  const initial = useAppStore.getState();
+  const profile = buildSurveyProfile(answers);
+  const preferences = mergeSurveyPreferences(initial.preferences, profile.preferences);
+  const sameAccount = () => {
+    const now = useAppStore.getState();
+    return now.sessionToken === initial.sessionToken && now.localProfile.email === initial.localProfile.email;
+  };
+  useAppStore.setState({ preferences, preferenceSurveyResponse: profile.response });
+  try {
+    await flushPersist();
+    if (!sameAccount()) throw new Error('Account changed. Please reopen preferences.');
+    const completion = finish ? { preferenceSurveyComplete: true as const, onboardingComplete: true as const }
+      : { preferenceSurveyComplete: true as const };
+    // Persist completion before the root navigator can unmount this screen.
+    await flushPersist(completion);
+    if (!sameAccount()) throw new Error('Account changed. Please reopen preferences.');
+    useAppStore.setState(completion);
+  } catch (error) {
+    if (sameAccount() && useAppStore.getState().preferences === preferences) {
+      useAppStore.setState({ preferences: initial.preferences,
+        preferenceSurveyResponse: initial.preferenceSurveyResponse,
+        preferenceSurveyComplete: initial.preferenceSurveyComplete });
     }
+    throw error;
   }
-
-  const open = answers.openText.trim();
-  if (open) {
-    lines.push({
-      title: 'What matters most',
-      text: open.slice(0, 150),
-    });
-  }
-
-  return lines;
 }
 
-function writeSurveyPreferences(answers: SurveyAnswers) {
-  const lines = buildPreferenceLines(answers);
-  if (lines.length > 0) {
-    useAppStore.setState({
-      preferences: lines.map((p, i) => ({
-        id: `survey-${Date.now()}-${i}`,
-        title: p.title,
-        text: p.text,
-      })),
-    });
-  }
-
-  const cloudEvidenceConsent = answers.consent === 'agree';
-  useAppStore.setState({
-    cloudEvidenceConsent,
-    cloudEvidenceConsentVersion: cloudEvidenceConsent ? CLOUD_EVIDENCE_CONSENT_VERSION : null,
-    preferenceSurveyComplete: true,
-  });
+export async function applyPreferenceSurveyAndFinish(answers: SurveyAnswers) {
+  await writeSurveyPreferences(answers, true);
 }
 
-/** Apply survey from onboarding → Preferences + consent, then enter Diary. */
-export function applyPreferenceSurveyAndFinish(answers: SurveyAnswers) {
-  writeSurveyPreferences(answers);
-  useAppStore.setState({
-    onboardingComplete: true,
-  });
+export async function applyPreferenceSurveyFromAccount(answers: SurveyAnswers) {
+  await writeSurveyPreferences(answers, false);
 }
 
-/** Apply survey from Account retake — stay in Account, do not re-toggle onboarding. */
-export function applyPreferenceSurveyFromAccount(answers: SurveyAnswers) {
-  writeSurveyPreferences(answers);
+export async function skipPreferenceSurveyAndFinish() {
+  await writeSurveyPreferences(EMPTY_SURVEY_ANSWERS, true);
 }
 
-export function skipPreferenceSurveyAndFinish() {
-  useAppStore.setState({
-    preferenceSurveyComplete: true,
-    onboardingComplete: true,
-  });
-}
-
-export function goToPreferenceSurveyOrFinish(
-  navigate: (name: 'PreferenceSurvey', params: { step: number }) => void,
-) {
-  navigate('PreferenceSurvey', { step: 0 });
-}
+/** Cancelling a retake does not change existing preferences. */
+export function skipPreferenceSurveyFromAccount() {}

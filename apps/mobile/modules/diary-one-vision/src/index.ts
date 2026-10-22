@@ -1,30 +1,30 @@
-import { requireNativeModule } from 'expo-modules-core';
-
-export type DiaryOneVisionResult = {
-  modelId: string;
-  vectors: number[][];
-  classifications: Array<Array<{ identifier: string; confidence: number }>>;
-};
+import { requireNativeModule } from 'expo';
 
 export type DiaryOneExtractedFrame = {
   uri: string;
   requestedMs: number;
   actualPtsMs: number;
+  decodeTimeMs?: number;
 };
 
 const DiaryOneVision = requireNativeModule<{
   isAvailable?: boolean;
-  analyzeImages(uris: string[]): Promise<DiaryOneVisionResult>;
+  normalizeEvidenceFrame(sourceUri: string, destUri: string): Promise<void>;
+  normalizePhotoEvidenceFrame(sourceUri: string, destUri: string, spatial: string): Promise<{
+    uri: string; width: number; height: number; format: string; spatialTransform: string;
+  }>;
+  extractVideoWindowFrames(
+    videoUri: string,
+    timestampsMs: number[],
+    destDir: string,
+    bounds: [number, number],
+  ): Promise<DiaryOneExtractedFrame[]>;
   extractVideoFrames(
     videoUri: string,
     timestampsMs: number[],
     destDir: string,
   ): Promise<DiaryOneExtractedFrame[]>;
 }>('DiaryOneVision');
-
-export async function analyzeImages(uris: string[]): Promise<DiaryOneVisionResult> {
-  return DiaryOneVision.analyzeImages(uris);
-}
 
 export async function extractVideoFrames(
   videoUri: string,

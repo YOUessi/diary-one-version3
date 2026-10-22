@@ -1,54 +1,59 @@
 /**
- * Expo Go 联调：从 EXPO_PUBLIC_DEV_BFF_* 灌入 Production BFF。
- * __DEV__ 下每次启动都覆盖，避免 SQLite 里旧空值挡住联调。
+ * Seed the public BFF URL for beta and App Store builds on startup.
+ * Formal consumer: URL only — never shared token, never silent cloud consent (PRI01).
+ * Lab (EXPO_PUBLIC_ENABLE_LAB=1): may set token / auto-consent for engineer demos.
  */
 import { useAppStore } from '../store/useAppStore';
 import { CLOUD_EVIDENCE_CONSENT_VERSION } from '../onboarding/preferenceSurvey';
+import { resolveConfiguredBffUrl } from '../backend/bffUrl';
+import { isFormalConsumerApp, isLabToolsEnabled, isStoreRelease } from './buildProfile';
 
-/** Dev / Expo Go：未明确拒绝时，打开云同意，否则 Demo 上传会被拦。 */
+/** Lab-only helper. No-op on formal consumer App. */
 export function ensureDevCloudConsentForLab(): void {
-  if (process.env.EXPO_PUBLIC_STORE_RELEASE === '1') return;
-  if (!__DEV__) return;
+  if (isStoreRelease || isFormalConsumerApp || !isLabToolsEnabled) return;
   const consent = useAppStore.getState().cloudEvidenceConsent;
-  if (consent === false) return;
-  if (consent === true) return;
+  if (consent === false || consent === true) return;
   useAppStore.getState().setCloudEvidenceConsent(true);
 }
 
-export function applyDevCloudDefaults(): void {
-  if (process.env.EXPO_PUBLIC_STORE_RELEASE === '1') return;
+function resolvePublicBffUrl(): string {
+  return resolveConfiguredBffUrl({
+    envUrl: process.env.EXPO_PUBLIC_DEV_BFF_URL,
+    envAlias: process.env.EXPO_PUBLIC_BFF_BASE_URL,
+  });
+}
 
-  const url = (process.env.EXPO_PUBLIC_DEV_BFF_URL ?? '').trim().replace(/\/+$/, '');
-  const token = (process.env.EXPO_PUBLIC_DEV_BFF_TOKEN ?? 'dev-token').trim() || 'dev-token';
+export function applyDevCloudDefaults(): void {
+  const url = resolvePublicBffUrl();
   if (!url) return;
 
-  if (__DEV__) {
+  if (isStoreRelease || isFormalConsumerApp) {
+    // Shipping builds use the public URL, clear shared tokens, and preserve consent.
     useAppStore.setState({
       productionApiBaseUrl: url,
-      productionApiToken: token,
+      productionApiToken: '',
       cloudProcessingTarget: 'production',
+      researchEndpoint: '',
+      researchToken: '',
     });
-    // Skip / 未做问卷时 consent=null，会 fail-closed；内测默认同意（可在 Privacy 关掉）
-    if (useAppStore.getState().cloudEvidenceConsent == null) {
-      useAppStore.setState({
-        cloudEvidenceConsent: true,
-        cloudEvidenceConsentVersion: CLOUD_EVIDENCE_CONSENT_VERSION,
-      });
-    }
     return;
   }
 
-  const s = useAppStore.getState();
-  const patch: Partial<{
-    productionApiBaseUrl: string;
-    productionApiToken: string;
-    cloudProcessingTarget: 'production' | 'research';
-  }> = {};
-
-  if (!s.productionApiBaseUrl.trim()) patch.productionApiBaseUrl = url;
-  if (!s.productionApiToken.trim()) patch.productionApiToken = token;
-  if (s.cloudProcessingTarget !== 'production' && (patch.productionApiBaseUrl || s.productionApiBaseUrl.trim())) {
-    patch.cloudProcessingTarget = 'production';
+  // Lab only
+  const rawToken = (
+    process.env.EXPO_PUBLIC_DEV_BFF_TOKEN ??
+    process.env.EXPO_PUBLIC_API_TOKEN ??
+    ''
+  ).trim();
+  useAppStore.setState({
+    productionApiBaseUrl: url,
+    productionApiToken: rawToken,
+    cloudProcessingTarget: 'production',
+  });
+  if (useAppStore.getState().cloudEvidenceConsent == null) {
+    useAppStore.setState({
+      cloudEvidenceConsent: true,
+      cloudEvidenceConsentVersion: CLOUD_EVIDENCE_CONSENT_VERSION,
+    });
   }
-  if (Object.keys(patch).length) useAppStore.setState(patch);
 }

@@ -1,32 +1,31 @@
+import { appStrings, appLocale } from '../domain/strings';
+import { pipelineTaskLabel, pipelineTaskDetail, requiresEvidenceRebuild } from '../domain/pipelineCopy';
+import { useAppStore } from '../store/useAppStore';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors, font, layout, radius, spacing } from '../theme';
-import type { PipelineTask, PipelineTaskStatus } from '../pipeline/types';
-
-const LABEL: Record<PipelineTaskStatus, string> = {
-  queued: 'Queued',
-  building_evidence: 'Building evidence',
-  bundle_ready: 'Bundle ready',
-  uploading: 'Uploading',
-  cloud_processing: 'Cloud processing',
-  succeeded: 'Succeeded',
-  failed: 'Failed',
-};
+import type { PipelineTask } from '../pipeline/types';
+import { retryStoredCloudResult } from '../pipeline/runPipeline';
 
 export function PipelineTaskList({ tasks }: { tasks: PipelineTask[] }) {
+  const language = useAppStore((s) => s.language);
+  const strings = appStrings(language);
   if (!tasks.length) return null;
   return (
     <View style={styles.wrap}>
       {tasks.slice(0, 5).map((t) => (
         <View key={t.id} style={styles.row}>
-          <Text style={styles.status}>{LABEL[t.status]}</Text>
-          <Text style={styles.msg}>{t.message}</Text>
+          <Text style={styles.status}>{pipelineTaskLabel(t, language)}</Text>
           <Text style={styles.meta}>
-            {t.dayKey} · {t.sourceCount} file(s)
-            {t.bundleVersion ? ` · ${t.bundleVersion}` : ''}
-            {t.dayRevisionId ? `\n${t.dayRevisionId}` : ''}
+            {t.dayKey} · {t.sourceCount} {appLocale(language) === 'zh-CN' ? '份素材' : 'files'}
           </Text>
-          {t.error ? <Text style={styles.err}>{t.error}</Text> : null}
+          {pipelineTaskDetail(t, language) ? <Text style={styles.msg}>{pipelineTaskDetail(t, language)}</Text> : null}
+          {t.error && !pipelineTaskDetail(t, language) ? <Text style={styles.err}>{t.error}</Text> : null}
+          {t.status === 'failed' && t.bundleDir && t.bundleJsonPath && !requiresEvidenceRebuild(t.error) ? (
+            <Pressable accessibilityRole="button" onPress={() => retryStoredCloudResult(t.id)}>
+              <Text style={styles.msg}>{strings.retry}</Text>
+            </Pressable>
+          ) : null}
         </View>
       ))}
     </View>

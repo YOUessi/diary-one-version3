@@ -1,6 +1,0 @@
-# Local S3 stand-in when docker.io/minio/minio cannot be pulled (China mirrors deny it).
-FROM python:3.12-slim
-ENV PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
-RUN pip install --no-cache-dir "moto[server]>=5.0.0"
-EXPOSE 9000
-CMD ["moto_server", "-H", "0.0.0.0", "-p", "9000"]

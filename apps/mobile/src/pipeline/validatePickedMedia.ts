@@ -10,11 +10,11 @@ const MAX_VIDEO_DURATION_MS = 10 * 60 * 1000;
 
 export type MediaValidationResult =
   | { ok: true; items: PickedMedia[] }
-  | { ok: false; reason: string };
+  | { ok: false; reason: string; reasonZh: string };
 
 export function validatePickedMedia(items: PickedMedia[]): MediaValidationResult {
   if (!items.length) {
-    return { ok: false, reason: 'No media selected.' };
+    return { ok: false, reason: 'No media selected.', reasonZh: '没有选中素材，请重新选择。' };
   }
 
   const accepted: PickedMedia[] = [];
@@ -27,7 +27,7 @@ export function validatePickedMedia(items: PickedMedia[]): MediaValidationResult
     }
     if (item.mediaType === 'image') {
       if (item.fileSize != null && item.fileSize > MAX_PHOTO_BYTES) {
-        return { ok: false, reason: 'A photo is too large (max 40 MB).' };
+        return { ok: false, reason: 'A photo is too large (max 40 MB).', reasonZh: '有照片超过 40 MB，请缩小后重新导入。' };
       }
       if (item.width != null && item.height != null && (item.width < 32 || item.height < 32)) {
         continue;
@@ -37,17 +37,17 @@ export function validatePickedMedia(items: PickedMedia[]): MediaValidationResult
     }
     if (item.mediaType === 'video') {
       if (item.fileSize != null && item.fileSize > MAX_VIDEO_BYTES) {
-        return { ok: false, reason: 'A video is too large (max 200 MB).' };
+        return { ok: false, reason: 'A video is too large (max 200 MB).', reasonZh: '有视频超过 200 MB，请压缩或截短后重新导入。' };
       }
       if (item.durationMs != null && item.durationMs > MAX_VIDEO_DURATION_MS) {
-        return { ok: false, reason: 'A video is longer than 10 minutes.' };
+        return { ok: false, reason: 'A video is longer than 10 minutes.', reasonZh: '有视频超过 10 分钟，请截短后重新导入。' };
       }
       accepted.push(item);
     }
   }
 
   if (!accepted.length) {
-    return { ok: false, reason: 'No valid photos or videos after validation.' };
+    return { ok: false, reason: 'No valid photos or videos after validation.', reasonZh: '所选素材无法识别为有效照片或视频，请重新选择。' };
   }
   return { ok: true, items: accepted };
 }

@@ -1,6 +1,0 @@
-.dev_lite_pycache
-**/__pycache__
-.pytest_cache
-dev_lite/data
-.git
-*.md

@@ -1,0 +1,31 @@
+{
+  "verified_at": "2026-10-22T11:01:11.649357+08:00",
+  "repository": "YOUessi/diary-one-version3",
+  "branch": "版本4",
+  "base_commit": "b5eb6118c306281ba680a8652967a5903999fa48",
+  "source_package_files": 923,
+  "source_package_missing": [],
+  "publication_only_document_changes": [
+    "README.md",
+    "README_build.md",
+    "docs/BRANCHES.md"
+  ],
+  "built_app_input_files": 251,
+  "built_app_input_hashes_match": true,
+  "fresh_checks": {
+    "core": {
+      "passed": 189,
+      "failed": 0
+    },
+    "typecheck_exit_code": 0,
+    "lint": {
+      "exit_code": 0,
+      "errors": 0,
+      "existing_warnings": 4
+    }
+  },
+  "test_environment": "Existing local Node dependencies; exact matching source; not a fresh dependency installation or physical-device run",
+  "cloud_calls": 0,
+  "signed_archive_rebuilt": false,
+  "testflight_upload_performed": false
+}

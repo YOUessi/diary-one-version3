@@ -16,13 +16,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
 import { colors, layout, spacing, type } from '../../theme';
 import type { OnboardingStackParamList } from '../../navigation/types';
+import type { AuthFlowParams } from '../../navigation/authTypes';
 
-type Route = RouteProp<OnboardingStackParamList, 'EmailOtp'>;
-type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'EmailOtp'>;
+type Route = RouteProp<AuthFlowParams, 'EmailOtp'>;
+type Nav = NativeStackNavigationProp<OnboardingStackParamList & AuthFlowParams, 'EmailOtp'>;
 
 /** Figma 127:1195 — six discrete OTP boxes + Continue + Resend. */
 export default function EmailOtpScreen() {
-  const { email } = useRoute<Route>().params;
+  const { email, mode } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
@@ -44,6 +45,11 @@ export default function EmailOtpScreen() {
         );
         return;
       }
+      if (mode === 'account') {
+        Alert.alert('Signed in', 'Cloud uploads can use this email session.');
+        navigation.popToTop();
+        return;
+      }
       navigation.navigate('PairingStart');
     } finally {
       setBusy(false);
@@ -57,10 +63,10 @@ export default function EmailOtpScreen() {
       Alert.alert('Resend failed', result.reason);
       return;
     }
-    if (result.devCode) {
-      Alert.alert('New code', result.devCode);
+    if (result.devCode && (process.env.EXPO_PUBLIC_ENABLE_LAB ?? '').trim() === '1') {
+      Alert.alert('Lab OTP', result.devCode);
     } else {
-      Alert.alert('Code sent', result.message);
+      Alert.alert('Code sent', result.message || 'Check your email for the new code.');
     }
   };
 
@@ -73,7 +79,7 @@ export default function EmailOtpScreen() {
 
         <Pressable style={styles.boxes} onPress={() => hiddenRef.current?.focus()}>
           {Array.from({ length: 6 }).map((_, i) => (
-            <View key={i} style={[styles.box, digits[i] ? styles.boxFilled : null]}>
+            <View key={i} style={styles.box}>
               <Text style={styles.digit}>{digits[i] ?? ''}</Text>
             </View>
           ))}
@@ -106,38 +112,39 @@ export default function EmailOtpScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
-  body: { flex: 1, paddingHorizontal: layout.gutterDiary },
-  title: { ...type.titleLarge, color: colors.ink, marginBottom: spacing.sm },
-  lead: { ...type.bodyStory, color: colors.secondary, marginBottom: spacing.xxxl },
-  /** Figma 127:1195 — OTP 52×56 r10 gap 8; Verify 52×r12 */
+  /** Figma 127:1195 — content gap 18; OTP 52×56 r10 white; Continue 52×r12 */
+  body: {
+    flex: 1,
+    paddingHorizontal: layout.gutterDiary,
+    paddingTop: spacing.sm,
+    gap: 18,
+  },
+  title: { ...type.titleLarge, color: colors.ink },
+  lead: { ...type.bodyStory, color: colors.secondary },
   boxes: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     gap: 8,
-    marginBottom: spacing.xxxl,
   },
   box: {
     width: 52,
     height: 56,
     borderRadius: 10,
     backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.divider,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  boxFilled: { borderColor: colors.ink },
-  digit: { ...type.titleChapter, color: colors.ink },
+  digit: { fontSize: 22, lineHeight: 28, fontWeight: '600', letterSpacing: -0.1, color: colors.ink },
   hidden: { position: 'absolute', opacity: 0, height: 1, width: 1 },
   primary: {
     backgroundColor: colors.ink,
     borderRadius: 12,
-    minHeight: 52,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
   },
   primaryDisabled: { opacity: 0.4 },
   primaryLabel: { fontSize: 15, lineHeight: 20, color: colors.paper, fontWeight: '600' },
-  resendHit: { minHeight: layout.minTouch, justifyContent: 'center', marginTop: spacing.sm },
-  resend: { ...type.caption, color: colors.secondary },
+  resendHit: { minHeight: layout.minTouch, justifyContent: 'center' },
+  resend: { fontSize: 13, lineHeight: 18, fontWeight: '500', color: colors.secondary },
 });

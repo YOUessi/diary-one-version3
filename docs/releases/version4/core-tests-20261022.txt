@@ -1,0 +1,1154 @@
+
+> diary-one-app@1.0.0 test:core
+> node --test tests/*.test.cjs
+
+TAP version 13
+# Subtest: a different email clears previous account content and consent before activating session
+ok 1 - a different email clears previous account content and consent before activating session
+  ---
+  duration_ms: 3.44225
+  type: 'test'
+  ...
+# Subtest: same verified email preserves its own library when renewing an expired session
+ok 2 - same verified email preserves its own library when renewing an expired session
+  ---
+  duration_ms: 0.386541
+  type: 'test'
+  ...
+# Subtest: late authentication response cannot overwrite a newer account session
+ok 3 - late authentication response cannot overwrite a newer account session
+  ---
+  duration_ms: 0.265375
+  type: 'test'
+  ...
+# Subtest: OAuth success without an actual session is rejected without changing local data
+ok 4 - OAuth success without an actual session is rejected without changing local data
+  ---
+  duration_ms: 0.166708
+  type: 'test'
+  ...
+# Subtest: bootstrap durably saves expired-session and interrupted-task recovery without a subscription
+ok 5 - bootstrap durably saves expired-session and interrupted-task recovery without a subscription
+  ---
+  duration_ms: 199.106083
+  type: 'test'
+  ...
+# Subtest: bootstrap storage failure reaches the retry screen instead of pretending recovery was saved
+ok 6 - bootstrap storage failure reaches the retry screen instead of pretending recovery was saved
+  ---
+  duration_ms: 87.570792
+  type: 'test'
+  ...
+# Subtest: bootstrap preserves imported playback even when a moment id matches an old demo id
+ok 7 - bootstrap preserves imported playback even when a moment id matches an old demo id
+  ---
+  duration_ms: 77.933125
+  type: 'test'
+  ...
+# Subtest: delivery warning and diary are committed atomically (disk failure: false)
+ok 8 - delivery warning and diary are committed atomically (disk failure: false)
+  ---
+  duration_ms: 95.012625
+  type: 'test'
+  ...
+# Subtest: delivery warning and diary are committed atomically (disk failure: true)
+ok 9 - delivery warning and diary are committed atomically (disk failure: true)
+  ---
+  duration_ms: 127.007584
+  type: 'test'
+  ...
+# Subtest: train cover plays its matching second original, not the first grass clip
+ok 10 - train cover plays its matching second original, not the first grass clip
+  ---
+  duration_ms: 1.318125
+  type: 'test'
+  ...
+# Subtest: unmatched or ambiguously linked cover never plays an unrelated original
+ok 11 - unmatched or ambiguously linked cover never plays an unrelated original
+  ---
+  duration_ms: 0.07925
+  type: 'test'
+  ...
+# Subtest: missing cover, photos, video-only and empty chapters remain usable
+ok 12 - missing cover, photos, video-only and empty chapters remain usable
+  ---
+  duration_ms: 0.117042
+  type: 'test'
+  ...
+# Subtest: home renders preview, falls back for legacy data, and supplies historical Aha media
+ok 13 - home renders preview, falls back for legacy data, and supplies historical Aha media
+  ---
+  duration_ms: 327.0395
+  type: 'test'
+  ...
+# Subtest: detail renders the original highlight at its matching image once and passes focus to playback
+ok 14 - detail renders the original highlight at its matching image once and passes focus to playback
+  ---
+  duration_ms: 201.63775
+  type: 'test'
+  ...
+# Subtest: independent Aha remains non-interactive with or without its thumbnail
+ok 15 - independent Aha remains non-interactive with or without its thumbnail
+  ---
+  duration_ms: 9.231208
+  type: 'test'
+  ...
+# Subtest: preview: a fresh install has its public BFF without silently accepting cloud upload
+ok 16 - preview: a fresh install has its public BFF without silently accepting cloud upload
+  ---
+  duration_ms: 92.281959
+  type: 'test'
+  ...
+# Subtest: preview: upgrading clears stale shared credentials and preserves an explicit refusal
+ok 17 - preview: upgrading clears stale shared credentials and preserves an explicit refusal
+  ---
+  duration_ms: 15.944042
+  type: 'test'
+  ...
+# Subtest: production: a fresh install has its public BFF without silently accepting cloud upload
+ok 18 - production: a fresh install has its public BFF without silently accepting cloud upload
+  ---
+  duration_ms: 56.138041
+  type: 'test'
+  ...
+# Subtest: production: upgrading clears stale shared credentials and preserves an explicit refusal
+ok 19 - production: upgrading clears stale shared credentials and preserves an explicit refusal
+  ---
+  duration_ms: 14.236583
+  type: 'test'
+  ...
+# Subtest: a store build cannot enable shared credentials or auto-consent even if lab flags drift
+ok 20 - a store build cannot enable shared credentials or auto-consent even if lab flags drift
+  ---
+  duration_ms: 13.105375
+  type: 'test'
+  ...
+# Subtest: missing configuration does not overwrite a previously configured URL
+ok 21 - missing configuration does not overwrite a previously configured URL
+  ---
+  duration_ms: 46.160458
+  type: 'test'
+  ...
+# (node:2238) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: capture dates separate days; missing metadata requires an explicit user choice
+ok 22 - capture dates separate days; missing metadata requires an explicit user choice
+  ---
+  duration_ms: 12.013709
+  type: 'test'
+  ...
+# Subtest: a second batch preserves existing memories, notes and other days
+ok 23 - a second batch preserves existing memories, notes and other days
+  ---
+  duration_ms: 0.775375
+  type: 'test'
+  ...
+# Subtest: reused cloud ids in two batches cannot overwrite or inherit another memory note
+ok 24 - reused cloud ids in two batches cannot overwrite or inherit another memory note
+  ---
+  duration_ms: 0.322208
+  type: 'test'
+  ...
+# Subtest: same batch retry replaces AI output, preserves exact-id notes and orphan notes
+ok 25 - same batch retry replaces AI output, preserves exact-id notes and orphan notes
+  ---
+  duration_ms: 0.14725
+  type: 'test'
+  ...
+# Subtest: honest empty cannot erase a ready day or small memories
+ok 26 - honest empty cannot erase a ready day or small memories
+  ---
+  duration_ms: 0.109
+  type: 'test'
+  ...
+# Subtest: a fourth small memory preserves the previously published history
+ok 27 - a fourth small memory preserves the previously published history
+  ---
+  duration_ms: 0.083125
+  type: 'test'
+  ...
+# Subtest: public export omits all credentials and implementation settings
+ok 28 - public export omits all credentials and implementation settings
+  ---
+  duration_ms: 0.19875
+  type: 'test'
+  ...
+# Subtest: original gallery uses retained local sources, genuine frame paths and no invented capture time
+ok 29 - original gallery uses retained local sources, genuine frame paths and no invented capture time
+  ---
+  duration_ms: 0.101167
+  type: 'test'
+  ...
+# Subtest: EXIF preserves the original calendar date, raw time and offset; invalid dates stay unknown
+ok 30 - EXIF preserves the original calendar date, raw time and offset; invalid dates stay unknown
+  ---
+  duration_ms: 0.914042
+  type: 'test'
+  ...
+# Subtest: real SQLite: optimistic notes, tombstones, restart overlay and account isolation
+ok 31 - real SQLite: optimistic notes, tombstones, restart overlay and account isolation
+  ---
+  duration_ms: 36.449417
+  type: 'test'
+  ...
+# Subtest: real SQLite: account guard failure rolls back the note transaction
+ok 32 - real SQLite: account guard failure rolls back the note transaction
+  ---
+  duration_ms: 0.201459
+  type: 'test'
+  ...
+# Subtest: real SQLite: interrupted publication rolls back diary, task completion and all dedupe entries together
+ok 33 - real SQLite: interrupted publication rolls back diary, task completion and all dedupe entries together
+  ---
+  duration_ms: 2.716041
+  type: 'test'
+  ...
+# Subtest: real SQLite: failed profile persistence keeps the previously saved profile
+ok 34 - real SQLite: failed profile persistence keeps the previously saved profile
+  ---
+  duration_ms: 0.575709
+  type: 'test'
+  ...
+# Subtest: cleanup receipt survives snapshot deletion and clears only after completion
+ok 35 - cleanup receipt survives snapshot deletion and clears only after completion
+  ---
+  duration_ms: 0.8635
+  type: 'test'
+  ...
+# Subtest: real SQLite: questionnaire scopes and skipped/default response survive reopening without content tags
+ok 36 - real SQLite: questionnaire scopes and skipped/default response survive reopening without content tags
+  ---
+  duration_ms: 137.008583
+  type: 'test'
+  ...
+# Subtest: history counts dates, includes Aha-only days, and does not omit their content
+ok 37 - history counts dates, includes Aha-only days, and does not omit their content
+  ---
+  duration_ms: 25.689792
+  type: 'test'
+  ...
+# Subtest: real capture times interleave Chapter and Aha across batches without mutating saved data
+ok 38 - real capture times interleave Chapter and Aha across batches without mutating saved data
+  ---
+  duration_ms: 1.310792
+  type: 'test'
+  ...
+# Subtest: missing capture times use sequence only within the same import; legacy entries keep their positions
+ok 39 - missing capture times use sequence only within the same import; legacy entries keep their positions
+  ---
+  duration_ms: 0.450875
+  type: 'test'
+  ...
+# Subtest: nested highlight and playback identifiers cannot collide across imports
+ok 40 - nested highlight and playback identifiers cannot collide across imports
+  ---
+  duration_ms: 0.24625
+  type: 'test'
+  ...
+# Subtest: highlight annotates its own selected frame once and keeps the original playback binding
+ok 41 - highlight annotates its own selected frame once and keeps the original playback binding
+  ---
+  duration_ms: 0.356416
+  type: 'test'
+  ...
+# Subtest: iOS uses actual decoded pixels instead of picker size 1920x1080
+ok 42 - iOS uses actual decoded pixels instead of picker size 1920x1080
+  ---
+  duration_ms: 132.747958
+  type: 'test'
+  ...
+# Subtest: iOS uses actual decoded pixels instead of picker size 1080x1920
+ok 43 - iOS uses actual decoded pixels instead of picker size 1080x1920
+  ---
+  duration_ms: 23.62275
+  type: 'test'
+  ...
+# Subtest: iOS uses actual decoded pixels instead of picker size 1000x1000
+ok 44 - iOS uses actual decoded pixels instead of picker size 1000x1000
+  ---
+  duration_ms: 43.39025
+  type: 'test'
+  ...
+# Subtest: iOS uses actual decoded pixels instead of picker size x
+ok 45 - iOS uses actual decoded pixels instead of picker size x
+  ---
+  duration_ms: 81.450667
+  type: 'test'
+  ...
+# Subtest: iOS uses actual decoded pixels instead of picker size 0x0
+ok 46 - iOS uses actual decoded pixels instead of picker size 0x0
+  ---
+  duration_ms: 18.948959
+  type: 'test'
+  ...
+# Subtest: reject native missing mismatch before a bundle can be built
+ok 47 - reject native missing mismatch before a bundle can be built
+  ---
+  duration_ms: 8.629583
+  type: 'test'
+  ...
+# Subtest: reject native width mismatch before a bundle can be built
+ok 48 - reject native width mismatch before a bundle can be built
+  ---
+  duration_ms: 17.57475
+  type: 'test'
+  ...
+# Subtest: reject native height mismatch before a bundle can be built
+ok 49 - reject native height mismatch before a bundle can be built
+  ---
+  duration_ms: 5.476167
+  type: 'test'
+  ...
+# Subtest: reject native format mismatch before a bundle can be built
+ok 50 - reject native format mismatch before a bundle can be built
+  ---
+  duration_ms: 122.566166
+  type: 'test'
+  ...
+# Subtest: reject native destination mismatch before a bundle can be built
+ok 51 - reject native destination mismatch before a bundle can be built
+  ---
+  duration_ms: 4.630958
+  type: 'test'
+  ...
+# Subtest: reject native transform mismatch before a bundle can be built
+ok 52 - reject native transform mismatch before a bundle can be built
+  ---
+  duration_ms: 30.849792
+  type: 'test'
+  ...
+# Subtest: old iOS module fails visibly rather than falling back to a stretched image
+ok 53 - old iOS module fails visibly rather than falling back to a stretched image
+  ---
+  duration_ms: 4.378333
+  type: 'test'
+  ...
+# Subtest: native decode failure propagates with no fallback write
+ok 54 - native decode failure propagates with no fallback write
+  ---
+  duration_ms: 20.151333
+  type: 'test'
+  ...
+# Subtest: center crop mode is forwarded to native
+ok 55 - center crop mode is forwarded to native
+  ---
+  duration_ms: 18.092541
+  type: 'test'
+  ...
+# Subtest: Web output dimensions must be checked even when extent silently does nothing
+ok 56 - Web output dimensions must be checked even when extent silently does nothing
+  ---
+  duration_ms: 3.270041
+  type: 'test'
+  ...
+# Subtest: Web valid output is copied, Android does not claim Web-only letterboxing
+ok 57 - Web valid output is copied, Android does not claim Web-only letterboxing
+  ---
+  duration_ms: 6.472375
+  type: 'test'
+  ...
+# Subtest: iCloud original download is enabled and 60 second video reaches the pipeline once
+ok 58 - iCloud original download is enabled and 60 second video reaches the pipeline once
+  ---
+  duration_ms: 371.93775
+  type: 'test'
+  ...
+# Subtest: feedback is already visible while Photos downloads, then while SHA checks run
+ok 59 - feedback is already visible while Photos downloads, then while SHA checks run
+  ---
+  duration_ms: 307.667667
+  type: 'test'
+  ...
+# Subtest: picker fails after dismissal produces persistent safe feedback, not an unhandled rejection
+ok 60 - picker fails after dismissal produces persistent safe feedback, not an unhandled rejection
+  ---
+  duration_ms: 40.008125
+  type: 'test'
+  ...
+# Subtest: iCloud download offline produces persistent safe feedback, not an unhandled rejection
+ok 61 - iCloud download offline produces persistent safe feedback, not an unhandled rejection
+  ---
+  duration_ms: 121.861834
+  type: 'test'
+  ...
+# Subtest: cache disk full produces persistent safe feedback, not an unhandled rejection
+ok 62 - cache disk full produces persistent safe feedback, not an unhandled rejection
+  ---
+  duration_ms: 90.030875
+  type: 'test'
+  ...
+# Subtest: permission native exception produces persistent safe feedback, not an unhandled rejection
+ok 63 - permission native exception produces persistent safe feedback, not an unhandled rejection
+  ---
+  duration_ms: 106.880292
+  type: 'test'
+  ...
+# Subtest: hash read fails produces persistent safe feedback, not an unhandled rejection
+ok 64 - hash read fails produces persistent safe feedback, not an unhandled rejection
+  ---
+  duration_ms: 167.877916
+  type: 'test'
+  ...
+# Subtest: native cancel clears preparation and allows another picker
+ok 65 - native cancel clears preparation and allows another picker
+  ---
+  duration_ms: 48.875209
+  type: 'test'
+  ...
+# Subtest: rapid taps cannot open parallel pickers, and cancel ignores a late native success
+ok 66 - rapid taps cannot open parallel pickers, and cancel ignores a late native success
+  ---
+  duration_ms: 195.415125
+  type: 'test'
+  ...
+# Subtest: cancel during hashing stops before touching history or starting a cloud task
+ok 67 - cancel during hashing stops before touching history or starting a cloud task
+  ---
+  duration_ms: 26.404583
+  type: 'test'
+  ...
+# Subtest: account during hashing stops before touching history or starting a cloud task
+ok 68 - account during hashing stops before touching history or starting a cloud task
+  ---
+  duration_ms: 61.564875
+  type: 'test'
+  ...
+# Subtest: consent during hashing stops before touching history or starting a cloud task
+ok 69 - consent during hashing stops before touching history or starting a cloud task
+  ---
+  duration_ms: 46.754709
+  type: 'test'
+  ...
+# Subtest: missing video date has a stable in-app confirmation: confirm
+ok 70 - missing video date has a stable in-app confirmation: confirm
+  ---
+  duration_ms: 166.985833
+  type: 'test'
+  ...
+# Subtest: missing video date has a stable in-app confirmation: cancel
+ok 71 - missing video date has a stable in-app confirmation: cancel
+  ---
+  duration_ms: 67.098541
+  type: 'test'
+  ...
+# Subtest: missing video date has a stable in-app confirmation: logout
+ok 72 - missing video date has a stable in-app confirmation: logout
+  ---
+  duration_ms: 57.362708
+  type: 'test'
+  ...
+# Subtest: large 60 second 4K video has a visible validation reason before hashing
+ok 73 - large 60 second 4K video has a visible validation reason before hashing
+  ---
+  duration_ms: 68.661375
+  type: 'test'
+  ...
+# Subtest: long video has a visible validation reason before hashing
+ok 74 - long video has a visible validation reason before hashing
+  ---
+  duration_ms: 29.69425
+  type: 'test'
+  ...
+# Subtest: invalid media has a visible validation reason before hashing
+ok 75 - invalid media has a visible validation reason before hashing
+  ---
+  duration_ms: 24.982459
+  type: 'test'
+  ...
+# Subtest: already imported files do not create a second task
+ok 76 - already imported files do not create a second task
+  ---
+  duration_ms: 32.531166
+  type: 'test'
+  ...
+# Subtest: existing processing blocks a new picker before expensive work
+ok 77 - existing processing blocks a new picker before expensive work
+  ---
+  duration_ms: 30.160041
+  type: 'test'
+  ...
+# Subtest: denied permission is visible and does not launch Photos
+ok 78 - denied permission is visible and does not launch Photos
+  ---
+  duration_ms: 34.870667
+  type: 'test'
+  ...
+# Subtest: Android Done ends selection and submits the selected item
+ok 79 - Android Done ends selection and submits the selected item
+  ---
+  duration_ms: 26.11275
+  type: 'test'
+  ...
+# Subtest: language changes derive display labels without translating authored content
+ok 80 - language changes derive display labels without translating authored content
+  ---
+  duration_ms: 37.744625
+  type: 'test'
+  ...
+# Subtest: a successful empty cloud result is never labelled as a newly saved memory
+ok 81 - a successful empty cloud result is never labelled as a newly saved memory
+  ---
+  duration_ms: 0.399917
+  type: 'test'
+  ...
+# Subtest: partial delivery remains visible with COMPLETE coverage and prior diary: READY_WITH_ITEM_BLOCKS
+ok 82 - partial delivery remains visible with COMPLETE coverage and prior diary: READY_WITH_ITEM_BLOCKS
+  ---
+  duration_ms: 0.206958
+  type: 'test'
+  ...
+# Subtest: partial delivery remains visible with COMPLETE coverage and prior diary: READY_WITH_GROUNDED_COPY_FALLBACK
+ok 83 - partial delivery remains visible with COMPLETE coverage and prior diary: READY_WITH_GROUNDED_COPY_FALLBACK
+  ---
+  duration_ms: 0.0535
+  type: 'test'
+  ...
+# Subtest: empty failed delivery is distinguished from an honest empty result
+ok 84 - empty failed delivery is distinguished from an honest empty result
+  ---
+  duration_ms: 0.064541
+  type: 'test'
+  ...
+# Subtest: legacy task message still exposes partial status instead of saved
+ok 85 - legacy task message still exposes partial status instead of saved
+  ---
+  duration_ms: 0.040333
+  type: 'test'
+  ...
+# Subtest: photo normalization failure is actionable in the selected language
+ok 86 - photo normalization failure is actionable in the selected language
+  ---
+  duration_ms: 0.125875
+  type: 'test'
+  ...
+# Subtest: new photo encoding has a stable distinct revision while video identity remains unchanged
+ok 87 - new photo encoding has a stable distinct revision while video identity remains unchanged
+  ---
+  duration_ms: 49.5275
+  type: 'test'
+  ...
+# (node:2244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real SQLite restores Chapter, nested highlight and Aha media after sandbox relocation
+ok 88 - real SQLite restores Chapter, nested highlight and Aha media after sandbox relocation
+  ---
+  duration_ms: 237.790833
+  type: 'test'
+  ...
+# Subtest: nested highlight and Aha attachment checks the complete visible evidence: none
+ok 89 - nested highlight and Aha attachment checks the complete visible evidence: none
+  ---
+  duration_ms: 84.59625
+  type: 'test'
+  ...
+# Subtest: nested highlight and Aha attachment checks the complete visible evidence: missing_highlight
+ok 90 - nested highlight and Aha attachment checks the complete visible evidence: missing_highlight
+  ---
+  duration_ms: 113.464792
+  type: 'test'
+  ...
+# Subtest: nested highlight and Aha attachment checks the complete visible evidence: changed_aha
+ok 91 - nested highlight and Aha attachment checks the complete visible evidence: changed_aha
+  ---
+  duration_ms: 115.233959
+  type: 'test'
+  ...
+# Subtest: nested highlight and Aha attachment checks the complete visible evidence: foreign_focus
+ok 92 - nested highlight and Aha attachment checks the complete visible evidence: foreign_focus
+  ---
+  duration_ms: 33.712709
+  type: 'test'
+  ...
+# Subtest: nested highlight and Aha attachment checks the complete visible evidence: focus_at_end
+ok 93 - nested highlight and Aha attachment checks the complete visible evidence: focus_at_end
+  ---
+  duration_ms: 183.043625
+  type: 'test'
+  ...
+# Subtest: nested highlight and Aha attachment checks the complete visible evidence: zero_focus
+ok 94 - nested highlight and Aha attachment checks the complete visible evidence: zero_focus
+  ---
+  duration_ms: 62.53025
+  type: 'test'
+  ...
+# Subtest: legacy absolute snapshot recovers only proven bundle roots and leaves unrelated paths alone
+ok 95 - legacy absolute snapshot recovers only proven bundle roots and leaves unrelated paths alone
+  ---
+  duration_ms: 37.258166
+  type: 'test'
+  ...
+# Subtest: SQLite publication rollback guard_before
+ok 96 - SQLite publication rollback guard_before
+  ---
+  duration_ms: 62.917333
+  type: 'test'
+  ...
+# Subtest: SQLite publication rollback guard_after
+ok 97 - SQLite publication rollback guard_after
+  ---
+  duration_ms: 48.435875
+  type: 'test'
+  ...
+# Subtest: SQLite publication rollback missing_asset_hash
+ok 98 - SQLite publication rollback missing_asset_hash
+  ---
+  duration_ms: 15.753667
+  type: 'test'
+  ...
+# Subtest: corrupt persisted JSON is an error and never becomes a new empty library
+ok 99 - corrupt persisted JSON is an error and never becomes a new empty library
+  ---
+  duration_ms: 18.3655
+  type: 'test'
+  ...
+# Subtest: attach exact media with file/hash verification: none
+ok 100 - attach exact media with file/hash verification: none
+  ---
+  duration_ms: 56.118167
+  type: 'test'
+  ...
+# Subtest: attach exact media with file/hash verification: missing_video
+ok 101 - attach exact media with file/hash verification: missing_video
+  ---
+  duration_ms: 28.556625
+  type: 'test'
+  ...
+# Subtest: attach exact media with file/hash verification: changed_video
+ok 102 - attach exact media with file/hash verification: changed_video
+  ---
+  duration_ms: 33.902125
+  type: 'test'
+  ...
+# Subtest: attach exact media with file/hash verification: changed_frame
+ok 103 - attach exact media with file/hash verification: changed_frame
+  ---
+  duration_ms: 25.112875
+  type: 'test'
+  ...
+# Subtest: attach exact media with file/hash verification: legacy_uri
+ok 104 - attach exact media with file/hash verification: legacy_uri
+  ---
+  duration_ms: 18.803333
+  type: 'test'
+  ...
+# Subtest: managed URI decoder rejects traversal and does not rewrite arbitrary sandbox UUIDs
+ok 105 - managed URI decoder rejects traversal and does not rewrite arbitrary sandbox UUIDs
+  ---
+  duration_ms: 8.608916
+  type: 'test'
+  ...
+# Subtest: real SQLITE_FULL rolls back incoming diary and dedupe together
+ok 106 - real SQLITE_FULL rolls back incoming diary and dedupe together
+  ---
+  duration_ms: 16.521791
+  type: 'test'
+  ...
+# Subtest: restored legacy setup routes never simulate a connected device or a system prompt: disconnected
+ok 107 - restored legacy setup routes never simulate a connected device or a system prompt: disconnected
+  ---
+  duration_ms: 489.484041
+  type: 'test'
+  ...
+# Subtest: restored legacy setup routes never simulate a connected device or a system prompt: lab_linked
+ok 108 - restored legacy setup routes never simulate a connected device or a system prompt: lab_linked
+  ---
+  duration_ms: 247.857959
+  type: 'test'
+  ...
+# Subtest: no-device continuation reaches skippable preferences without device permissions or consent changes
+ok 109 - no-device continuation reaches skippable preferences without device permissions or consent changes
+  ---
+  duration_ms: 56.424166
+  type: 'test'
+  ...
+# Subtest: setup reports only a real hardware connection: disconnected
+ok 110 - setup reports only a real hardware connection: disconnected
+  ---
+  duration_ms: 47.012708
+  type: 'test'
+  ...
+# Subtest: setup reports only a real hardware connection: lab_linked
+ok 111 - setup reports only a real hardware connection: lab_linked
+  ---
+  duration_ms: 11.785292
+  type: 'test'
+  ...
+# Subtest: setup reports only a real hardware connection: hardware_linked
+ok 112 - setup reports only a real hardware connection: hardware_linked
+  ---
+  duration_ms: 29.548042
+  type: 'test'
+  ...
+# Subtest: retrying an uploaded job reuses frozen evidence instead of extracting it again
+ok 113 - retrying an uploaded job reuses frozen evidence instead of extracting it again
+  ---
+  duration_ms: 225.615083
+  type: 'test'
+  ...
+# Subtest: two simultaneous retries cannot duplicate extraction, polling or publication
+ok 114 - two simultaneous retries cannot duplicate extraction, polling or publication
+  ---
+  duration_ms: 151.326333
+  type: 'test'
+  ...
+# Subtest: account change during poll stops before reading or validating another account result
+ok 115 - account change during poll stops before reading or validating another account result
+  ---
+  duration_ms: 112.4035
+  type: 'test'
+  ...
+# Subtest: disk full preserves prior ready data and job identity for save retry
+ok 116 - disk full preserves prior ready data and job identity for save retry
+  ---
+  duration_ms: 36.833208
+  type: 'test'
+  ...
+# Subtest: revision conflict is visible, never silently creates a second billable revision
+ok 117 - revision conflict is visible, never silently creates a second billable revision
+  ---
+  duration_ms: 103.042583
+  type: 'test'
+  ...
+# Subtest: temporary poll outage pauses without clearing the accepted job or prior content
+ok 118 - temporary poll outage pauses without clearing the accepted job or prior content
+  ---
+  duration_ms: 53.866792
+  type: 'test'
+  ...
+# Subtest: visible retry after lost submit acknowledgement uses saved evidence and the same revision
+ok 119 - visible retry after lost submit acknowledgement uses saved evidence and the same revision
+  ---
+  duration_ms: 23.291042
+  type: 'test'
+  ...
+# Subtest: session renewal during new import resumes after the old runner releases ownership
+ok 120 - session renewal during new import resumes after the old runner releases ownership
+  ---
+  duration_ms: 55.363417
+  type: 'test'
+  ...
+# Subtest: account change during async contract verification stops new import before mapping/attachment/persistence
+ok 121 - account change during async contract verification stops new import before mapping/attachment/persistence
+  ---
+  duration_ms: 26.433417
+  type: 'test'
+  ...
+# Subtest: session renewal during resume saved job resumes after the old runner releases ownership
+ok 122 - session renewal during resume saved job resumes after the old runner releases ownership
+  ---
+  duration_ms: 21.574334
+  type: 'test'
+  ...
+# Subtest: account change during async contract verification stops resume saved job before mapping/attachment/persistence
+ok 123 - account change during async contract verification stops resume saved job before mapping/attachment/persistence
+  ---
+  duration_ms: 21.958042
+  type: 'test'
+  ...
+# Subtest: queued session renewal is discarded if the user signs out before the old runner stops
+ok 124 - queued session renewal is discarded if the user signs out before the old runner stops
+  ---
+  duration_ms: 24.509375
+  type: 'test'
+  ...
+# Subtest: resume does not mark a currently running pre-upload task as interrupted
+ok 125 - resume does not mark a currently running pre-upload task as interrupted
+  ---
+  duration_ms: 18.558458
+  type: 'test'
+  ...
+# Subtest: resume request for the current session does not retry an active runner after a poll failure
+ok 126 - resume request for the current session does not retry an active runner after a poll failure
+  ---
+  duration_ms: 39.689125
+  type: 'test'
+  ...
+# Subtest: interrupted local build clears the preparing banner (prior content: true)
+ok 127 - interrupted local build clears the preparing banner (prior content: true)
+  ---
+  duration_ms: 26.796709
+  type: 'test'
+  ...
+# Subtest: interrupted local build clears the preparing banner (prior content: false)
+ok 128 - interrupted local build clears the preparing banner (prior content: false)
+  ---
+  duration_ms: 50.078959
+  type: 'test'
+  ...
+# Subtest: partial cloud delivery is committed with its warning during new import
+ok 129 - partial cloud delivery is committed with its warning during new import
+  ---
+  duration_ms: 38.109167
+  type: 'test'
+  ...
+# Subtest: partial cloud delivery is committed with its warning during resume saved job
+ok 130 - partial cloud delivery is committed with its warning during resume saved job
+  ---
+  duration_ms: 56.736708
+  type: 'test'
+  ...
+# Subtest: a rejected image bundle cannot be blindly resubmitted by the stored-result retry
+ok 131 - a rejected image bundle cannot be blindly resubmitted by the stored-result retry
+  ---
+  duration_ms: 21.672333
+  type: 'test'
+  ...
+# Subtest: async preprocessing retains Pillow tensor hash 37x53
+ok 132 - async preprocessing retains Pillow tensor hash 37x53
+  ---
+  duration_ms: 520.183375
+  type: 'test'
+  ...
+# Subtest: async preprocessing retains Pillow tensor hash 53x37
+ok 133 - async preprocessing retains Pillow tensor hash 53x37
+  ---
+  duration_ms: 305.8505
+  type: 'test'
+  ...
+# Subtest: async preprocessing retains Pillow tensor hash 269x269
+ok 134 - async preprocessing retains Pillow tensor hash 269x269
+  ---
+  duration_ms: 308.837958
+  type: 'test'
+  ...
+# Subtest: async preprocessing retains Pillow tensor hash 456x256
+ok 135 - async preprocessing retains Pillow tensor hash 456x256
+  ---
+  duration_ms: 364.867958
+  type: 'test'
+  ...
+# Subtest: async preprocessing retains Pillow tensor hash 1280x720
+ok 136 - async preprocessing retains Pillow tensor hash 1280x720
+  ---
+  duration_ms: 737.67
+  type: 'test'
+  ...
+# Subtest: preprocessing cancels mid-image and can process the next image
+ok 137 - preprocessing cancels mid-image and can process the next image
+  ---
+  duration_ms: 111.839333
+  type: 'test'
+  ...
+# Subtest: invalid RGBA data fails before returning a model input
+ok 138 - invalid RGBA data fails before returning a model input
+  ---
+  duration_ms: 0.288292
+  type: 'test'
+  ...
+# (node:2258) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: historical nagoya_r52 output passes actual App binding and preserves Chapter/Aha mapping
+ok 139 - historical nagoya_r52 output passes actual App binding and preserves Chapter/Aha mapping
+  ---
+  duration_ms: 15.047958
+  type: 'test'
+  ...
+# Subtest: historical zoo_r52 output passes actual App binding and preserves Chapter/Aha mapping
+ok 140 - historical zoo_r52 output passes actual App binding and preserves Chapter/Aha mapping
+  ---
+  duration_ms: 3.265834
+  type: 'test'
+  ...
+# Subtest: historical rural_r55 output passes actual App binding and preserves Chapter/Aha mapping
+ok 141 - historical rural_r55 output passes actual App binding and preserves Chapter/Aha mapping
+  ---
+  duration_ms: 1.25025
+  type: 'test'
+  ...
+# Subtest: historical photo_v07 output passes actual App binding and preserves Chapter/Aha mapping
+ok 142 - historical photo_v07 output passes actual App binding and preserves Chapter/Aha mapping
+  ---
+  duration_ms: 0.856042
+  type: 'test'
+  ...
+# Subtest: wrong public/source/frame/claim/structure identities fail independently of a trusted-looking envelope
+ok 143 - wrong public/source/frame/claim/structure identities fail independently of a trusted-looking envelope
+  ---
+  duration_ms: 2.180542
+  type: 'test'
+  ...
+# Subtest: exact representative and hero images use source aliases without changing raw source playback
+ok 144 - exact representative and hero images use source aliases without changing raw source playback
+  ---
+  duration_ms: 33.129375
+  type: 'test'
+  ...
+# Subtest: Product metadata and Aha text survive SQLite save/load with relative media paths
+ok 145 - Product metadata and Aha text survive SQLite save/load with relative media paths
+  ---
+  duration_ms: 2.478917
+  type: 'test'
+  ...
+# Subtest: uncertain poll preserves retryable job: {"network":true}
+ok 146 - uncertain poll preserves retryable job: {"network":true}
+  ---
+  duration_ms: 265.08125
+  type: 'test'
+  ...
+# Subtest: uncertain poll preserves retryable job: {"status":500}
+ok 147 - uncertain poll preserves retryable job: {"status":500}
+  ---
+  duration_ms: 72.63925
+  type: 'test'
+  ...
+# Subtest: uncertain poll preserves retryable job: {"status":503}
+ok 148 - uncertain poll preserves retryable job: {"status":503}
+  ---
+  duration_ms: 38.110625
+  type: 'test'
+  ...
+# Subtest: uncertain poll preserves retryable job: {"status":429}
+ok 149 - uncertain poll preserves retryable job: {"status":429}
+  ---
+  duration_ms: 48.569625
+  type: 'test'
+  ...
+# Subtest: uncertain poll preserves retryable job: {"malformed":true}
+ok 150 - uncertain poll preserves retryable job: {"malformed":true}
+  ---
+  duration_ms: 31.230084
+  type: 'test'
+  ...
+# Subtest: uncertain poll preserves retryable job: {"body":{"job_id":"other-job","status":"succeeded","result":{}}}
+ok 151 - uncertain poll preserves retryable job: {"body":{"job_id":"other-job","status":"succeeded","result":{}}}
+  ---
+  duration_ms: 18.3465
+  type: 'test'
+  ...
+# Subtest: uncertain poll preserves retryable job: {"body":{"job_id":"job","status":"succeeded"}}
+ok 152 - uncertain poll preserves retryable job: {"body":{"job_id":"job","status":"succeeded"}}
+  ---
+  duration_ms: 11.368833
+  type: 'test'
+  ...
+# Subtest: uncertain poll preserves retryable job: {"body":{"job_id":"job","status":"surprise"}}
+ok 153 - uncertain poll preserves retryable job: {"body":{"job_id":"job","status":"surprise"}}
+  ---
+  duration_ms: 10.765833
+  type: 'test'
+  ...
+# Subtest: late 401 during poll cannot sign out a newer account
+ok 154 - late 401 during poll cannot sign out a newer account
+  ---
+  duration_ms: 16.726875
+  type: 'test'
+  ...
+# Subtest: late 401 during submit cannot sign out a newer account
+ok 155 - late 401 during submit cannot sign out a newer account
+  ---
+  duration_ms: 80.004625
+  type: 'test'
+  ...
+# Subtest: late 403 during poll cannot sign out a newer account
+ok 156 - late 403 during poll cannot sign out a newer account
+  ---
+  duration_ms: 38.324708
+  type: 'test'
+  ...
+# Subtest: late 403 during submit cannot sign out a newer account
+ok 157 - late 403 during submit cannot sign out a newer account
+  ---
+  duration_ms: 20.094042
+  type: 'test'
+  ...
+# Subtest: definitive job failure: {"status":404}
+ok 158 - definitive job failure: {"status":404}
+  ---
+  duration_ms: 4.57025
+  type: 'test'
+  ...
+# Subtest: definitive job failure: {"body":{"job_id":"job","status":"failed","message":"model unavailable"}}
+ok 159 - definitive job failure: {"body":{"job_id":"job","status":"failed","message":"model unavailable"}}
+  ---
+  duration_ms: 12.454292
+  type: 'test'
+  ...
+# Subtest: reject malformed submit identity 17
+ok 160 - reject malformed submit identity 17
+  ---
+  duration_ms: 6.20875
+  type: 'test'
+  ...
+# Subtest: reject malformed submit identity {}
+ok 161 - reject malformed submit identity {}
+  ---
+  duration_ms: 9.107167
+  type: 'test'
+  ...
+# Subtest: reject malformed submit identity " "
+ok 162 - reject malformed submit identity " "
+  ---
+  duration_ms: 9.563917
+  type: 'test'
+  ...
+# Subtest: matching success and pending responses remain usable
+ok 163 - matching success and pending responses remain usable
+  ---
+  duration_ms: 34.70775
+  type: 'test'
+  ...
+# Subtest: a stalled request has a finite timeout and keeps original job retryable
+ok 164 - a stalled request has a finite timeout and keeps original job retryable
+  ---
+  duration_ms: 17.449041
+  type: 'test'
+  ...
+# Subtest: lost POST acknowledgement retries frozen preferences even after settings change
+ok 165 - lost POST acknowledgement retries frozen preferences even after settings change
+  ---
+  duration_ms: 8.110209
+  type: 'test'
+  ...
+# Subtest: consumer validates input binding, media lineage and complete visible sets independently
+ok 166 - consumer validates input binding, media lineage and complete visible sets independently
+  ---
+  duration_ms: 4.376084
+  type: 'test'
+  ...
+# Subtest: hero uses its exact selected frame and unknown frames fail instead of falling back
+ok 167 - hero uses its exact selected frame and unknown frames fail instead of falling back
+  ---
+  duration_ms: 0.403916
+  type: 'test'
+  ...
+# Subtest: exclusive responses work in both directions for both questions
+ok 168 - exclusive responses work in both directions for both questions
+  ---
+  duration_ms: 1.573042
+  type: 'test'
+  ...
+# Subtest: conditional paths include tag-only review and preserve themes when custom is skipped
+ok 169 - conditional paths include tag-only review and preserve themes when custom is skipped
+  ---
+  duration_ms: 0.197167
+  type: 'test'
+  ...
+# Subtest: skipped, explicit no preference, Nothing for now and empty Something else remain distinct
+ok 170 - skipped, explicit no preference, Nothing for now and empty Something else remain distinct
+  ---
+  duration_ms: 1.328292
+  type: 'test'
+  ...
+# Subtest: themes never expand into concrete tags; entry/default choices produce no preference cards
+ok 171 - themes never expand into concrete tags; entry/default choices produce no preference cards
+  ---
+  duration_ms: 0.423209
+  type: 'test'
+  ...
+# Subtest: literal matching uses standard IDs, has no substring guesses and keeps unknown names private
+ok 172 - literal matching uses standard IDs, has no substring guesses and keeps unknown names private
+  ---
+  duration_ms: 3.151917
+  type: 'test'
+  ...
+# Subtest: negative reasons remain scoped soft preferences, including uncomfortable content without guessing why
+ok 173 - negative reasons remain scoped soft preferences, including uncomfortable content without guessing why
+  ---
+  duration_ms: 0.121375
+  type: 'test'
+  ...
+# Subtest: retake replaces only questionnaire records, including when new response is empty
+ok 174 - retake replaces only questionnaire records, including when new response is empty
+  ---
+  duration_ms: 0.156166
+  type: 'test'
+  ...
+# Subtest: saving waits for storage and preserves privacy; failure restores previous preferences
+ok 175 - saving waits for storage and preserves privacy; failure restores previous preferences
+  ---
+  duration_ms: 0.434667
+  type: 'test'
+  ...
+# Subtest: account switch while saving never rolls questionnaire data into the new account
+ok 176 - account switch while saving never rolls questionnaire data into the new account
+  ---
+  duration_ms: 0.280125
+  type: 'test'
+  ...
+# Subtest: native fullscreen keeps the same source and seek; native pause/mute are reflected inline
+ok 177 - native fullscreen keeps the same source and seek; native pause/mute are reflected inline
+  ---
+  duration_ms: 141.394209
+  type: 'test'
+  ...
+# Subtest: fullscreen repeated taps and failed presentation do not reset or release playback
+ok 178 - fullscreen repeated taps and failed presentation do not reset or release playback
+  ---
+  duration_ms: 63.7275
+  type: 'test'
+  ...
+# Subtest: unmount autoplay=false: no call after Expo releases handle
+ok 179 - unmount autoplay=false: no call after Expo releases handle
+  ---
+  duration_ms: 48.410625
+  type: 'test'
+  ...
+# Subtest: source replacement autoplay=false: old handle released safely
+ok 180 - source replacement autoplay=false: old handle released safely
+  ---
+  duration_ms: 24.659459
+  type: 'test'
+  ...
+# Subtest: unmount autoplay=true: no call after Expo releases handle
+ok 181 - unmount autoplay=true: no call after Expo releases handle
+  ---
+  duration_ms: 16.99375
+  type: 'test'
+  ...
+# Subtest: source replacement autoplay=true: old handle released safely
+ok 182 - source replacement autoplay=true: old handle released safely
+  ---
+  duration_ms: 19.468667
+  type: 'test'
+  ...
+# Subtest: screen blur and app background pause only while handle is live
+ok 183 - screen blur and app background pause only while handle is live
+  ---
+  duration_ms: 38.131958
+  type: 'test'
+  ...
+# Subtest: focus seeks once, preserves manual scrubbing, resets for another source, and replays from focus
+ok 184 - focus seeks once, preserves manual scrubbing, resets for another source, and replays from focus
+  ---
+  duration_ms: 18.111875
+  type: 'test'
+  ...
+# Subtest: focus defense for initial position NaN
+ok 185 - focus defense for initial position NaN
+  ---
+  duration_ms: 15.104959
+  type: 'test'
+  ...
+# Subtest: focus defense for initial position -3
+ok 186 - focus defense for initial position -3
+  ---
+  duration_ms: 19.792958
+  type: 'test'
+  ...
+# Subtest: focus defense for initial position Infinity
+ok 187 - focus defense for initial position Infinity
+  ---
+  duration_ms: 17.958
+  type: 'test'
+  ...
+# Subtest: focus defense for initial position 99
+ok 188 - focus defense for initial position 99
+  ---
+  duration_ms: 19.0065
+  type: 'test'
+  ...
+# Subtest: focus defense for initial position 0
+ok 189 - focus defense for initial position 0
+  ---
+  duration_ms: 11.977958
+  type: 'test'
+  ...
+1..189
+# tests 189
+# suites 0
+# pass 189
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3920.389541

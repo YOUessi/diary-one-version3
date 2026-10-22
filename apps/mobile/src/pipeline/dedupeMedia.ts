@@ -15,7 +15,7 @@ export type DedupeResult = {
 
 export async function dedupePickedMedia(
   items: PickedMedia[],
-  options?: { skipKnownLedger?: boolean },
+  options?: { skipKnownLedger?: boolean; assertActive?: () => void; onProgress?: (index: number, total: number) => void },
 ): Promise<DedupeResult> {
   const skipKnown = options?.skipKnownLedger !== false;
   const unique: PickedMedia[] = [];
@@ -24,9 +24,13 @@ export async function dedupePickedMedia(
   let skippedLedgerDupes = 0;
 
   for (let i = 0; i < items.length; i++) {
+    options?.assertActive?.();
+    options?.onProgress?.(i + 1, items.length);
     const item = items[i];
     const localUri = await ensureLocalFileUri(item.uri, `dedupe-${i}`);
+    options?.assertActive?.();
     const sha = await sha256File(localUri);
+    options?.assertActive?.();
     if (seenSha.has(sha)) {
       skippedSessionDupes += 1;
       continue;
@@ -35,6 +39,7 @@ export async function dedupePickedMedia(
 
     if (skipKnown) {
       const known = await findRawAssetBySha(sha);
+      options?.assertActive?.();
       if (known) {
         skippedLedgerDupes += 1;
         // 仍刷新 last_seen，便于审计
@@ -57,13 +62,13 @@ export async function dedupePickedMedia(
 }
 
 export async function rememberRawAssetsFromBundleAssets(
-  assets: Array<{
+  assets: {
     asset_id?: string;
     original_sha256?: string;
     media_kind?: string;
     source_display_name?: string;
     original_bytes?: number;
-  }>,
+  }[],
 ): Promise<void> {
   for (const a of assets) {
     const sha = (a.original_sha256 ?? '').trim();

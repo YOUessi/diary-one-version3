@@ -100,30 +100,30 @@ export default function DeviceSettingsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper, paddingHorizontal: layout.gutterDiary },
-  /** Figma 69:1020 — title 28; values 13 */
+  /** Figma 69:1020 — title 28; rows h52 gap24; values 13 regular */
   title: {
     ...type.titleSection,
     color: colors.ink,
-    marginBottom: spacing.xxxl,
+    marginBottom: 24,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     minHeight: 52,
+    marginBottom: 24,
   },
   rowLabel: { ...type.bodyStory, fontWeight: '500', color: colors.ink },
   rowTrailing: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  rowValue: { ...type.caption, fontWeight: '500', color: colors.secondary },
-  chevron: { fontSize: 20, color: colors.tertiary, fontWeight: '300' },
+  rowValue: { fontSize: 13, lineHeight: 18, fontWeight: '400', color: colors.secondary },
+  chevron: { fontSize: 17, color: colors.secondary, fontWeight: '500' },
   divider: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.divider,
-    marginTop: spacing.sm,
-    marginBottom: spacing.sm,
+    marginBottom: 24,
   },
   resetRow: { minHeight: 52, justifyContent: 'center' },
-  resetLabel: { ...type.bodyStory, color: colors.secondary },
+  resetLabel: { ...type.bodyStory, fontWeight: '500', color: colors.secondary },
   labRow: {
     flexDirection: 'row',
     alignItems: 'center',

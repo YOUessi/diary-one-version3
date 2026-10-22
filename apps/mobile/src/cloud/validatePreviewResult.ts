@@ -1,13 +1,27 @@
 import type { X02PreviewResult } from './types';
 import { ALGORITHM_LOCK } from '../config/algorithmLock';
+import { admitDeliveryState } from './deliveryAdmit';
+import { isFormalConsumerApp, isLabToolsEnabled } from '../config/buildProfile';
+import { validateResultBinding, type ResultInput } from './validateResultBinding';
+import { productMemoryIdentities } from './productIdentity';
 
 export type ValidateOutcome =
-  | { ok: true }
+  | { ok: true; honestEmpty?: boolean }
   | { ok: false; reason: string };
 
-/** fail-closed：与 eval-web 消费侧一致的最小合同门槛。 */
-export function validatePreviewResult(result: X02PreviewResult): ValidateOutcome {
-  if (result.schema_version !== ALGORITHM_LOCK.previewSchema) {
+/** fail-closed：对齐 BFF result_admit + eval-web 消费门槛（PRD DAT01 / AI03）。 */
+export async function validatePreviewResult(result: X02PreviewResult, input?: ResultInput): Promise<ValidateOutcome> {
+  if (!result || typeof result !== 'object') return { ok: false, reason: 'Invalid result object' };
+  try {
+    if (!input && isFormalConsumerApp) throw new Error('Missing submitted input for validation');
+    if (input) validateResultBinding(result, { ...input,
+      productIdentities: await productMemoryIdentities(result, input.manifest.session.session_id),
+    }, isFormalConsumerApp);
+  } catch (error) {
+    return { ok: false, reason: error instanceof Error ? error.message : 'Invalid result binding' };
+  }
+  if (result.schema_version !== ALGORITHM_LOCK.previewSchema
+    && result.schema_version !== ALGORITHM_LOCK.productPreviewSchema) {
     return { ok: false, reason: `Unexpected schema_version: ${result.schema_version}` };
   }
   if (!Array.isArray(result.chapters) || !Array.isArray(result.ahas)) {
@@ -45,14 +59,47 @@ export function validatePreviewResult(result: X02PreviewResult): ValidateOutcome
     }
   }
 
-  if (result.delivery_state === 'PIPELINE_BLOCKED') {
-    const empty =
-      result.chapters.length === 0 &&
-      result.ahas.length === 0 &&
-      result.selected_memory_outcomes.length === 0;
-    if (!empty) {
-      return { ok: false, reason: `Pipeline blocked: ${result.delivery_state}` };
+  const labAllowMock =
+    isLabToolsEnabled && (process.env.EXPO_PUBLIC_ALLOW_MOCK_DIARY ?? '').trim() === '1';
+  if (result.dev_lite_fallback === true && !labAllowMock) {
+    return {
+      ok: false,
+      reason: 'Rejected mock fallback (dev_lite_fallback). PRD AI03.',
+    };
+  }
+
+  const publish = (
+    result as {
+      _publish?: {
+        publish_admit?: boolean;
+        admit_reason?: string;
+        is_mock_fallback?: boolean;
+        source?: string;
+      };
     }
+  )._publish;
+
+  if (
+    (publish?.is_mock_fallback === true || publish?.source === 'dev_lite_fallback') &&
+    !labAllowMock
+  ) {
+    return { ok: false, reason: 'Rejected mock _publish payload.' };
+  }
+  if (publish && publish.publish_admit === false) {
+    return { ok: false, reason: `Not admitted: ${publish.admit_reason ?? 'unknown'}` };
+  }
+
+  // Formal consumer App: require BFF _publish envelope.
+  if (isFormalConsumerApp && !publish && !labAllowMock) {
+    return { ok: false, reason: 'Missing _publish envelope (consumer App / AI03).' };
+  }
+
+  const deliveryAdmit = admitDeliveryState(result.delivery_state, {
+    isMock: result.dev_lite_fallback === true,
+    allowMock: labAllowMock,
+  });
+  if (!deliveryAdmit.admit) {
+    return { ok: false, reason: `Delivery not admitted: ${deliveryAdmit.reason}` };
   }
 
   const visibleOutcomes = result.selected_memory_outcomes.filter(
@@ -65,5 +112,5 @@ export function validatePreviewResult(result: X02PreviewResult): ValidateOutcome
     return { ok: false, reason: 'Staged chapters without VISIBLE_PREVIEW outcomes' };
   }
 
-  return { ok: true };
+  return { ok: true, honestEmpty: deliveryAdmit.honestEmpty };
 }

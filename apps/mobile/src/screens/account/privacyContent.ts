@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import type { PrivacyDetailSection } from '../../navigation/types';
 
 export const PRIVACY_SECTION_COPY: Record<
@@ -7,7 +8,7 @@ export const PRIVACY_SECTION_COPY: Record<
   stored_memories: {
     title: 'Stored Memories & Captured by You',
     body:
-      'Curated memories, small memories, topics, and manual Captured by You originals are stored on this iPhone. Sync and cloud processing may temporarily use recordings; automatic raw clips that are not selected are not kept long-term.',
+      'Curated memories, small memories, topics, and originals you select are stored on this iPhone. With your permission, compressed evidence is uploaded to create memories. You can delete this account\'s cloud processing data and local library using Delete Account & Data. Photos in your system library are not deleted.',
   },
   memory_profile: {
     title: 'Memory Profile & Stories',
@@ -17,12 +18,12 @@ export const PRIVACY_SECTION_COPY: Record<
   export_data: {
     title: 'Export My Data',
     body:
-      'Export a JSON snapshot of local Diary One data from this device. Export does not include cloud account credentials or research API tokens unless you choose to share them separately.',
+      'Export a JSON snapshot of local Diary One data from this device. Export excludes login credentials, API tokens and internal pipeline records.',
   },
   delete_account: {
     title: 'Delete Account & Data',
     body:
-      'Cloud account deletion is not available in this build. You can delete all local data from this iPhone, which resets memories, originals, profile, and settings to the demo seed.',
+      'Delete your cloud processing jobs, evidence and account sessions, then clear local memories, notes, originals, profile and settings. Finish any active cloud processing before deleting. Signing in again starts a new empty account.',
   },
   privacy_policy: {
     title: 'Privacy Policy',
@@ -42,10 +43,33 @@ export const PRIVACY_URL_PENDING_NOTE =
 export const TERMS_URL_PENDING_NOTE =
   'The full published page is not linked in this build yet. By continuing in Sign in you acknowledge these terms will apply when the service is live.';
 
-export function privacyPolicyUrl(): string {
-  return (process.env.EXPO_PUBLIC_PRIVACY_POLICY_URL ?? '').trim();
+function trimEnv(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : '';
 }
 
+function extraField(key: string): string {
+  const extra = Constants.expoConfig?.extra as Record<string, unknown> | undefined;
+  return trimEnv(extra?.[key]);
+}
+
+/**
+ * Published privacy policy HTTPS URL.
+ * Env: EXPO_PUBLIC_PRIVACY_POLICY_URL or EXPO_PUBLIC_PRIVACY_URL (alias).
+ * Empty → in-app copy + pending note (no dead link).
+ */
+export function privacyPolicyUrl(): string {
+  return (
+    trimEnv(process.env.EXPO_PUBLIC_PRIVACY_POLICY_URL) ||
+    trimEnv(process.env.EXPO_PUBLIC_PRIVACY_URL) ||
+    extraField('privacyPolicyUrl')
+  );
+}
+
+/**
+ * Published terms HTTPS URL.
+ * Env: EXPO_PUBLIC_TERMS_URL.
+ * Empty → in-app copy + pending note (no dead link).
+ */
 export function termsUrl(): string {
-  return (process.env.EXPO_PUBLIC_TERMS_URL ?? '').trim();
+  return trimEnv(process.env.EXPO_PUBLIC_TERMS_URL) || extraField('termsUrl');
 }

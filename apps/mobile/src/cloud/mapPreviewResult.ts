@@ -25,7 +25,7 @@ function isVisibleAha(result: X02PreviewResult, ahaId: string, publication: stri
 
 /**
  * Map X02 staged preview → Diary chapters / small memories.
- * Media URIs are attached later via `attachChapterMediaFromBundle`
+ * Media URIs are attached later via `attachDiaryMediaFromBundle`
  * using `hero_asset_id` + `selected_media`.
  */
 export function mapPreviewToDiary(
@@ -38,19 +38,14 @@ export function mapPreviewToDiary(
     .filter((ch) => isVisibleChapter(result, ch.id, ch.publication_status))
     .map((ch) => {
       const selected = ch.selected_media ?? [];
-      const momentPlaceholders =
-        selected.length > 0
-          ? selected.map((m, index) => ({
-              id: `${ch.id}-media-${m.asset_id}-${index}`,
-              label:
-                index === 0 && ch.time_label
-                  ? ch.time_label
-                  : `Moment ${index + 1}`,
-            }))
-          : (ch.moment_ids ?? []).map((id, index) => ({
-              id,
-              label: ch.time_label && index === 0 ? ch.time_label : `Moment ${index + 1}`,
-            }));
+      // PRD AI02 / AI03 / CH01 — Moments only from selected_media; never invent from moment_ids.
+      const momentPlaceholders = selected.map((m, index) => ({
+        id: `${ch.id}-media-${m.asset_id}-${index}`,
+        label:
+          index === 0 && ch.time_label
+            ? ch.time_label
+            : `Moment ${index + 1}`,
+      }));
 
       return {
         id: ch.id,
@@ -59,12 +54,12 @@ export function mapPreviewToDiary(
         dateLabel,
         weakTime: ch.time_label || undefined,
         aiStory: ch.story,
+        // Optional fields remain compatible with older saved results.
+        previewStory: ch.preview_story,
+        highlights: ch.highlights?.map((h) => ({ id: h.id, text: h.story })),
         tags: ch.tags.slice(0, 2),
         detailTags: ch.tags.length > 2 ? ch.tags.slice(2) : undefined,
-        moments:
-          momentPlaceholders.length > 0
-            ? momentPlaceholders
-            : [{ id: `${ch.id}-m0`, label: ch.time_label || 'Moment 1' }],
+        moments: momentPlaceholders,
       };
     });
 

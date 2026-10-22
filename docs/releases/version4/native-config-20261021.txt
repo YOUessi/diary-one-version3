@@ -1,0 +1,38 @@
+
+> diary-one-app@1.0.0 test:native-config
+> node --test scripts/test-native-config.cjs
+
+TAP version 13
+# Subtest: encoder ios registration gains root podspec path without changing module metadata
+ok 1 - encoder ios registration gains root podspec path without changing module metadata
+  ---
+  duration_ms: 3.360834
+  type: 'test'
+  ...
+# Subtest: encoder apple registration gains root podspec path without changing module metadata
+ok 2 - encoder apple registration gains root podspec path without changing module metadata
+  ---
+  duration_ms: 4.005
+  type: 'test'
+  ...
+# Subtest: future encoder metadata with an explicit path remains unchanged
+ok 3 - future encoder metadata with an explicit path remains unchanged
+  ---
+  duration_ms: 2.921917
+  type: 'test'
+  ...
+# Subtest: an unexpected encoder package layout fails before mutating config
+ok 4 - an unexpected encoder package layout fails before mutating config
+  ---
+  duration_ms: 2.658583
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 138.677125

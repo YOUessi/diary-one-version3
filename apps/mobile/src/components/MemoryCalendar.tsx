@@ -1,3 +1,5 @@
+import { appStrings, appLocale } from '../domain/strings';
+import { useAppStore } from '../store/useAppStore';
 import React, { useMemo } from 'react';
 import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { colors, layout, spacing, type } from '../theme';
@@ -10,8 +12,8 @@ function parseDateKey(key: string) {
   return new Date(y, m - 1, d);
 }
 
-function formatMonthLabel(date: Date) {
-  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+function formatMonthLabel(date: Date, locale: string) {
+  return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
 }
 
 function buildMonthCells(anchor: Date) {
@@ -52,8 +54,12 @@ export function MemoryCalendar({
   onJumpToday: () => void;
   dayPreparing?: boolean;
 }) {
+  const language = useAppStore((s) => s.language);
+  const strings = appStrings(language);
+  const locale = appLocale(language);
+  const weekdays = locale === 'zh-CN' ? ['一', '二', '三', '四', '五', '六', '日'] : WEEKDAYS;
   const anchor = parseDateKey(selectedDateKey);
-  const cells = useMemo(() => buildMonthCells(anchor), [anchor.getFullYear(), anchor.getMonth()]);
+  const cells = useMemo(() => buildMonthCells(parseDateKey(selectedDateKey)), [selectedDateKey]);
   const weeks: (typeof cells)[] = [];
   for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
 
@@ -64,9 +70,9 @@ export function MemoryCalendar({
         style={styles.mini}
         accessibilityRole="button"
         accessibilityState={{ expanded: false }}
-        accessibilityLabel={`${formatMonthLabel(anchor)} calendar`}
+        accessibilityLabel={`${formatMonthLabel(anchor, locale)} ${strings.calendar}`}
       >
-        <Text style={styles.miniMonth}>{formatMonthLabel(anchor)}</Text>
+        <Text style={styles.miniMonth}>{formatMonthLabel(anchor, locale)}</Text>
         <View style={styles.heat}>
           {weeks.map((week, wi) => (
             <View key={`w-${wi}`} style={styles.heatRow}>
@@ -106,15 +112,15 @@ export function MemoryCalendar({
         accessibilityRole="button"
         accessibilityState={{ expanded: true }}
       >
-        <Text style={styles.monthExpanded}>{formatMonthLabel(anchor)}</Text>
+        <Text style={styles.monthExpanded}>{formatMonthLabel(anchor, locale)}</Text>
         <Text style={styles.chevron}>▴</Text>
       </Pressable>
       <Pressable onPress={onJumpToday} style={styles.jumpToday} hitSlop={8}>
-        <Text style={styles.jumpTodayText}>Jump to today</Text>
+        <Text style={styles.jumpTodayText}>{strings.jumpToday}</Text>
       </Pressable>
       <View style={styles.grid}>
         <View style={styles.weekRow}>
-          {WEEKDAYS.map((w, i) => (
+          {weekdays.map((w, i) => (
             <Text key={`${w}-${i}`} style={styles.weekday}>
               {w}
             </Text>

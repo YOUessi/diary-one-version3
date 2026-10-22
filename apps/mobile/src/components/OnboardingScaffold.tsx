@@ -22,8 +22,17 @@ type Props = {
   primaryDisabled?: boolean;
   secondaryLabel?: string;
   onSecondary?: () => void;
+  /** muted = Figma secondary caption (Pairing soft path); accent = warm link */
+  secondaryTone?: 'muted' | 'accent';
+  /**
+   * Figma Pairing stacks CTA under the hardware slot (gap 18).
+   * footer = sticky bottom (permissions / default).
+   */
+  ctaPlacement?: 'footer' | 'content';
   showBack?: boolean;
   onBack?: () => void;
+  /** Pairing Searching/Connecting — Cancel in header (Figma). */
+  headerLeading?: 'back' | 'cancel';
   children?: React.ReactNode;
 };
 
@@ -42,13 +51,54 @@ export function OnboardingScaffold({
   primaryDisabled,
   secondaryLabel,
   onSecondary,
+  secondaryTone = 'accent',
+  ctaPlacement = 'footer',
   showBack = true,
   onBack,
+  headerLeading = 'back',
   children,
 }: Props) {
+  const hasCta = Boolean(
+    (primaryLabel && onPrimary) || (secondaryLabel && onSecondary),
+  );
+
+  const ctaBlock =
+    hasCta ? (
+      <View style={ctaPlacement === 'content' ? styles.ctaInContent : styles.footer}>
+        {primaryLabel && onPrimary ? (
+          <Pressable
+            onPress={onPrimary}
+            disabled={primaryDisabled}
+            style={[styles.primary, primaryDisabled && styles.primaryDisabled]}
+          >
+            <Text style={styles.primaryLabel}>{primaryLabel}</Text>
+          </Pressable>
+        ) : null}
+        {secondaryLabel && onSecondary ? (
+          <Pressable onPress={onSecondary} style={styles.secondary}>
+            <Text
+              style={[
+                styles.secondaryLabel,
+                secondaryTone === 'muted' && styles.secondaryLabelMuted,
+              ]}
+            >
+              {secondaryLabel}
+            </Text>
+          </Pressable>
+        ) : null}
+      </View>
+    ) : null;
+
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      {showBack ? <FigmaBackHeader eyebrow={eyebrow} onBack={onBack} /> : eyebrow ? (
+      {showBack || headerLeading === 'cancel' ? (
+        <FigmaBackHeader
+          eyebrow={eyebrow}
+          onBack={onBack}
+          leading={headerLeading}
+          backGlyphSize={headerLeading === 'back' ? 22 : undefined}
+        />
+      ) : eyebrow ? (
         <Text style={styles.eyebrowOnly}>{eyebrow}</Text>
       ) : null}
       <ScrollView
@@ -60,7 +110,7 @@ export function OnboardingScaffold({
         {lead ? <Text style={styles.lead}>{lead}</Text> : null}
         {visual ? (
           <>
-            {visual}
+            <View style={styles.visual}>{visual}</View>
             {visualHint ? <Text style={styles.visualCaption}>{visualHint}</Text> : null}
           </>
         ) : visualHint ? (
@@ -83,25 +133,9 @@ export function OnboardingScaffold({
           </View>
         ) : null}
         {children}
+        {ctaPlacement === 'content' ? ctaBlock : null}
       </ScrollView>
-      {(primaryLabel && onPrimary) || (secondaryLabel && onSecondary) ? (
-        <View style={styles.footer}>
-          {primaryLabel && onPrimary ? (
-            <Pressable
-              onPress={onPrimary}
-              disabled={primaryDisabled}
-              style={[styles.primary, primaryDisabled && styles.primaryDisabled]}
-            >
-              <Text style={styles.primaryLabel}>{primaryLabel}</Text>
-            </Pressable>
-          ) : null}
-          {secondaryLabel && onSecondary ? (
-            <Pressable onPress={onSecondary} style={styles.secondary}>
-              <Text style={styles.secondaryLabel}>{secondaryLabel}</Text>
-            </Pressable>
-          ) : null}
-        </View>
-      ) : null}
+      {ctaPlacement === 'footer' ? ctaBlock : null}
     </SafeAreaView>
   );
 }
@@ -122,27 +156,28 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
     flexGrow: 1,
   },
-  /** Pairing / Setup Complete — primary titles are 34 in Figma */
+  /** Pairing / Setup Complete — primary titles are 34; stack gap ~18 in Figma */
   title: {
     ...type.titleLarge,
     color: colors.ink,
-    marginBottom: spacing.sm,
+    marginBottom: 18,
   },
   titleSection: {
     ...type.titleSection,
     color: colors.ink,
     marginBottom: spacing.sm,
   },
-  lead: { ...type.bodyStory, color: colors.secondary, marginBottom: spacing.lg },
-  /** Figma Pairing / Setup — hardware placeholder r16 × ~220 */
+  lead: { ...type.bodyStory, color: colors.secondary, marginBottom: 18 },
+  /** Figma Pairing / Setup — hardware placeholder r16 × 220 */
   visual: {
-    minHeight: 220,
+    height: 220,
     backgroundColor: colors.surface,
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: spacing.lg,
+    marginBottom: 18,
     padding: spacing.md,
+    overflow: 'hidden',
   },
   visualText: { ...type.caption, color: colors.tertiary, textAlign: 'center' },
   visualCaption: {
@@ -189,19 +224,31 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.lg,
     gap: spacing.sm,
   },
+  /** Figma Pairing — CTA sits in content stack under hardware slot */
+  ctaInContent: {
+    gap: 10,
+    marginTop: 0,
+    marginBottom: spacing.md,
+  },
   primary: {
     backgroundColor: colors.ink,
     borderRadius: 12,
-    minHeight: 52,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
   },
   primaryDisabled: { opacity: 0.45 },
   primaryLabel: { fontSize: 15, lineHeight: 20, color: colors.paper, fontWeight: '600' },
   secondary: {
-    minHeight: layout.minTouch,
+    minHeight: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },
   secondaryLabel: { ...type.bodyStory, color: colors.accent, fontWeight: '600' },
+  secondaryLabelMuted: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '500',
+    color: colors.secondary,
+  },
 });

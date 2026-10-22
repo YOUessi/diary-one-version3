@@ -1,5 +1,4 @@
 import type { TodayStatus } from '../model';
-import type { PersistedSnapshot } from '../db/sqlite';
 import type { X02PreviewResult } from '../cloud/types';
 
 export type CloudProcessingTarget = 'research' | 'production';
@@ -15,6 +14,7 @@ export type AuthOutcome =
 export type CloudJobPoll =
   | { state: 'pending'; message?: string }
   | { state: 'succeeded'; result: X02PreviewResult }
+  | { state: 'paused'; message: string }
   | { state: 'failed'; message: string };
 
 export type BackendHealth = {
@@ -27,7 +27,7 @@ export type BackendHealth = {
 export type PrivacyExportPayload = {
   exportedAt: string;
   schema: 'DIARY_ONE_LOCAL_EXPORT_V1';
-  snapshot: PersistedSnapshot;
+  snapshot: ReturnType<typeof import('../domain/dataExport').buildUserDataExport>;
 };
 
 export type ApplyPreviewOutcome = {

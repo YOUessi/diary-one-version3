@@ -1,5 +1,7 @@
+import { appStrings } from '../../domain/strings';
+import { showImportFailure } from '../../pipeline/importFailure';
 import React, { useMemo } from 'react';
-import { ScrollView, View, Text, Pressable, StyleSheet } from 'react-native';
+import { Alert, ScrollView, View, Text, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,7 +23,7 @@ import { daysWithContent } from '../../model';
 import type { DiaryStackParamList } from '../../navigation/types';
 import { TodayStatusDevPicker } from '../../dev/TodayStatusDevPicker';
 import { diaryTodayKey } from '../../domain/dayKey';
-import { buildDayFeed, buildEarlierFeed } from '../../diary/buildDiaryFeed';
+import { buildDayFeed, buildEarlierFeed, historyDateKeys } from '../../diary/buildDiaryFeed';
 import { DayPrepareBanner } from '../../components/DayPrepareBanner';
 import { ShareDayReadinessSheet } from '../../components/ShareDayReadinessSheet';
 import { CloudProcessingBanner } from '../../components/CloudProcessingBanner';
@@ -31,6 +33,8 @@ type Nav = NativeStackNavigationProp<DiaryStackParamList, 'DiaryHome'>;
 
 export default function DiaryHomeScreen() {
   const navigation = useNavigation<Nav>();
+  const language = useAppStore((s) => s.language);
+  const strings = appStrings(language);
   const todayStatus = useAppStore((s) => s.todayStatus);
   const selectedDateKey = useAppStore((s) => s.selectedDateKey);
   const chapters = useAppStore((s) => s.chapters);
@@ -67,9 +71,9 @@ export default function DiaryHomeScreen() {
       todayKey,
       todayKey,
       chapters,
-      smallMemoriesForDate(smallMemoriesByDate, todayKey),
+      smallMemoriesForDate(smallMemoriesByDate, todayKey), language,
     );
-  }, [chapters, smallMemoriesByDate, isViewingToday, todayKey]);
+  }, [chapters, smallMemoriesByDate, isViewingToday, todayKey, language]);
 
   const selectedDayFeed = useMemo(() => {
     if (isViewingToday) return [];
@@ -77,17 +81,17 @@ export default function DiaryHomeScreen() {
       selectedDateKey,
       todayKey,
       chapters,
-      smallMemoriesForDate(smallMemoriesByDate, selectedDateKey),
+      smallMemoriesForDate(smallMemoriesByDate, selectedDateKey), language,
     );
-  }, [chapters, smallMemoriesByDate, isViewingToday, selectedDateKey, todayKey]);
+  }, [chapters, smallMemoriesByDate, isViewingToday, selectedDateKey, todayKey, language]);
 
   const earlierBlocks = useMemo(
-    () => buildEarlierFeed(chapters, todayKey, historyVisibleCount),
-    [chapters, todayKey, historyVisibleCount],
+    () => buildEarlierFeed(chapters, todayKey, historyVisibleCount, language, smallMemoriesByDate),
+    [chapters, todayKey, historyVisibleCount, language, smallMemoriesByDate],
   );
 
   const hasMoreHistory =
-    chapters.filter((c) => c.dateKey !== todayKey).length > historyVisibleCount;
+    historyDateKeys(chapters, smallMemoriesByDate, todayKey).length > historyVisibleCount;
 
   const recapDateKey = isViewingToday ? todayKey : selectedDateKey;
   const recapHasChapters = chaptersForDate(chapters, recapDateKey).length > 0;
@@ -100,7 +104,7 @@ export default function DiaryHomeScreen() {
   const renderFeed = (items: ReturnType<typeof buildDayFeed>, isTodaySection: boolean) =>
     items.map((item, index) => {
       if (item.kind === 'day_header') {
-        const isToday = item.label === 'Today';
+        const isToday = item.label === strings.today;
         return (
           <View key={`h-${index}`} style={[styles.dayHeader, isToday && styles.dayHeaderToday]}>
             <Text style={[styles.dayTitle, isToday ? styles.dayTitleToday : styles.dayTitlePast]}>
@@ -113,7 +117,7 @@ export default function DiaryHomeScreen() {
                   onPress={() => navigation.navigate('ShareDaySelector', { dateKey: recapDateKey })}
                   hitSlop={8}
                   accessibilityRole="button"
-                  accessibilityLabel="Share day"
+                  accessibilityLabel={strings.shareDay}
                   style={styles.shareHit}
                 >
                   <ShareGlyph />
@@ -124,7 +128,7 @@ export default function DiaryHomeScreen() {
         );
       }
       if (item.kind === 'small') {
-        return <SmallMemory key={item.memory.id} text={item.memory.text} />;
+        return <SmallMemory key={item.memory.id} text={item.memory.text} posterUri={item.memory.posterUri} />;
       }
       const c = item.chapter;
       return (
@@ -133,7 +137,7 @@ export default function DiaryHomeScreen() {
           title={c.title}
           dateLabel={c.dateLabel}
           weakTime={c.weakTime}
-          aiStory={c.aiStory}
+          aiStory={c.previewStory?.trim() || c.aiStory}
           tags={c.tags}
           heroUri={c.heroUri}
           showDateMeta={false}
@@ -150,13 +154,13 @@ export default function DiaryHomeScreen() {
       >
         <View style={styles.gutter}>
           <FigmaScreenHeader
-            title="Diary"
+            title={strings.tabDiary}
             rightAccessory={
               <Pressable
                 onPress={() => navigation.navigate('Search', {})}
                 hitSlop={8}
                 accessibilityRole="button"
-                accessibilityLabel="Search memories"
+                accessibilityLabel={strings.searchMemories}
               >
                 <SearchGlyph />
               </Pressable>
@@ -184,6 +188,11 @@ export default function DiaryHomeScreen() {
             <TodayStatusBanner
               status={todayStatus}
               onSyncPress={() => {
+                const link = useAppStore.getState().deviceLinkState;
+                if (link === 'disconnected') {
+                  Alert.alert(strings.deviceConnectionTitle, strings.hardwareUnavailable);
+                  return;
+                }
                 void performDeviceSync();
               }}
             />
@@ -194,17 +203,34 @@ export default function DiaryHomeScreen() {
             pointerEvents={calendarDayPreparing ? 'none' : 'auto'}
           >
             {isViewingToday && !todayHasMemories && (todayStatus === 'ZERO_CURATED' || todayStatus === 'NO_RECORDINGS') ? (
-              <Text style={styles.emptyToday}>
-                {todayStatus === 'NO_RECORDINGS'
-                  ? 'No recordings today.'
-                  : "No memories were created from today's recordings."}
-              </Text>
+              <View style={styles.emptyBlock}>
+                <Text style={styles.emptyToday}>
+                  {todayStatus === 'NO_RECORDINGS'
+                    ? strings.noToday
+                    : strings.noCuratedToday}
+                </Text>
+                <Text style={styles.emptyHint}>
+                  {strings.uploadLead}
+                </Text>
+                <Pressable
+                  style={styles.uploadBtn}
+                  accessibilityRole="button"
+                  accessibilityLabel={strings.uploadMedia}
+                  onPress={() =>
+                    void import('../../pipeline/launchEvidenceImport').then((m) =>
+                      m.launchEvidenceImportFromLibrary(),
+                    ).catch((error) => showImportFailure(error, 'START'))
+                  }
+                >
+                  <Text style={styles.uploadBtnLabel}>{strings.uploadMedia}</Text>
+                </Pressable>
+              </View>
             ) : null}
 
             {isViewingToday ? renderFeed(todayFeed, true) : renderFeed(selectedDayFeed, false)}
 
             {selectedPastDayEmpty ? (
-              <Text style={styles.emptyToday}>No memories for this day.</Text>
+              <Text style={styles.emptyToday}>{strings.emptyDay}</Text>
             ) : null}
           </View>
 
@@ -216,19 +242,19 @@ export default function DiaryHomeScreen() {
                 </View>
               ))}
               {historyLoadState === 'loading' ? (
-                <Text style={styles.loadStatus}>Loading earlier memories…</Text>
+                <Text style={styles.loadStatus}>{strings.loadingHistory}</Text>
               ) : null}
               {historyLoadState === 'failed' ? (
                 <View style={styles.loadFailed}>
-                  <Text style={styles.loadFailedText}>Couldn&apos;t load earlier memories.</Text>
+                  <Text style={styles.loadFailedText}>{strings.historyFailed}</Text>
                   <Pressable onPress={loadMoreHistory}>
-                    <Text style={styles.tryAgain}>Try Again</Text>
+                    <Text style={styles.tryAgain}>{strings.retry}</Text>
                   </Pressable>
                 </View>
               ) : null}
               {hasMoreHistory && historyLoadState === 'idle' ? (
                 <Pressable onPress={loadMoreHistory} style={styles.loadMore}>
-                  <Text style={styles.loadMoreText}>Load earlier memories</Text>
+                  <Text style={styles.loadMoreText}>{strings.loadHistory}</Text>
                 </Pressable>
               ) : null}
             </>
@@ -304,5 +330,16 @@ const styles = StyleSheet.create({
     ...type.bodyStory,
     color: colors.secondary,
   },
+  emptyBlock: { gap: spacing.sm },
+  emptyHint: { ...type.caption, color: colors.tertiary, lineHeight: 20 },
+  uploadBtn: {
+    marginTop: spacing.xs,
+    height: 52,
+    borderRadius: 12,
+    backgroundColor: colors.ink,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  uploadBtnLabel: { fontSize: 15, lineHeight: 20, fontWeight: '600', color: colors.paper },
   feedPreparing: { opacity: 0.42 },
 });

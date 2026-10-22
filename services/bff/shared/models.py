@@ -23,6 +23,7 @@ class CloudJob(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     day_revision_id: Mapped[str] = mapped_column(String(128), index=True)
+    owner_email: Mapped[str | None] = mapped_column(String(320), nullable=True, index=True)
     bundle_version: Mapped[str | None] = mapped_column(String(32), nullable=True)
     object_prefix: Mapped[str] = mapped_column(String(512))
     status: Mapped[JobStatus] = mapped_column(Enum(JobStatus), default=JobStatus.pending)

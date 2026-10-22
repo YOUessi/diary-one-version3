@@ -8,8 +8,10 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
+      "buildNumber": "4",
       "supportsTablet": true,
       "bundleIdentifier": "com.nexleap.diaryone.dev",
+      "usesAppleSignIn": true,
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true
@@ -23,7 +25,6 @@
     },
     "android": {
       "package": "com.nexleap.diaryone.dev",
-      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -41,7 +42,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow Diary One to access photos you select for your profile."
+          "photosPermission": "Allow Diary One to use the photos and videos you select to create your diary or update your profile."
         }
       ],
       [
@@ -54,7 +55,19 @@
       "expo-sharing",
       "expo-apple-authentication",
       "expo-web-browser",
-      "./modules/diary-one-vision"
+      "./modules/diary-one-vision/app.plugin.js",
+      "onnxruntime-react-native",
+      "./plugins/withOnnxRuntimeLifecycle",
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "./assets/models/mobileclip-s0-fp16/image_encoder.onnx",
+            "./assets/models/mobileclip-s0-fp16/prompts.f32.bin"
+          ]
+        }
+      ],
+      "./plugins/withVideoEncoderAutolinking"
     ]
   }
 }

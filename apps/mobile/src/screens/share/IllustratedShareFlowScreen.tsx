@@ -17,25 +17,24 @@ import { SharePreviewShell } from '../../components/SharePreviewShell';
 type Route = RouteProp<DiaryStackParamList, 'IllustratedShareFlow'>;
 type Nav = NativeStackNavigationProp<DiaryStackParamList, 'IllustratedShareFlow'>;
 
-const STYLES: Array<'A' | 'B' | 'C'> = ['A', 'B', 'C'];
-const illustratedUriCache = new Map<string, string>();
+const STYLES: ('A' | 'B' | 'C')[] = ['A', 'B', 'C'];
 
 export default function IllustratedShareFlowScreen() {
-  const { chapterId, phase, style = 'A' } = useRoute<Route>().params;
+  const { chapterId, phase, previewUri, style = 'A' } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
   const chapter = useAppStore((s) => s.chapters.find((c) => c.id === chapterId));
-  const [uri, setUri] = useState<string | null>(null);
   /** Figma page_05 — Style Picker starts with none selected; Create disabled until pick. */
   const [picked, setPicked] = useState<'A' | 'B' | 'C' | null>(phase === 'picker' ? null : style);
   const activeStyle: 'A' | 'B' | 'C' = picked ?? style;
 
-  const runPrepare = useCallback(async () => {
+  const runPrepare = useCallback(async (isCurrent: () => boolean) => {
     if (!chapter) {
       navigation.replace('IllustratedShareFlow', { chapterId, phase: 'failed', style: activeStyle });
       return;
     }
     try {
       const out = await buildIllustratedShare(chapter, activeStyle);
+      if (!isCurrent()) return;
       if (!out || shouldSimulateSharePrepareFailure()) {
         navigation.replace('IllustratedShareFlow', {
           chapterId,
@@ -44,14 +43,13 @@ export default function IllustratedShareFlowScreen() {
         });
         return;
       }
-      illustratedUriCache.set(`${chapterId}-${activeStyle}`, out);
-      setUri(out);
       navigation.replace('IllustratedShareFlow', {
         chapterId,
-        phase: 'preview',
+        phase: 'preview', previewUri: out,
         style: activeStyle,
       });
     } catch {
+      if (!isCurrent()) return;
       navigation.replace('IllustratedShareFlow', {
         chapterId,
         phase: 'failed',
@@ -61,7 +59,10 @@ export default function IllustratedShareFlowScreen() {
   }, [activeStyle, chapter, chapterId, navigation]);
 
   useEffect(() => {
-    if (phase === 'preparing') void runPrepare();
+    let active = true;
+    const token = useAppStore.getState().sessionToken;
+    if (phase === 'preparing') void runPrepare(() => active && useAppStore.getState().sessionToken === token);
+    return () => { active = false; };
   }, [phase, runPrepare]);
 
   const back = () => navigation.navigate('ChapterDetail', { chapterId });
@@ -157,9 +158,6 @@ export default function IllustratedShareFlowScreen() {
       </SafeAreaView>
     );
   }
-
-  const previewUri =
-    uri ?? illustratedUriCache.get(`${chapterId}-${activeStyle}`) ?? chapter.heroUri;
 
   return (
     <SharePreviewShell

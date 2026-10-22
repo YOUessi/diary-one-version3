@@ -28,7 +28,7 @@
       }
     },
     "preview": {
-      "distribution": "internal",
+      "distribution": "store",
       "ios": {
         "simulator": false
       },
@@ -36,8 +36,11 @@
         "EXPO_PUBLIC_DEFAULT_BUNDLE_EXPORT": "V04",
         "EXPO_PUBLIC_STORE_RELEASE": "0",
         "EXPO_PUBLIC_INTERNAL_BETA": "1",
-        "EXPO_PUBLIC_INCLUDE_VISION": "1"
-      }
+        "EXPO_PUBLIC_INCLUDE_VISION": "1",
+        "EXPO_PUBLIC_DEV_BFF_URL": "https://bff.diary.luxe",
+        "EXPO_PUBLIC_DEV_BFF_TOKEN": ""
+      },
+      "autoIncrement": true
     },
     "production": {
       "autoIncrement": true,
@@ -47,7 +50,9 @@
       "env": {
         "EXPO_PUBLIC_DEFAULT_BUNDLE_EXPORT": "V04",
         "EXPO_PUBLIC_STORE_RELEASE": "1",
-        "EXPO_PUBLIC_INCLUDE_VISION": "1"
+        "EXPO_PUBLIC_INCLUDE_VISION": "1",
+        "EXPO_PUBLIC_DEV_BFF_URL": "https://bff.diary.luxe",
+        "EXPO_PUBLIC_DEV_BFF_TOKEN": ""
       }
     }
   },

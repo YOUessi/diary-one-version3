@@ -1,5 +1,4 @@
-import type { SemanticClassification, SemanticEmbedding, SemanticRoutingProfile } from './types';
-import type { PairwiseSemanticRelation } from './types';
+import type { SemanticClassification, SemanticEmbedding, SemanticRoutingProfile, PairwiseSemanticRelation } from './types';
 
 export function normalizeVector(vector: number[]): number[] {
   const flat = vector.map((v) => Number(v));

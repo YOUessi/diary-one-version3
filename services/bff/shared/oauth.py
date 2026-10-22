@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 
 from shared.otp import issue_session_token
 from shared.sessions import SessionStore
+from shared.config import settings
 
 APPLE_AUDIENCES = (
     "host.exp.Exponent",
@@ -43,6 +44,9 @@ async def exchange_oauth(body: OAuthBody, sessions: SessionStore) -> dict[str, A
 
 
 async def _google_email(id_token: str) -> str:
+    audiences = {value.strip() for value in settings.google_client_ids.split(',') if value.strip()}
+    if not audiences:
+        raise HTTPException(status_code=503, detail="google_sign_in_not_configured")
     async with httpx.AsyncClient(timeout=15.0) as client:
         r = await client.get(
             "https://oauth2.googleapis.com/tokeninfo",
@@ -51,11 +55,27 @@ async def _google_email(id_token: str) -> str:
     if r.status_code != 200:
         raise HTTPException(status_code=401, detail="google_token_rejected")
     data = r.json()
+    validate_google_claims(data, audiences)
     email = str(data.get("email") or "").strip().lower()
     verified = str(data.get("email_verified")).lower() in ("true", "1")
     if not email or not verified:
         raise HTTPException(status_code=401, detail="google_email_unverified")
     return email
+
+
+def validate_google_claims(data: dict[str, Any], audiences: set[str]) -> None:
+    """tokeninfo verifies the signature; the relying party still must verify its audience."""
+    import time
+
+    try:
+        expires_at = float(data.get("exp", 0))
+    except (TypeError, ValueError):
+        expires_at = 0
+    if (data.get("aud") not in audiences
+            or data.get("iss") not in ("accounts.google.com", "https://accounts.google.com")
+            or expires_at <= time.time()
+            or not str(data.get("sub") or "").strip()):
+        raise HTTPException(status_code=401, detail="google_token_claims_rejected")
 
 
 async def _apple_email(identity_token: str) -> str:
@@ -69,6 +89,7 @@ async def _apple_email(identity_token: str) -> str:
         signing_key.key,
         algorithms=["RS256"],
         audience=APPLE_AUDIENCES,
+        issuer="https://appleid.apple.com",
         options={"verify_aud": True},
     )
     email = str(claims.get("email") or "").strip().lower()

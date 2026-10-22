@@ -1,0 +1,140 @@
+
+> diary-one-app@1.0.0 test:onnx
+> node --test scripts/test-onnx-lifecycle.cjs scripts/test-onnx-native-patch.cjs
+
+TAP version 13
+# Subtest: concurrent callers initialize once, run serially and preserve result order
+ok 1 - concurrent callers initialize once, run serially and preserve result order
+  ---
+  duration_ms: 29.140541
+  type: 'test'
+  ...
+# Subtest: initialization failure is surfaced and does not poison the retry queue
+ok 2 - initialization failure is surfaced and does not poison the retry queue
+  ---
+  duration_ms: 4.346917
+  type: 'test'
+  ...
+# Subtest: release waits for an in-flight run; subsequent request gets a fresh session
+ok 3 - release waits for an in-flight run; subsequent request gets a fresh session
+  ---
+  duration_ms: 4.584917
+  type: 'test'
+  ...
+# Subtest: native inference failure releases before the next run and preserves the error
+ok 4 - native inference failure releases before the next run and preserves the error
+  ---
+  duration_ms: 2.7395
+  type: 'test'
+  ...
+# Subtest: cancelled queued work neither initializes nor executes; later calls still work
+ok 5 - cancelled queued work neither initializes nor executes; later calls still work
+  ---
+  duration_ms: 3.949833
+  type: 'test'
+  ...
+# Subtest: cancellation during inference discards results and waits for native completion before release
+ok 6 - cancellation during inference discards results and waits for native completion before release
+  ---
+  duration_ms: 4.089833
+  type: 'test'
+  ...
+# Subtest: failed native cleanup blocks a second session until explicit cleanup succeeds
+ok 7 - failed native cleanup blocks a second session until explicit cleanup succeeds
+  ---
+  duration_ms: 3.001375
+  type: 'test'
+  ...
+# Subtest: analyzer module reevaluation preserves its runtime queue/session without parallel native inference
+ok 8 - analyzer module reevaluation preserves its runtime queue/session without parallel native inference
+  ---
+  duration_ms: 50.961041
+  type: 'test'
+  ...
+# Subtest: cancellation during preprocessing does not create tensors or call native inference
+ok 9 - cancellation during preprocessing does not create tensors or call native inference
+  ---
+  duration_ms: 23.879959
+  type: 'test'
+  ...
+# Subtest: invalid model checksum fails closed before native creation and can be retried
+ok 10 - invalid model checksum fails closed before native creation and can be retried
+  ---
+  duration_ms: 32.176209
+  type: 'test'
+  ...
+# Subtest: wrong model input contract releases the created session before reporting failure
+ok 11 - wrong model input contract releases the created session before reporting failure
+  ---
+  duration_ms: 24.912667
+  type: 'test'
+  ...
+# Subtest: inference failure disposes input tensor and releases session before retry
+ok 12 - inference failure disposes input tensor and releases session before retry
+  ---
+  duration_ms: 15.194292
+  type: 'test'
+  ...
+# Subtest: NaN or wrong-size embeddings never produce semantic labels and all tensors are disposed
+ok 13 - NaN or wrong-size embeddings never produce semantic labels and all tensors are disposed
+  ---
+  duration_ms: 26.814083
+  type: 'test'
+  ...
+# Subtest: cancel during a native run drops outputs and skips later photos after native completion
+ok 14 - cancel during a native run drops outputs and skips later photos after native completion
+  ---
+  duration_ms: 16.798875
+  type: 'test'
+  ...
+# Subtest: bad JPEG/file read errors are surfaced without calling native inference and queue recovers
+ok 15 - bad JPEG/file read errors are surfaced without calling native inference and queue recovers
+  ---
+  duration_ms: 30.428584
+  type: 'test'
+  ...
+# Subtest: empty batch does not initialize native runtime
+ok 16 - empty batch does not initialize native runtime
+  ---
+  duration_ms: 8.701
+  type: 'test'
+  ...
+# Subtest: main assertCurrent owner fence stops later photos after a pending native run settles
+ok 17 - main assertCurrent owner fence stops later photos after a pending native run settles
+  ---
+  duration_ms: 11.794625
+  type: 'test'
+  ...
+# Subtest: clean install and repeat prebuild produce the reviewed runtime-owned constructor backport
+ok 18 - clean install and repeat prebuild produce the reviewed runtime-owned constructor backport
+  ---
+  duration_ms: 10.572625
+  type: 'test'
+  ...
+# Subtest: unknown ORT version is rejected without replacing any source
+ok 19 - unknown ORT version is rejected without replacing any source
+  ---
+  duration_ms: 4.575208
+  type: 'test'
+  ...
+# Subtest: unexpected second source cannot leave the first source half-patched
+ok 20 - unexpected second source cannot leave the first source half-patched
+  ---
+  duration_ms: 2.580583
+  type: 'test'
+  ...
+# Subtest: an interrupted previous write is completed idempotently
+ok 21 - an interrupted previous write is completed idempotently
+  ---
+  duration_ms: 3.167375
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 448.93875

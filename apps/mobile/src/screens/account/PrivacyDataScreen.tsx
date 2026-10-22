@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
 import { FigmaEyebrow } from '../../components/FigmaScreenHeader';
 import { SettingsRow } from '../../components/SettingsRow';
-import { colors, font, layout, radius, spacing, type } from '../../theme';
+import { colors, font, layout, spacing, type } from '../../theme';
 import type { AccountStackParamList } from '../../navigation/types';
 import { useAppStore } from '../../store/useAppStore';
 
@@ -145,12 +145,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: layout.gutterDiary,
     marginBottom: spacing.md,
   },
+  /** Figma 71:993 — flat rows (no bordered cards); CLOUD EVIDENCE is product extension */
   card: {
     marginHorizontal: layout.gutterDiary,
-    borderWidth: 1,
-    borderColor: colors.divider,
-    borderRadius: radius.control,
-    paddingHorizontal: spacing.md,
     marginBottom: spacing.sm,
   },
   choiceRow: {
@@ -160,12 +157,12 @@ const styles = StyleSheet.create({
     minHeight: 52,
     paddingVertical: spacing.sm,
   },
-  choiceLabel: { fontSize: font.body, color: colors.ink, flex: 1, paddingRight: spacing.sm },
-  choiceMark: { fontSize: font.body, color: colors.ink, fontWeight: '700', minWidth: 20 },
+  choiceLabel: { fontSize: 17, lineHeight: 24, fontWeight: '500', color: colors.ink, flex: 1, paddingRight: spacing.sm },
+  choiceMark: { fontSize: 17, color: colors.ink, fontWeight: '700', minWidth: 20 },
   footer: {
-    fontSize: font.micro,
-    color: colors.tertiary,
+    fontSize: 13,
     lineHeight: 18,
+    color: colors.tertiary,
     paddingHorizontal: layout.gutterDiary,
     marginTop: spacing.md,
   },

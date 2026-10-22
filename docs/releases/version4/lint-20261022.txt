@@ -1,0 +1,16 @@
+
+> diary-one-app@1.0.0 lint
+> expo lint
+
+
+${SOURCE_ROOT}/apps/mobile/src/evidence/mobileclip/analyzer.ts
+  30:11  warning  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  34:33  warning  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  35:38  warning  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+${SOURCE_ROOT}/apps/mobile/src/evidence/semanticRouter.ts
+  394:11  warning  Array type using 'Array<T>' is forbidden. Use 'T[]' instead  @typescript-eslint/array-type
+
+✖ 4 problems (0 errors, 4 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

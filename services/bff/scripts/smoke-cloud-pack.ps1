@@ -46,10 +46,21 @@ $x02ok = $health.x02.reachable
 Write-Host "   mode=$($health.mode) x02=$x02ok mock=$mock modelReady=$($health.x02.modelReady)"
 
 if ($RequireGrounded) {
-  if (-not $x02ok) { throw "X02 not reachable from BFF — start .\scripts\start-x02.ps1 -Adapter qwen" }
+  if (-not $x02ok) { throw "X02 not reachable from BFF — start .\scripts\start-quality-stack.ps1 (or start-x02 -Adapter qwen)" }
   if ($mock -eq $true) {
-    Write-Host "WARNING: allow_mock_preview=true — empty X02 days will be mocked (not quality)." -ForegroundColor Yellow
-    Write-Host "For quality: docker compose with ALLOW_MOCK_PREVIEW=false, or Dev Lite -AllowMockPreview:`$false" -ForegroundColor Yellow
+    throw @"
+allow_mock_preview=true — Refuse quality gate.
+
+Start quality stack:
+  .\scripts\start-quality-stack.ps1
+Or Dev Lite:
+  .\scripts\start-dev-lite.ps1 -Adapter qwen -AllowMockPreview:`$false
+"@
+  }
+  $model = [string]$health.x02.model
+  $provider = [string]$health.x02.provider
+  if ($provider -match 'fixture' -or $model -match 'fixture') {
+    throw "X02 still on fixture — need qwen + DASHSCOPE_API_KEY (start-quality-stack.ps1)"
   }
 }
 
@@ -146,6 +157,20 @@ if ($RequireGrounded) {
   if ($delivery -eq "NO_GROUNDED_MEMORY" -or $semantic -eq "EMPTY_DAY") {
     throw "Empty day delivery=$delivery semantic=$semantic"
   }
+  # Copy / selection sanity (quality gate)
+  $emptyTitle = @($chapters | Where-Object { -not [string]$_.title -or ([string]$_.title).Trim().Length -lt 2 })
+  if ($emptyTitle.Count -gt 0) { throw "Grounded gate: $($emptyTitle.Count) chapter(s) missing title" }
+  $thin = @($chapters | Where-Object {
+      $body = [string]($_.body -as [string])
+      if (-not $body) { $body = [string]($_.story -as [string]) }
+      if (-not $body) { $body = [string]($_.ai_story -as [string]) }
+      if (-not $body) { $body = [string]($_.summary -as [string]) }
+      $body.Trim().Length -lt 12
+    })
+  if ($thin.Count -eq $chapters.Count -and $chapters.Count -gt 0) {
+    Write-Host "WARNING: all chapter bodies look thin — check writer surface fields in result JSON" -ForegroundColor Yellow
+  }
+  Write-Host "RequireGrounded checks passed" -ForegroundColor Green
 }
 
 Write-Host "Cloud pack channel OK" -ForegroundColor Green

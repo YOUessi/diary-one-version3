@@ -1,7 +1,0 @@
-# Rename to CODEOWNERS only after replacing the examples with real GitHub users/teams.
-# Do not commit guessed or nonexistent owners.
-
-/algorithm/          @nexleap-tech/<ai-owner>
-/apps/eval-web/      @nexleap-tech/<web-owner>
-/docs/handoff/       @nexleap-tech/<product-owner> @nexleap-tech/<ai-owner>
-/.github/             @nexleap-tech/<repo-admin>

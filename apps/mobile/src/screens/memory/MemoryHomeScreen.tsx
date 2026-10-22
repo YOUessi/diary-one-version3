@@ -12,15 +12,23 @@ import type { MemoryStackParamList } from '../../navigation/types';
 
 type Nav = NativeStackNavigationProp<MemoryStackParamList, 'MemoryHome'>;
 
-const PREVIEW_COUNT = 6;
+/** Figma Memory Home strip shows ~4 tiles at 82×72. */
+const PREVIEW_COUNT = 4;
 
 export default function MemoryHomeScreen() {
   const navigation = useNavigation<Nav>();
   const topics = useAppStore((s) => s.topics);
-  const captured = useAppStore((s) => s.capturedOriginals);
+  const originals = useAppStore((s) => s.capturedOriginals);
+  const captured = originals.filter((item) => item.intakeSource === 'DEVICE_MANUAL');
   const todayStatus = useAppStore((s) => s.todayStatus);
   const showTopics = topics.length > 0;
-  const showUnsynced = todayStatus === 'UNSYNCED' || todayStatus === 'READY_NEW_RECORDINGS';
+  const deviceLinkState = useAppStore((s) => s.deviceLinkState);
+  const devicePendingRecordings = useAppStore((s) => s.devicePendingRecordings);
+  // PRD DEV01 / DIA04 — Sync banner only when a real device link has pending recordings.
+  const showUnsynced =
+    deviceLinkState !== 'disconnected' &&
+    devicePendingRecordings &&
+    (todayStatus === 'UNSYNCED' || todayStatus === 'READY_NEW_RECORDINGS');
   const photoCount = captured.filter((c) => c.kind === 'photo').length;
   const videoCount = captured.filter((c) => c.kind === 'video').length;
   const preview = captured.slice(0, PREVIEW_COUNT);
@@ -37,7 +45,7 @@ export default function MemoryHomeScreen() {
           accessibilityRole="button"
           accessibilityLabel="Search your memories"
         >
-          <SearchGlyph />
+          <SearchGlyph size={22} />
           <Text style={styles.searchPlaceholder}>Search your memories...</Text>
         </Pressable>
 
@@ -59,36 +67,39 @@ export default function MemoryHomeScreen() {
           </Pressable>
         ) : null}
 
-        <View style={styles.sectionRow}>
-          <Text style={styles.sectionTitle}>Captured by You</Text>
-          <Pressable
-            onPress={() => navigation.navigate('CapturedByYou', { filter: 'all' })}
-            hitSlop={8}
-            style={styles.seeAllHit}
-          >
-            <Text style={styles.seeAll}>See all</Text>
-            <Text style={styles.seeAllChevron}>›</Text>
-          </Pressable>
-        </View>
-        <Text style={styles.sectionSub}>Photos and videos you chose to capture.</Text>
-        <Text style={styles.counts}>
-          {photoCount} photos · {videoCount} videos
-        </Text>
-        {preview.length > 0 ? (
-          <View style={styles.previewGrid}>
-            {preview.map((cell) => (
-              <CapturedGridCell
-                key={cell.id}
-                item={cell}
-                onPress={() => navigation.navigate('OriginalViewer', { captureId: cell.id })}
-              />
-            ))}
+        <View style={styles.section}>
+          <View style={styles.sectionRow}>
+            <Text style={styles.sectionTitle}>Captured by You</Text>
+            <Pressable
+              onPress={() => navigation.navigate('CapturedByYou', { filter: 'all' })}
+              hitSlop={8}
+              style={styles.seeAllHit}
+            >
+              <Text style={styles.seeAll}>See all</Text>
+              <Text style={styles.seeAllChevron}>›</Text>
+            </Pressable>
           </View>
-        ) : null}
+          <Text style={styles.sectionSub}>Photos and videos you chose to capture.</Text>
+          {preview.length > 0 ? (
+            <View style={styles.previewStrip}>
+              {preview.map((cell) => (
+                <CapturedGridCell
+                  key={cell.id}
+                  item={cell}
+                  variant="preview"
+                  onPress={() => navigation.navigate('OriginalViewer', { captureId: cell.id })}
+                />
+              ))}
+            </View>
+          ) : null}
+          <Text style={styles.counts}>
+            {photoCount} photos · {videoCount} videos
+          </Text>
+        </View>
 
         {showTopics ? (
-          <>
-            <View style={[styles.sectionRow, styles.topicsHead]}>
+          <View style={styles.section}>
+            <View style={styles.sectionRow}>
               <Text style={styles.sectionTitle}>Your Topics</Text>
               <Pressable
                 onPress={() => navigation.navigate('TopicsList')}
@@ -111,7 +122,7 @@ export default function MemoryHomeScreen() {
                 </Pressable>
               ))}
             </View>
-          </>
+          </View>
         ) : null}
       </ScrollView>
     </SafeAreaView>
@@ -124,52 +135,64 @@ const styles = StyleSheet.create({
   scroll: {
     paddingHorizontal: layout.gutterDiary,
     paddingBottom: layout.tabBarHeight + spacing.xxxl,
+    gap: spacing.xxl,
   },
+  /** Figma 44:809 — white elevated field, r12, h48, no border */
   searchBox: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
     backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.divider,
-    borderRadius: radius.control,
-    paddingRight: spacing.md,
-    paddingLeft: 2,
-    marginBottom: spacing.lg,
-    minHeight: layout.minTouch,
+    borderRadius: radius.card,
+    paddingHorizontal: 14,
+    height: layout.buttonHeight,
+    overflow: 'hidden',
   },
   searchPlaceholder: { ...type.bodyStory, color: colors.tertiary, flex: 1 },
   banner: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: radius.control,
+    borderRadius: radius.card,
     padding: spacing.md,
-    marginBottom: spacing.lg,
     minHeight: layout.minTouch,
   },
   bannerCopy: { flex: 1 },
   bannerTitle: { ...type.captionEmphasis, color: colors.ink },
   bannerSub: { ...type.metadata, color: colors.secondary, marginTop: 2 },
   bannerChevron: { ...type.titleChapter, color: colors.tertiary, fontWeight: '300' },
+  section: { gap: 10, width: '100%' },
   sectionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    minHeight: 44,
   },
-  topicsHead: { marginTop: spacing.xl },
-  sectionTitle: { ...type.titleChapter, color: colors.ink },
-  seeAllHit: { flexDirection: 'row', alignItems: 'center', minHeight: layout.minTouch },
-  seeAll: { ...type.captionEmphasis, color: colors.accent },
-  seeAllChevron: { ...type.captionEmphasis, color: colors.accent, marginLeft: 2 },
-  sectionSub: { ...type.caption, color: colors.secondary, marginTop: 4 },
-  counts: { ...type.metadata, color: colors.tertiary, marginTop: spacing.xs, marginBottom: spacing.sm },
-  previewGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.md },
-  topicGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.sm },
+  sectionTitle: { ...type.titleChapter, color: colors.ink, flex: 1 },
+  seeAllHit: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    minHeight: layout.minTouch,
+    width: 74,
+    justifyContent: 'flex-end',
+  },
+  /** Figma See all — secondary ink, not accent */
+  seeAll: { ...type.captionEmphasis, color: colors.secondary, textAlign: 'right' },
+  seeAllChevron: { ...type.captionEmphasis, color: colors.secondary },
+  sectionSub: { ...type.caption, color: colors.secondary },
+  counts: { ...type.caption, color: colors.tertiary },
+  previewStrip: { flexDirection: 'row', gap: spacing.sm, height: layout.capturedPreviewH },
+  topicGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  /** Neutral D1/Tag on Memory Home topics */
   topicChip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    height: 26,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  topicText: { ...type.captionEmphasis, color: colors.ink },
+  topicText: { ...type.captionEmphasis, color: colors.secondary },
 });

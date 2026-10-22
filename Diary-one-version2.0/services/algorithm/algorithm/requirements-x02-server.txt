@@ -1,2 +1,0 @@
-# Local X02 research server (Python 3.13+)
-legacy-cgi>=2.6

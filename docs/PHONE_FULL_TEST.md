@@ -1,6 +1,9 @@
 # 手机一次试完全部（Expo Go）
 
-电脑已开：**BFF `http://192.168.31.74:8790`** · **Metro `:8081`** · ffmpeg / mock 已就绪。  
+**真质量验收请先读 [`LOCAL_QUALITY_LOOP.md`](./LOCAL_QUALITY_LOOP.md)**（`start-quality-loop.ps1`，Ping 须 **mock=no**）。  
+本节适合全功能点检；若 Ping 为 `mock=yes` / provider=fixture，**不能**当作算法质量通过。
+
+电脑已开：**BFF LAN `:8790`** · **Metro `:8081`** · ffmpeg 就绪。  
 （若电脑 IP 变了，在 PC 再跑 `services/bff/scripts/setup-commercial-dev.ps1` 并重启 Metro。）
 
 ---
@@ -35,7 +38,7 @@
 |------|------|------|
 | 1 | **Apply .env BFF defaults** | URL=`http://192.168.31.74:8790`，Target=production，consent=yes |
 | 1b | **Enable cloud consent**（若显示 no） | consent=yes |
-| 2 | **Ping BFF /health** | `OK · x02=up · ffmpeg=yes · mock=yes` |
+| 2 | **Ping BFF /health** | 质量闭环：`OK · x02=up · ffmpeg=yes · mock=no`；仅 UI 调试才可 mock=yes |
 | 3 | **Test OTP API**（可选） | 弹出 dev_code |
 | 0 | **Offline mock Diary** | 回 **Diary** 看到 *Offline test memory* |
 | A | **Demo photo → cloud → Diary** | Diary 顶栏 **Cloud processing** → Active tasks 成功（可含 *mock fallback*）→ **新章节** |

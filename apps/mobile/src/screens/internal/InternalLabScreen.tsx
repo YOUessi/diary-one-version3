@@ -20,6 +20,7 @@ import { PipelineTaskList } from '../../components/PipelineTaskList';
 import { AssetLedgerList } from '../../components/AssetLedgerList';
 import { launchEvidenceImport, launchDemoEvidenceImport, launchSimulationVideoImport } from '../../pipeline/launchEvidenceImport';
 import { applyOfflineMockDiary } from '../../pipeline/applyOfflineMockDiary';
+import { applyLabDemoSeed } from '../../store/hydrate';
 import {
   formatSemanticRouteSummary,
   getLastSemanticRouteAudit,
@@ -243,11 +244,25 @@ export default function InternalLabScreen() {
         </View>
 
         <FigmaEyebrow>Evidence import</FigmaEyebrow>
+        <Pressable
+          style={styles.importBtn}
+          onPress={() => {
+            applyLabDemoSeed();
+            Alert.alert(
+              'Lab demo seed loaded',
+              'Figma Fishing sample is Lab-only. Wipe / cold start stays empty (PRD DIA02).',
+            );
+          }}
+        >
+          <Text style={styles.importLabel}>0a · Load Figma demo seed (Lab only)</Text>
+          <Text style={styles.importHint}>
+            Optional UI polish. Commercial cold start and Delete Account stay empty — no Fishing.
+          </Text>
+        </Pressable>
         <Pressable style={styles.importBtn} onPress={() => applyOfflineMockDiary()}>
           <Text style={styles.importLabel}>0 · Offline mock Diary (no cloud)</Text>
           <Text style={styles.importHint}>
-            Instant UI check. If this fails, tell us. If it works, Diary tab is fine — problem is
-            cloud pipeline.
+            Instant UI check. Not a cloud quality path. Real M2 uses BFF with allow_mock_preview=false.
           </Text>
         </Pressable>
         <Pressable style={styles.importBtn} onPress={() => void launchDemoEvidenceImport()}>

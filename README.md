@@ -1,97 +1,65 @@
-# Diary One（Nexleap）
+# Diary One · 版本4
 
-用户把照片/视频交给 App，本地先做轻处理，再上云跑算法，最后在 Diary 里看到自己的 **chapter（日记章节）**。
+本分支 `版本4` 保存 **iOS 1.0.0（构建4）** 的打包源码，来源于 2026-10-21 已完成的签名归档。App 构建入口：`apps/mobile`。
 
-本仓库是 **iOS 内测 / 商用形态** 的开发仓：手机 App、BFF 云接口、算法联调、测试手册都在这里。
+- 包含 Chapter 首页摘要、章内高光与原视频定位、历史 Aha 展示，以及完整比例预览、独立控制栏、全屏播放和退出时保留进度。
+- 包含此前照片格式/尺寸归一化与视频导入反馈修复。
+- 保留 **MobileCLIP-S0 FP16 v07**、云端 **R5_18 / qwen3.8-flash** 和公网 BFF 配置。
+- 仓库提供 App、BFF、云端算法源码。源码上传不代表云端已重新部署或 TestFlight 已更新。
 
----
-
-## 现在做到哪了
-
-### 已经能演示的
-
-1. **Expo Go 真机**：登录 / Skip、配对失败诚实提示、问卷、四个 Tab（Diary / Memory / Device / Account），UI 按 Figma 对齐可测。  
-2. **云端出 chapter**：相册或 Lab Demo → 去重压缩（视频可语义选帧）→ 上传 BFF → Worker → X02/千问 → Diary 出章节。  
-3. **本机联调两套后端**：  
-   - Dev Lite（不起 Docker，适合自己同 Wi‑Fi 调试）  
-   - Docker 量产栈（Postgres + Redis + MinIO + BFF + Worker，更接近以后给别人用）  
-4. **视频语义轻处理（可选）**：Windows BFF 接 MobileCLIP 权重后，可出 512 维向量；手机规则再选 1/3/5/10 帧。没权重时会降级，链路仍能走通。  
-5. **分享**：拼贴、插画、Daily Recap（电脑要有 ffmpeg）。
-
-### 还没到「几十人各自稳定出 chapter」
-
-本机 Dev Lite / 家里 Wi‑Fi **只能给几台手机用**。  
-要马上内测几十人，还需要：
-
-- 一台 **公网 HTTPS** 的量产 BFF（云主机或隧道）  
-- **真千问 Key + 关掉 mock**（否则空日可能是假章节）  
-- 每人 **邮箱 OTP** 登录（账号隔离）  
-- **粗配额**（防止打爆百炼账单）——代码里还要补一小块  
-- **TestFlight / 固定 Expo 入口** 发给内测员  
-
-细节步骤与勾选表见下面「怎么测 / 怎么内测」。
-
-### 先没有做
-
-真耳机 BLE、全员本机 Apple Vision、本地自训小模型上云、精细订阅计费。这些不挡当前软件内测。
+请先阅读 [版本4说明与验证记录](docs/releases/version4/README.md)，构建按 [Xcode 内测步骤](README_build.md) 操作。本分支来自原 `version3.0` 提交，目录使用清理后的结构，原分支保持不变。
 
 ---
 
-## 仓库里有什么
+以下为 2026-10-21 **初次清理源码目录时的历史说明**；其中无提交/远端、模拟器构建与待完成状态均为当时记录。版本4当前范围和限制以上方链接为准。
 
-```text
-apps/mobile/          Expo React Native App（对标 Figma + PRD）
-services/bff/         FastAPI：Dev Lite + Docker 量产 BFF/Worker
-services/algorithm/   算法 / X02 联调
-docs/                 测试手册、路线图、进度与缺口
+# Diary One version3 · 干净源码目录
+
+更新：2026-10-21。当前工作目录是 `Diary_one_version3_clean`，App 唯一构建入口为 `apps/mobile`。
+
+来源为 `Diary_one_main_algorithm` 的 `version3.0` / `b5eb6118c306281ba680a8652967a5903999fa48` 加本地未提交修复（包含 R5_18）。本目录独立初始化为 `version3.0-clean`，尚无提交或远端。原目录保留；本次未推送或覆盖 GitHub 分支。
+
+## 项目结构
+
+| 目录 | 用途 |
+|---|---|
+| `apps/mobile` | Expo / React Native App，MobileCLIP-S0 FP16 v07 |
+| `services/bff` | BFF、Worker、鉴权、上传和结果保存 |
+| `services/algorithm/algorithm` | qwen3.8-flash 云端 Chapter / Aha 算法，当前 R5_18 |
+| `docs` | 合同、交接和历史决策；带日期文件保留其当时结论 |
+| `scripts` | 构建、检查与团队辅助工具 |
+
+已经移除另一套顶层旧项目、旧导出及10个无调用文件；清理范围、保留理由和回归证据见 [清理记录](docs/CODE_CLEANUP.md)。测试日志和安装产物在工作区 `work_logs/evidence/rebuild-audit-20261021-045231`，与源码分开。
+
+## 从干净环境运行检查
+
+当前实测工具为 Node.js 22.23.1、Python 3.13.13、Xcode 26.6。依赖由锁文件或安装声明重新安装；不复制旧 node_modules、Pods 或虚拟环境。
+
+```sh
+cd apps/mobile
+npm ci
+npm run typecheck
+npm run lint
+npm run test:core
+npm run test:evidence
+npm run test:onnx
+npm run test:video-evidence
+npm run test:native-config
 ```
 
----
+在仓库根目录准备 Python 环境（不需要云端密钥即可执行本地回归）：
 
-## 测试手册
-
-| 手册 | 干什么用 |
-|------|----------|
-| [`docs/EXPO_GO_FULL_TEST_GUIDE.md`](docs/EXPO_GO_FULL_TEST_GUIDE.md) | **自己用 Expo Go 真机怎么点**：登录、问卷、Lab、Share、像素勾选 |
-| [`docs/INTERNAL_BETA_FULL_GUIDE.md`](docs/INTERNAL_BETA_FULL_GUIDE.md) | **内测总册**：本机验收 → 关 mock 质量门 → 公网几十人底座 → TestFlight/值守 |
-
-相关补充：
-
-- `docs/WINDOWS_MOBILECLIP_BFF.md` — MobileCLIP 权重怎么下、怎么看 Ping `mc=yes`  
-- `docs/CLOUD_BULK_CHANNEL.md` — PC 大量素材走百炼质量门  
-- `docs/TEST_LOG.md` — 测试结果往这记  
-
----
-
-## 自己本机快速联调（阶段 A）
-
-```powershell
-cd services/bff
-.\scripts\setup-commercial-dev.ps1
-.\scripts\up-docker-stack.ps1      # 或 start-dev-lite-background.ps1
-.\scripts\start-x02.ps1            # Docker 路线需要
-
-cd ..\..\apps\mobile
-npx expo start --go --lan
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r services/bff/requirements.txt -e 'services/algorithm/algorithm[test]'
+(cd services/algorithm/algorithm && ../../../.venv/bin/python -m pytest tests -q)
+(cd services/bff && PYTHONPATH=. ../../.venv/bin/python -m pytest tests -q)
 ```
 
-手机：同一 Wi‑Fi → Lab **Apply → Ping**（看 `x02` / `ffmpeg` / `mc` / `mock`）→ **A Demo** 或 **B 相册真图**。  
-BFF 地址必须是 `192.168.x`，不能是 `172.22`（WSL，手机连不上）。
+## 构建与服务
 
-真算法质量：先 `.\scripts\set-dashscope-key.ps1 -Key "sk-..."`，再用 qwen 起栈并 **关 mock**（见内测总册阶段 B）。
+公网 BFF 配置保持 `https://bff.diary.luxe`，App 只使用用户会话；DashScope、SMTP、API_TOKEN 不进入 App 或本目录。云端 R5_18 上一轮已部署，本次目录清理没有部署或修改服务器。
 
----
+本次重新构建的目标是 **iOS arm64 模拟器 Release 包**。构建、安装和数据保持结果以 [清理记录](docs/CODE_CLEANUP.md) 为准；不等同于真机 IPA 或 TestFlight。真机分发可按 [TestFlight 步骤](docs/TestFlight打包详细步骤.md) 完成 Apple 签名与公司项目配置，目录统一使用当前 `apps/mobile`。
 
-## 产品纪律
-
-- Sync ≠ 云端出章节；未连接设备不造假电量  
-- Tag 点了不会变筛选；Small Memory 没有详情页  
-- Lab/测试导入的图不要当成用户长期「Captured by You」纪律  
-- Demo 小图经常空日——**验收记忆质量请用真实照片**  
-- 勿提交 `.env`、API Key、真实用户素材、MobileCLIP 权重大文件  
-
----
-
-## 许可
-
-私有仓（Nexleap-Tech）。Apple MobileCLIP 权重另受 Apple ML Research 许可约束，仅科研/非商业实验用途，勿随仓库分发。
+保留 S0 FP16 v07 与 qwen3.8-flash，不更换模型。部分内容拒绝会显示部分交付；历史25份私有素材缺失，不能计为通过。文案事实准确性、独立 Aha 选图展示、内容重生成入口、Android 原生抽帧、真机和签名分发仍有未完成项，源码清理及自动测试不代表这些能力全部验收完成。

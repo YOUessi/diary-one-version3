@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Alert, StyleSheet, Text } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
@@ -17,35 +17,36 @@ import { SharePreviewShell } from '../../components/SharePreviewShell';
 type Route = RouteProp<DiaryStackParamList, 'PhotoCollageFlow'>;
 type Nav = NativeStackNavigationProp<DiaryStackParamList, 'PhotoCollageFlow'>;
 
-const collageUriCache = new Map<string, string>();
 
 export default function PhotoCollageFlowScreen() {
-  const { chapterId, phase } = useRoute<Route>().params;
+  const { chapterId, phase, previewUri } = useRoute<Route>().params;
   const navigation = useNavigation<Nav>();
   const chapter = useAppStore((s) => s.chapters.find((c) => c.id === chapterId));
-  const [uri, setUri] = useState<string | null>(null);
 
-  const runPrepare = useCallback(async () => {
+  const runPrepare = useCallback(async (isCurrent: () => boolean) => {
     if (!chapter) {
       navigation.replace('PhotoCollageFlow', { chapterId, phase: 'failed' });
       return;
     }
     try {
       const out = await buildChapterPhotoCollage(chapter);
+      if (!isCurrent()) return;
       if (!out || shouldSimulateSharePrepareFailure()) {
         navigation.replace('PhotoCollageFlow', { chapterId, phase: 'failed' });
         return;
       }
-      collageUriCache.set(chapterId, out);
-      setUri(out);
-      navigation.replace('PhotoCollageFlow', { chapterId, phase: 'preview' });
+      navigation.replace('PhotoCollageFlow', { chapterId, phase: 'preview', previewUri: out });
     } catch {
+      if (!isCurrent()) return;
       navigation.replace('PhotoCollageFlow', { chapterId, phase: 'failed' });
     }
   }, [chapter, chapterId, navigation]);
 
   useEffect(() => {
-    if (phase === 'preparing') void runPrepare();
+    let active = true;
+    const token = useAppStore.getState().sessionToken;
+    if (phase === 'preparing') void runPrepare(() => active && useAppStore.getState().sessionToken === token);
+    return () => { active = false; };
   }, [phase, runPrepare]);
 
   const back = () => navigation.navigate('ChapterDetail', { chapterId });
@@ -79,7 +80,6 @@ export default function PhotoCollageFlowScreen() {
     );
   }
 
-  const previewUri = uri ?? collageUriCache.get(chapterId) ?? chapter.heroUri;
 
   const onShare = async () => {
     if (!previewUri) {

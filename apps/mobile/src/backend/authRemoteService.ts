@@ -1,12 +1,42 @@
 import { useAppStore } from '../store/useAppStore';
 import { resolveProductionBearer } from './resolveProductionBearer';
+import { requireCloudAuth } from '../config/buildProfile';
+import { resolveConfiguredBffUrl } from './bffUrl';
 
 function authBase(): { url: string; token: string } {
   const s = useAppStore.getState();
-  const fromStore = s.productionApiBaseUrl.trim();
-  const fromEnv = (process.env.EXPO_PUBLIC_DEV_BFF_URL ?? '').trim();
-  const url = fromStore || fromEnv;
-  return { url: url.replace(/\/+$/, ''), token: resolveProductionBearer() };
+  const url = resolveConfiguredBffUrl({
+    storeUrl: s.productionApiBaseUrl,
+    envUrl: process.env.EXPO_PUBLIC_DEV_BFF_URL,
+    envAlias: process.env.EXPO_PUBLIC_BFF_BASE_URL,
+  });
+  return { url, token: resolveProductionBearer() };
+}
+
+let activating = false;
+
+async function activateCloudSession(email: string, token: string, nickname: string | undefined, expectedToken: string) {
+  if (activating) throw new Error('Sign-in is already completing.');
+  if (!email.trim() || !token.trim()) throw new Error('The sign-in service returned an incomplete session.');
+  const before = useAppStore.getState();
+  if (before.sessionToken !== expectedToken) throw new Error('Account changed while signing in. Please try again.');
+  activating = true;
+  try {
+    const owner = email.trim().toLowerCase();
+    const { resetLocalAppData, flushPersist } = await import('../store/hydrate');
+    if (useAppStore.getState().sessionToken !== expectedToken) throw new Error('Account changed while signing in.');
+    if ((before.localProfile.email ?? '').trim().toLowerCase() !== owner) {
+      await resetLocalAppData({ onboardingComplete: before.onboardingComplete });
+    }
+    const profile = useAppStore.getState().localProfile;
+    useAppStore.setState({ sessionToken: token, localProfile: { ...profile, email: owner,
+      nickname: nickname?.trim() || profile.nickname || 'Guest' } });
+    await flushPersist();
+    // A poll interrupted by session expiry retains its job. Renewing the same
+    // account can resume it without an app restart or another upload.
+    const { resumeInFlightCloudJobs } = await import('../pipeline/runPipeline');
+    resumeInFlightCloudJobs();
+  } finally { activating = false; }
 }
 
 export type OtpRequestResult =
@@ -25,10 +55,17 @@ export async function requestEmailOtp(email: string): Promise<OtpRequestResult> 
   }
   const { url } = authBase();
   if (!url) {
+    if (requireCloudAuth) {
+      return {
+        ok: false,
+        reason:
+          'BFF URL missing or still a placeholder. Set EXPO_PUBLIC_DEV_BFF_URL to your team BFF (LAN or HTTPS).',
+      };
+    }
     return {
       ok: true,
       email: trimmed,
-      message: 'No BFF URL — use any 6-digit code (local-only mode).',
+      message: 'Lab: no BFF URL — use any 6-digit code (local-only).',
       devCode: undefined,
     };
   }
@@ -59,13 +96,21 @@ export async function requestEmailOtp(email: string): Promise<OtpRequestResult> 
 }
 
 export async function verifyEmailOtpRemote(email: string, code: string): Promise<OtpVerifyResult> {
+  const expectedToken = useAppStore.getState().sessionToken;
   const digits = code.replace(/\D/g, '');
   if (digits.length < 6) {
     return { ok: false, reason: 'invalid_code' };
   }
   const { url } = authBase();
   if (!url) {
-    // Local-only fallback for UI walkthrough without BFF
+    if (requireCloudAuth) {
+      return {
+        ok: false,
+        reason:
+          'BFF URL missing or still a placeholder. Cannot verify OTP without the team cloud.',
+      };
+    }
+    // Lab-only walkthrough without BFF
     const profile = useAppStore.getState().localProfile;
     useAppStore.getState().setLocalProfile({ ...profile, email: email.trim() });
     return { ok: true, email: email.trim() };
@@ -86,16 +131,8 @@ export async function verifyEmailOtpRemote(email: string, code: string): Promise
     if (!res.ok) {
       return { ok: false, reason: body.detail ?? `otp_verify_failed_${res.status}` };
     }
-    const profile = useAppStore.getState().localProfile;
     const sessionToken = (body.session_token ?? '').trim();
-    useAppStore.getState().setLocalProfile({
-      ...profile,
-      email: body.profile?.email ?? email.trim(),
-      nickname: body.profile?.nickname ?? profile.nickname,
-    });
-    if (sessionToken) {
-      useAppStore.getState().setSessionToken(sessionToken);
-    }
+    await activateCloudSession(body.profile?.email ?? body.email ?? email, sessionToken, body.profile?.nickname, expectedToken);
     return {
       ok: true,
       email: body.email ?? email.trim(),
@@ -120,9 +157,13 @@ export async function completeOAuthLogin(
   provider: 'apple' | 'google',
   identityToken: string,
 ): Promise<OAuthResult> {
+  const expectedToken = useAppStore.getState().sessionToken;
   const { url } = authBase();
   if (!url) {
-    return { ok: false, reason: 'Set Production BFF URL (Lab Apply) before Apple/Google sign-in.' };
+    return {
+      ok: false,
+      reason: 'BFF URL missing. Set EXPO_PUBLIC_DEV_BFF_URL (preview) or Lab Apply before Apple/Google sign-in.',
+    };
   }
   try {
     const res = await fetch(`${url}/v1/auth/oauth`, {
@@ -140,16 +181,8 @@ export async function completeOAuthLogin(
       return { ok: false, reason: body.detail ?? `oauth_failed_${res.status}` };
     }
     const email = (body.profile?.email ?? body.email ?? '').trim();
-    const profile = useAppStore.getState().localProfile;
-    useAppStore.getState().setLocalProfile({
-      ...profile,
-      email: email || profile.email,
-      nickname: body.profile?.nickname ?? profile.nickname,
-    });
     const sessionToken = (body.session_token ?? '').trim();
-    if (sessionToken) {
-      useAppStore.getState().setSessionToken(sessionToken);
-    }
+    await activateCloudSession(email, sessionToken, body.profile?.nickname, expectedToken);
     return { ok: true, email, sessionToken: sessionToken || undefined };
   } catch (e) {
     return { ok: false, reason: e instanceof Error ? e.message : String(e) };

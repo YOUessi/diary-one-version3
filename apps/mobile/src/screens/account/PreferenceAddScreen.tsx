@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { colors, layout, spacing } from '../../theme';
+import { colors, layout } from '../../theme';
 import { useAppStore } from '../../store/useAppStore';
 
-/** Figma 126:1117 — Preference Sheet h≈420, top r16; title 22; Cancel text + Save 88×44 r12. */
+/** Figma 126:1149 — sheet h420 r16; scrim 18%; Cancel+Save justify-end gap10. */
 export default function PreferenceAddScreen() {
   const navigation = useNavigation();
   const addPreference = useAppStore((s) => s.addPreference);
@@ -59,17 +59,18 @@ export default function PreferenceAddScreen() {
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(0,0,0,0.18)',
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.card,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingHorizontal: layout.gutterDiary,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.xxxl,
+    paddingTop: 14,
+    paddingBottom: 26,
     minHeight: 420,
+    gap: 14,
   },
   handle: {
     alignSelf: 'center',
@@ -77,26 +78,26 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 2,
     backgroundColor: colors.divider,
-    marginBottom: spacing.lg,
   },
   sheetTitle: {
     fontSize: 22,
     lineHeight: 28,
     fontWeight: '600',
+    letterSpacing: -0.1,
     color: colors.ink,
-    marginBottom: spacing.sm,
   },
   hint: {
     fontSize: 17,
     lineHeight: 24,
     color: colors.secondary,
-    marginBottom: spacing.md,
   },
   input: {
-    minHeight: 132,
+    height: 132,
     borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.divider,
+    paddingHorizontal: 13,
+    paddingVertical: 11,
     fontSize: 17,
     lineHeight: 24,
     color: colors.ink,
@@ -107,18 +108,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
     color: colors.tertiary,
-    marginTop: spacing.md,
   },
   actions: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: spacing.lg,
+    justifyContent: 'flex-end',
+    gap: 10,
     minHeight: 48,
   },
   cancelHit: {
-    minWidth: 88,
+    width: 88,
     minHeight: 44,
+    alignItems: 'center',
     justifyContent: 'center',
   },
   cancel: {
@@ -130,12 +131,11 @@ const styles = StyleSheet.create({
   savePill: {
     backgroundColor: colors.ink,
     borderRadius: 12,
-    minWidth: 88,
+    width: 88,
     minHeight: 44,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
   },
-  saveLabel: { fontSize: 15, lineHeight: 20, color: '#ffffff', fontWeight: '600' },
+  saveLabel: { fontSize: 15, lineHeight: 20, color: colors.paper, fontWeight: '600' },
   saveDisabled: { opacity: 0.4 },
 });

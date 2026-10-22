@@ -1,34 +1,44 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Platform, TextInput, Text, StyleSheet, View, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {
+  Alert,
+  Linking,
+  Platform,
+  TextInput,
+  Text,
+  StyleSheet,
+  View,
+  Pressable,
+} from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import Constants from 'expo-constants';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, layout, radius, spacing, type } from '../../theme';
 import type { OnboardingStackParamList } from '../../navigation/types';
+import type { AuthFlowParams } from '../../navigation/authTypes';
 import { completeWithoutHardware } from '../../onboarding/completeWithoutHardware';
 import {
   requestEmailOtp,
   resolveAuthApiHint,
   completeOAuthLogin,
 } from '../../backend/authRemoteService';
-import { isStoreRelease } from '../../config/buildProfile';
+import { isLabToolsEnabled } from '../../config/buildProfile';
+import { FigmaBackHeader } from '../../components/FigmaBackHeader';
+import { privacyPolicyUrl, termsUrl } from '../account/privacyContent';
 
 WebBrowser.maybeCompleteAuthSession();
 
-const allowInternalSkip =
-  !isStoreRelease &&
-  (__DEV__ ||
-    Constants.appOwnership === 'expo' ||
-    (process.env.EXPO_PUBLIC_ALLOW_SKIP_ONBOARDING ?? '').trim() === '1');
+/** Formal App (incl. Expo Go): no Skip. Lab only with EXPO_PUBLIC_ENABLE_LAB=1. */
+const allowInternalSkip = isLabToolsEnabled;
 
-/** App Store production: email only (APP_STORE_RELEASE A2). Expo Go / preview keep OAuth UI. */
-const showOAuthButtons = !isStoreRelease;
+/** Figma 127:1179 — Apple + Google + Email. Always shown in consumer App. */
+const showOAuthButtons = true;
 
-type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'SignIn'>;
+type Nav = NativeStackNavigationProp<OnboardingStackParamList & AuthFlowParams, 'SignIn'>;
+type SignInRoute = RouteProp<AuthFlowParams, 'SignIn'>;
 
 type GoogleAuthConfig = {
   clientId: string;
@@ -89,7 +99,7 @@ function GoogleConfiguredButton({
   onToken: (token: string) => void;
 }) {
   const [, googleResponse, promptGoogle] = Google.useIdTokenAuthRequest(config);
-  const usedToken = useRef<string | undefined>();
+  const usedToken = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     const token = googleResponse?.type === 'success' ? googleResponse.params.id_token : undefined;
@@ -114,6 +124,8 @@ function GoogleConfiguredButton({
 /** Figma 127:1179 — Apple black / Google white / email field / Continue with Email. */
 export default function SignInScreen() {
   const navigation = useNavigation<Nav>();
+  const route = useRoute<SignInRoute>();
+  const accountMode = route.params?.mode === 'account';
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -126,6 +138,10 @@ export default function SignInScreen() {
           `${provider} sign-in failed`,
           `${result.reason}\n\nBFF: ${resolveAuthApiHint()}`,
         );
+        return;
+      }
+      if (accountMode) {
+        navigation.popToTop();
         return;
       }
       navigation.navigate('PairingStart');
@@ -176,12 +192,15 @@ export default function SignInScreen() {
         );
         return;
       }
-      if (result.devCode) {
-        Alert.alert('Internal beta OTP', `Code for ${trimmed}:\n\n${result.devCode}`);
+      if (result.devCode && isLabToolsEnabled) {
+        Alert.alert('Lab OTP', `Code for ${trimmed}:\n\n${result.devCode}`);
       } else {
         Alert.alert('Check your email', result.message || 'If SMTP is configured, the code was sent.');
       }
-      navigation.navigate('EmailOtp', { email: trimmed });
+      navigation.navigate('EmailOtp', {
+        email: trimmed,
+        mode: accountMode ? 'account' : undefined,
+      });
     } finally {
       setBusy(false);
     }
@@ -191,10 +210,13 @@ export default function SignInScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      <View style={styles.body}>
+      {accountMode ? <FigmaBackHeader /> : null}
+      <View style={[styles.body, accountMode && styles.bodyAccount]}>
         <Text style={styles.title}>Sign in to Diary One</Text>
         <Text style={styles.lead}>
-          Your memories, profile, and Captured by You originals stay with your account.
+          {accountMode
+            ? 'Sign in unlocks cloud Evidence upload for this beta. Memories stay on this device.'
+            : 'Your memories, profile, and Captured by You originals stay with your account.'}
         </Text>
 
         <View style={styles.stack}>
@@ -238,7 +260,26 @@ export default function SignInScreen() {
         ) : null}
 
         <Text style={styles.legal}>
-          By continuing, you agree to the Terms and acknowledge the Privacy Policy.
+          By continuing, you agree to the{' '}
+          {termsUrl() ? (
+            <Text style={styles.legalLink} onPress={() => void Linking.openURL(termsUrl())}>
+              Terms
+            </Text>
+          ) : (
+            <Text style={styles.legalStrong}>Terms</Text>
+          )}{' '}
+          and acknowledge the{' '}
+          {privacyPolicyUrl() ? (
+            <Text
+              style={styles.legalLink}
+              onPress={() => void Linking.openURL(privacyPolicyUrl())}
+            >
+              Privacy Policy
+            </Text>
+          ) : (
+            <Text style={styles.legalStrong}>Privacy Policy</Text>
+          )}
+          .
         </Text>
       </View>
     </SafeAreaView>
@@ -247,51 +288,53 @@ export default function SignInScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.paper },
+  /** Figma 127:1179 — content top ~120; gap 16; controls 52×r12 */
   body: {
     flex: 1,
     paddingHorizontal: layout.gutterDiary,
-    paddingTop: spacing.xl,
+    paddingTop: 76,
     justifyContent: 'flex-start',
   },
-  title: { ...type.titleLarge, color: colors.ink, marginBottom: spacing.sm },
-  lead: { ...type.bodyStory, color: colors.secondary, marginBottom: spacing.xxxl },
-  /** Figma 127:1179 — content gap 16; controls 52×r12 */
-  stack: { gap: spacing.md },
+  bodyAccount: { paddingTop: spacing.md },
+  title: { ...type.titleLarge, color: colors.ink, marginBottom: 16 },
+  lead: { ...type.bodyStory, color: colors.secondary, marginBottom: 16 },
+  stack: { gap: 16 },
   appleBtn: {
     backgroundColor: colors.ink,
     borderRadius: 12,
-    minHeight: 52,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   appleLabel: { fontSize: 15, lineHeight: 20, fontWeight: '600', color: colors.paper },
   googleBtn: {
     backgroundColor: colors.card,
     borderRadius: 12,
-    minHeight: 52,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.divider,
+    width: '100%',
   },
   googleLabel: { fontSize: 15, lineHeight: 20, fontWeight: '600', color: colors.ink },
-  or: { ...type.caption, color: colors.tertiary, textAlign: 'center', marginVertical: spacing.xs },
+  or: { fontSize: 13, lineHeight: 18, color: colors.tertiary, textAlign: 'left', width: '100%' },
   input: {
     backgroundColor: colors.card,
     borderRadius: 12,
-    minHeight: 52,
-    paddingHorizontal: spacing.md,
+    height: 52,
+    paddingHorizontal: 14,
     ...type.bodyStory,
     color: colors.ink,
-    borderWidth: 1,
-    borderColor: colors.divider,
   },
   emailBtn: {
     backgroundColor: colors.ink,
     borderRadius: 12,
-    minHeight: 52,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   emailBtnDisabled: { opacity: 0.4 },
   emailLabel: { fontSize: 15, lineHeight: 20, fontWeight: '600', color: colors.paper },
@@ -306,10 +349,18 @@ const styles = StyleSheet.create({
   skip: { ...type.bodyStory, fontWeight: '700', color: colors.accent },
   skipHint: { ...type.metadata, color: colors.secondary, marginTop: 4 },
   legal: {
-    ...type.caption,
-    color: colors.tertiary,
+    fontSize: 13,
     lineHeight: 18,
-    marginTop: spacing.xxxl,
+    color: colors.tertiary,
+    marginTop: 16,
     marginBottom: spacing.lg,
+  },
+  legalStrong: { fontSize: 13, lineHeight: 18, color: colors.secondary, fontWeight: '600' },
+  legalLink: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.ink,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
   },
 });

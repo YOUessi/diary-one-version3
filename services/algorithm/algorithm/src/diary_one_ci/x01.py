@@ -235,6 +235,7 @@ class QwenChatCompletionsAdapter(EditorialModelAdapter):
 
     provider = "alibaba_model_studio"
     credential_environment = "DASHSCOPE_API_KEY"
+    pricing_currency = "CNY"
 
     def __init__(
         self,
@@ -270,6 +271,9 @@ class QwenChatCompletionsAdapter(EditorialModelAdapter):
         self.pricing_basis = os.environ.get(
             "DIARY_ONE_X01_QWEN_PRICING_BASIS", default_basis
         )
+
+    def request_options(self) -> Dict[str, object]:
+        return {"enable_thinking": False}
 
     @property
     def ready(self) -> bool:

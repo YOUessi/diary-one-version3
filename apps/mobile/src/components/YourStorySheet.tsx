@@ -1,9 +1,10 @@
+import { appStrings } from '../domain/strings';
+import { useAppStore } from '../store/useAppStore';
 import React, { useCallback, useMemo, useRef, useEffect, useState } from 'react';
 import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
-import { colors, font, layout, radius, spacing } from '../theme';
-import { STORY_DISCARD_ALERT } from '../domain/discardCopy';
+import { colors, font, layout, spacing } from '../theme';
 import { DiscardConfirmCard } from './DiscardConfirmCard';
 
 export type YourStorySaveState = 'idle' | 'saving' | 'failed';
@@ -32,6 +33,7 @@ export function YourStorySheet({
   onRemove,
 }: Props) {
   const ref = useRef<BottomSheet>(null);
+  const strings = appStrings(useAppStore((s) => s.language));
   const snapPoints = useMemo(() => ['50%', '75%'], []);
   const [discardOpen, setDiscardOpen] = useState(false);
 
@@ -39,16 +41,19 @@ export function YourStorySheet({
     if (open) {
       ref.current?.expand();
     } else {
-      setDiscardOpen(false);
       ref.current?.close();
     }
   }, [open]);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.35} />
+      <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.18}
+        pressBehavior="none" onPress={() => {
+          if (saveState === 'saving') return;
+          if (dirty) setDiscardOpen(true); else ref.current?.close();
+        }} />
     ),
-    [],
+    [dirty, saveState],
   );
 
   const handleSheetChange = (index: number) => {
@@ -75,6 +80,9 @@ export function YourStorySheet({
       ref={ref}
       index={-1}
       snapPoints={snapPoints}
+      // This editor uses fixed percentage stops, not content measurements.
+      // v5 otherwise waits for an unreported content height and cannot open.
+      enableDynamicSizing={false}
       enablePanDownToClose={!saving && !dirty}
       onChange={handleSheetChange}
       backdropComponent={renderBackdrop}
@@ -83,40 +91,40 @@ export function YourStorySheet({
     >
       <View style={styles.content}>
         <Text style={styles.title}>
-          {hasExistingStory ? 'Edit what you remember' : 'Add what you remember'}
+          {hasExistingStory ? strings.editStory : strings.addStory}
         </Text>
-        <Text style={styles.lead}>What would you like to remember about this memory?</Text>
+        <Text style={styles.lead}>{strings.storyQuestion}</Text>
         <BottomSheetTextInput
           multiline
           editable={!saving}
           value={draft}
           onChangeText={onChangeDraft}
-          placeholder="Add a person, detail, or why this memory mattered to you."
+          placeholder={strings.storyHint}
           placeholderTextColor={colors.tertiary}
           style={styles.input}
         />
-        <Text style={styles.footnote}>This is saved separately from Diary&apos;s AI summary.</Text>
+        <Text style={styles.footnote}>{strings.storyFootnote}</Text>
         {failed ? (
-          <Text style={styles.error}>Couldn&apos;t save. Your text is still here.</Text>
+          <Text style={styles.error}>{strings.saveFailed}</Text>
         ) : null}
         {saving ? (
           <View style={styles.savingRow}>
             <ActivityIndicator color={colors.accent} size="small" />
-            <Text style={styles.savingText}>Saving…</Text>
+            <Text style={styles.savingText}>{strings.saving}</Text>
           </View>
         ) : null}
         <View style={styles.actions}>
           {hasExistingStory && onRemove && !failed ? (
-            <Pressable onPress={onRemove} style={styles.btn}>
-              <Text style={styles.remove}>Remove note</Text>
+            <Pressable onPress={onRemove} style={styles.btn} disabled={saving}>
+              <Text style={styles.remove}>{strings.removeNote}</Text>
             </Pressable>
           ) : null}
           <Pressable onPress={requestClose} style={styles.btn} disabled={saving}>
-            <Text style={styles.cancel}>Cancel</Text>
+            <Text style={styles.cancel}>{strings.cancel}</Text>
           </Pressable>
           {failed ? (
             <Pressable onPress={onSave} style={[styles.btn, styles.save]}>
-              <Text style={styles.saveText}>Try Again</Text>
+              <Text style={styles.saveText}>{strings.retry}</Text>
             </Pressable>
           ) : (
             <Pressable
@@ -124,7 +132,7 @@ export function YourStorySheet({
               style={[styles.btn, styles.save]}
               disabled={!draft.trim() || saving}
             >
-              <Text style={[styles.saveText, (!draft.trim() || saving) && { opacity: 0.4 }]}>Save</Text>
+              <Text style={[styles.saveText, (!draft.trim() || saving) && { opacity: 0.4 }]}>{strings.save}</Text>
             </Pressable>
           )}
         </View>
@@ -132,10 +140,10 @@ export function YourStorySheet({
     </BottomSheet>
       <DiscardConfirmCard
         visible={discardOpen}
-        title={STORY_DISCARD_ALERT.title}
-        message={STORY_DISCARD_ALERT.message}
-        keepLabel={STORY_DISCARD_ALERT.keepEditing}
-        discardLabel={STORY_DISCARD_ALERT.discard}
+        title={strings.discardTitle}
+        message={strings.discardMessage}
+        keepLabel={strings.keepEditing}
+        discardLabel={strings.discard}
         onKeepEditing={() => setDiscardOpen(false)}
         onDiscard={() => {
           setDiscardOpen(false);
@@ -153,7 +161,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
   },
-  handle: { backgroundColor: colors.divider },
+  handle: {
+    backgroundColor: colors.divider,
+    width: 41,
+    height: 4,
+  },
   content: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
   title: {
     fontSize: 22,
@@ -166,12 +178,14 @@ const styles = StyleSheet.create({
   input: {
     minHeight: 120,
     fontSize: font.body,
+    lineHeight: 22,
     color: colors.ink,
     textAlignVertical: 'top',
     borderWidth: 1,
     borderColor: colors.divider,
-    borderRadius: radius.control,
+    borderRadius: 12,
     padding: spacing.md,
+    backgroundColor: colors.paper,
   },
   footnote: { fontSize: font.micro, color: colors.tertiary, marginTop: spacing.sm, lineHeight: 18 },
   error: { fontSize: font.small, color: colors.accent, marginTop: spacing.sm },

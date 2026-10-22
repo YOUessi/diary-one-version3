@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FigmaBackHeader } from '../../components/FigmaBackHeader';
 import { FigmaEyebrow } from '../../components/FigmaScreenHeader';
 import { SettingsRow } from '../../components/SettingsRow';
-import { colors, font, layout, radius, spacing, type } from '../../theme';
+import { colors, font, layout, spacing, type } from '../../theme';
 import type { AccountStackParamList, HelpTopicId } from '../../navigation/types';
 import { HELP_TOPICS } from './helpContent';
 
@@ -88,17 +88,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: layout.gutterDiary,
     marginBottom: spacing.md,
   },
-  /** Figma 127:1139 — search h48 r12; FAQ rows ~50 */
+  /** Figma 127:1139 — search white h48 r12; FAQ rows ~50 */
   search: {
     marginHorizontal: layout.gutterDiary,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.card,
     borderRadius: 12,
     minHeight: 48,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
     ...type.bodyStory,
     color: colors.ink,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
   card: {
     marginHorizontal: layout.gutterDiary,

@@ -13,14 +13,14 @@ export default function PlanScreen() {
       <View style={styles.gutter}>
         <FigmaEyebrow>Plan</FigmaEyebrow>
         <View style={styles.card}>
-          <Text style={styles.planName}>Basic</Text>
+          <Text style={styles.planName}>Not available</Text>
           <Text style={styles.planBody}>
-            Diary One on this device with local memories, manual capture, and optional research API for
-            preview processing. Subscription billing is not wired in this build.
+            Subscription tiers in Figma are placeholders. This build does not sell Basic / Plus / Pro
+            (PRD ACC / D11). Local memories and OTP cloud processing do not imply a paid plan.
           </Text>
         </View>
         <Text style={styles.note}>
-          Upgrade paths will appear here when account and billing services are connected.
+          Billing will appear here only after account and commerce services are approved.
         </Text>
       </View>
     </SafeAreaView>

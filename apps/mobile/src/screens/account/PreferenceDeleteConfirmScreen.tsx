@@ -45,7 +45,7 @@ export default function PreferenceDeleteConfirmScreen() {
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(0,0,0,0.18)',
     justifyContent: 'center',
     paddingHorizontal: layout.gutterDiary,
   },

@@ -4,8 +4,14 @@ import { applyDiaryDayUpdate, applyTodayStatus } from '../store/applyDiaryDay';
 import { useAppStore } from '../store/useAppStore';
 import type { Chapter, SmallMemory } from '../model';
 
-/** Guaranteed Expo Go path: write sample memories without cloud/gallery. */
+import { isLabToolsEnabled } from '../config/buildProfile';
+
+/** Lab-only: write sample memories without cloud. Forbidden on formal consumer App. */
 export function applyOfflineMockDiary(): void {
+  if (!isLabToolsEnabled) {
+    Alert.alert('Not available', 'Offline mock Diary is Lab-only (EXPO_PUBLIC_ENABLE_LAB=1).');
+    return;
+  }
   const dayKey = diaryTodayKey();
   const id = `offline-${Date.now()}`;
   const chapter: Chapter = {

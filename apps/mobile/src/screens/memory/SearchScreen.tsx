@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, TextInput, Pressable, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, Text, TextInput, Pressable, FlatList, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,9 +10,8 @@ import { MemoryTag } from '../../components/MemoryTag';
 import { useAppStore } from '../../store/useAppStore';
 import { searchChapters } from '../../search/localSearch';
 import { formatChapterDateLong } from '../../domain/formatChapterDate';
-import type { DiaryStackParamList } from '../../navigation/types';
-import type { MemoryStackParamList } from '../../navigation/types';
-import { isDevFailSimulationEnabled } from '../../config/devFailSimulation';
+import type { DiaryStackParamList , MemoryStackParamList } from '../../navigation/types';
+
 
 type DiaryRoute = RouteProp<DiaryStackParamList, 'Search'>;
 type MemoryRoute = RouteProp<MemoryStackParamList, 'Search'>;
@@ -33,46 +32,27 @@ export default function SearchScreen() {
   const chapters = useAppStore((s) => s.chapters);
   const [query, setQuery] = useState(initial);
   const debounced = useDebounced(query, 280);
-  const [searchPhase, setSearchPhase] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
   const [retryNonce, setRetryNonce] = useState(0);
-  const searchFailAlternate = useRef(false);
-
-  useEffect(() => {
-    if (debounced.trim() === '') {
-      setSearchPhase('idle');
-      return;
-    }
-    setSearchPhase('loading');
-    const t = setTimeout(() => {
-      if (isDevFailSimulationEnabled() && searchFailAlternate.current) {
-        searchFailAlternate.current = false;
-        setSearchPhase('error');
-        return;
-      }
-      if (isDevFailSimulationEnabled()) searchFailAlternate.current = true;
-      setSearchPhase('done');
-    }, 280);
-    return () => clearTimeout(t);
-  }, [debounced, retryNonce]);
-
-  const results = useMemo(() => {
+  const search = useMemo(() => {
     try {
-      return searchChapters(chapters, debounced);
+      return { results: searchChapters(chapters, debounced), failed: false, attempt: retryNonce };
     } catch {
-      setSearchPhase('error');
-      return [];
+      return { results: [], failed: true, attempt: retryNonce };
     }
-  }, [chapters, debounced]);
+  }, [chapters, debounced, retryNonce]);
+  const results = search.results;
+  const searchPhase = !query.trim() ? 'idle' : query !== debounced ? 'loading' : search.failed ? 'error' : 'done';
 
   const openChapter = (chapterId: string) => {
+    // PRD SEA03 — re-validate before opening; stale hits must not open another scope.
+    const still = useAppStore.getState().chapters.some((c) => c.id === chapterId);
+    if (!still) {
+      Alert.alert('Memory unavailable', 'This result is no longer available. Search again.');
+      setRetryNonce((n) => n + 1);
+      return;
+    }
     navigation.dispatch(
-      CommonActions.navigate({
-        name: 'DiaryTab',
-        params: {
-          screen: 'ChapterDetail',
-          params: { chapterId },
-        },
-      }),
+      CommonActions.navigate({ name: 'ChapterDetail', params: { chapterId } }),
     );
   };
 
@@ -87,7 +67,7 @@ export default function SearchScreen() {
         </View>
       </View>
       <View style={styles.searchRow}>
-        <SearchGlyph />
+        <SearchGlyph size={22} />
         <TextInput
           autoFocus
           value={query}
@@ -103,8 +83,8 @@ export default function SearchScreen() {
           <Text style={styles.hint}>
             Search by person, activity, season, or anything you remember.
           </Text>
-          <Pressable onPress={() => setQuery('coffee last summer')} hitSlop={8}>
-            <Text style={styles.tryExample}>Try: coffee last summer</Text>
+          <Pressable onPress={() => setQuery('coffee')} hitSlop={8}>
+            <Text style={styles.tryExample}>Try: coffee (word match in titles, stories, notes, tags)</Text>
           </Pressable>
         </View>
       ) : searchPhase === 'loading' ? (
@@ -140,6 +120,7 @@ export default function SearchScreen() {
           <Text style={styles.resultCount}>
             {results.length} {results.length === 1 ? 'memory' : 'memories'}
           </Text>
+          {/* Figma Search Results: chapter list only — no conversational agent card */}
           <FlatList
             data={results}
             keyExtractor={(item) => item.chapter.id}
@@ -177,22 +158,22 @@ const styles = StyleSheet.create({
   },
   backText: { fontSize: 28, color: colors.ink, fontWeight: '300' },
   headerWrap: { flex: 1, marginLeft: -spacing.sm },
-  /** Figma 174:1921 — search field h48 r12 */
+  /** Figma 174:1921 — white elevated field h48 r12 */
   searchRow: {
     marginHorizontal: layout.gutterDiary,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    minHeight: 48,
-    paddingRight: spacing.md,
+    backgroundColor: colors.card,
+    borderRadius: radius.card,
+    height: 48,
+    paddingHorizontal: 14,
     marginBottom: spacing.lg,
     gap: 10,
   },
-  input: { flex: 1, ...type.bodyStory, color: colors.ink, paddingVertical: spacing.sm },
+  input: { flex: 1, ...type.bodyStory, color: colors.ink, paddingVertical: 0 },
   hintBlock: { paddingHorizontal: layout.gutterDiary, gap: spacing.sm },
-  hint: { ...type.caption, color: colors.secondary, lineHeight: 20 },
-  tryExample: { ...type.caption, color: colors.tertiary },
+  hint: { ...type.bodyStory, color: colors.secondary, lineHeight: 24 },
+  tryExample: { ...type.captionEmphasis, color: colors.secondary },
   emptyBlock: { padding: layout.gutterDiary, gap: spacing.sm },
   emptyTitle: { fontSize: font.body, fontWeight: '600', color: colors.ink },
   emptyBody: { fontSize: font.small, color: colors.secondary, lineHeight: 20 },
@@ -227,6 +208,24 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.secondary,
   },
+  agentCard: {
+    marginHorizontal: layout.gutterDiary,
+    marginTop: spacing.md,
+    marginBottom: spacing.sm,
+    padding: spacing.md,
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
+    gap: 4,
+  },
+  agentEyebrow: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: colors.tertiary,
+    letterSpacing: 0.4,
+    textTransform: 'uppercase',
+  },
+  agentHeadline: { fontSize: font.body, fontWeight: '700', color: colors.ink, marginTop: 2 },
+  agentBullet: { fontSize: font.small, color: colors.secondary, lineHeight: 18 },
   list: { paddingHorizontal: layout.gutterDiary, paddingBottom: spacing.xl },
   row: {
     paddingVertical: spacing.md,

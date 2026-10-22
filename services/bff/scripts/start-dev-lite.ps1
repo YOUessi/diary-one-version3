@@ -74,18 +74,14 @@ Write-Host "Adapter: $Adapter"
 if ($Adapter -eq "qwen") {
   if (-not $env:DASHSCOPE_API_KEY) {
     Write-Host ""
-    Write-Host "MISSING DASHSCOPE_API_KEY — falling back to fixture + mock (Expo Go path)." -ForegroundColor Yellow
-    Write-Host "For real V1.75: .\scripts\set-dashscope-key.ps1 -Key 'sk-...' then re-run with -Adapter qwen." -ForegroundColor DarkYellow
-    $Adapter = "fixture"
-    if (-not $PSBoundParameters.ContainsKey('AllowMockPreview')) {
-      $AllowMockPreview = $true
-    }
-  } else {
-    Write-Host "DashScope key: present ($($env:DASHSCOPE_API_KEY.Substring(0,[Math]::Min(6,$env:DASHSCOPE_API_KEY.Length)))…)" -ForegroundColor Green
+    Write-Host "FIX: MISSING DASHSCOPE_API_KEY — consumer App requires real qwen (no silent fixture)." -ForegroundColor Red
+    Write-Host "  .\scripts\set-dashscope-key.ps1 -Key 'sk-...'" -ForegroundColor Yellow
+    Write-Host "  Or engineer-only UI: .\scripts\start-dev-lite.ps1 -Adapter fixture -AllowMockPreview" -ForegroundColor DarkYellow
+    exit 1
   }
+  Write-Host "DashScope key: present ($($env:DASHSCOPE_API_KEY.Substring(0,[Math]::Min(6,$env:DASHSCOPE_API_KEY.Length)))...)" -ForegroundColor Green
 } else {
-  Write-Host "Fixture mode: NOT real algorithm — UI/pipeline only." -ForegroundColor Yellow
-  # Expo Go 无 Key 内测：默认允许 mock 回写 Diary（真 qwen 勿开）
+  Write-Host "Fixture mode: NOT real algorithm — Lab/UI only. Do not use for consumer acceptance." -ForegroundColor Yellow
   if (-not $PSBoundParameters.ContainsKey('AllowMockPreview')) {
     $AllowMockPreview = $true
   }
@@ -185,7 +181,7 @@ $pyPathEsc = $BffPythonPath -replace "'", "''"
 $bffCmd = @"
 Set-Location '$ServerRoot'
 `$env:PYTHONPATH = '$pyPathEsc'
-`$env:API_TOKEN = 'dev-token'
+`$env:API_TOKEN = '$(if ($env:API_TOKEN) { $env:API_TOKEN -replace "'","''" } else { "dev-token" })'
 `$env:X02_BASE_URL = 'http://127.0.0.1:$X02Port'
 `$env:DEV_LITE_PORT = '$BffPort'
 `$env:ALLOW_MOCK_PREVIEW = '$allowMock'

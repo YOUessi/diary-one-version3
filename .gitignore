@@ -31,6 +31,7 @@
 # Dev lite runtime
 **/services/bff/dev_lite/data/
 **/services/bff/data/
+**/services/bff/.local/
 
 # Logs & caches
 **/*.log
@@ -38,4 +39,12 @@
 **/expo-env.d.ts
 
 .figma_pixel/
+.figma_audit/
 
+
+# Local generated/export files
+**/.verify_export/
+**/.claude/
+**/build/
+**/native-derived/
+**/*.egg-info/

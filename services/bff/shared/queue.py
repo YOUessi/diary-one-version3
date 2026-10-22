@@ -13,7 +13,11 @@ def redis_client() -> redis.Redis:
 
 
 def enqueue_job(job_id: str) -> None:
-    redis_client().lpush(settings.queue_key, job_id)
+    # Bounded notification channel. Postgres retains the durable pending work.
+    with redis_client().pipeline() as pipe:
+        pipe.lpush(settings.queue_key, job_id)
+        pipe.ltrim(settings.queue_key, 0, 999)
+        pipe.execute()
 
 
 def blocking_pop_job(timeout: int = 5) -> str | None:

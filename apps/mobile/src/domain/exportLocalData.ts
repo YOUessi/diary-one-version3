@@ -1,6 +1,7 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import type { PersistedSnapshot } from '../db/sqlite';
+import { buildUserDataExport } from './dataExport';
 
 export async function exportSnapshotJson(snapshot: PersistedSnapshot): Promise<void> {
   const root = FileSystem.cacheDirectory;
@@ -9,7 +10,7 @@ export async function exportSnapshotJson(snapshot: PersistedSnapshot): Promise<v
   const payload = {
     exported_at: new Date().toISOString(),
     schema: 'DIARY_ONE_LOCAL_EXPORT_V1',
-    snapshot,
+    snapshot: buildUserDataExport(snapshot),
   };
   await FileSystem.writeAsStringAsync(path, JSON.stringify(payload, null, 2));
   const canShare = await Sharing.isAvailableAsync();

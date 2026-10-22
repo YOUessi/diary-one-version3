@@ -17,6 +17,8 @@ import PreferenceAddScreen from '../screens/account/PreferenceAddScreen';
 import PreferenceEditScreen from '../screens/account/PreferenceEditScreen';
 import PreferenceDeleteConfirmScreen from '../screens/account/PreferenceDeleteConfirmScreen';
 import PreferenceSurveyScreen from '../screens/onboarding/PreferenceSurveyScreen';
+import SignInScreen from '../screens/onboarding/SignInScreen';
+import EmailOtpScreen from '../screens/onboarding/EmailOtpScreen';
 import { showInternalLabTools } from '../config/buildProfile';
 import { transparentModalSheetOptions } from './transparentModalOptions';
 import { colors } from '../theme';
@@ -60,6 +62,8 @@ export default function AccountStack() {
       <Stack.Screen name="Plan" component={PlanScreen} />
       <Stack.Screen name="Licenses" component={LicensesScreen} />
       <Stack.Screen name="PreferenceSurvey" component={PreferenceSurveyScreen} />
+      <Stack.Screen name="SignIn" component={SignInScreen} />
+      <Stack.Screen name="EmailOtp" component={EmailOtpScreen} />
       {showInternalLabTools ? <Stack.Screen name="InternalLab" component={InternalLabRoute} /> : null}
     </Stack.Navigator>
   );

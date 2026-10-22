@@ -65,15 +65,15 @@ if (Test-Path $envPath) {
 }
 $envBody = @"
 # Auto-written by setup-commercial-dev.ps1 — restart Metro after change
-# Phone must use Wi-Fi LAN (192.168.x), never WSL 172.22.x
+# Formal consumer App: OTP session only (empty token). Lab: EXPO_PUBLIC_ENABLE_LAB=1
 EXPO_PUBLIC_DEV_BFF_URL=http://${lan}:8790
-EXPO_PUBLIC_DEV_BFF_TOKEN=dev-token
+EXPO_PUBLIC_DEV_BFF_TOKEN=
 "@
 if ($keepLines.Count -gt 0) {
   $envBody = $envBody.TrimEnd() + "`r`n" + ($keepLines -join "`r`n") + "`r`n"
 }
 $envBody | Set-Content -Path $envPath -Encoding UTF8
-Write-Host "Wrote $envPath (BFF http://${lan}:8790)"
+Write-Host "Wrote $envPath (BFF http://${lan}:8790, token empty for OTP)"
 
 $serverEnv = Join-Path $ServerRoot ".env"
 if (-not (Test-Path $serverEnv)) {
@@ -84,7 +84,7 @@ $hasX02 = $false
 $hasToken = $false
 $out = foreach ($line in $lines) {
   if ($line -match '^X02_BASE_URL=') { $hasX02 = $true; "X02_BASE_URL=http://127.0.0.1:8787" }
-  elseif ($line -match '^API_TOKEN=') { $hasToken = $true; "API_TOKEN=dev-token" }
+  elseif ($line -match '^API_TOKEN=') { $hasToken = $true; $line }
   else { $line }
 }
 if (-not $hasX02) { $out += "X02_BASE_URL=http://127.0.0.1:8787" }
@@ -108,7 +108,7 @@ Write-Host ""
 Write-Host "Phone Expo Go:" -ForegroundColor Cyan
 Write-Host "  Metro:  cd $AppRoot ; npx expo start --go --lan --clear"
 Write-Host "  URL:    exp://${lan}:8081"
-Write-Host "  BFF:    http://${lan}:8790   token=dev-token"
+Write-Host "  BFF:    http://${lan}:8790   (OTP login; no shared app token)"
 Write-Host "Admin once:  .\scripts\setup-commercial-dev.ps1 -OpenFirewall"
-Write-Host "Real AI:     set DASHSCOPE_API_KEY then start-dev-lite -Adapter qwen"
-Write-Host "Doc:         diary-one\services\bff\docs\EXPO_GO_DEV_LITE.md"
+Write-Host "Quality:     .\scripts\start-quality-loop.ps1"
+Write-Host "Formal App:  diary-one\docs\FORMAL_APP_ACCEPTANCE.md"

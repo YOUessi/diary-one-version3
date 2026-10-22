@@ -44,7 +44,7 @@ export function ChapterBlock({
         {weakTime ? <Text style={styles.weakTime}>{weakTime}</Text> : null}
         <Text style={styles.title}>{title}</Text>
         {showDateMeta ? <Text style={styles.meta}>{dateLabel}</Text> : null}
-        <View
+        {tags.length > 0 ? <View
           style={styles.tagRow}
           pointerEvents="none"
           accessibilityElementsHidden
@@ -53,7 +53,7 @@ export function ChapterBlock({
           {tags.slice(0, 2).map((t) => (
             <MemoryTag key={t} label={t} tone="primary" />
           ))}
-        </View>
+        </View> : null}
         <Text style={styles.story} numberOfLines={2}>
           {aiStory}
         </Text>
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
   tagRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    gap: spacing.sm,
     height: 26,
     overflow: 'hidden',
   },

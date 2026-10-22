@@ -27,6 +27,17 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from shared.api_auth import require_api_bearer
 from shared.otp import OtpMailConfig, OtpRequestBody, OtpService, OtpStore, OtpVerifyBody
 from shared.oauth import OAuthBody, exchange_oauth
+from shared.quota import (
+    CallerIdentity,
+    assert_inflight,
+    assert_quota,
+    daily_limit,
+    max_inflight_per_user,
+    quota_store,
+    resolve_caller,
+    worker_max_concurrent,
+)
+from shared.result_admit import apply_admission
 from shared.recap_render import ffmpeg_available
 from dev_lite.mobileclip_backend import get_embedder, mobileclip_status
 from shared.sessions import SessionStore
@@ -62,6 +73,9 @@ class Settings(BaseSettings):
     otp_ttl_seconds: int = 600
     # 真云默认 false：X02 失败不得用假结果冒充算法质量
     allow_mock_preview: bool = False
+    day_revision_daily_limit: int = 8
+    day_revision_max_inflight: int = 2
+    worker_max_concurrent: int = 2
     smtp_host: str = ""
     smtp_port: int = 465
     smtp_user: str = ""
@@ -77,6 +91,8 @@ if settings.smtp_host and os.environ.get("EXPOSE_OTP_IN_RESPONSE") is None:
 bearer = HTTPBearer(auto_error=False)
 _jobs: dict[str, dict[str, Any]] = {}
 _sessions = SessionStore(SESSIONS_PATH)
+_process_sem: asyncio.Semaphore | None = None
+_quota = quota_store(DATA / "day_revision_quota.json")
 
 
 def _otp_mail_config() -> OtpMailConfig:
@@ -112,9 +128,10 @@ async def _form_bytes(part: Any) -> bytes:
 
 def require_token(
     creds: Optional[HTTPAuthorizationCredentials] = Depends(bearer),
-) -> None:
+) -> CallerIdentity:
     header = f"Bearer {creds.credentials}" if creds else None
     require_api_bearer(header, settings.api_token, _sessions, invalid_status=401)
+    return resolve_caller(header, settings.api_token, _sessions)
 
 
 app = FastAPI(title="Diary One Dev Lite BFF", version="0.2.0")
@@ -203,8 +220,9 @@ def _hydrate_job_from_disk(job_id: str) -> dict[str, Any] | None:
 
 @app.on_event("startup")
 async def startup() -> None:
-    global _jobs, _revision_index
+    global _jobs, _revision_index, _process_sem
     _ensure_dirs()
+    _process_sem = asyncio.Semaphore(max(1, int(settings.worker_max_concurrent or worker_max_concurrent())))
     _otp_service.mail = _otp_mail_config()
     _jobs, _revision_index = reload_jobs_from_disk(JOBS_DIR, DATA)
     for job_id, job in list(_jobs.items()):
@@ -249,6 +267,9 @@ async def health() -> dict[str, Any]:
         "smtp_configured": bool(settings.smtp_host.strip() and settings.smtp_from.strip()),
         "ffmpeg_available": ffmpeg_available(),
         "mobileclip": mobileclip_status(),
+        "day_revision_daily_limit": settings.day_revision_daily_limit or daily_limit(),
+        "day_revision_max_inflight": settings.day_revision_max_inflight or max_inflight_per_user(),
+        "worker_max_concurrent": settings.worker_max_concurrent or worker_max_concurrent(),
         "x02": {
             "base_url": settings.x02_base_url,
             "reachable": x02_ok,
@@ -290,8 +311,11 @@ async def oauth_login(body: OAuthBody) -> dict[str, Any]:
     return await exchange_oauth(body, _sessions)
 
 
-@app.post("/v1/day-revisions", dependencies=[Depends(require_token)])
-async def create_day_revision(request: Request) -> dict[str, Any]:
+@app.post("/v1/day-revisions")
+async def create_day_revision(
+    request: Request,
+    caller: CallerIdentity = Depends(require_token),
+) -> dict[str, Any]:
     form = await request.form()
     manifest_part = form.get("manifest")
     if manifest_part is None:
@@ -320,12 +344,47 @@ async def create_day_revision(request: Request) -> dict[str, Any]:
                 _jobs[existing_id] = meta
                 existing = meta
         if existing and idempotent_reuse_status(str(existing.get("status", ""))):
-            return {
-                "job_id": existing_id,
-                "day_revision_id": rev_id,
-                "status": existing.get("status", "pending"),
-                "idempotent": True,
-            }
+            owner = str(existing.get("owner_email") or "").strip().lower()
+            caller_email = str(caller.email or "").strip().lower()
+            if owner and caller_email and owner != caller_email:
+                raise HTTPException(
+                    status_code=409,
+                    detail="day_revision_id already used by another account",
+                )
+            if (owner and caller_email and owner == caller_email) or (
+                not owner and not caller_email
+            ):
+                return {
+                    "job_id": existing_id,
+                    "day_revision_id": rev_id,
+                    "status": existing.get("status", "pending"),
+                    "idempotent": True,
+                }
+            if owner and not caller_email:
+                raise HTTPException(
+                    status_code=409,
+                    detail="day_revision_id owned by OTP user; use that session",
+                )
+            if not owner and caller_email:
+                raise HTTPException(
+                    status_code=409,
+                    detail="day_revision_id conflict with unowned legacy job",
+                )
+
+    if caller.email:
+        inflight = sum(
+            1
+            for j in _jobs.values()
+            if j.get("owner_email") == caller.email
+            and str(j.get("status") or "") in ("pending", "processing")
+        )
+        assert_inflight(inflight, limit=settings.day_revision_max_inflight)
+
+    used = assert_quota(
+        caller,
+        _quota,
+        limit=settings.day_revision_daily_limit,
+    )
 
     job_id = str(uuid.uuid4())
     job_dir = JOBS_DIR / job_id
@@ -348,6 +407,7 @@ async def create_day_revision(request: Request) -> dict[str, Any]:
     _jobs[job_id] = {
         "job_id": job_id,
         "day_revision_id": rev_id,
+        "owner_email": caller.email,
         "status": "pending",
         "message": "Queued (dev_lite)",
         "bundle_version": manifest_json.get("bundle_version"),
@@ -359,13 +419,25 @@ async def create_day_revision(request: Request) -> dict[str, Any]:
     _persist_job(job_id, job_dir)
 
     asyncio.create_task(_process_job(job_id, job_dir))
-    return {"job_id": job_id, "day_revision_id": rev_id, "status": "pending"}
+    return {
+        "job_id": job_id,
+        "day_revision_id": rev_id,
+        "status": "pending",
+        "quota_used": used,
+        "quota_limit": settings.day_revision_daily_limit,
+    }
 
 
-@app.get("/v1/jobs/{job_id}", dependencies=[Depends(require_token)])
-async def get_job(job_id: str) -> dict[str, Any]:
+@app.get("/v1/jobs/{job_id}")
+async def get_job(
+    job_id: str,
+    caller: CallerIdentity = Depends(require_token),
+) -> dict[str, Any]:
     job = _hydrate_job_from_disk(job_id)
     if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    owner = job.get("owner_email")
+    if caller.email and owner and owner != caller.email:
         raise HTTPException(status_code=404, detail="Job not found")
 
     body: dict[str, Any] = {
@@ -452,6 +524,12 @@ async def _call_x02(job_dir: Path) -> dict[str, Any]:
 
 
 async def _process_job(job_id: str, job_dir: Path) -> None:
+    sem = _process_sem or asyncio.Semaphore(1)
+    async with sem:
+        await _process_job_inner(job_id, job_dir)
+
+
+async def _process_job_inner(job_id: str, job_dir: Path) -> None:
     job = _jobs[job_id]
     job["status"] = "processing"
     job["message"] = "Calling X02…"
@@ -471,11 +549,26 @@ async def _process_job(job_id: str, job_dir: Path) -> None:
             job["message"] = "Mock preview (X02 returned no grounded memories)"
         else:
             job["message"] = "X02 preview succeeded"
+        result, envelope = apply_admission(
+            result,
+            bundle_version=job.get("bundle_version"),
+            allow_mock=settings.allow_mock_preview,
+            manifest_bytes=(job_dir / "bundle.json").read_bytes(),
+            bundle_dir=job_dir,
+        )
         (job_dir / "result.json").write_text(
             json.dumps(result, ensure_ascii=False), encoding="utf-8"
         )
-        job["status"] = "succeeded"
-        job["result"] = result
+        if envelope.get("fail_job"):
+            job["status"] = "failed"
+            job["error"] = str(envelope.get("admit_reason") or "not_admitted")
+            job["message"] = f"Result not admitted ({envelope.get('admit_reason')})"
+            job["result"] = result
+        else:
+            job["status"] = "succeeded"
+            job["result"] = result
+            if envelope.get("admit_reason") == "no_grounded_memory":
+                job["message"] = "Completed with no grounded memories (honest empty)"
         _persist_job(job_id, job_dir)
     except Exception as e:  # noqa: BLE001
         if settings.allow_mock_preview:
@@ -483,6 +576,11 @@ async def _process_job(job_id: str, job_dir: Path) -> None:
             result = _mock_preview(manifest)
             result["dev_lite_fallback"] = True
             result["dev_lite_x02_error"] = str(e)
+            result, _envelope = apply_admission(
+                result,
+                bundle_version=job.get("bundle_version"),
+                allow_mock=True,
+            )
             (job_dir / "result.json").write_text(
                 json.dumps(result, ensure_ascii=False), encoding="utf-8"
             )
