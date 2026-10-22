@@ -19,7 +19,7 @@ from . import narrative_focus, frame_selection, frame_observation, final_moment_
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_18'
+EDITOR_REVISION = 'SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_19'
 
 
 def obj(properties, required=None):
@@ -2712,7 +2712,7 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
 
 def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved_asset_ids,
         call_model, stage_runs, gateway, run_started, namespace):
-    from . import x02, product_evidence, final_copy_evidence
+    from . import x02, product_evidence, final_copy_evidence, model_recovery
     assets = bundle.manifest['assets']
     facts, asset_map = catalog(assets, observations)
     initial_facts = deepcopy(facts)
@@ -2750,16 +2750,26 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
                 stage_runs.append(run)
                 return run.output
             except x02.X02Error as exc:
+                if isinstance(exc, x02.X02StageCallError):
+                    x02._retain_failed_stage_run(gateway, stage_runs, exc.stage_run)
                 if final_provider_failure_is_terminal(exc):
                     terminal_model_failure = stage
-                raise
-            except OSError:
-                # One retry for a lost transport response; never reinterpret an
-                # unavailable model as an empty day. Token use may be unknown.
+                if not model_recovery.retryable_model_failure(exc):
+                    raise
+                transport_failures.append({'stage': stage, 'attempt': attempt + 1,
+                    'code': getattr(exc, 'code', 'MODEL_TRANSPORT_FAILED'),
+                    'usage_known': False, 'retry': attempt == 0})
+                if attempt:
+                    raise
+                model_recovery.wait_before_retry(attempt)
+            except OSError as exc:
+                if not model_recovery.retryable_model_failure(exc):
+                    raise
                 transport_failures.append({'stage': stage, 'attempt': attempt + 1,
                                            'usage_known': False, 'retry': attempt == 0})
                 if attempt:
                     raise
+                model_recovery.wait_before_retry(attempt)
     if facts:
         editorial_draft = ask('S07_PRODUCT_EDITOR', EDITOR_PROMPT, editor_schema, editor_input)
         editorial_output = ask('S08_PRODUCT_STRUCTURE_REVIEW', STRUCTURE_REVIEW_PROMPT, editor_schema,
@@ -3078,7 +3088,7 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
     verification_incomplete = bool(media_selection_rejections) or any(r['status'] == 'UNVERIFIED' for r in visual_ledger + recovery_visual_ledger + moment_value_ledger + recovery_value_ledger)
     delivery = ('PIPELINE_BLOCKED' if unresolved_asset_ids or (not visible and (memories or rejected or verification_incomplete)) else
                 'NO_GROUNDED_MEMORY' if not visible else 'READY_WITH_ITEM_BLOCKS' if blocked or coverage_incomplete else 'READY_PRIMARY_COPY')
-    if visible and verification_incomplete:
+    if visible and verification_incomplete and not unresolved_asset_ids:
         delivery = 'READY_WITH_ITEM_BLOCKS'
     semantic = 'CHAPTER_DAY' if published_chapters else 'HIGHLIGHT_DAY' if published_ahas else 'EMPTY_DAY'
     metrics = [x02._metric_from_run(r) for r in stage_runs]

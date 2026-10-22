@@ -42,6 +42,24 @@ def _require(condition, reason):
         raise ValueError(reason)
 
 
+def incomplete_input_reason(result):
+    """Reject processing gaps independently of a claimed ready/complete state.
+
+    Historical Product results may omit coverage metadata. PARTIAL observations
+    still carry usable evidence; FAILED observations represent unresolved input.
+    """
+    if result.get('unresolved_asset_ids'):
+        return 'incomplete_input:unresolved_assets'
+    observations = result.get('observations')
+    if isinstance(observations, list) and any(
+        isinstance(row, dict) and row.get('status') == 'FAILED' for row in observations
+    ):
+        return 'incomplete_input:failed_observation'
+    if result.get('coverage_status') in ('INCOMPLETE', 'PARTIAL_UNRESOLVED'):
+        return 'incomplete_input:coverage_status'
+    return None
+
+
 def _ids(value, allowed, *, required=False):
     _require(isinstance(value, list) and (not required or bool(value)) and
              all(isinstance(x, str) for x in value) and len(value) == len(set(value)) and
@@ -96,6 +114,8 @@ def validate_result_contract(result, manifest_bytes, bundle_dir=None):
     if error:
         raise ValueError('result_schema_invalid:' + '/'.join(map(str, error.absolute_path)))
     validate_real_result(payload)
+    incomplete = incomplete_input_reason(payload)
+    _require(incomplete is None, incomplete)
     _require(isinstance(manifest_bytes, bytes) and bool(manifest_bytes), 'missing_input_manifest')
     manifest = json.loads(manifest_bytes)
     _require(result.get('bundle_manifest_sha256') == hashlib.sha256(manifest_bytes).hexdigest(),
@@ -145,11 +165,6 @@ def validate_result_contract(result, manifest_bytes, bundle_dir=None):
     frame_refs(result.get('evidence_frame_ids', []))
     unresolved = _ids(result.get('unresolved_asset_ids', []), assets)
     _require(observed_sources | set(unresolved) == set(assets), 'missing_input_asset_accounting')
-    if result.get('coverage_status') == 'COMPLETE':
-        _require(not unresolved, 'complete_with_unresolved_input')
-    if result['delivery_state'] == 'NO_GROUNDED_MEMORY':
-        _require(not unresolved and all(o.get('status') != 'FAILED' for o in observations.values()),
-                 'failed_input_is_not_honest_empty')
     moments = _index(result.get('moments'))
     moment_sources = {}
     if schema == STAGED:

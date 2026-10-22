@@ -257,8 +257,8 @@ def _write_x02_run_audit(
         "run_id": run_id,
         "recorded_at": _utc_now(),
         "session_id": session_id,
-        "evaluation_run_mode": X02_EVALUATION_RUN_MODE,
-        "cross_run_semantic_cache_used": False,
+        "evaluation_run_mode": trace.get("evaluation_run_mode", X02_EVALUATION_RUN_MODE),
+        "cross_run_semantic_cache_used": trace.get("cross_run_semantic_cache_used", False),
         "image_payloads_included": False,
         "manifest": manifest,
         "result": result,
@@ -305,6 +305,7 @@ def _write_x02_failed_run_audit(
         stage_runs
         if historical_v03 else [
             item for item in stage_runs if item.get("call_status") == "COMPLETED"
+            and item.get("model_calls", 0) > 0
         ]
     )
     audit = {
@@ -313,8 +314,11 @@ def _write_x02_failed_run_audit(
         "recorded_at": _utc_now(),
         "session_id": session_id,
         "status": "FAILED",
-        "evaluation_run_mode": X02_EVALUATION_RUN_MODE,
-        "cross_run_semantic_cache_used": False,
+        "evaluation_run_mode": (
+            'RESUMED_PERCEPTION_CHECKPOINT'
+            if error.perception_checkpoint.get('reused_assets') else X02_EVALUATION_RUN_MODE
+        ),
+        "cross_run_semantic_cache_used": bool(error.perception_checkpoint.get('reused_assets')),
         "image_payloads_included": False,
         "failure": {
             "stage": error.stage,
@@ -344,6 +348,8 @@ def _write_x02_failed_run_audit(
     }
     if not historical_v03:
         audit["stage_call_attempts"] = stage_runs
+    if error.perception_checkpoint:
+        audit['perception_checkpoint'] = error.perception_checkpoint
     _assert_no_embedded_images(audit)
     session_root = audit_root / session_id
     archive = session_root / "failures" / (failure_id + ".failed_run_audit.json")
@@ -929,8 +935,11 @@ class X01RequestHandler(BaseHTTPRequestHandler):
                 manifest = loaded_manifest
                 pipeline_started = time.monotonic()
                 if request_path == X02_PREVIEW_PATH:
-                    runner = run_x02_product if _product_editor_enabled() else run_x02
-                    result = runner(manifest_path, self.stage_gateway)
+                    if _product_editor_enabled():
+                        result = run_x02_product(manifest_path, self.stage_gateway,
+                            checkpoint_dir=self.x02_run_audit_dir / 'perception_checkpoints')
+                    else:
+                        result = run_x02(manifest_path, self.stage_gateway)
                 elif request_path == X02_V03_PREVIEW_PATH:
                     result = run_x02_v03(manifest_path, self.stage_gateway)
                 else:
@@ -998,13 +1007,13 @@ class X01RequestHandler(BaseHTTPRequestHandler):
                 "model_call_completed": (
                     bool(exc.stage_runs)
                     if request_path == X02_V03_PREVIEW_PATH else any(
-                        run.call_status == "COMPLETED" for run in exc.stage_runs
+                        run.call_status == "COMPLETED" and run.model_calls > 0 for run in exc.stage_runs
                     )
                 ),
                 "failure_audit_saved": bool(failure_id),
             }
             if request_path != X02_V03_PREVIEW_PATH:
-                response["model_call_attempted"] = bool(exc.stage_runs)
+                response["model_call_attempted"] = any(run.model_calls > 0 for run in exc.stage_runs)
             if failure_id:
                 response["failure_id"] = failure_id
             status = 422 if exc.code in (

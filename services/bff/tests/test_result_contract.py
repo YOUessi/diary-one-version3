@@ -8,6 +8,7 @@ import pytest
 from PIL import Image
 
 from shared.result_admit import apply_admission
+from shared.result_contract import validate_result_contract
 
 
 def fixture():
@@ -70,3 +71,24 @@ def test_corrupt_or_wrong_media_cannot_publish(tmp_path):
     assert not admit()['publish_admit']
     path.unlink()
     assert not admit()['publish_admit']
+
+
+def test_staged_complete_label_cannot_hide_failed_observation():
+    result, raw = fixture()
+    result['observations'][0]['status'] = 'FAILED'
+
+    with pytest.raises(ValueError):
+        validate_result_contract(result, raw)
+    _, env = apply_admission(result, manifest_bytes=raw,
+                            bundle_version='DIARY_ONE_APP_LIBRARY_BUNDLE_V04', allow_mock=False)
+    assert not env['publish_admit'] and env['fail_job']
+
+
+def test_staged_partial_observation_with_complete_coverage_still_publishes():
+    result, raw = fixture()
+    result['observations'][0]['status'] = 'PARTIAL'
+
+    _, env = apply_admission(result, manifest_bytes=raw,
+                            bundle_version='DIARY_ONE_APP_LIBRARY_BUNDLE_V04', allow_mock=False)
+
+    assert env['publish_admit'] and env['input_bound'], env

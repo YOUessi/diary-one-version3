@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any
 from pathlib import Path
 
-from shared.result_contract import validate_result_contract, CONTRACT_VERSION
+from shared.result_contract import incomplete_input_reason, validate_result_contract, CONTRACT_VERSION
 
 
 # Delivery states that may surface to Diary (honest empty included separately).
@@ -46,6 +46,7 @@ def build_publish_envelope(
 ) -> dict[str, Any]:
     delivery = str(result.get("delivery_state") or "").strip()
     is_mock = bool(result.get("dev_lite_fallback"))
+    incomplete = incomplete_input_reason(result)
     reason = "ok"
     admit = True
     fail_job = False
@@ -58,6 +59,10 @@ def build_publish_envelope(
         admit = False
         fail_job = True
         reason = "pipeline_blocked"
+    elif incomplete:
+        admit = False
+        fail_job = True
+        reason = incomplete
     elif delivery == "NO_GROUNDED_MEMORY":
         # Honest empty day — admit as empty, do not invent filler (DIA02 + AI03).
         admit = True

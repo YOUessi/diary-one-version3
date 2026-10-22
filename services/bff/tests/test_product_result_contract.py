@@ -12,7 +12,7 @@ import pytest
 from PIL import Image
 
 from shared.result_admit import apply_admission
-from shared.result_contract import CONTRACT_VERSION, SCHEMA_SHA256
+from shared.result_contract import CONTRACT_VERSION, SCHEMA_SHA256, validate_result_contract
 
 FIXTURES = Path(__file__).parent / 'fixtures/product_contract'
 
@@ -84,3 +84,65 @@ def test_product_requires_evidence_and_rejects_changed_or_missing_frame_bytes(tm
     assert not admit(result, manifest, raw, tmp_path)[1]['publish_admit']
     path.unlink()
     assert not admit(result, manifest, raw, tmp_path)[1]['publish_admit']
+
+
+def empty_result(result):
+    result.update(delivery_state='NO_GROUNDED_MEMORY', semantic_day_state='EMPTY_DAY',
+                  output_mode='EMPTY_DAY', chapters=[], ahas=[], selected_memory_outcomes=[])
+    result['observations'][0].update(status='INSUFFICIENT_EVIDENCE', facts=[])
+    result['decision_trace'].update(verified_facts={}, visual_fact_ledger=[], recovery_visual_ledger=[],
+                                    selected_structure={'chapters': [], 'moments': []})
+
+
+@pytest.mark.parametrize('delivery', ['READY_WITH_ITEM_BLOCKS', 'NO_GROUNDED_MEMORY'])
+@pytest.mark.parametrize('signal', ['INCOMPLETE', 'PARTIAL_UNRESOLVED', 'unresolved', 'FAILED'])
+def test_product_contract_and_admission_reject_each_incomplete_input_signal(tmp_path, delivery, signal):
+    result, manifest, raw = fixture(tmp_path, 'photo_v07')
+    if delivery == 'NO_GROUNDED_MEMORY':
+        empty_result(result)
+    else:
+        result['delivery_state'] = delivery
+    if signal == 'unresolved':
+        # Product historically permits omitted coverage; unresolved IDs alone must block.
+        result.pop('coverage_status')
+        result['unresolved_asset_ids'] = [manifest['assets'][0]['asset_id']]
+    elif signal == 'FAILED':
+        # Neither a forged COMPLETE label nor empty unresolved IDs can conceal failure.
+        result['observations'][0]['status'] = 'FAILED'
+    else:
+        result['coverage_status'] = signal
+
+    with pytest.raises(ValueError):
+        validate_result_contract(result, raw, tmp_path)
+    _, envelope = admit(result, manifest, raw, tmp_path)
+    assert not envelope['publish_admit'] and envelope['fail_job']
+
+
+def test_complete_partial_observation_with_grounded_facts_still_publishes(tmp_path):
+    result, manifest, raw = fixture(tmp_path, 'photo_v07')
+    result['observations'][0]['status'] = 'PARTIAL'
+
+    _, envelope = admit(result, manifest, raw, tmp_path)
+
+    assert envelope['publish_admit'] and envelope['input_bound'], envelope
+
+
+def test_complete_insufficient_evidence_is_an_honest_empty_result(tmp_path):
+    result, manifest, raw = fixture(tmp_path, 'photo_v07')
+    empty_result(result)
+
+    saved, envelope = admit(result, manifest, raw, tmp_path)
+
+    assert envelope['publish_admit'] and envelope['input_bound'], envelope
+    assert not envelope['fail_job']
+    assert saved['chapters'] == [] and saved['ahas'] == []
+
+
+def test_historical_product_without_optional_coverage_fields_still_publishes(tmp_path):
+    result, manifest, raw = fixture(tmp_path, 'nagoya_r52')
+    result.pop('coverage_status')
+    result.pop('unresolved_asset_ids')
+
+    _, envelope = admit(result, manifest, raw, tmp_path)
+
+    assert envelope['publish_admit'] and envelope['input_bound'], envelope

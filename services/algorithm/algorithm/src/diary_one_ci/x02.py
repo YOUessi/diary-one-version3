@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import copy
+import http.client
 import itertools
 import json
 import math
@@ -9,7 +10,7 @@ import re
 import time
 import unicodedata
 import uuid
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, replace
 from importlib import resources
 from pathlib import Path
 from typing import Dict, List, Mapping, Optional, Sequence, Tuple
@@ -33,6 +34,7 @@ from . import codex_grounded_recording_editor as grounded_recording_editor
 from . import codex_aha_set_editor as aha_set_editor
 from . import codex_experience_editor as experience_editor
 from . import app_client_profile as client_profile
+from . import model_recovery
 from . import codex_v174_writer as v174_writer
 from . import codex_writer_exit as writer_exit
 from .x01 import (
@@ -395,11 +397,13 @@ class X02ExecutionError(X02Error):
         stage: str,
         code: str,
         stage_runs: Sequence["StageRun"],
+        perception_checkpoint: Optional[Dict[str, object]] = None,
     ) -> None:
         super().__init__(message)
         self.stage = stage
         self.code = code
         self.stage_runs = tuple(stage_runs)
+        self.perception_checkpoint = perception_checkpoint or {}
 
 
 @dataclass(frozen=True)
@@ -459,10 +463,10 @@ def _call_stage_transport(
     pricing_basis: str,
     audit_pre_response_failures: bool,
 ) -> Tuple[int, Mapping[str, str], bytes, float]:
-    """Turn pre-response transport failures into an auditable failed stage run.
+    """Turn interrupted transport responses into an auditable failed stage run.
 
-    HTTP responses still flow through the provider-specific historical handling
-    below. This boundary only covers failures for which no HTTP response exists.
+    Complete HTTP responses flow through provider-specific handling below.
+    This boundary also covers incomplete bodies after headers were received.
     """
 
     started = time.monotonic()
@@ -470,7 +474,7 @@ def _call_stage_transport(
         status, response_headers, response_data = transport(
             url, headers, body, timeout_seconds
         )
-    except (X01Error, TimeoutError, OSError) as exc:
+    except (X01Error, TimeoutError, OSError, http.client.HTTPException) as exc:
         # Historical V03 allowed the adapter/transport exception to reach the
         # server's legacy model_request_failed boundary. V04.1 and explicitly
         # opted-in product calls retain failed attempts as StageRuns; otherwise
@@ -495,7 +499,7 @@ def _call_stage_transport(
             call_status="FAILED_BEFORE_RESPONSE",
         )
         raise X02StageCallError(
-            "%s model transport failed before an HTTP response: %s" % (stage, exc),
+            "%s model transport failed before a complete response: %s" % (stage, exc),
             stage_run=failure_run,
             code=code,
         ) from exc
@@ -528,6 +532,7 @@ class _RecordingStageGateway(StageModelGateway):
         self.model = gateway.model
         self.credential_environment = getattr(gateway, "credential_environment", "MODEL_API_KEY")
         self.runs: List[StageRun] = []
+        self.perception_checkpoint: Dict[str, object] = {}
 
     @property
     def ready(self) -> bool:
@@ -1173,9 +1178,30 @@ def run_x02(manifest_path: Path, gateway: StageModelGateway) -> Dict[str, object
     return _run_x02_with_policy(manifest_path, gateway, "V04_1")
 
 
-def run_x02_product(manifest_path: Path, gateway: StageModelGateway) -> Dict[str, object]:
+def run_x02_product(manifest_path: Path, gateway: StageModelGateway, *,
+                    checkpoint_dir: Optional[Path] = None) -> Dict[str, object]:
     """Product editorial path; legacy/research entry points remain reproducible."""
-    return _run_x02_with_policy(manifest_path, gateway, "V04_1", product_editor=True)
+    return _run_x02_with_policy(manifest_path, gateway, "V04_1", product_editor=True,
+                                checkpoint_dir=checkpoint_dir)
+
+
+def _perception_checkpoint_store(root, bundle, gateway):
+    from .perception_checkpoint import PerceptionCheckpointStore
+    # Invalidate on code, contracts, input bytes, model or request option changes.
+    package = Path(__file__).parent
+    implementation = {str(p.relative_to(package)): sha256_file(p)
+                      for p in sorted(package.rglob('*')) if p.suffix in ('.py', '.json')}
+    underlying = gateway
+    while isinstance(underlying, _RecordingStageGateway):
+        underlying = underlying.gateway
+    adapter = getattr(underlying, 'adapter', None)
+    options = adapter.request_options() if adapter is not None and hasattr(adapter, 'request_options') else {}
+    identity = {'manifest_sha256': sha256_file(bundle.manifest_path),
+                'provider': gateway.provider, 'model': gateway.model,
+                'endpoint_sha256': sha256_bytes(str(getattr(adapter, 'base_url', '')).encode()),
+                'request_options_sha256': sha256_bytes(canonical_bytes(options)),
+                'implementation_sha256': sha256_bytes(canonical_bytes(implementation))}
+    return PerceptionCheckpointStore(root, identity)
 
 
 def _retain_failed_stage_run(
@@ -1183,9 +1209,11 @@ def _retain_failed_stage_run(
     stage_runs: List[StageRun],
     stage_run: StageRun,
 ) -> None:
-    stage_runs.append(stage_run)
+    if all(run is not stage_run for run in stage_runs):
+        stage_runs.append(stage_run)
     if isinstance(gateway, _RecordingStageGateway):
-        gateway.runs.append(stage_run)
+        if all(run is not stage_run for run in gateway.runs):
+            gateway.runs.append(stage_run)
 
 
 def run_x02_v041(manifest_path: Path, gateway: StageModelGateway, *,
@@ -1210,12 +1238,14 @@ def _run_x02_with_policy(
     editorial_order_policy: Optional[str] = None,
     recording_editor_policy: Optional[str] = None,
     product_editor: bool = False,
+    checkpoint_dir: Optional[Path] = None,
 ) -> Dict[str, object]:
     recorder = _RecordingStageGateway(gateway)
     try:
         return _run_x02_impl(manifest_path, recorder, policy_version,
                              editorial_order_policy=editorial_order_policy,
-                             recording_editor_policy=recording_editor_policy, product_editor=product_editor)
+                             recording_editor_policy=recording_editor_policy, product_editor=product_editor,
+                             checkpoint_dir=checkpoint_dir)
     except X02ModelNotReady:
         raise
     except X02StageCallError as exc:
@@ -1223,7 +1253,9 @@ def _run_x02_with_policy(
             str(exc),
             stage=exc.stage_run.stage,
             code=exc.code,
-            stage_runs=[*recorder.runs, exc.stage_run],
+            stage_runs=recorder.runs if any(run is exc.stage_run for run in recorder.runs)
+                       else [*recorder.runs, exc.stage_run],
+            perception_checkpoint=recorder.perception_checkpoint,
         ) from exc
     except X02ContractError as exc:
         if not recorder.runs:
@@ -1233,6 +1265,7 @@ def _run_x02_with_policy(
             stage="DETERMINISTIC_CONTRACT_GATE",
             code="POST_MODEL_CONTRACT_VIOLATION",
             stage_runs=recorder.runs,
+            perception_checkpoint=recorder.perception_checkpoint,
         ) from exc
     except X02Error as exc:
         raise X02ExecutionError(
@@ -1240,6 +1273,7 @@ def _run_x02_with_policy(
             stage="MODEL_GATEWAY",
             code="MODEL_REQUEST_FAILED",
             stage_runs=recorder.runs,
+            perception_checkpoint=recorder.perception_checkpoint,
         ) from exc
 
 
@@ -1251,6 +1285,7 @@ def _run_x02_impl(
     editorial_order_policy: Optional[str] = None,
     recording_editor_policy: Optional[str] = None,
     product_editor: bool = False,
+    checkpoint_dir: Optional[Path] = None,
 ) -> Dict[str, object]:
     if recording_editor_policy not in (
         None, recording_editor.POLICY_VERSION, grounded_recording_editor.POLICY_VERSION,
@@ -1303,6 +1338,17 @@ def _run_x02_impl(
     )
     if not gateway.ready:
         raise X02ModelNotReady("X02 staged model gateway is not ready")
+
+    checkpoint = None
+    checkpoint_audit = {'enabled': checkpoint_dir is not None, 'reused_batches': 0,
+                        'reused_assets': 0, 'saved_batches': 0, 'events': []}
+    if checkpoint_dir is not None and isinstance(gateway, _RecordingStageGateway):
+        gateway.perception_checkpoint = checkpoint_audit
+    if checkpoint_dir is not None and product_editor:
+        try:
+            checkpoint = _perception_checkpoint_store(checkpoint_dir, bundle, gateway)
+        except (OSError, ValueError, TypeError) as exc:
+            checkpoint_audit['events'].append({'status': 'UNAVAILABLE', 'error_type': type(exc).__name__})
 
     namespace = _session_namespace(bundle)
     assets = list(bundle.manifest["assets"])
@@ -1414,17 +1460,43 @@ def _run_x02_impl(
             return failed_observations, failed_ledger
         error_code = ""
         error_detail = ""
+        transport_retryable = False
+        schema = (experience_editor.perception_schema(PERCEPTION_SCHEMA_GENERIC_ANIMAL)
+                  if experience_editor_active else PERCEPTION_SCHEMA_GENERIC_ANIMAL
+                  if stop_loss_v041 else PERCEPTION_SCHEMA)
+        cache_key, stage_run, checkpoint_hit = None, None, False
+        if checkpoint is not None:
+            try:
+                cache_key = checkpoint.key(prompt, schema, evidence)
+                receipt = checkpoint.load(cache_key)
+                if receipt is not None:
+                    prior = StageRun(**receipt)
+                    if (prior.provider != gateway.provider or prior.model != gateway.model
+                            or prior.call_status != 'COMPLETED' or not prior.stage.startswith('S04_PERCEPTION')):
+                        raise ValueError('checkpoint model/stage mismatch')
+                    cached_observations, _ = _validate_perception_batch(
+                        namespace, batch_assets, prior, app_asset_ids, unicode_motifs=stop_loss_v041,
+                        retain_extended_fact_text=stop_loss_v041, generic_animal_subjects=stop_loss_v041,
+                        representative_fact_frame=experience_editor_active)
+                    if any(item['status'] == 'FAILED' for item in cached_observations):
+                        raise ValueError('checkpoint observation rejected')
+                    stage_run = replace(prior, stage=stage_name, input_tokens=0, output_tokens=0,
+                                        latency_seconds=0.0, model_calls=0, model_frame_count=0)
+                    checkpoint_hit = True
+                    checkpoint_audit['reused_batches'] += 1
+                    checkpoint_audit['reused_assets'] += len(batch_assets)
+                    checkpoint_audit['events'].append({'status': 'REVALIDATED', 'key': cache_key,
+                        'asset_ids': [a['asset_id'] for a in batch_assets],
+                        'original_request_id': prior.request_id, 'prior_input_tokens': prior.input_tokens,
+                        'prior_output_tokens': prior.output_tokens, 'current_run_model_calls': 0})
+                    if isinstance(gateway, _RecordingStageGateway):
+                        gateway.runs.append(stage_run)
+            except (OSError, ValueError, TypeError, KeyError, X02Error) as exc:
+                checkpoint_audit['events'].append({'status': 'CACHE_MISS', 'error_type': type(exc).__name__})
+                stage_run, checkpoint_hit = None, False
         try:
-            stage_run = call_model(
-                stage_name, prompt,
-                (
-                    experience_editor.perception_schema(PERCEPTION_SCHEMA_GENERIC_ANIMAL)
-                    if experience_editor_active
-                    else PERCEPTION_SCHEMA_GENERIC_ANIMAL
-                    if stop_loss_v041 else PERCEPTION_SCHEMA
-                ),
-                evidence=evidence, context=context,
-            )
+            if stage_run is None:
+                stage_run = call_model(stage_name, prompt, schema, evidence=evidence, context=context)
             stage_runs.append(stage_run)
             batch_validation_started = time.monotonic()
             batch_observations, batch_ledger = _validate_perception_batch(
@@ -1449,6 +1521,7 @@ def _run_x02_impl(
                 raise
             _retain_failed_stage_run(gateway, stage_runs, exc.stage_run)
             error_code, error_detail = exc.code, str(exc)
+            transport_retryable = model_recovery.retryable_model_failure(exc)
         except X02Error as exc:
             if not stop_loss_v041:
                 raise
@@ -1495,10 +1568,7 @@ def _run_x02_impl(
                     attempt_kind="SPLIT_CHILD",
                 )
                 return left_observations + right_observations, left_ledger + right_ledger
-            transient_original_batch_retry = (
-                error_code == "MODEL_TRANSPORT_TIMEOUT"
-                or bool(re.fullmatch(r"MODEL_HTTP_5\d\d", error_code))
-            )
+            transient_original_batch_retry = transport_retryable
             if (
                 stop_loss_v041
                 and transient_original_batch_retry
@@ -1507,6 +1577,7 @@ def _run_x02_impl(
             ):
                 failed_attempt_entry["recovery_action"] = "ORIGINAL_BATCH_RETRY"
                 failed_attempt_entry["terminal_unresolved_asset_ids"] = []
+                model_recovery.wait_before_retry(0)
                 return process_perception_batch(
                     batch_assets,
                     parent_attempt_id=attempt_id,
@@ -1542,6 +1613,12 @@ def _run_x02_impl(
             str(item["source_asset_id"])
             for item in batch_observations if item["status"] == "FAILED"
         }
+        if checkpoint is not None and cache_key and not checkpoint_hit and not item_failure_ids:
+            try:
+                checkpoint.save(cache_key, asdict(stage_run))
+                checkpoint_audit['saved_batches'] += 1
+            except (OSError, ValueError, TypeError) as exc:
+                checkpoint_audit['events'].append({'status': 'SAVE_FAILED', 'error_type': type(exc).__name__})
         validated_attempt_entry = {
             "attempt_id": attempt_id,
             "parent_attempt_id": parent_attempt_id,
@@ -1549,7 +1626,7 @@ def _run_x02_impl(
             "asset_count": len(batch_assets),
             "frame_count": len(evidence),
             "evidence_bytes": evidence_bytes,
-            "provider_call_attempted": True,
+            "provider_call_attempted": not checkpoint_hit,
             "attempt_kind": attempt_kind,
             "status": "VALIDATED_WITH_ITEM_FAILURES" if item_failure_ids else "VALIDATED",
             "reason_code": (
@@ -1630,7 +1707,7 @@ def _run_x02_impl(
                 "ONE_TERMINAL_STATUS_PER_ASSET",
                 "PER_ASSET_FAILURE_ISOLATION",
                 "ONLY_EXPLICIT_ASSET_LOCAL_FAILURE_OR_HTTP_413_MAY_SPLIT",
-                "TIMEOUT_OR_HTTP_5XX_MAY_RETRY_ORIGINAL_BATCH_ONCE_WITHOUT_SPLIT",
+                "TRANSIENT_TRANSPORT_OR_HTTP_5XX_MAY_RETRY_ORIGINAL_BATCH_ONCE_WITHOUT_SPLIT",
                 "BOUNDED_SINGLE_ASSET_RETRY",
                 "V04_1_RUN_MODEL_CALL_CIRCUIT_BREAKER",
                 "VALID_GROUNDED_FACTS_SURVIVE_NONCRITICAL_FIELD_ERRORS",
@@ -1657,6 +1734,11 @@ def _run_x02_impl(
                 result["chapters"], app_profile)
             profile_audit["soft_editorial"] = reorder_audit
             result["decision_trace"]["client_profile_audit"] = profile_audit
+        if checkpoint_dir is not None:
+            result['decision_trace']['perception_checkpoint'] = checkpoint_audit
+            if checkpoint_audit['reused_assets']:
+                result['trace']['evaluation_run_mode'] = 'RESUMED_PERCEPTION_CHECKPOINT'
+                result['trace']['cross_run_semantic_cache_used'] = True
         return result
 
     structure_started = time.monotonic()
@@ -3075,7 +3157,7 @@ def _validate_v041_result_state(
                 or list(children[0].get("asset_ids", []))
                 != list(parent.get("asset_ids", []))
                 or not (
-                    parent.get("reason_code") == "MODEL_TRANSPORT_TIMEOUT"
+                    parent.get("reason_code") in ("MODEL_TRANSPORT_TIMEOUT", "MODEL_TRANSPORT_FAILED")
                     or bool(re.fullmatch(
                         r"MODEL_HTTP_5\d\d", str(parent.get("reason_code", ""))
                     ))
@@ -3708,6 +3790,10 @@ def _validated_observation(
     quality_score = _degradable_quality(raw.get("quality_score"), degrade)
     limitations = _degradable_limitations(raw.get("limitations"), degrade)
 
+    if not facts and raw_status == 'FAILED':
+        raise X02ObservationContractError(
+            'Provider reported failed observation without surviving grounded facts',
+            rule_id='X02_PROVIDER_OBSERVATION_FAILED', json_field_path='$.observations[*].status')
     if not facts:
         status = "INSUFFICIENT_EVIDENCE"
     elif status not in ("OBSERVED", "PARTIAL"):

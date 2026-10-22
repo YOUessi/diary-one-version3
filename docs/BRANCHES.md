@@ -1,5 +1,14 @@
 # Branches
 
+## fix/version4-chapter-recovery · 2026-10-23
+
+- Source: clean `fix/version4-evidence-preflight` at `5f238f542a34b6f127907d4e7d54540a61640366` (iOS Build 5).
+- Isolated checkout: `/Users/youtang/Documents/Nexleap/Diary_one_chapter_recovery`; original checkout is preserved for an already-running three-group experiment. Native worktree creation was unavailable for the parent non-repository workspace, so a Git linked worktree was used.
+- Purpose: correct incomplete-input delivery/admission, retry transient model transport failures with a bounded budget, and resume validated perception work without repeating successful batches. S0 FP16 v07 and content grounding requirements remain in scope as preserved constraints.
+- Status at creation: implementation and regression verification pending; no deployment, iOS rebuild, remote push, or changes to main.
+- Evidence and daily work records live outside source in workspace `work_logs/2026-10-23.md` and `work_logs/evidence/`.
+- Local repair verification: R5_19 algorithm 1125 passed / 25 historical-fixture skips / 158 subtests passed; BFF 203 passed / 7 runtime skips. Independent review findings were reproduced and fixed. Recovery behavior and remaining deployment boundaries: [CHAPTER_RECOVERY.md](releases/version4/CHAPTER_RECOVERY.md). No mobile code, main, public deployment or current experiment runner changes.
+
 ## feat/main-algorithms-only · 2026-10-19
 
 - Base: origin/main `602d2cf7f60600e7a7b9d19a87eff5fb7977c84f`; clean worktree at creation.

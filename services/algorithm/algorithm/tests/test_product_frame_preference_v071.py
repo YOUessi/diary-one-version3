@@ -25,7 +25,9 @@ class PreferenceGateway(Gateway):
         if stage == 'S09C_PRODUCT_VERIFIED_REPAIR':
             self.feedback.append(deepcopy(context))
             if self.mode == 'transport':
-                raise OSError('Injected optional image optimization outage')
+                raise ConnectionResetError('Injected optional image optimization outage')
+            if self.mode == 'local_io':
+                raise PermissionError('Injected permanent local I/O failure')
         result = super().call(stage, prompt, schema, evidence, context)
         raw = result.output
         if stage == 'S09A_FRAME_OBSERVATION' and self.prefer:
@@ -84,7 +86,7 @@ def test_malformed_chapter_identity_is_rejected_without_unhashable_crash(identit
     assert any('chapter identity' in r['reason'] for r in issues)
 
 
-@pytest.mark.parametrize('mode', ['malformed', 'transport', 'stage_error'])
+@pytest.mark.parametrize('mode', ['malformed', 'transport', 'stage_error', 'local_io'])
 def test_failed_optional_image_optimization_retains_validated_content(tmp_path, mode):
     result, gateway = run(tmp_path, mode)
     trace = result['decision_trace']
@@ -104,6 +106,9 @@ def test_failed_optional_image_optimization_retains_validated_content(tmp_path, 
     if mode == 'transport':
         assert len(gateway.feedback) == 2
         assert [r['attempt'] for r in trace['transport_failures']] == [1, 2]
+    if mode == 'local_io':
+        assert len(gateway.feedback) == 1
+        assert not trace['transport_failures']
     if mode == 'stage_error':
         assert result['trace']['model_call_failed_count'] == 1
         assert result['trace']['request_ids'].count('failed-preference-stage') == 1

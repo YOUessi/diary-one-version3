@@ -1,6 +1,8 @@
 """PRD DAT01 / AI03 — result admission contract (keep App deliveryAdmit.ts in sync)."""
 from __future__ import annotations
 
+import pytest
+
 from shared.result_admit import apply_admission, build_publish_envelope
 
 
@@ -65,3 +67,25 @@ def test_apply_admission_attaches_envelope():
     assert result["_publish"] == env
     assert env["publish_admit"] is False
     assert 'missing_input_manifest' in env['admit_reason']
+
+
+@pytest.mark.parametrize('delivery', [
+    'READY_PRIMARY_COPY', 'READY_WITH_GROUNDED_COPY_FALLBACK',
+    'READY_WITH_ITEM_BLOCKS', 'STAGED_PREVIEW_DELIVERED', 'NO_GROUNDED_MEMORY',
+])
+@pytest.mark.parametrize('incomplete', [
+    {'coverage_status': 'INCOMPLETE'},
+    {'coverage_status': 'PARTIAL_UNRESOLVED'},
+    {'unresolved_asset_ids': ['asset-0']},
+    {'observations': [{'status': 'FAILED'}]},
+], ids=['incomplete-coverage', 'partial-unresolved-coverage', 'unresolved-input', 'failed-observation'])
+def test_incomplete_input_cannot_be_admitted_as_ready_or_honest_empty(delivery, incomplete):
+    result = {
+        'delivery_state': delivery, 'coverage_status': 'COMPLETE',
+        'unresolved_asset_ids': [], 'observations': [{'status': 'OBSERVED'}],
+        **incomplete,
+    }
+    env = build_publish_envelope(result, bundle_version='V04', allow_mock=False)
+
+    assert env['publish_admit'] is False, env
+    assert env['fail_job'] is True
