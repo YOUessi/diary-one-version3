@@ -38,3 +38,6 @@ async def init_db_async() -> None:
         await conn.execute(
             text("ALTER TABLE cloud_jobs ADD COLUMN IF NOT EXISTS owner_email VARCHAR(320)")
         )
+        await conn.execute(
+            text("ALTER TABLE cloud_jobs ADD COLUMN IF NOT EXISTS input_fingerprint VARCHAR(64)")
+        )

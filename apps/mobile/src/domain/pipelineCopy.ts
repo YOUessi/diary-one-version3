@@ -23,6 +23,9 @@ export function pipelineFailureDetail(error: string, language: LanguagePreferenc
   if (/Upload limit|day_revision_.*limit/i.test(error)) return zh
     ? '处理次数已达上限，或还有任务正在处理。请稍后重试。错误编号：UPLOAD_LIMIT'
     : 'The processing limit was reached or other jobs are still running. Try again later. Error code: UPLOAD_LIMIT';
+  if (/CLOUD_SUBMISSION_UNAVAILABLE/.test(error)) return zh
+    ? '云端暂未确认本次提交。请稍后重试原任务，不要重复导入；系统会核对是否已经接收。错误编号：CLOUD_SUBMISSION'
+    : 'The cloud has not confirmed this submission. Retry the same task later instead of importing again; the server will check whether it was accepted. Error code: CLOUD_SUBMISSION';
   if (/^CLOUD_JOB_FAILED:X02\b/.test(error)) return zh
     ? '云端处理服务暂未完成请求。请稍后重试；若持续失败，请反馈操作时间和错误编号。错误编号：CLOUD_SERVICE'
     : 'The cloud processing service could not complete the request. Retry later; if it persists, report the time and error code. Error code: CLOUD_SERVICE';

@@ -82,3 +82,12 @@ for (const reason of ['evidence_format_or_dimensions_mismatch', 'evidence_hash_m
     assert.equal(h.state.sessionToken, 'account-a');
   });
 }
+
+test('submission storage failure preserves login and frozen input without exposing server detail', async () => {
+  const h = harness({ status: 503, body: { detail: { code: 'SUBMISSION_STORAGE_UNAVAILABLE',
+    message: '/srv/private/data: disk error', retryable: true, action: 'retry_same_revision' } } });
+  await assert.rejects(h.api.submitProductionDayRevision('http://fixture.invalid', 'account-a', 'revision',
+    'file:///bundle/', 'file:///bundle/bundle.json'), error => error.message === 'CLOUD_SUBMISSION_UNAVAILABLE');
+  assert.equal(h.state.sessionToken, 'account-a');
+  assert.equal(JSON.parse(h.files.get('file:///bundle/submission-profile.json')).dayRevisionId, 'revision');
+});

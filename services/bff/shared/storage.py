@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 from minio import Minio
+from minio.deleteobjects import DeleteObject
 
 from shared.config import settings
 
@@ -44,6 +45,16 @@ def download_bytes(client: Minio, object_name: str) -> bytes:
     finally:
         resp.close()
         resp.release_conn()
+
+
+def delete_prefix(client: Minio, prefix: str) -> None:
+    """Remove all versions of a server-generated, uncommitted job prefix."""
+    objects = client.list_objects(settings.minio_bucket, prefix=prefix, recursive=True, include_version=True)
+    errors = client.remove_objects(settings.minio_bucket, (
+        DeleteObject(obj.object_name, obj.version_id) for obj in objects if obj.object_name
+    ))
+    if next(iter(errors), None) is not None:
+        raise OSError("Incomplete submission cleanup")
 
 
 def download_to_dir(client: Minio, prefix: str, dest: Path) -> None:

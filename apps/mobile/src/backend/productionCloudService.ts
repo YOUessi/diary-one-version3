@@ -131,6 +131,11 @@ export async function submitProductionDayRevision(
       const hint = parseDetail(posted.text) || 'Daily upload limit reached';
       throw new Error(`Upload limit (429): ${hint}`);
     }
+    if (posted.status === 503) {
+      // Acceptance may be uncertain after a lost DB acknowledgement. Preserve
+      // the revision and frozen preferences so retry can recover the same job.
+      throw new Error('CLOUD_SUBMISSION_UNAVAILABLE');
+    }
     throw new Error(
       `Production API rejected day revision (${posted.status})${posted.text ? `: ${posted.text}` : ''}`,
     );

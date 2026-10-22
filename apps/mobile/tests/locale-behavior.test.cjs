@@ -113,3 +113,11 @@ test('upstream provider 403 or 429 does not blame the phone login or daily allow
     assert.doesNotMatch(text, /SESSION|UPLOAD_LIMIT|重新登录/);
   }
 });
+
+test('uncertain server storage advises retrying the same task, not freeing phone storage', () => {
+  const code = 'CLOUD_SUBMISSION_UNAVAILABLE';
+  assert.equal(requiresEvidenceRebuild(code), false);
+  assert.match(pipelineFailureDetail(code, 'zh-Hans'), /原任务/);
+  assert.doesNotMatch(pipelineFailureDetail(code, 'zh-Hans'), /释放空间|重新登录/);
+  assert.match(pipelineFailureDetail(code, 'en'), /same task/i);
+});

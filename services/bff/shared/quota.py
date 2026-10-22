@@ -4,6 +4,8 @@ from __future__ import annotations
 import json
 import os
 import threading
+import uuid
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,6 +15,20 @@ from fastapi import HTTPException
 
 from shared.api_auth import parse_bearer
 from shared.sessions import SessionStore
+from shared.atomic_file import write_json_atomic
+
+try:
+    import fcntl
+except ImportError:  # Windows development fallback; production BFF runs on Linux.
+    fcntl = None
+
+
+@dataclass(frozen=True)
+class QuotaCharge:
+    day: str
+    key: str
+    charge_id: str
+    used: int
 
 
 def daily_limit() -> int:
@@ -79,48 +95,69 @@ class DailyQuotaStore:
     def _day(self) -> str:
         return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
+    @contextmanager
+    def _locked(self):
+        with self._lock:
+            self._path.parent.mkdir(parents=True, exist_ok=True)
+            with self._path.with_suffix('.lock').open('a+b') as lock_file:
+                if fcntl is not None: fcntl.flock(lock_file, fcntl.LOCK_EX)
+                try:
+                    yield
+                finally:
+                    if fcntl is not None: fcntl.flock(lock_file, fcntl.LOCK_UN)
+
     def _load(self) -> dict:
         if not self._path.exists():
             return {}
         try:
             raw = json.loads(self._path.read_text(encoding="utf-8"))
-            return raw if isinstance(raw, dict) else {}
-        except (OSError, json.JSONDecodeError):
-            return {}
+            if not isinstance(raw, dict) or any(not isinstance(bucket, dict) for bucket in raw.values()):
+                raise ValueError("invalid quota snapshot")
+            return raw
+        except (OSError, ValueError) as exc:
+            raise OSError("Quota snapshot is unreadable; refusing to reset usage") from exc
 
     def _save(self, data: dict) -> None:
-        self._path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = self._path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-        tmp.replace(self._path)
+        write_json_atomic(self._path, data)
 
     def count_today(self, key: str) -> int:
-        with self._lock:
+        with self._locked():
             data = self._load()
             day = self._day()
             bucket = data.get(day) or {}
             return int(bucket.get(key, 0))
 
     def delete_caller(self, key: str) -> None:
-        with self._lock:
+        with self._locked():
             data = self._load()
             for bucket in data.values():
                 if isinstance(bucket, dict):
                     bucket.pop(key, None)
+                    charges = bucket.get("_charges", {})
+                    for charge_id in list(charges):
+                        if charges[charge_id] == key: charges.pop(charge_id)
             self._save(data)
 
     def consume(self, key: str, *, limit: int | None = None) -> int:
         """Increment and return new count. Raises HTTP 429 if over limit."""
+        return self.charge(key, str(uuid.uuid4()), limit=limit).used
+
+    def charge(self, key: str, charge_id: str, *, limit: int | None = None) -> QuotaCharge:
+        """Persist a charge receipt so compensation cannot refund a different request."""
         lim = daily_limit() if limit is None else limit
         if lim <= 0:
-            return 0
-        with self._lock:
+            return QuotaCharge(self._day(), key, charge_id, 0)
+        with self._locked():
             data = self._load()
             day = self._day()
             # Drop old days
             data = {day: data.get(day) or {}}
             bucket = data[day]
             cur = int(bucket.get(key, 0))
+            charges = bucket.setdefault("_charges", {})
+            if charge_id in charges:
+                if charges[charge_id] != key: raise ValueError("quota receipt owner mismatch")
+                return QuotaCharge(day, key, charge_id, cur)
             if cur >= lim:
                 raise HTTPException(
                     status_code=429,
@@ -134,9 +171,36 @@ class DailyQuotaStore:
                 )
             cur += 1
             bucket[key] = cur
+            charges[charge_id] = key
             data[day] = bucket
             self._save(data)
-            return cur
+            return QuotaCharge(day, key, charge_id, cur)
+
+    def refund(self, charge: QuotaCharge) -> None:
+        if charge.used == 0:
+            return
+        with self._locked():
+            data = self._load()
+            bucket = data.get(charge.day, {})
+            charges = bucket.get("_charges", {})
+            if charges.get(charge.charge_id) != charge.key:
+                return
+            charges.pop(charge.charge_id)
+            bucket[charge.key] = max(0, int(bucket.get(charge.key, 0)) - 1)
+            self._save(data)
+
+    def refund_job(self, key: str, charge_id: str) -> None:
+        """Reconcile an interrupted unpublished job, even across UTC midnight."""
+        with self._locked():
+            data = self._load()
+            changed = False
+            for bucket in data.values():
+                charges = bucket.get('_charges', {})
+                if charges.get(charge_id) == key:
+                    charges.pop(charge_id)
+                    bucket[key] = max(0, int(bucket.get(key, 0)) - 1)
+                    changed = True
+            if changed: self._save(data)
 
 
 # Process-local default for Dev Lite / single-node BFF

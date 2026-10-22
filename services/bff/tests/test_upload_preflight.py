@@ -54,8 +54,18 @@ def upload_case(kind="valid"):
 def api(request, monkeypatch, tmp_path):
     caller = CallerIdentity("lab:api_token", None, "api_token")
     quota = DailyQuotaStore(tmp_path / "quota.json")
-    storage = Mock()
-    session = SimpleNamespace(scalar=AsyncMock(return_value=None), add=Mock(), commit=AsyncMock())
+    objects, pending, committed = {}, [], []
+    storage = Mock(side_effect=lambda client, name, data, content_type: objects.__setitem__(name, data))
+    def remove(bucket, entries):
+        for entry in entries: objects.pop(entry.name, None)
+        return iter([])
+    client_store = SimpleNamespace(
+        list_objects=lambda bucket, **kw: [SimpleNamespace(object_name=k, version_id=None)
+            for k in list(objects) if k.startswith(kw["prefix"])], remove_objects=remove)
+    def commit(): committed.extend(pending); pending.clear()
+    session = SimpleNamespace(scalar=AsyncMock(return_value=None), add=Mock(side_effect=pending.append),
+        commit=AsyncMock(side_effect=commit), rollback=AsyncMock(side_effect=pending.clear),
+        execute=AsyncMock(), get=AsyncMock(side_effect=lambda model, jid: next((j for j in committed if j.id == jid), None)))
     if request.param == "lite":
         monkeypatch.setattr(lite, "DATA", tmp_path)
         monkeypatch.setattr(lite, "JOBS_DIR", tmp_path / "jobs")
@@ -71,11 +81,12 @@ def api(request, monkeypatch, tmp_path):
         app.dependency_overrides[require_bearer] = lambda: caller
         app.dependency_overrides[get_async_session] = lambda: session
         monkeypatch.setattr(day_revisions, "quota_store", lambda: quota)
-        monkeypatch.setattr(day_revisions, "minio_client", lambda: object())
+        monkeypatch.setattr(day_revisions, "minio_client", lambda: client_store)
         monkeypatch.setattr(day_revisions, "upload_bytes", storage)
         monkeypatch.setattr(day_revisions, "notify_worker", Mock())
     yield SimpleNamespace(client=TestClient(app, raise_server_exceptions=False), quota=quota,
-                          storage=storage, session=session, root=tmp_path, kind=request.param)
+                          storage=storage, objects=objects, committed=committed,
+                          session=session, root=tmp_path, kind=request.param)
     app.dependency_overrides.clear()
 
 
