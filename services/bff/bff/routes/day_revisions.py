@@ -1,4 +1,3 @@
-import json
 import uuid
 import logging
 
@@ -20,6 +19,7 @@ from shared.quota import (
     quota_store,
 )
 from shared.storage import minio_client, upload_bytes
+from shared.evidence_input import read_validated_upload
 
 router = APIRouter(prefix="/v1", dependencies=[Depends(require_bearer)])
 logger = logging.getLogger(__name__)
@@ -63,17 +63,7 @@ async def create_day_revision(
     form = await request.form()
     if caller.email:
         await lock_account(session, caller.email, request)
-    manifest_part = form.get("manifest")
-    if manifest_part is None:
-        raise HTTPException(status_code=400, detail="manifest required")
-
-    manifest_bytes = await read_form_bytes(manifest_part)
-    if not manifest_bytes:
-        raise HTTPException(status_code=400, detail="manifest required")
-    try:
-        manifest_json = json.loads(manifest_bytes.decode("utf-8"))
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="manifest must be JSON")
+    manifest_bytes, manifest_json, frame_contents = await read_validated_upload(form)
 
     rev_id = await read_form_field(form.get("day_revision_id"))
     rev_id = rev_id or f"dayrev_{uuid.uuid4()}"
@@ -136,13 +126,8 @@ async def create_day_revision(
         if profile_bytes:
             upload_bytes(client, f"{prefix}app_client_profile.json", profile_bytes, "application/json")
 
-    for key, part in form.items():
-        if key in ("manifest", "app_client_profile", "day_revision_id"):
-            continue
-        if not hasattr(part, "read"):
-            continue
-        frame_bytes = await part.read()
-        upload_bytes(client, f"{prefix}frames/{key}.jpg", frame_bytes, "image/jpeg")
+    for frame_id, frame_bytes in frame_contents.items():
+        upload_bytes(client, f"{prefix}frames/{frame_id}.jpg", frame_bytes, "image/jpeg")
 
     bundle_version = manifest_json.get("bundle_version")
 

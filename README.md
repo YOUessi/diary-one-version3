@@ -1,5 +1,7 @@
 # Diary One · 版本4
 
+> 当前本地开发分支为 `fix/version4-evidence-preflight`，含构建4之后的接口/链路修复。逐版进度、反思及新修复边界见 [第一版到第四版复盘](docs/releases/version4/PROGRESS_AND_RETROSPECTIVE.md)。下方版本4说明描述已交付快照，不表示这些后续修复已打包或部署。
+
 本分支 `版本4` 保存 **iOS 1.0.0（构建4）** 的打包源码，来源于 2026-10-21 已完成的签名归档。App 构建入口：`apps/mobile`。
 
 - 包含 Chapter 首页摘要、章内高光与原视频定位、历史 Aha 展示，以及完整比例预览、独立控制栏、全屏播放和退出时保留进度。

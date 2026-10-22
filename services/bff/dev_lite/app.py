@@ -38,6 +38,7 @@ from shared.quota import (
     worker_max_concurrent,
 )
 from shared.result_admit import apply_admission
+from shared.evidence_input import EvidenceInputError, read_validated_upload, validate_stored_bundle
 from shared.recap_render import ffmpeg_available
 from dev_lite.mobileclip_backend import get_embedder, mobileclip_status
 from shared.sessions import SessionStore
@@ -317,15 +318,7 @@ async def create_day_revision(
     caller: CallerIdentity = Depends(require_token),
 ) -> dict[str, Any]:
     form = await request.form()
-    manifest_part = form.get("manifest")
-    if manifest_part is None:
-        raise HTTPException(status_code=400, detail="manifest required")
-
-    manifest_bytes = await _form_bytes(manifest_part)
-    try:
-        manifest_json = json.loads(manifest_bytes.decode("utf-8"))
-    except json.JSONDecodeError as e:
-        raise HTTPException(status_code=400, detail=f"manifest must be JSON: {e}") from e
+    manifest_bytes, manifest_json, frame_contents = await read_validated_upload(form)
 
     rev_field = form.get("day_revision_id")
     if rev_field is None:
@@ -396,13 +389,8 @@ async def create_day_revision(
     if profile_part is not None:
         (job_dir / "app_client_profile.json").write_bytes(await _form_bytes(profile_part))
 
-    for key, part in form.items():
-        if key in ("manifest", "app_client_profile", "day_revision_id"):
-            continue
-        if not (hasattr(part, "read") or isinstance(part, (str, bytes))):
-            continue
-        frame_bytes = await _form_bytes(part)
-        (frames_dir / f"{key}.jpg").write_bytes(frame_bytes)
+    for frame_id, frame_bytes in frame_contents.items():
+        (frames_dir / f"{frame_id}.jpg").write_bytes(frame_bytes)
 
     _jobs[job_id] = {
         "job_id": job_id,
@@ -535,6 +523,7 @@ async def _process_job_inner(job_id: str, job_dir: Path) -> None:
     job["message"] = "Calling X02…"
     _persist_job(job_id, job_dir)
     try:
+        validate_stored_bundle(job_dir)
         result = await _call_x02(job_dir)
         # Fixture / tiny evidence often returns EMPTY_DAY with zero memories.
         # For Expo Go internal beta (ALLOW_MOCK_PREVIEW), substitute a contract-shaped mock
@@ -569,6 +558,10 @@ async def _process_job_inner(job_id: str, job_dir: Path) -> None:
             job["result"] = result
             if envelope.get("admit_reason") == "no_grounded_memory":
                 job["message"] = "Completed with no grounded memories (honest empty)"
+        _persist_job(job_id, job_dir)
+    except EvidenceInputError as e:
+        job.update(status="failed", result=None, error=f"EVIDENCE_INPUT_INVALID:{e.reason}",
+                   message="Evidence validation failed before cloud processing")
         _persist_job(job_id, job_dir)
     except Exception as e:  # noqa: BLE001
         if settings.allow_mock_preview:

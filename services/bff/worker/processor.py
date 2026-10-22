@@ -13,6 +13,7 @@ from shared.db import SyncSessionLocal
 from shared.mock_preview import mock_preview_result, preview_has_no_memories
 from shared.models import CloudJob, JobStatus
 from shared.result_admit import apply_admission
+from shared.evidence_input import EvidenceInputError, validate_stored_bundle
 from shared.storage import download_to_dir, minio_client
 from worker.x02_proxy import run_x02_preview
 
@@ -46,9 +47,7 @@ def process_job_sync(job_id: str) -> None:
         try:
             download_to_dir(minio_client(), job.object_prefix, tmp)
             manifest_path = tmp / "bundle.json"
-            if not manifest_path.exists():
-                raise FileNotFoundError("bundle.json missing in object storage")
-
+            validate_stored_bundle(tmp)
             result = asyncio.run(run_x02_preview(tmp, manifest_path))
             if settings.allow_mock_preview and preview_has_no_memories(result):
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -79,6 +78,11 @@ def process_job_sync(job_id: str) -> None:
                 job.error = None
                 if envelope.get("admit_reason") == "no_grounded_memory":
                     job.message = "Completed with no grounded memories (honest empty)"
+        except EvidenceInputError as exc:
+            job.status = JobStatus.failed
+            job.result = None
+            job.error = f"EVIDENCE_INPUT_INVALID:{exc.reason}"
+            job.message = "Evidence validation failed before cloud processing"
         except Exception as exc:  # noqa: BLE001
             if settings.allow_mock_preview:
                 try:

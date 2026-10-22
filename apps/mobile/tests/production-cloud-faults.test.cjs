@@ -72,3 +72,13 @@ test('lost POST acknowledgement retries frozen preferences even after settings c
   await assert.rejects(h.api.submitProductionDayRevision('http://fixture.invalid','account-a','revision','file:///bundle/','file:///bundle/bundle.json'));
   assert.equal(JSON.stringify(h.profiles[0]),JSON.stringify(h.profiles[1]));assert.match(JSON.stringify(h.profiles[1]),/cycling/);
 });
+
+for (const reason of ['evidence_format_or_dimensions_mismatch', 'evidence_hash_mismatch', 'evidence_decode_failed']) {
+  test('preflight rejection preserves a stable rebuild code: ' + reason, async () => {
+    const h = harness({ status: 422, body: { detail: { code: 'EVIDENCE_INPUT_INVALID', reason,
+      action: 'reimport', retryable: false, message: 'internal /srv/private/path' } } });
+    await assert.rejects(h.api.submitProductionDayRevision('http://fixture.invalid', 'account-a', 'revision',
+      'file:///bundle/', 'file:///bundle/bundle.json'), error => error.message === 'EVIDENCE_INPUT_INVALID:' + reason);
+    assert.equal(h.state.sessionToken, 'account-a');
+  });
+}

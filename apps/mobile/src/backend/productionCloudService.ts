@@ -113,6 +113,16 @@ export async function submitProductionDayRevision(
         'Cloud session expired or unauthorized. Open Account → Continue with Email and sign in again.',
       );
     }
+    if (posted.status === 422) {
+      let rejection: { detail?: { code?: unknown; reason?: unknown } } | undefined;
+      try { rejection = JSON.parse(posted.text); } catch { /* legacy response uses the fallback below */ }
+      if (rejection?.detail?.code === 'EVIDENCE_INPUT_INVALID') {
+        const reason = rejection.detail.reason;
+        // Preserve the machine code for recovery decisions, never a server path or stack.
+        throw new Error(`EVIDENCE_INPUT_INVALID:${typeof reason === 'string' && /^[a-z_]{1,80}$/.test(reason)
+          ? reason : 'invalid_upload'}`);
+      }
+    }
     if (posted.status === 409) {
       const detail = parseDetail(posted.text) || 'day_revision conflict';
       throw new Error(`DAY_REVISION_CONFLICT:${detail}`);

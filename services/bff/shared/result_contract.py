@@ -12,7 +12,7 @@ import uuid
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
-from PIL import Image
+from shared.evidence_input import validate_evidence_bytes
 
 from shared.job_contract import validate_real_result
 
@@ -382,11 +382,5 @@ def validate_result_contract(result, manifest_bytes, bundle_dir=None):
             _require(re.fullmatch(r'[A-Za-z0-9_-]{1,200}', fid) is not None, 'unsafe_frame_id')
             path = (root / 'frames' / (fid + '.jpg')).resolve()
         _require(path.is_relative_to(root) and path.is_file(), 'missing_input_frame')
-        _require(hashlib.sha256(path.read_bytes()).hexdigest() == frame.get('sha256'), 'evidence_hash_mismatch')
-        with Image.open(path) as image:
-            _require(image.format == 'JPEG' and image.size == (frame.get('width'), frame.get('height')),
-                     'evidence_format_or_dimensions_mismatch')
-            image.verify()
-        with Image.open(path) as image:
-            image.load()  # verify alone does not decode truncated image data.
+        validate_evidence_bytes(path.read_bytes(), frame)
     return SCHEMA_SHA256[schema]

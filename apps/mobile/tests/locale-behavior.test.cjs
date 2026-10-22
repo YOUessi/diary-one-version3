@@ -80,3 +80,36 @@ test('new photo encoding has a stable distinct revision while video identity rem
   assert.equal(selectionFingerprint([{...media,mediaType:'image'}]),current);
   assert.equal(selectionFingerprint([{...media,mediaType:'video'}]),old);
 });
+
+const { pipelineFailureDetail, requiresEvidenceRebuild } = require('../src/domain/pipelineCopy.ts');
+for (const reason of ['evidence_hash_mismatch', 'evidence_decode_failed', 'missing_input_frame', 'uploaded_frame_set_mismatch']) {
+  test('bad uploads require reimport and cannot expose internal diagnostics: ' + reason, () => {
+    const code = 'EVIDENCE_INPUT_INVALID:' + reason;
+    assert.equal(requiresEvidenceRebuild(code), true);
+    assert.equal(requiresEvidenceRebuild('CLOUD_JOB_FAILED:' + code), true);
+    assert.match(pipelineFailureDetail(code, 'zh-Hans'), /重新.*(选择|导入)/);
+    assert.match(pipelineFailureDetail(code, 'en'), /select|import/i);
+    assert.doesNotMatch(pipelineFailureDetail(code, 'zh-Hans'), /evidence_|CLOUD_JOB/);
+  });
+}
+test('a transient network failure remains retryable without rebuilding evidence', () => {
+  assert.equal(requiresEvidenceRebuild('Job poll interrupted: network offline'), false);
+  assert.match(pipelineFailureDetail('Job poll interrupted: network offline', 'zh-Hans'), /网络/);
+  assert.match(pipelineFailureDetail('Upload limit (429): Daily limit reached', 'zh-Hans'), /上限|次数/);
+  assert.match(pipelineFailureDetail('Cloud session expired or unauthorized', 'zh-Hans'), /登录/);
+});
+test('unknown cloud and native errors do not leak paths or stack traces to either language', () => {
+  const raw = 'X02 500 unexpected /srv/private/user.jpg Authorization: Bearer example-secret at Promise.swift:56';
+  for (const lang of ['zh-Hans', 'en']) {
+    const message = pipelineFailureDetail(raw, lang);
+    assert.doesNotMatch(message, /private|Authorization|example-secret|Promise.swift/);
+    assert.match(message, /PIPELINE_FAILED/);
+  }
+});
+
+test('upstream provider 403 or 429 does not blame the phone login or daily allowance', () => {
+  for (const code of ['CLOUD_JOB_FAILED:X02 403 provider unauthorized', 'CLOUD_JOB_FAILED:X02 429 model capacity']) {
+    const text = pipelineFailureDetail(code, 'zh-Hans');
+    assert.doesNotMatch(text, /SESSION|UPLOAD_LIMIT|重新登录/);
+  }
+});

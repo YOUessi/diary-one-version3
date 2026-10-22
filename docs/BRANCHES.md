@@ -177,3 +177,9 @@
 - 目的：保存 1.0.0(4) 已打包源码及验证说明。来源：YOUessi/diary-one-version3 的 version3.0 / b5eb611，加 2026-10-21 干净目录已打包快照（923文件，App构建输入251文件）。原开发目录全为未提交文件，故发布副本置于独立 Diary_one_version4_github；未对原目录提交或重置。
 - 功能源码逐文件匹配归档快照，只更新文档与发布验证记录；保留 S0 FP16 v07、R5_18。分支名为 `版本4`；不更新旧 version3.0 或其他分支。
 - 本次提交及远端核验以 Git 历史和工作区 work_logs/2026-10-22.md 为准；不代表云端部署、TestFlight上传或新增真实手机验收。
+
+### 2026-10-22 — fix/version4-evidence-preflight
+
+- 从版本4/f5371df创建，创建时工作区干净。目的：共享上传证据预检、worker防御检查和App错误/恢复交互；保留版本4已打包快照。开发范围和验证结果以独立工作日志为准，尚不代表重新打包或上线。
+
+- 本轮完成上传证据预检与worker防御、App错误协议/重试提示，BFF115和App199通过；typecheck通过，lint4既有警告。完整历史复盘见 docs/releases/version4/PROGRESS_AND_RETROSPECTIVE.md。这属于构建4之后的本地修复，不代表服务器部署或新TestFlight包。
