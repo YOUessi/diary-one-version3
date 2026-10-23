@@ -1,5 +1,12 @@
 # Branches
 
+## fix/2026-10-23-r5-21-chapter-recovery · 2026-10-23
+
+- 目的：按用户要求，在个人仓库 `YOUessi/diary-one-version3` 新建带日期的分支，保存R5_19—R5_21累计修复并说明范围；不更新main或既有发布分支。
+- 来源：`fix/version4-chapter-recovery` / `ff240a54dbfbcf5b7e3d18ce6dfae5f733900dc0`；创建时工作区干净、无未提交修改。继续使用 `Diary_one_chapter_recovery` 工作区，原分支保留。
+- 更新说明：[2026-10-23-R5_21.md](releases/version4/2026-10-23-R5_21.md)。本次只新增发布说明，算法源码与ff240a5一致；推送前重跑算法1151通过/25历史素材跳过/158子测试通过，BFF203通过/7跳过。
+- 尚未部署公网或重新打包；phase_10最终审核未完成，23/24结果保持。推送后的远端提交核验记录独立存放工作区 `work_logs/2026-10-23.md`。
+
 ## fix/version4-chapter-recovery · 2026-10-23
 
 - Source: clean `fix/version4-evidence-preflight` at `5f238f542a34b6f127907d4e7d54540a61640366` (iOS Build 5).

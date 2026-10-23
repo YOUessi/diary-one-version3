@@ -1,6 +1,15 @@
-# Diary One · 版本4后续修复（iOS 构建5）
+# Diary One · R5_21 Chapter 恢复修复 · 2026-10-23
 
-> 当前分支 `fix/version4-evidence-preflight` 已纳入构建4之后的接口/链路修复。2026-10-22 已部署匹配BFF/Worker并完成 **1.0.0（5）签名归档**；TestFlight上传及新包真机验收尚未执行。见 [构建5交付记录](docs/releases/version4/BUILD5.md)。
+当前分支：`fix/2026-10-23-r5-21-chapter-recovery`。完整日期与变更说明见 **[2026-10-23 · R5_21 更新说明](docs/releases/version4/2026-10-23-R5_21.md)**。
+
+- 基于 iOS 构建5源码，累计加入 R5_19—R5_21 的云算法和 BFF 修复：传输有界重试、视觉/编辑阶段断点恢复、不完整结果拦截、章节候选图覆盖及边界局部修复、脱敏网络诊断。
+- 手机仍为 **MobileCLIP-S0 FP16 v07**，云模型仍为 **qwen3.8-flash**；本分支没有新的 App 构建或云端部署。
+- 2026-10-23 发布前复验：算法 **1151通过 / 25历史素材缺失跳过 / 158子测试通过**；BFF **203通过 / 7跳过**。
+- phase_10 最终文案与内容审核尚未完成，已有实验总结果仍为 **23/24组有效、19个Chapter**。同请求代理/直连对照通过选图结构检查，不等于整条链路终审通过。
+
+## iOS 构建5交付背景（2026-10-22 历史记录）
+
+> 此前分支 `fix/version4-evidence-preflight` 已纳入构建4之后的接口/链路修复。2026-10-22 已部署匹配BFF/Worker并完成 **1.0.0（5）签名归档**；该交付记录当时尚未执行TestFlight上传及新包真机验收。见 [构建5交付记录](docs/releases/version4/BUILD5.md)。以下保留其历史范围，不代表本分支R5_21已经上线。
 
 > 修复内容：[任务归属、重复提交、额度补偿与恢复](docs/releases/version4/JOB_RELIABILITY.md)。逐版进度及反思见 [第一版到第四版复盘](docs/releases/version4/PROGRESS_AND_RETROSPECTIVE.md)。下方描述原版本4快照，其GitHub分支保持不变。
 
