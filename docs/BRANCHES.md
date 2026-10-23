@@ -10,6 +10,8 @@
 - Local repair verification: R5_19 algorithm 1125 passed / 25 historical-fixture skips / 158 subtests passed; BFF 203 passed / 7 runtime skips. Independent review findings were reproduced and fixed. Recovery behavior and remaining deployment boundaries: [CHAPTER_RECOVERY.md](releases/version4/CHAPTER_RECOVERY.md). No mobile code, main, public deployment or current experiment runner changes.
 - R5_20 follow-up: reserve the fixed 18-image budget by provisional chapter facts and their verified frames; repair chapter boundaries independently of an invalid hero while retaining full publication validation; deduplicate retained failed StageRun records. Recorded phase_10 payload and multiframed-asset regressions added. Algorithm: 1139 passed / 25 historical-fixture skips / 158 subtests passed; independent review passed. A separately pinned, single real phase_10 run is planned; its results are not implied by offline verification.
 
+- R5_21 follow-up from clean d75fa47: safe transport diagnostics and persistent editorial-stage responses, with unchanged semantic gates and zero current usage for reused calls. Algorithm 1151 passed / 25 historical skips / 158 subtests; BFF 203 passed / 7 skips. Independent review findings reproduced and corrected. Two byte-identical S09B real calls (SYSTEM/DIRECT) returned HTTP200 and passed local structure gates, but no final full-group result was published. Aggregate remains 23/24. Evidence: work_logs/evidence/editorial-recovery-20261023/. No deployment, push, mobile build or main changes.
+
 ## feat/main-algorithms-only · 2026-10-19
 
 - Base: origin/main `602d2cf7f60600e7a7b9d19a87eff5fb7977c84f`; clean worktree at creation.

@@ -10,7 +10,8 @@ import re
 import time
 import unicodedata
 import uuid
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass, field, replace
+from functools import wraps
 from importlib import resources
 from pathlib import Path
 from typing import Dict, List, Mapping, Optional, Sequence, Tuple
@@ -398,12 +399,14 @@ class X02ExecutionError(X02Error):
         code: str,
         stage_runs: Sequence["StageRun"],
         perception_checkpoint: Optional[Dict[str, object]] = None,
+        editorial_checkpoint: Optional[Dict[str, object]] = None,
     ) -> None:
         super().__init__(message)
         self.stage = stage
         self.code = code
         self.stage_runs = tuple(stage_runs)
         self.perception_checkpoint = perception_checkpoint or {}
+        self.editorial_checkpoint = editorial_checkpoint or {}
 
 
 @dataclass(frozen=True)
@@ -425,6 +428,8 @@ class StageRun:
     pricing_basis: str
     selected_evidence: Tuple[Dict[str, object], ...] = ()
     call_status: str = "COMPLETED"
+    transport_diagnostics: Dict[str, object] = field(default_factory=dict)
+    checkpoint_provenance: Dict[str, object] = field(default_factory=dict)
 
     @property
     def estimated_cost_native(self) -> float:
@@ -439,9 +444,31 @@ class StageRun:
 
 
 def _transport_failure_code(exc: Exception) -> str:
-    if isinstance(exc, TimeoutError) or "timed out" in str(exc).casefold():
-        return "MODEL_TRANSPORT_TIMEOUT"
+    seen = set()
+    while isinstance(exc, BaseException) and id(exc) not in seen:
+        seen.add(id(exc))
+        if isinstance(exc, TimeoutError) or "timed out" in str(exc).casefold():
+            return "MODEL_TRANSPORT_TIMEOUT"
+        reason = getattr(exc, 'reason', None)
+        exc = exc.__cause__ or (reason if isinstance(reason, BaseException) else None) or exc.__context__
     return "MODEL_TRANSPORT_FAILED"
+
+
+def _diagnosed_stage_call(call):
+    @wraps(call)
+    def wrapped(self, *args, **kwargs):
+        from .transport_diagnostics import exception_chain
+        try:
+            result = call(self, *args, **kwargs)
+        except X02StageCallError as error:
+            diagnostic = getattr(self.adapter.transport, 'last_diagnostic', {})
+            if not diagnostic:
+                diagnostic = {'phase': 'UNINSTRUMENTED', 'exception_chain': exception_chain(error)}
+            error.stage_run = replace(error.stage_run, transport_diagnostics=diagnostic,
+                request_id=diagnostic.get('provider_request_id') or error.stage_run.request_id)
+            raise
+        return replace(result, transport_diagnostics=getattr(self.adapter.transport, 'last_diagnostic', {}))
+    return wrapped
 
 
 def _call_stage_transport(
@@ -499,7 +526,7 @@ def _call_stage_transport(
             call_status="FAILED_BEFORE_RESPONSE",
         )
         raise X02StageCallError(
-            "%s model transport failed before a complete response: %s" % (stage, exc),
+            "%s model transport failed before a complete response (%s)" % (stage, type(exc).__name__),
             stage_run=failure_run,
             code=code,
         ) from exc
@@ -533,6 +560,7 @@ class _RecordingStageGateway(StageModelGateway):
         self.credential_environment = getattr(gateway, "credential_environment", "MODEL_API_KEY")
         self.runs: List[StageRun] = []
         self.perception_checkpoint: Dict[str, object] = {}
+        self.editorial_checkpoint: Dict[str, object] = {}
 
     @property
     def ready(self) -> bool:
@@ -562,6 +590,7 @@ class QwenStageGateway(StageModelGateway):
     def ready(self) -> bool:
         return self.adapter.ready
 
+    @_diagnosed_stage_call
     def call(
         self,
         stage: str,
@@ -751,6 +780,7 @@ class OpenAIStageGateway(StageModelGateway):
     def ready(self) -> bool:
         return self.adapter.ready
 
+    @_diagnosed_stage_call
     def call(
         self,
         stage: str,
@@ -1216,6 +1246,20 @@ def _retain_failed_stage_run(
             gateway.runs.append(stage_run)
 
 
+def _editorial_checkpoint_context(context):
+    # Only final-copy local audit locations are incidental. Preserve hashes,
+    # crop/encoding decisions and every model-visible semantic field. The actual
+    # (possibly derived) image bytes are independently hashed by the store.
+    result = copy.deepcopy(context)
+    audit = result.get('image_transform_audit')
+    if isinstance(audit, dict):
+        audit.pop('bundle_root', None)
+        for frame in audit.get('frames', []):
+            if isinstance(frame, dict):
+                frame.pop('source_path', None)
+    return result
+
+
 def run_x02_v041(manifest_path: Path, gateway: StageModelGateway, *,
                  editorial_order_policy: Optional[str] = None,
                  recording_editor_policy: Optional[str] = None) -> Dict[str, object]:
@@ -1256,6 +1300,7 @@ def _run_x02_with_policy(
             stage_runs=recorder.runs if any(run is exc.stage_run for run in recorder.runs)
                        else [*recorder.runs, exc.stage_run],
             perception_checkpoint=recorder.perception_checkpoint,
+            editorial_checkpoint=recorder.editorial_checkpoint,
         ) from exc
     except X02ContractError as exc:
         if not recorder.runs:
@@ -1266,6 +1311,7 @@ def _run_x02_with_policy(
             code="POST_MODEL_CONTRACT_VIOLATION",
             stage_runs=recorder.runs,
             perception_checkpoint=recorder.perception_checkpoint,
+            editorial_checkpoint=recorder.editorial_checkpoint,
         ) from exc
     except X02Error as exc:
         raise X02ExecutionError(
@@ -1274,6 +1320,7 @@ def _run_x02_with_policy(
             code="MODEL_REQUEST_FAILED",
             stage_runs=recorder.runs,
             perception_checkpoint=recorder.perception_checkpoint,
+            editorial_checkpoint=recorder.editorial_checkpoint,
         ) from exc
 
 
@@ -1350,6 +1397,18 @@ def _run_x02_impl(
         except (OSError, ValueError, TypeError) as exc:
             checkpoint_audit['events'].append({'status': 'UNAVAILABLE', 'error_type': type(exc).__name__})
 
+    editorial_store = None
+    perception_request_keys = []
+    editorial_audit = {'enabled': checkpoint_dir is not None and product_editor,
+                       'reused_stages': 0, 'saved_stages': 0, 'events': []}
+    if editorial_audit['enabled']:
+        if isinstance(gateway, _RecordingStageGateway):
+            gateway.editorial_checkpoint = editorial_audit
+        try:
+            editorial_store = _perception_checkpoint_store(Path(checkpoint_dir) / 'editorial', bundle, gateway)
+        except (OSError, ValueError, TypeError) as exc:
+            editorial_audit['events'].append({'status': 'UNAVAILABLE', 'error_type': type(exc).__name__})
+
     namespace = _session_namespace(bundle)
     assets = list(bundle.manifest["assets"])
     asset_order = {str(asset["asset_id"]): index for index, asset in enumerate(assets)}
@@ -1372,19 +1431,61 @@ def _run_x02_impl(
         call_context = dict(context or {})
         if stop_loss_v041:
             call_context["_x02_policy_version"] = "V04_1"
+        cache_key = None
+        if editorial_store is not None and not stage.startswith('S04_'):
+            from jsonschema import Draft202012Validator
+            try:
+                identity = canonical_bytes({'stage': stage, 'prompt': prompt,
+                    'context': _editorial_checkpoint_context(call_context),
+                    'perception_request_keys': perception_request_keys}).decode('utf-8')
+                cache_key = editorial_store.key(identity, schema, evidence)
+                receipt = editorial_store.load(cache_key)
+                if receipt is not None:
+                    prior = StageRun(**receipt)
+                    if (prior.stage != stage or prior.provider != gateway.provider or prior.model != gateway.model
+                            or prior.call_status != 'COMPLETED'
+                            or not Draft202012Validator(schema).is_valid(prior.output)):
+                        raise ValueError('editorial receipt contract mismatch')
+                    provenance = {'key': cache_key, 'prior_request_id': prior.request_id,
+                                  'prior_input_tokens': prior.input_tokens, 'prior_output_tokens': prior.output_tokens,
+                                  'reuse': 'SCHEMA_REVALIDATED_SEMANTIC_GATES_PENDING'}
+                    reused = replace(prior, input_tokens=0, output_tokens=0, latency_seconds=0,
+                        model_calls=0, model_frame_count=0, transport_diagnostics={}, checkpoint_provenance=provenance)
+                    editorial_audit['reused_stages'] += 1
+                    editorial_audit['events'].append({'status': 'REUSED', 'stage': stage, **provenance})
+                    if isinstance(gateway, _RecordingStageGateway):
+                        gateway.runs.append(reused)
+                    return reused
+            except (OSError, ValueError, TypeError) as exc:
+                editorial_audit['events'].append({'status': 'CACHE_MISS', 'stage': stage,
+                                                'error_type': type(exc).__name__})
+        if stop_loss_v041:
             if model_call_attempt_count >= V041_RUN_MAX_MODEL_CALL_ATTEMPTS:
                 model_call_circuit_breaker_tripped = True
                 raise X02CallAttemptLimitReached(
                     "V04.1 model-call attempt circuit breaker is open"
                 )
         model_call_attempt_count += 1
-        return gateway.call(
+        result = gateway.call(
             stage,
             prompt,
             schema,
             evidence=evidence,
             context=call_context,
         )
+        if cache_key and result.call_status == 'COMPLETED':
+            try:
+                # Saving a response never admits it to the product. All existing
+                # semantic/grounding gates execute again after a cache hit.
+                if Draft202012Validator(schema).is_valid(result.output):
+                    editorial_store.save(cache_key, asdict(result))
+                    editorial_audit['saved_stages'] += 1
+                else:
+                    editorial_audit['events'].append({'status': 'NOT_SAVED_SCHEMA_INVALID', 'stage': stage})
+            except (OSError, ValueError, TypeError) as exc:
+                editorial_audit['events'].append({'status': 'SAVE_FAILED', 'stage': stage,
+                                                'error_type': type(exc).__name__})
+        return result
     stage_statuses: List[Dict[str, object]] = [
         _stage_status("S00_S02_INTAKE", "COMPLETED", [
             "APP_LIBRARY_BUNDLE_GATE_PASSED",
@@ -1481,7 +1582,10 @@ def _run_x02_impl(
                     if any(item['status'] == 'FAILED' for item in cached_observations):
                         raise ValueError('checkpoint observation rejected')
                     stage_run = replace(prior, stage=stage_name, input_tokens=0, output_tokens=0,
-                                        latency_seconds=0.0, model_calls=0, model_frame_count=0)
+                        latency_seconds=0.0, model_calls=0, model_frame_count=0, transport_diagnostics={},
+                        checkpoint_provenance={'key': cache_key, 'prior_request_id': prior.request_id,
+                            'prior_input_tokens': prior.input_tokens, 'prior_output_tokens': prior.output_tokens,
+                            'reuse': 'PERCEPTION_REVALIDATED'})
                     checkpoint_hit = True
                     checkpoint_audit['reused_batches'] += 1
                     checkpoint_audit['reused_assets'] += len(batch_assets)
@@ -1613,6 +1717,8 @@ def _run_x02_impl(
             str(item["source_asset_id"])
             for item in batch_observations if item["status"] == "FAILED"
         }
+        if cache_key and not item_failure_ids:
+            perception_request_keys.append(cache_key)
         if checkpoint is not None and cache_key and not checkpoint_hit and not item_failure_ids:
             try:
                 checkpoint.save(cache_key, asdict(stage_run))
@@ -1736,8 +1842,12 @@ def _run_x02_impl(
             result["decision_trace"]["client_profile_audit"] = profile_audit
         if checkpoint_dir is not None:
             result['decision_trace']['perception_checkpoint'] = checkpoint_audit
+            result['decision_trace']['editorial_checkpoint'] = editorial_audit
             if checkpoint_audit['reused_assets']:
                 result['trace']['evaluation_run_mode'] = 'RESUMED_PERCEPTION_CHECKPOINT'
+                result['trace']['cross_run_semantic_cache_used'] = True
+            if editorial_audit['reused_stages']:
+                result['trace']['evaluation_run_mode'] = 'RESUMED_EDITORIAL_CHECKPOINT'
                 result['trace']['cross_run_semantic_cache_used'] = True
         return result
 
@@ -6562,6 +6672,10 @@ def _metric_from_run(run: StageRun) -> Dict[str, object]:
         "pricing_basis": run.pricing_basis,
         "call_status": run.call_status,
     })
+    if run.transport_diagnostics:
+        metric['transport_diagnostics'] = copy.deepcopy(run.transport_diagnostics)
+    if run.checkpoint_provenance:
+        metric['checkpoint_provenance'] = copy.deepcopy(run.checkpoint_provenance)
     return metric
 
 
@@ -6587,6 +6701,8 @@ def stage_run_audit_snapshot(run: StageRun) -> Dict[str, object]:
             "basis": run.pricing_basis,
         },
         "selected_evidence": [dict(item) for item in run.selected_evidence],
+        "transport_diagnostics": copy.deepcopy(run.transport_diagnostics),
+        "checkpoint_provenance": copy.deepcopy(run.checkpoint_provenance),
     }
 
 

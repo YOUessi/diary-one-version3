@@ -15,6 +15,7 @@ from typing import Callable, Dict, List, Mapping, Optional, Sequence, Tuple
 
 from .bundle import ImportedEvidenceBundle, load_app_library_bundle
 from .core import canonical_bytes, sha256_file
+from .transport_diagnostics import DiagnosticTransport
 
 
 X01_SCHEMA_VERSION = "DIARY_ONE_X01_PREVIEW_V01"
@@ -225,6 +226,16 @@ def _url_transport(
         raise X01Error("Could not reach %s: %s" % (provider_label, exc.reason)) from exc
 
 
+class _AdapterDiagnosticTransport(DiagnosticTransport):
+    def __call__(self, *args, **kwargs):
+        try:
+            return super().__call__(*args, **kwargs)
+        except urllib.error.URLError as error:
+            # Keep X01/V03's existing 502 boundary; the actual cause remains
+            # chained for recovery while arbitrary exception text stays private.
+            raise X01Error('Could not reach model provider (%s)' % type(error.reason).__name__) from error
+
+
 class QwenChatCompletionsAdapter(EditorialModelAdapter):
     """Qwen-first X01 adapter using Model Studio's OpenAI-compatible Chat API.
 
@@ -257,7 +268,7 @@ class QwenChatCompletionsAdapter(EditorialModelAdapter):
         if not self.base_url.startswith("https://"):
             raise ValueError("Qwen base_url must use https")
         self.timeout_seconds = timeout_seconds
-        self.transport = transport or self._url_transport
+        self.transport = transport or _AdapterDiagnosticTransport()
         default_input, default_output, default_basis = _qwen_default_pricing(self.model)
         self.input_rate_per_million = _configured_rate(
             "DIARY_ONE_X01_QWEN_INPUT_CNY_PER_MTOK", default_input
@@ -380,7 +391,7 @@ class OpenAIResponsesAdapter(EditorialModelAdapter):
         self.api_key = api_key if api_key is not None else os.environ.get("OPENAI_API_KEY", "")
         self.model = model or os.environ.get("DIARY_ONE_X01_OPENAI_MODEL", "gpt-5.6-luna")
         self.timeout_seconds = timeout_seconds
-        self.transport = transport or self._url_transport
+        self.transport = transport or _AdapterDiagnosticTransport()
         self.input_rate_per_million = _configured_rate(
             "DIARY_ONE_X01_OPENAI_INPUT_USD_PER_MTOK", 0.20
         )

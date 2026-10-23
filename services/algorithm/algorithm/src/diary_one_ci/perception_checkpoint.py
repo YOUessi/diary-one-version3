@@ -1,7 +1,9 @@
-"""Optional local receipts for validated, successful perception batches.
+"""Private local receipts, originally for validated perception batches.
 
-This is an input-addressed checkpoint, not a general stage cache. Callers must
-validate perception outputs before saving and again after loading. Write and
+Product editorial calls reuse the persistence mechanism in a separate editorial
+namespace: they validate schemas on save/load and still run all semantic gates.
+This is input-addressed storage, not an admission decision. Callers must
+validate outputs before saving and again after loading. Write and
 fingerprinting errors propagate so the caller can log them and continue without
 a checkpoint. Read errors are misses. Checksums detect accidental corruption;
 they do not authenticate records against someone who can edit the cache.
@@ -153,14 +155,17 @@ class PerceptionCheckpointStore:
         if not isinstance(key, str) or not _KEY_PATTERN.fullmatch(key):
             raise ValueError("checkpoint key must be a lowercase SHA256 digest")
         # Snapshot and validate before touching an existing successful record.
-        snapshot = json.loads(_canonical(dict(receipt)))
+        # Preserve provider object order: later prompts may serialize the output
+        # verbatim. Checksums/keys remain canonical, payload order does not drift
+        # merely because a response was loaded from disk.
+        snapshot = json.loads(json.dumps(dict(receipt), ensure_ascii=False, allow_nan=False))
         _check_receipt(snapshot)
         record = {
             "format": _FORMAT, "identity": self._identity, "key": key,
             "receipt": snapshot,
         }
         record["checksum"] = hashlib.sha256(_canonical(record)).hexdigest()
-        encoded = _canonical(record)
+        encoded = json.dumps(record, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf-8')
         if len(encoded) > _MAX_RECORD_BYTES:
             raise ValueError("perception checkpoint exceeds 8 MiB record limit")
 

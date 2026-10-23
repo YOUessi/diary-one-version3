@@ -315,10 +315,12 @@ def _write_x02_failed_run_audit(
         "session_id": session_id,
         "status": "FAILED",
         "evaluation_run_mode": (
+            'RESUMED_EDITORIAL_CHECKPOINT' if error.editorial_checkpoint.get('reused_stages') else
             'RESUMED_PERCEPTION_CHECKPOINT'
             if error.perception_checkpoint.get('reused_assets') else X02_EVALUATION_RUN_MODE
         ),
-        "cross_run_semantic_cache_used": bool(error.perception_checkpoint.get('reused_assets')),
+        "cross_run_semantic_cache_used": bool(error.perception_checkpoint.get('reused_assets')
+                                              or error.editorial_checkpoint.get('reused_stages')),
         "image_payloads_included": False,
         "failure": {
             "stage": error.stage,
@@ -350,6 +352,8 @@ def _write_x02_failed_run_audit(
         audit["stage_call_attempts"] = stage_runs
     if error.perception_checkpoint:
         audit['perception_checkpoint'] = error.perception_checkpoint
+    if error.editorial_checkpoint:
+        audit['editorial_checkpoint'] = error.editorial_checkpoint
     _assert_no_embedded_images(audit)
     session_root = audit_root / session_id
     archive = session_root / "failures" / (failure_id + ".failed_run_audit.json")
