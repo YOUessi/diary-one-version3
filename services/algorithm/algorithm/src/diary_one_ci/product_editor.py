@@ -14,12 +14,12 @@ import uuid
 
 from .scene_selection import (EXPERIENCE_KINDS, SELECTION_POLICY_PROMPT,
                               selection_policy_context, policy_for)
-from . import narrative_focus, frame_selection, frame_observation, final_moment_repair
+from . import narrative_focus, frame_selection, frame_observation, final_moment_repair, chapter_transition
 
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_22'
+EDITOR_REVISION = 'CHAPTER_V2_S07_DRAFT_ANCHOR_REVIEW_P0_R5_23'
 
 
 def obj(properties, required=None):
@@ -2789,6 +2789,11 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
                     'personal_history_available': False}
     chapters, moments, rejected, coverage = [], [], [], []
     editorial_draft, editorial_output, drafts, reviewed = {}, {}, {}, {}
+    draft_scene_anchors = []
+    draft_at_risk_anchors = []
+    chapter_transition_pre_review, chapter_transition_post_review = {}, {}
+    chapter_transition_final = {}
+    draft_media_reservations = {}
     raw_drafts, raw_review, raw_copy_repair = {}, {}, {}
     writer_ledger, review_ledger = [], []
     chapter_limit = min(4, len(asset_map))
@@ -2837,6 +2842,9 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
                 model_recovery.wait_before_retry(attempt)
     if facts:
         editorial_draft = ask('S07_PRODUCT_EDITOR', EDITOR_PROMPT, editor_schema, editor_input)
+        # Draft Chapters are provisional, but each valid focus anchor deserves
+        # early image review even if S08 later merges or removes the Chapter.
+        draft_scene_anchors = chapter_transition.draft_anchor_proposals(editorial_draft, facts)
         editorial_output = ask('S08_PRODUCT_STRUCTURE_REVIEW', STRUCTURE_REVIEW_PROMPT, editor_schema,
                               {**editor_input, 'draft': editorial_draft})
         try:
@@ -2853,8 +2861,18 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             raise x02.X02ContractError(str(exc)) from exc
     # Display capacity must not erase evidence from a wider experience. Facts
     # outside the representative media can still support a nested highlight.
+    chapter_transition_pre_review = chapter_transition.transition_audit(
+        editorial_draft, editorial_output, initial_facts)
+    # A valid merge may keep every source fact (e.g. multiple road surfaces
+    # in one cycling journey). Do not re-seed its candidate pool or alter
+    # existing P IDs in that case. Only LOST S07 focus facts need extra review.
+    draft_at_risk_anchors = chapter_transition.unrepresented_anchor_proposals(
+        draft_scene_anchors, editorial_output, initial_facts)
     visual_targets = {facts[f]['asset_id'] for c in chapters for f in c['fact_ids']}
     visual_targets.update(facts[m['fact_id']]['asset_id'] for m in moments)
+    # Previously the review was limited to S08 survivors. That made dropped
+    # experiences invisible to later visual verification and media selection.
+    visual_targets.update(chapter_transition.anchor_asset_ids(draft_at_risk_anchors))
     pending_facts = {f: v for f, v in facts.items() if v['asset_id'] not in visual_targets}
     facts, visual_ledger, visual_outputs = product_evidence.review_visual_facts(
         {f: v for f, v in facts.items() if v['asset_id'] in visual_targets}, asset_map, bundle, ask,
@@ -2863,12 +2881,34 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
                     for f in facts.values()]
     editor_input['facts'] = public_facts
     editor_input['visual_fact_policy'] = 'ONLY_IMAGE_REVIEWED_FACTS; original observations retained for audit'
+    chapter_transition_post_review = chapter_transition.transition_audit(
+        editorial_draft, editorial_output, initial_facts, verified_facts=facts)
+    # A concise advisory goes to S09B ONLY when S08 dropped an S07 focus
+    # anchor. The full fact/ID audit remains in decision_trace, never bloating
+    # ordinary unchanged model prompts with hundreds of duplicated fact IDs.
+    if draft_at_risk_anchors:
+        editor_input['draft_scene_anchor_audit'] = {
+            'policy': 'RECONSIDER_LOST_S07_ANCHORS_AFTER_IMAGE_REVIEW',
+            'lost_draft_anchors': [{
+                'draft_chapter_id': row['draft_chapter_id'],
+                'draft_theme_hint': row['draft_theme'],
+                'lost_focus_fact_ids': row['anchor_fact_ids'],
+                'verified_focus_fact_ids': [
+                    fid for fid in row['anchor_fact_ids'] if fid in facts],
+            } for row in draft_at_risk_anchors],
+            'notice': 'A source draft is provisional; a visually verified anchor is a review obligation, not forced publication.'
+        }
     media_selection_audit, media_selection_rejections = {}, []
     if facts:
         preferred = list(dict.fromkeys(facts[f]['asset_id'] for c in chapters for f in c['fact_ids'] if f in facts))
+        draft_media_reservations = chapter_transition.media_reservations(draft_at_risk_anchors, facts)
+        chapter_media_groups = {c['id']: c['fact_ids'] for c in chapters}
+        # Ensure each visually supported S07 scene can supply a real candidate
+        # to S09B; these synthetic reservation IDs are never published IDs.
+        chapter_media_groups.update(draft_media_reservations)
         shown_media_frames, media_evidence, media_selection_audit = media_selection_candidates(
             facts, asset_map, bundle, preferred_assets=preferred,
-            chapter_fact_groups={c['id']: c['fact_ids'] for c in chapters})
+            chapter_fact_groups=chapter_media_groups)
         candidates = media_selection_audit['shown_frames']
         media_selection_audit['independent_scene_clues'] = frame_selection.scene_clues_from_visual_outputs(
             visual_outputs, candidates, facts)
@@ -2887,8 +2927,13 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             'policy': policy_for(c['selection_focus']['experience_kind']),
             'status': 'PROVISIONAL_REASSESS_AGAINST_VERIFIED_FACTS'} for c in chapters
             if any(f in facts for f in c['selection_focus']['fact_ids'])]
+        lost_anchor_guidance = (
+            '\nS07被删章节的draft_scene_anchor_audit已供复核。若图像核验后的锚点属于独立经历，应重新评估其去向，不得仅因同属CITYWALK而认定重复。'
+            '\n若锚点事实不成立可删除，但未选择事实需说明原因；不要把旧章节ID复用来指代完全不同的经历。'
+        ) if draft_at_risk_anchors else ''
         editorial_output = ask('S09B_PRODUCT_VERIFIED_STRUCTURE', STRUCTURE_REVIEW_PROMPT + MEDIA_SELECTION_PROMPT + frame_selection.FRAME_SELECTION_PROMPT +
             '\n现已看图核验事实。只用当前facts重整结构；旧draft中的店铺类别/动作/理由都可能已被纠正。'
+            + lost_anchor_guidance +
             '\n活动没变时优先整合；停留眺望或道路背景变化本身不另开骑行章。不同独立活动可保留小记忆。',
             editor_schema, {**editor_input, 'draft': editorial_output}, evidence=media_evidence)
         chapters, moments, verified_rejections, coverage, frame_audit = compile_assessed_structure(editorial_output, facts, asset_map, chapter_limit,
@@ -2971,6 +3016,8 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         rejected.extend(verified_rejections)
     else:
         chapters, moments = [], []
+    chapter_transition_final = chapter_transition.transition_audit(
+        editorial_draft, editorial_output, initial_facts, verified_facts=facts)
     moments, moment_value_ledger, moment_value_output = product_evidence.review_moments(
         moments, chapters, facts, ask, stage_runs=stage_runs, assets=asset_map, bundle=bundle)
     memories = memory_specs(chapters, moments, facts,
@@ -3169,6 +3216,10 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         'decision_trace': {'editor_revision': EDITOR_REVISION,
             'observation_candidates': observation_ledger, 'evidence_selection': {'selected': evidence_ledger},
             'editor_input': editor_input, 'editor_draft': editorial_draft, 'editor_output': editorial_output, 'rejected_items': rejected,
+            'chapter_transition_pre_review': chapter_transition_pre_review,
+            'chapter_transition_post_visual_review': chapter_transition_post_review,
+            'chapter_transition_final': chapter_transition_final,
+            'draft_media_reservations': draft_media_reservations,
             'contract_repair_issues': contract_repairs, 'focused_contract_repairs': focused_contract_repairs,
             'copy_repair_ledger': copy_repair_ledger,
             'writer_output': raw_drafts, 'review_output': raw_review, 'copy_repair_output': raw_copy_repair,
