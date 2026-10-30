@@ -13,6 +13,19 @@ An anchor is a review obligation, not a fact verdict or forced published Chapter
 from collections import defaultdict
 
 
+LOST_ANCHOR_REVIEW_PROMPT = (
+    '\nS07中有核心事实在S08复核后未进入任何Chapter或Moment，'
+    '这些真实图片已重新核验。请按已核验事实判断它们是否构成独立经历、'
+    '应合入现有章节、只作为Moment保留，或因证据不足舍弃。'
+    '\n相同活动类别既不意味着必然属于同一段经历，也不意味着应拆成多个章节。'
+    '需要比较实际可见的事件、主体、场景关联与可信时间依据；'
+    '单纯地点、路面或视角变化不能自动升格成章。'
+    '\nS07主题只是待验证的候选，不是事实真值；'
+    '取消独立章节时要在已有结构和未选择事实中留下明确证据去向，'
+    '并避免把旧章节ID无记录地赋予不同经历。'
+)
+
+
 def _chapters(packet):
     rows = packet.get('chapters', []) if isinstance(packet, dict) else []
     return rows if isinstance(rows, list) else []
@@ -73,7 +86,19 @@ def transition_audit(draft, reviewed, facts, *, verified_facts=None):
         row['id']: row for row in _chapters(reviewed)
         if isinstance(row, dict) and isinstance(row.get('id'), str)
     }
+    # An experience may legitimately be down-scoped to a Moment, rather
+    # than a full Chapter. A fact referenced by a provisional Moment is
+    # accounted for but still awaits the normal downstream evidence gates.
+    moments = reviewed.get('moments', []) if isinstance(reviewed, dict) else []
+    moment_facts = {
+        m['fact_id'] for m in moments if isinstance(m, dict)
+        and isinstance(m.get('fact_id'), str)
+    } if isinstance(moments, list) else set()
     verified = set(verified_facts) if verified_facts is not None else None
+    retained_chapter_facts = {
+        fid for row in finals.values() for fid in row.get('fact_ids', [])
+        if isinstance(fid, str)
+    }
     mapped = defaultdict(list)
     records = []
     for source in proposals:
@@ -103,12 +128,24 @@ def transition_audit(draft, reviewed, facts, *, verified_facts=None):
             'retained_fact_overlap': overlaps.get(best, 0),
             'same_id_reused_for_different_facts': reused,
             'fact_overlap_by_final_chapter': overlaps,
+            'represented_as_moment_fact_ids': [
+                fid for fid in source['draft_fact_ids'] if fid in moment_facts
+            ],
+            'unaccounted_fact_ids': [
+                fid for fid in source['draft_fact_ids']
+                if fid not in retained_chapter_facts and fid not in moment_facts
+            ],
             'visual_review_status': visual_status,
             'verified_anchor_fact_ids': surviving_anchors,
         })
     for record in records:
         target = record['best_reviewed_chapter_id']
         record['transition'] = (
+            'REPRESENTED_AS_MOMENT' if target is None
+                and not record['unaccounted_fact_ids']
+                and record['represented_as_moment_fact_ids'] else
+            'PARTIALLY_REPRESENTED_AS_MOMENT' if target is None
+                and record['represented_as_moment_fact_ids'] else
             'OMITTED' if target is None else
             'MERGED_WITH_ANOTHER_DRAFT' if len(mapped[target]) > 1 else
             'RETAINED' if target == record['draft_chapter_id'] else
@@ -141,6 +178,15 @@ def unrepresented_anchor_proposals(proposals, reviewed, facts):
         fid for chapter in _chapters(reviewed) if isinstance(chapter, dict)
         for fid in chapter.get('fact_ids', []) if isinstance(fid, str)
     }
+    # A draft scenelet can be intentionally represented by a smaller Moment.
+    # It does not require an entire Chapter to survive. The downstream moment
+    # evidence and publication gates still decide if this representation holds.
+    moments = reviewed.get('moments', []) if isinstance(reviewed, dict) else []
+    if isinstance(moments, list):
+        accounted.update(
+            m['fact_id'] for m in moments if isinstance(m, dict)
+            and isinstance(m.get('fact_id'), str)
+        )
     lost = []
     for item in proposals:
         omitted = [fid for fid in item['anchor_fact_ids'] if fid not in accounted]

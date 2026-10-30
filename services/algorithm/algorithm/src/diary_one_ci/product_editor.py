@@ -2928,9 +2928,9 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             'status': 'PROVISIONAL_REASSESS_AGAINST_VERIFIED_FACTS'} for c in chapters
             if any(f in facts for f in c['selection_focus']['fact_ids'])]
         lost_anchor_guidance = (
-            '\nS07被删章节的draft_scene_anchor_audit已供复核。若图像核验后的锚点属于独立经历，应重新评估其去向，不得仅因同属CITYWALK而认定重复。'
-            '\n若锚点事实不成立可删除，但未选择事实需说明原因；不要把旧章节ID复用来指代完全不同的经历。'
-        ) if draft_at_risk_anchors else ''
+            chapter_transition.LOST_ANCHOR_REVIEW_PROMPT
+            if draft_at_risk_anchors else ''
+        )
         editorial_output = ask('S09B_PRODUCT_VERIFIED_STRUCTURE', STRUCTURE_REVIEW_PROMPT + MEDIA_SELECTION_PROMPT + frame_selection.FRAME_SELECTION_PROMPT +
             '\n现已看图核验事实。只用当前facts重整结构；旧draft中的店铺类别/动作/理由都可能已被纠正。'
             + lost_anchor_guidance +
