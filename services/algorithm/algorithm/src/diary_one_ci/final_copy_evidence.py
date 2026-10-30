@@ -17,8 +17,10 @@ def build_final_copy_scope(items, assets, bundle, max_frames=24):
     budget. Moment facts must already be narrowed by ``memory_specs``; optional
     focus_frame_ids only prioritize references and can never authorize new ones.
     """
-    if type(max_frames) is not int or not 0 <= max_frames <= 24:
-        raise ValueError('max_frames must be an integer from 0 to 24')
+    # None builds a validated reference directory, not a model request. Actual
+    # requests below still contain only one claim's exact images, bounded at 24.
+    if max_frames is not None and (type(max_frames) is not int or not 0 <= max_frames <= 24):
+        raise ValueError('max_frames must be None or an integer from 0 to 24')
     root = Path(bundle.manifest_path).resolve().parent
     issues, rows, queues, available = [], [], [], {}
     id_counts = Counter(item.get('id') for item in items)
@@ -87,7 +89,8 @@ def build_final_copy_scope(items, assets, bundle, max_frames=24):
     # consume only one slot while retaining each memory's independent fact map.
     selected = []
     positions = [0] * len(queues)
-    while len(selected) < max_frames:
+    limit = len(available) if max_frames is None else max_frames
+    while len(selected) < limit:
         progress = False
         for i, queue in enumerate(queues):
             while positions[i] < len(queue) and queue[positions[i]] in selected:
@@ -96,7 +99,7 @@ def build_final_copy_scope(items, assets, bundle, max_frames=24):
                 selected.append(queue[positions[i]])
                 positions[i] += 1
                 progress = True
-                if len(selected) == max_frames:
+                if len(selected) == limit:
                     break
         if not progress:
             break
@@ -111,6 +114,8 @@ def build_final_copy_scope(items, assets, bundle, max_frames=24):
                 row['unshown_refs'].append({**ref, 'reason': 'IMAGE_BUDGET'})
         row['visual_check_available'] = bool(row['shown_refs'])
     scope = {'version': VERSION, 'max_frames': max_frames, 'bundle_root': str(root),
+             'allocation_mode': 'REFERENCE_DIRECTORY' if max_frames is None else 'BOUNDED_PRESELECTION',
+             'max_claim_frames': 24,
              'scope_notice': 'Images are available evidence, not verified visual truth. Judge each memory only from its own shown_refs. Unshown facts cannot establish visual relations.',
              'shown_frames': [{'asset_id': aid, 'source_asset_id': assets[aid]['asset_id'], 'frame_id': frame_id}
                               for aid, frame_id in selected],
@@ -171,6 +176,9 @@ def build_final_claim_batches(context_items, evidence, evidence_scope):
                                       images[key][1].get('source_timestamp_ms') or 0, key[1]))
             if issues or not keys:
                 claim.update(status='NOT_EVALUATED', reason='; '.join(issues) or 'NO_BOUND_IMAGES')
+                continue
+            if len(keys) > 24:
+                claim.update(status='NOT_EVALUATED', reason='CLAIM_IMAGE_BUDGET_EXCEEDED')
                 continue
             key = tuple(keys)
             if key not in grouped:

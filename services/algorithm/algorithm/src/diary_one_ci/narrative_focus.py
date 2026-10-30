@@ -10,6 +10,7 @@ evidence_quote必须逐字摘自对应fact.text的一个连续片段，不拼接
 role为MAIN（本次经历最值得留下的动作或具体画面）、SUPPORT（帮助理解或呼应主线的细节）、BACKGROUND（普通伴随背景，无需逐一交代）。
 先理解这是什么经历，再选具体细节。活动主线与有辨识度的细节优先；普通路况、车把手臂、无关路人衣着不因被识别就成为重点。
 selection_focus是已选章节的叙述方向提示，必须仍由facts支持，不是额外事实。让MAIN体现经历的具体特点，不把背景按识别顺序全升为MAIN。
+chapter_anchor保留已看图选定的章节主旨、封面及核心事实。优先保留其中可辨认的主体；不能把核心建筑仅摘成字幕，或用普通路人动作取代原本的活动重点。主旨仍须由事实支持，不是新证据。
 园林可重有特色的园景构造，动物园可重动物可见姿态，博物馆可重展品细节；按本次证据判断，不硬套场景模板。
 颜色、背景、人物并非一律删除：若它们让主体更具体或帮助回忆，仍可为MAIN或SUPPORT。
 至少有一个MAIN；不规定细节数、字数、句数，也不要求所有fact或所有视频都有detail。
@@ -81,6 +82,10 @@ def writing_context(memory, brief=None):
     not deletion of evidence, a length quota or proof of a relation between clips.
     """
     base = {'id': memory['id'], 'kind': memory['kind']}
+    if memory.get('chapter_anchor'):
+        # Full anchor facts accompany excerpts: an excerpt containing only a
+        # caption must not erase the already selected subject from the writer.
+        base['chapter_anchor'] = deepcopy(memory['chapter_anchor'])
     if brief and brief.get('narrative_details'):
         facts = {f['id']: f for f in memory['facts']}
         material = [{**deepcopy(d), 'asset_id': facts[d['fact_id']]['asset_id']}

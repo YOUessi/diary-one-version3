@@ -19,7 +19,7 @@ from . import narrative_focus, frame_selection, frame_observation, final_moment_
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_21'
+EDITOR_REVISION = 'SCENE_FOCUS_LOCAL_REPAIR_V07_1_HARDENED_R5_22'
 
 
 def obj(properties, required=None):
@@ -117,6 +117,7 @@ CHAPTER_VOICE = '''Chapter是对已有事实的轻度文字编辑，不是创作
 
 WRITER_PROMPT = '''你是一位中文文字编辑，为用户写生活日记的chapter总结。
 有writing_material时，它是本次正文的选材范围：围绕MAIN里的具体细节展开，SUPPORT仅在帮助读者理解主线时使用，不需要逐项交代。原始完整事实会留给后续独立编辑核验，不需要在正文里补成素材目录。
+有chapter_anchor时，其facts也是本次可用材料，保留其中有依据的核心主体及经历范围。theme是原章节标题候选：有事实支持且表达自然时优先保留，不能仅因某个局部动作容易描述就把整章缩成那个动作。不要只写主体旁的字幕而漏掉主体本身。原主题和封面不是事实证据，不能据此增加地点身份、动作或连续路线。
 evidence_quote是原事实的连续摘句，不是完整事件。表达应自然改写，不直接拼接摘句；同一fact_id的两个摘句也不能自动合成同一画面。asset_id不同的材料不能编造成先后路线、同一人物或连续动作。
 只在没有writing_material、回退为facts时自行做主次取舍，仍不必逐段覆盖；编辑角色不证明新的时间、人物关系或情绪。
 先选原材料中最有辨识度且成立的内容，再对已有句子做轻度润色；不补动作或环境。文字长短由成立内容自然决定。
@@ -1435,6 +1436,22 @@ def memory_specs(chapters, moments, facts, *, frame_claim_supports=()):
                                                     'max_sentences': 1, 'max_characters': 28})
         memory['evidence_groups'] = [{'asset_id': aid, 'facts': [f for f in memory['facts'] if f['asset_id'] == aid]}
                                      for aid in dict.fromkeys(f['asset_id'] for f in memory['facts'])]
+        if chapter:
+            selected = next(c for c in chapters if c['id'] == memory['id'])
+            hero = next((choice for choice in selected.get('media_choices', [])
+                         if choice['asset_id'] == selected.get('hero_asset_id')
+                         and choice['frame_id'] == selected.get('hero_frame_id')), {})
+            eligible = {fid for fid in memory.get('selected_title_fact_ids', [])
+                        if fid in memory['fact_ids'] and facts[fid].get('visual_reviewed') is True}
+            hero_ids = [fid for fid in hero.get('fact_ids', []) if fid in eligible]
+            anchor_ids = list(dict.fromkeys(hero_ids + [fid for fid in
+                memory.get('selection_focus', {}).get('fact_ids', []) if fid in eligible]))
+            if hero_ids:
+                memory['chapter_anchor'] = {'theme': memory['theme'],
+                    'selection_focus': deepcopy(memory.get('selection_focus', {})),
+                    'hero_frame_id': selected['hero_frame_id'], 'hero_fact_ids': hero_ids,
+                    'facts': [deepcopy(f) for f in memory['facts'] if f['id'] in anchor_ids],
+                    'basis': 'IMAGE_REVIEWED_SELECTION; EDITORIAL_DIRECTION_REQUIRES_FINAL_IMAGE_VERIFICATION'}
     return memories
 
 
@@ -1620,9 +1637,9 @@ def reconcile_final_chapter_media(chapters, reviewed, facts):
             result.append(chapter)
             continue
         chosen = max(eligible, key=lambda choice: (
+            choice['asset_id'] == chapter['hero_asset_id'] and choice['frame_id'] == chapter['hero_frame_id'],
             len(supported(choice) & title_refs),
-            sum(body_refs[fid] for fid in supported(choice)),
-            choice['asset_id'] == chapter['hero_asset_id'] and choice['frame_id'] == chapter['hero_frame_id']))
+            sum(body_refs[fid] for fid in supported(choice))))
         revised = deepcopy(chapter)
         revised.update(hero_asset_id=chosen['asset_id'], hero_frame_id=chosen['frame_id'])
         revised['selection_focus'] = {**revised['selection_focus'], 'focus': copy['title'],
@@ -1637,7 +1654,7 @@ def reconcile_final_chapter_media(chapters, reviewed, facts):
         ledger.append({'id': chapter['id'], 'status': 'RESELECTED' if changed else 'RETAINED',
             'original_hero_frame_id': chapter['hero_frame_id'], 'hero_frame_id': chosen['frame_id'],
             'title_fact_ids': list(copy['title_fact_ids']),
-            'rule': 'FINAL_TITLE_SUPPORT_THEN_BODY_SUPPORT_THEN_ORIGINAL_VERIFIED_CHOICE'})
+            'rule': 'RETAIN_ORIGINAL_IF_TITLE_SUPPORTED_ELSE_RESELECT_VERIFIED_CHOICE'})
         result.append(revised)
     return result, ledger
 
@@ -1870,7 +1887,12 @@ def compile_repair_verification(output, memories):
                 raise ValueError('Missing or duplicate local verification')
             verdict = matches[0]
             if memory.get('final_copy_verification'):
-                _exact_fields(verdict, ('id', 'title_supported', 'title_reason', 'sentences'), 'final_verdict')
+                fields = ('id', 'title_supported', 'title_reason', 'sentences')
+                if 'title_evaluated' in verdict:
+                    fields += ('title_evaluated',)
+                    if verdict['title_evaluated'] is not True:
+                        raise ValueError('Title was not evaluated against complete image evidence')
+                _exact_fields(verdict, fields, 'final_verdict')
             if (verdict.get('title_supported') is not True
                     or not isinstance(verdict.get('title_reason'), str) or not verdict['title_reason'].strip()):
                 raise ValueError('Local title failed independent semantic verification')
@@ -2219,6 +2241,7 @@ def verify_final_chapter_copy(packet, items, stage, *, ask, time_basis, stage_ru
             'final_evidence_scope': deepcopy(evidence_scope)}
         judgments = {c['claim_id']: {'supported': False, 'reason': c.get('reason', 'FINAL_CLAIM_NOT_EVALUATED')}
                      for c in plan['claims']}
+        evaluated = set()
         approved = packet.setdefault('_approved_exact_claims', {})
         keys = {c['claim_id']: approved_claim_key(c, evidence) if c.get('batch_id') else None for c in plan['claims']}
         reused = set()
@@ -2226,6 +2249,7 @@ def verify_final_chapter_copy(packet, items, stage, *, ask, time_basis, stage_ru
             for cid, key in keys.items():
                 if key is not None and key in approved:
                     judgments[cid] = deepcopy(approved[key]); reused.add(cid)
+                    evaluated.add(cid)
         packet['final_verification_input']['reused_exact_approved_claim_ids'] = sorted(reused)
         terminal_failure = False
         for batch in plan['batches']:
@@ -2267,6 +2291,7 @@ def verify_final_chapter_copy(packet, items, stage, *, ask, time_basis, stage_ru
                     raise ValueError('Final claim verdict must cover each claim exactly once with a reason')
                 for row in rows:
                     judgments[row['claim_id']] = {'supported': row['supported'], 'reason': row['reason']}
+                    evaluated.add(row['claim_id'])
                 # A second model judgment may veto, never turn a failed first
                 # verdict into approval. Unrelated sentences keep their own
                 # image-bound decisions if this local challenge is unavailable.
@@ -2280,6 +2305,8 @@ def verify_final_chapter_copy(packet, items, stage, *, ask, time_basis, stage_ru
                     for cid, verdict in spatial.items():
                         if not verdict['supported']:
                             judgments[cid] = verdict
+                            if spatial_audit['status'] != 'EVALUATED':
+                                evaluated.discard(cid)
                     terminal_failure = spatial_terminal
                 audit['status'] = 'EVALUATED'
             except (KeyError, TypeError, ValueError, OSError, x02.X02Error) as exc:
@@ -2287,6 +2314,7 @@ def verify_final_chapter_copy(packet, items, stage, *, ask, time_basis, stage_ru
                              reason=str(exc) if isinstance(exc, ValueError) else type(exc).__name__)
                 for cid in audit['claim_ids']:
                     judgments[cid] = {'supported': False, 'reason': 'FINAL_BATCH_UNVERIFIED:' + audit['reason']}
+                    evaluated.discard(cid)
                 terminal_failure = final_provider_failure_is_terminal(exc)
                 if isinstance(exc, x02.X02StageCallError) and all(run is not exc.stage_run for run in stage_runs):
                     stage_runs.append(exc.stage_run)
@@ -2298,6 +2326,7 @@ def verify_final_chapter_copy(packet, items, stage, *, ask, time_basis, stage_ru
             title = next(c for c in claims if c['field'] == 'TITLE')
             title_verdict = judgments[title['claim_id']]
             rows.append({'id': memory['id'], 'title_supported': title_verdict['supported'],
+                         'title_evaluated': title['claim_id'] in evaluated,
                          'title_reason': title_verdict['reason'], 'sentences': [
                 {'source_index': c['source_index'], **judgments[c['claim_id']]}
                 for c in claims if c['field'] == 'SENTENCE']})
@@ -2340,6 +2369,7 @@ def repair_final_titles(packet, items, stage, *, ask, time_basis, stage_runs, ev
     for memory in packet.get('_final_verification_memories', []):
         mid = memory['id']; verdict = verdicts.get(mid, {})
         if (mid not in original_ids or mid in attempted or verdict.get('title_supported') is not False
+                or verdict.get('title_evaluated') is False
                 or mid in packet['reviewed']):
             continue
         passed = {r['source_index'] for r in verdict.get('sentences', []) if r.get('supported') is True}
@@ -2596,7 +2626,8 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
                 packet['narrative_brief_output'] = ask(stages[0] + '_NARRATIVE_BRIEF', NARRATIVE_BRIEF_PROMPT,
                     narrative_focus.brief_schema(chapters),
                     {'items': [{'id': m['id'], 'facts': m['facts'],
-                                'selection_focus': m.get('selection_focus')} for m in chapters]})
+                                'selection_focus': m.get('selection_focus'),
+                                'chapter_anchor': m.get('chapter_anchor')} for m in chapters]})
                 briefs, packet['narrative_brief_ledger'] = narrative_focus.validate_briefs(
                     packet['narrative_brief_output'], chapters)
             except (KeyError, TypeError, ValueError, OSError, x02.X02Error) as exc:
@@ -2604,8 +2635,8 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
                 if isinstance(exc, x02.X02StageCallError) and all(r is not exc.stage_run for r in stage_runs):
                     stage_runs.append(exc.stage_run)
                 # Priorities are hints; all original facts remain available.
-        # Do not duplicate facts in both a flat list and source groups, or anchor
-        # chapter titles to the structural editor's often mechanical theme.
+        # Keep excerpts concise, while carrying the original verified subject
+        # and chapter direction separately so selection cannot erase them.
         prose_input = {**writer_input, 'items': [
             narrative_focus.writing_context(m, briefs.get(m['id'])) if m['kind'] == 'CHAPTER' else m
             for m in items]}
@@ -2944,7 +2975,7 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         moments, chapters, facts, ask, stage_runs=stage_runs, assets=asset_map, bundle=bundle)
     memories = memory_specs(chapters, moments, facts,
         frame_claim_supports=media_selection_audit.get('frame_observation', {}).get('frame_claim_supports', []))
-    final_images, final_image_scope = final_copy_evidence.build_final_copy_scope(memories, asset_map, bundle)
+    final_images, final_image_scope = final_copy_evidence.build_final_copy_scope(memories, asset_map, bundle, max_frames=None)
 
     written = write_and_review(memories, ('S11_PRODUCT_WRITER', 'S12_PRODUCT_FACT_REVIEW', 'S13_PRODUCT_COPY_REPAIR'),
                                ask=ask, time_basis=editor_input['time_basis'], stage_runs=stage_runs,
@@ -3009,7 +3040,7 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
                 recovered, published_structure, facts, ask, stage='S14C_PRODUCT_MOMENT_VALUE', stage_runs=stage_runs,
                 assets=asset_map, bundle=bundle)
             new_memories = memory_specs([], recovered, facts)
-            recovery_images, recovery_image_scope = final_copy_evidence.build_final_copy_scope(new_memories, asset_map, bundle)
+            recovery_images, recovery_image_scope = final_copy_evidence.build_final_copy_scope(new_memories, asset_map, bundle, max_frames=None)
             recovery_written = write_and_review(new_memories,
                 ('S15_PRODUCT_RECOVERY_WRITER', 'S16_PRODUCT_RECOVERY_REVIEW', 'S17_PRODUCT_RECOVERY_REPAIR'),
                 ask=ask, time_basis=editor_input['time_basis'], stage_runs=stage_runs,
