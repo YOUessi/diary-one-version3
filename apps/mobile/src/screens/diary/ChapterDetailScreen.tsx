@@ -209,6 +209,7 @@ export default function ChapterDetailScreen() {
                       uri={posterUri ?? playbackUri!}
                       playbackUri={playbackUri}
                       focusTimeSec={m.focusTimeSec}
+                      motionCover={m.motionCover}
                       playing={playing}
                       onPlay={() => playMoment(m.id)}
                       onStop={stopPlayback}

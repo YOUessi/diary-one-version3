@@ -108,6 +108,17 @@ export async function buildAppLibraryBundle(
       captureUtcOffset: item.captureUtcOffset,
       confirmedDayKey: item.confirmedDayKey,
     };
+    // V05 opt-in: only explicit-offset EXIF/device-signed capture time is
+    // promoted to VERIFIED. Local EXIF and library timestamps may still inform
+    // UI ordering but cannot prove a continuous daily route.
+    const timeValue = Number.isFinite(item.creationTimeMs) && Number.isInteger(item.creationTimeMs)
+      && (item.creationTimeMs ?? 0) >= 946684800000 ? item.creationTimeMs : null;
+    const captureMetadata = exportVersion === 'V05' ? {
+      capture_time_ms: timeValue,
+      capture_time_source: item.captureTimeSource ?? 'UNKNOWN',
+      capture_time_confidence: (timeValue !== null && item.captureTimeSource === 'EXIF_OFFSET'
+        ? 'VERIFIED' : timeValue !== null ? 'ESTIMATED' : 'UNKNOWN'),
+    } : {};
     const isPhoto = item.mediaType !== 'video';
     const originalSha = await sha256File(localUri);
     const ext = extFromName(item.fileName, isPhoto ? 'jpg' : 'mp4');
@@ -136,6 +147,7 @@ export async function buildAppLibraryBundle(
         original_height: item.height ?? 1,
         original_duration_ms: null,
         original_included: false,
+        ...captureMetadata,
         sequence_index: sequenceIndex,
         logical_asset_duration_ms: 9000,
         materialized_video: false,
@@ -178,6 +190,7 @@ export async function buildAppLibraryBundle(
       original_height: item.height ?? 1,
       original_duration_ms: durationMs,
       original_included: false,
+      ...captureMetadata,
       sequence_index: sequenceIndex,
       logical_asset_duration_ms: 9000,
       materialized_video: false,

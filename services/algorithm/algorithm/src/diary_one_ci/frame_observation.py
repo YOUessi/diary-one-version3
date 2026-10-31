@@ -212,3 +212,42 @@ def review_frame_observations(candidates, facts, ask, *, evidence, stage='S09A_F
             return clues, {**audit, 'attempts': attempts}
         context = {**context, 'repair_instruction': 'Previous whole response was invalid. Return exactly every P and its allowed fact checks.',
                    'issues': audit['frame_ledger']}
+
+
+
+def review_frame_observations_batched(candidates, facts, ask, *, evidence,
+                                      stage='S09A_FRAME_OBSERVATION',
+                                      stage_runs=None, batch_size=12):
+    """Respect one-image-one-P auditing without a 44-image provider request.
+
+    This is a bounded aggregate of independent existing frame_observation
+    calls. A missing/invalid batch is recorded as unavailable, not implicitly
+    supported by a different batch's image.
+    """
+    if batch_size<1 or batch_size>18:
+        raise ValueError('Invalid frame observation batch size')
+    if len(candidates)!=len(evidence):
+        raise ValueError('Candidate/evidence misalignment')
+    if len(candidates)<=batch_size:
+        return review_frame_observations(
+            candidates,facts,ask,evidence=evidence,stage=stage,stage_runs=stage_runs)
+    all_clues={}
+    batches=[]
+    supports=[]
+    has_error=False
+    for offset in range(0,len(candidates),batch_size):
+        subset=candidates[offset:offset+batch_size]
+        images=evidence[offset:offset+batch_size]
+        clues,audit=review_frame_observations(subset,facts,ask,evidence=images,
+            stage=stage+'_BATCH_%02d'%(offset//batch_size+1),stage_runs=stage_runs)
+        all_clues.update(clues)
+        supports.extend(audit.get('frame_claim_supports',[]))
+        batches.append({'candidate_ids':[r['candidate_id'] for r in subset],
+            'audit':audit})
+        has_error=has_error or bool(audit.get('failure') or audit.get('whole_response_invalid')
+                                   or any(r.get('status')=='UNVERIFIED'
+                                          for r in audit.get('frame_ledger',[])))
+    return all_clues,{'revision':REVISION,'batching':'BOUNDED_CHAPTER_REVIEW_V01',
+        'frame_claim_supports':supports,'batches':batches,
+        'partial_failures':has_error,
+        'all_candidate_ids':[r['candidate_id'] for r in candidates]}

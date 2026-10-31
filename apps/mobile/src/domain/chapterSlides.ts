@@ -1,7 +1,7 @@
 import type { Chapter } from '../model';
 
 /** A cover can play only the original paired with that exact displayed frame. */
-export function chapterSlides(chapter: Pick<Chapter, 'heroUri' | 'moments'>) {
+export function chapterSlides(chapter: Pick<Chapter, 'heroUri' | 'moments' | 'motionCover'>) {
   const moments = chapter.moments.filter((m) => m.posterUri || m.playbackUri);
   const heroUri = chapter.heroUri ?? moments[0]?.posterUri;
   const matches = heroUri ? moments.filter((m) => m.posterUri === heroUri) : [];
@@ -13,12 +13,14 @@ export function chapterSlides(chapter: Pick<Chapter, 'heroUri' | 'moments'>) {
       posterUri: heroUri,
       playbackUri: sources.size === 1 ? hero?.playbackUri : undefined,
       title: sources.size === 1 ? hero?.label : undefined,
+      motionCover: chapter.motionCover ?? hero?.motionCover,
     }] : []),
     ...moments.map((m) => ({
       key: m.id,
       posterUri: m.posterUri ?? m.playbackUri,
       playbackUri: m.playbackUri,
       title: m.label,
+      motionCover: m.motionCover,
     })),
   ];
   return slides.filter((slide, index) =>

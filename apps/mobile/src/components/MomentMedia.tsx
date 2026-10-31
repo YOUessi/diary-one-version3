@@ -4,6 +4,8 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, layout, radius, type } from '../theme';
 import { MomentPlayer } from './MomentPlayer';
+import { ChapterMotionPlayer } from './ChapterMotionPlayer';
+import type { ChapterMotionCover } from '../model';
 
 function isVideoUri(uri: string) {
   return /\.(mp4|mov|m4v|webm)(\?|$)/i.test(uri);
@@ -15,16 +17,23 @@ type Props = {
   /** Local or remote MP4 when this moment is Motion; falls back to `uri`. */
   playbackUri?: string;
   focusTimeSec?: number;
+  motionCover?: ChapterMotionCover;
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
 };
 
 /** Figma 176:1966 / 176:2021 — idle poster; playing = accent stroke + Playing badge; tap to stop. */
-export function MomentMedia({ uri, playbackUri, focusTimeSec, playing, onPlay, onStop }: Props) {
+export function MomentMedia({ uri, playbackUri, focusTimeSec, motionCover, playing, onPlay, onStop }: Props) {
   const strings = appStrings(useAppStore((s) => s.language));
   const playSource = playbackUri ?? uri;
   const isMotion = isVideoUri(playSource);
+
+  if (motionCover) {
+    return <View style={styles.poster}>
+      <ChapterMotionPlayer cover={motionCover} height={layout.heroHome} />
+    </View>;
+  }
 
   if (!playing) {
     return (

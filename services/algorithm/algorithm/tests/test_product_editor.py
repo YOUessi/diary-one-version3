@@ -506,7 +506,7 @@ def test_pipeline_reviews_evidence_beyond_representative_media_and_does_not_infe
         def call(self, stage, prompt, schema, evidence=(), context=None):
             result = super().call(stage, prompt, schema, evidence, context)
             if stage in ('S07_PRODUCT_EDITOR', 'S08_PRODUCT_STRUCTURE_REVIEW', 'S09B_PRODUCT_VERIFIED_STRUCTURE'):
-                assert context['chapter_limit'] == 4  # Six clips are not a two-chapter target.
+                assert context['chapter_limit'] == 5  # V2 capacity, not a mandatory five-Chapter target.
                 c = chapter(); c['fact_ids'] = [f['id'] for f in context['facts']]
                 c['selected_asset_ids'] = list(dict.fromkeys(f['asset_id'] for f in context['facts']))[:5]
                 output = dict(chapters=[choose_media(c, context)], moments=[moment(fid=c['fact_ids'][-1])],

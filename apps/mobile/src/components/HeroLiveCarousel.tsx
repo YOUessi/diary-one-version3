@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, layout, radius, spacing } from '../theme';
 import { MomentPlayer } from './MomentPlayer';
+import { ChapterMotionPlayer } from './ChapterMotionPlayer';
+import type { ChapterMotionCover } from '../model';
 import { appStrings } from '../domain/strings';
 import { useAppStore } from '../store/useAppStore';
 
@@ -9,6 +11,7 @@ export type HeroSlide = {
   key: string;
   posterUri?: string;
   playbackUri?: string;
+  motionCover?: ChapterMotionCover;
   title?: string;
 };
 
@@ -52,8 +55,10 @@ export function HeroLiveCarousel({ slides, activePlaybackId, onPlay, onStop, pla
   const canLive = isVideoUri(playback);
 
   return (
-    <View style={[styles.hero, !(liveOn && canLive) && { height: layout.heroDetail }]}>
-      {liveOn && canLive && playback ? (
+    <View style={[styles.hero, (slide.motionCover || !(liveOn && canLive)) && { height: layout.heroDetail }]}>
+      {slide.motionCover ? (
+        <ChapterMotionPlayer key={slide.key} cover={slide.motionCover} height={layout.heroDetail} />
+      ) : liveOn && canLive && playback ? (
         <MomentPlayer uri={playback} playing videoHeight={layout.heroDetail} onStop={onStop} />
       ) : (
         <Pressable style={styles.heroImage} onPress={() => canLive && onPlay(liveId)}
@@ -75,7 +80,7 @@ export function HeroLiveCarousel({ slides, activePlaybackId, onPlay, onStop, pla
           ))}
         </View>
       ) : null}
-      {canLive ? (
+      {canLive && !slide.motionCover ? (
         <Pressable
           style={styles.liveChip}
           onPress={() => liveOn ? onStop() : onPlay(liveId)}

@@ -25,7 +25,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
-from .bundle import APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04
+from .bundle import APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04, APP_LIBRARY_BUNDLE_VERSION_V05
 from .core import canonical_bytes
 from .x01 import (
     FixtureEditorialAdapter,
@@ -837,7 +837,7 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             "appLibraryBundleVersion": APP_LIBRARY_BUNDLE_VERSION_V03,
             "supportedAppLibraryBundleVersions": [
                 "DIARY_ONE_APP_LIBRARY_BUNDLE_V01", "DIARY_ONE_APP_LIBRARY_BUNDLE_V02",
-                APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04,
+                APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04, APP_LIBRARY_BUNDLE_VERSION_V05,
             ],
             "phoneTestSpatialTransforms": ["CENTER_CROP_ASPECT_FILL", "ASPECT_FIT_LETTERBOX"],
             "phoneTestEvidenceProfileVersion": "PHONE_TEST_DURATION_WINDOWS_V01",
@@ -947,7 +947,7 @@ class X01RequestHandler(BaseHTTPRequestHandler):
                 elif request_path == X02_V03_PREVIEW_PATH:
                     result = run_x02_v03(manifest_path, self.stage_gateway)
                 else:
-                    if manifest.get("bundle_version") == APP_LIBRARY_BUNDLE_VERSION_V04:
+                    if manifest.get("bundle_version") in (APP_LIBRARY_BUNDLE_VERSION_V04, APP_LIBRARY_BUNDLE_VERSION_V05):
                         raise ValueError("App Library Bundle V04 requires the current X02 preview")
                     result = run_x01(manifest_path, self.adapter)
                 pipeline_complete = time.monotonic()

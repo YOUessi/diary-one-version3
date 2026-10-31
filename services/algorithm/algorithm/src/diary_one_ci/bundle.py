@@ -24,6 +24,7 @@ APP_LIBRARY_BUNDLE_VERSION = "DIARY_ONE_APP_LIBRARY_BUNDLE_V01"
 APP_LIBRARY_BUNDLE_VERSION_V02 = "DIARY_ONE_APP_LIBRARY_BUNDLE_V02"
 APP_LIBRARY_BUNDLE_VERSION_V03 = "DIARY_ONE_APP_LIBRARY_BUNDLE_V03"
 APP_LIBRARY_BUNDLE_VERSION_V04 = "DIARY_ONE_APP_LIBRARY_BUNDLE_V04"
+APP_LIBRARY_BUNDLE_VERSION_V05 = "DIARY_ONE_APP_LIBRARY_BUNDLE_V05"
 PHONE_TEST_EVIDENCE_PROFILE_V01 = "PHONE_TEST_DURATION_WINDOWS_V01"
 
 _APP_LIBRARY_BUNDLE_VERSIONS = (
@@ -31,6 +32,7 @@ _APP_LIBRARY_BUNDLE_VERSIONS = (
     APP_LIBRARY_BUNDLE_VERSION_V02,
     APP_LIBRARY_BUNDLE_VERSION_V03,
     APP_LIBRARY_BUNDLE_VERSION_V04,
+    APP_LIBRARY_BUNDLE_VERSION_V05,
 )
 _APP_LIBRARY_BUNDLE_V03_ASSET_FIELDS = frozenset({
     "asset_id",
@@ -50,6 +52,9 @@ _APP_LIBRARY_BUNDLE_V03_ASSET_FIELDS = frozenset({
     "evidence_sampling_profile",
     "evidence_window_count",
     "frames",
+})
+_APP_LIBRARY_BUNDLE_V05_CAPTURE_FIELDS = frozenset({
+    "capture_time_ms", "capture_time_source", "capture_time_confidence",
 })
 _APP_LIBRARY_BUNDLE_V03_TOP_FIELDS = frozenset({
     "bundle_version", "research_only", "session", "device", "normalization", "assets",
@@ -218,10 +223,12 @@ def load_app_library_bundle(manifest_path: Path) -> ImportedEvidenceBundle:
         APP_LIBRARY_BUNDLE_VERSION_V02,
         APP_LIBRARY_BUNDLE_VERSION_V03,
         APP_LIBRARY_BUNDLE_VERSION_V04,
+        APP_LIBRARY_BUNDLE_VERSION_V05,
     )
     # V04 retains V03's strict, sequence-only envelope; only geometry changes.
-    is_v04 = bundle_version == APP_LIBRARY_BUNDLE_VERSION_V04
-    is_v03 = bundle_version in (APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04)
+    is_v05 = bundle_version == APP_LIBRARY_BUNDLE_VERSION_V05
+    is_v04 = bundle_version in (APP_LIBRARY_BUNDLE_VERSION_V04, APP_LIBRARY_BUNDLE_VERSION_V05)
+    is_v03 = bundle_version in (APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04, APP_LIBRARY_BUNDLE_VERSION_V05)
     spatial_transform = "ASPECT_FIT_LETTERBOX" if is_v04 else "CENTER_CROP_ASPECT_FILL"
     if is_v03:
         _reject_unexpected(manifest, _APP_LIBRARY_BUNDLE_V03_TOP_FIELDS, "bundle")
@@ -305,13 +312,26 @@ def load_app_library_bundle(manifest_path: Path) -> ImportedEvidenceBundle:
                     f"assets[{index}].timeline_offset_ms is forbidden in App Library Bundle V03"
                 )
             unexpected_fields = sorted(
-                set(asset) - _APP_LIBRARY_BUNDLE_V03_ASSET_FIELDS
+                set(asset) - (_APP_LIBRARY_BUNDLE_V03_ASSET_FIELDS | (_APP_LIBRARY_BUNDLE_V05_CAPTURE_FIELDS if is_v05 else frozenset()))
             )
             if unexpected_fields:
                 raise ValueError(
                     f"assets[{index}] has unsupported fields for App Library Bundle V03: "
                     + ", ".join(unexpected_fields)
                 )
+            if is_v05:
+                _required(asset, _APP_LIBRARY_BUNDLE_V05_CAPTURE_FIELDS, f"assets[{index}]")
+                stamp = asset["capture_time_ms"]
+                source = asset["capture_time_source"]
+                confidence = asset["capture_time_confidence"]
+                if source not in ("EXIF_OFFSET","ASSET_TIMESTAMP","EXIF_LOCAL","UNKNOWN","DEVICE_VERIFIED"):
+                    raise ValueError(f"assets[{index}].capture_time_source invalid")
+                if confidence not in ("VERIFIED","ESTIMATED","UNKNOWN"):
+                    raise ValueError(f"assets[{index}].capture_time_confidence invalid")
+                if stamp is not None and (type(stamp) is not int or not 946684800000 <= stamp <= 4102444800000):
+                    raise ValueError(f"assets[{index}].capture_time_ms invalid")
+                if confidence == "VERIFIED" and (stamp is None or source not in ("EXIF_OFFSET","DEVICE_VERIFIED")):
+                    raise ValueError(f"assets[{index}].capture time is not independently reliable")
             sequence_index = asset["sequence_index"]
             if (
                 not isinstance(sequence_index, int)
@@ -524,7 +544,7 @@ def load_any_bundle(manifest_path: Path) -> Union[ImportedBundle, ImportedEviden
 def run_bundle_e00(manifest_path: Path, artifact_root: Path) -> Path:
     bundle = load_any_bundle(manifest_path)
     if isinstance(bundle, ImportedEvidenceBundle):
-        if bundle.manifest["bundle_version"] in (APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04):
+        if bundle.manifest["bundle_version"] in (APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04, APP_LIBRARY_BUNDLE_VERSION_V05):
             raise ValueError(
                 "App Library Bundle V03/V04 cannot run the historical E00 smoke because "
                 "E00 synthesizes time-shaped 120-second offsets"

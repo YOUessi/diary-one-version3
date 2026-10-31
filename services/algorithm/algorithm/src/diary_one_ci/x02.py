@@ -20,6 +20,7 @@ from .bundle import (
     APP_LIBRARY_BUNDLE_VERSION_V02,
     APP_LIBRARY_BUNDLE_VERSION_V03,
     APP_LIBRARY_BUNDLE_VERSION_V04,
+    APP_LIBRARY_BUNDLE_VERSION_V05,
     ImportedEvidenceBundle,
     load_app_library_bundle,
 )
@@ -1373,7 +1374,7 @@ def _run_x02_impl(
     bundle_complete = time.monotonic()
     input_bundle_version = str(bundle.manifest["bundle_version"])
     if policy_version == "V03" and input_bundle_version in (
-        APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04,
+        APP_LIBRARY_BUNDLE_VERSION_V03, APP_LIBRARY_BUNDLE_VERSION_V04, APP_LIBRARY_BUNDLE_VERSION_V05,
     ):
         raise X02ContractError(
             "historical X02 V03 accepts App Library Bundle V01/V02 only"
@@ -1382,6 +1383,7 @@ def _run_x02_impl(
         APP_LIBRARY_BUNDLE_VERSION_V02,
         APP_LIBRARY_BUNDLE_VERSION_V03,
         APP_LIBRARY_BUNDLE_VERSION_V04,
+        APP_LIBRARY_BUNDLE_VERSION_V05,
     )
     if not gateway.ready:
         raise X02ModelNotReady("X02 staged model gateway is not ready")

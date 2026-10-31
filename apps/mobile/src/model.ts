@@ -13,6 +13,21 @@ export type TodayStatus =
 /** Optional local ordering evidence; old saved memories may have neither. */
 export type MemoryOrder = { capturedAtMs?: number; sourceSequenceIndex?: number };
 
+/** One real 2–3s motion asset tied to its exact cloud-selected frame. */
+export type ChapterMotionCover = {
+  kind: 'chapter_motion';
+  /** `rendered` is a genuine local 3s MOV; fallback plays a 3s window of the original. */
+  status: 'rendered' | 'source_window';
+  posterUri: string;
+  motionUri: string;
+  sourceVideoUri: string;
+  focusTimeSec: number;
+  clipStartSec: number;
+  clipEndSec: number;
+  /** Apple Photos HEIC/MOV pairing is an independent, not-yet-certified step. */
+  applePhotosPaired: false;
+};
+
 export type MemoryMedia = {
   id: string;
   label: string;
@@ -21,6 +36,11 @@ export type MemoryMedia = {
   playbackUri?: string;
   /** Seek into the original video, not a claim that a short clip was exported. */
   focusTimeSec?: number;
+  /** V05 original evidence provenance for motion export; never cloud-uploaded video. */
+  sourceAssetId?: string;
+  selectedFrameId?: string;
+  sourceDurationSec?: number;
+  motionCover?: ChapterMotionCover;
 };
 
 export type Chapter = MemoryOrder & {
@@ -38,6 +58,7 @@ export type Chapter = MemoryOrder & {
   tags: string[];
   detailTags?: string[];
   heroUri?: string;
+  motionCover?: ChapterMotionCover;
   moments: MemoryMedia[];
   yourStory?: string;
 };

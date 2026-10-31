@@ -14,12 +14,12 @@ import uuid
 
 from .scene_selection import (EXPERIENCE_KINDS, SELECTION_POLICY_PROMPT,
                               selection_policy_context, policy_for)
-from . import narrative_focus, frame_selection, frame_observation, final_moment_repair, chapter_transition
+from . import narrative_focus, frame_selection, frame_observation, final_moment_repair, chapter_transition, scenelet_builder, chapter_boundary_planner
 
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'CHAPTER_V2_S07_DRAFT_ANCHOR_REVIEW_P0_R5_23'
+EDITOR_REVISION = 'CHAPTER_V2_GLOBAL_SCENELET_REPLAN_MEDIA_R5_24'
 
 
 def obj(properties, required=None):
@@ -44,8 +44,8 @@ MOMENT = obj({'id': STRING, 'parent_chapter_id': {'type': ['string', 'null']}, '
 CHAPTER_BOUNDARY = obj({'chapter_ids': {**IDS, 'minItems': 2, 'maxItems': 2},
     'basis': {'enum': ['DIFFERENT_ACTIVITY', 'SEPARATE_EXPERIENCE']},
     'evidence_fact_ids': {**IDS, 'minItems': 2}, 'reason': STRING})
-EDITOR_SCHEMA = obj({'chapter_boundaries': {'type': 'array', 'maxItems': 6, 'items': CHAPTER_BOUNDARY},
-                     'chapters': {'type': 'array', 'maxItems': 4, 'items': CHAPTER},
+EDITOR_SCHEMA = obj({'chapter_boundaries': {'type': 'array', 'maxItems': 10, 'items': CHAPTER_BOUNDARY},
+                     'chapters': {'type': 'array', 'maxItems': 5, 'items': CHAPTER},
                      'moments': {'type': 'array', 'maxItems': 8, 'items': MOMENT},
                      'unselected_facts': {'type': 'array', 'items': obj({'fact_id': STRING, 'reason': STRING})}})
 SENTENCE = obj({'text': STRING, 'fact_ids': IDS})
@@ -2783,9 +2783,17 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
     initial_facts = deepcopy(facts)
     public_facts = [{k: v for k, v in f.items() if k not in ('fact_id', 'source_asset_id', 'observation_id')}
                     for f in facts.values()]
+    global_scene_map = scenelet_builder.build_scene_map(asset_map, facts, observations)
+    global_chapter_plan = chapter_boundary_planner.propose_chapters(global_scene_map)
+    global_scene_context = scenelet_builder.editor_scene_summary(global_scene_map)
+    timeline_basis = global_scene_map['time_basis']
     editor_input = {'facts': public_facts, 'assets': [{'id': key, 'kind': a['media_kind'],
                     'import_order': a['sequence_index'], 'duration_ms': a['original_duration_ms']} for key, a in asset_map.items()],
-                    'time_basis': 'IMPORT_ORDER_ONLY; clip-relative PTS are not capture time',
+                    'time_basis': (timeline_basis + '; clip-relative PTS are not capture time'),
+                    'global_scene_map': global_scene_context,
+                    'global_chapter_plan': {'status': 'ADVISORY_NOT_FIXED_COUNT',
+                        'recommended_count': global_chapter_plan['recommended_count'],
+                        'chapter_candidates': global_chapter_plan['chapter_candidates']},
                     'personal_history_available': False}
     chapters, moments, rejected, coverage = [], [], [], []
     editorial_draft, editorial_output, drafts, reviewed = {}, {}, {}, {}
@@ -2793,10 +2801,11 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
     draft_at_risk_anchors = []
     chapter_transition_pre_review, chapter_transition_post_review = {}, {}
     chapter_transition_final = {}
+    structure_replan_audit = {'status': 'NOT_NEEDED'}
     draft_media_reservations = {}
     raw_drafts, raw_review, raw_copy_repair = {}, {}, {}
     writer_ledger, review_ledger = [], []
-    chapter_limit = min(4, len(asset_map))
+    chapter_limit = min(chapter_boundary_planner.MAX_CHAPTERS, len(asset_map))
     editor_input['chapter_limit'] = chapter_limit
     editor_input['selection_budget_rule'] = '先按证据确定经历边界，不按素材数量定章数。每章最多5段展示素材，无最低数量；chapter_limit只控制总容量。'
     editor_input['chapter_boundary_policy'] = 'PAIRWISE_FACT_REFERENCED_EXPERIENCE_DIFFERENCE_NOT_SCENERY_OR_CAPACITY'
@@ -2898,6 +2907,104 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             } for row in draft_at_risk_anchors],
             'notice': 'A source draft is provisional; a visually verified anchor is a review obligation, not forced publication.'
         }
+    # P0-2: bounded, image-grounded reconsideration of specifically lost
+    # draft anchors. A draft is a *proposal*, never guaranteed publication.
+    reviewed_lost = [
+        row for row in draft_at_risk_anchors
+        if any(fid in facts for fid in row['anchor_fact_ids'])
+    ]
+    if reviewed_lost:
+        structure_replan_audit = {
+            'status':'DISPOSITION_PENDING',
+            'lost_draft_ids':[row['draft_chapter_id'] for row in reviewed_lost],
+            'replan_attempts':0,
+        }
+        try:
+            disposition_input = {
+                'lost_draft_anchors':[{
+                    'draft_chapter_id':row['draft_chapter_id'],
+                    'theme_hint_not_evidence':row['draft_theme'],
+                    'draft_fact_ids':row['draft_fact_ids'],
+                    'verified_focus_facts':[{
+                        'id':fid,'text':facts[fid]['text'],
+                        'evidence_frame_ids':facts[fid]['evidence_frame_ids'],
+                    } for fid in row['anchor_fact_ids'] if fid in facts],
+                } for row in reviewed_lost],
+                'current_chapters':[{
+                    'id':c['id'],'theme':c['theme'],'fact_ids':c['fact_ids']
+                } for c in chapters],
+                'current_moments':moments,
+                'global_scene_summary':global_scene_context,
+                'time_basis':editor_input['time_basis'],
+            }
+            decision = ask('S08B_PRODUCT_MERGE_DISPOSITION',
+                chapter_boundary_planner.DISPOSITION_PROMPT,
+                chapter_boundary_planner.disposition_schema(reviewed_lost),
+                disposition_input)
+            checked = chapter_boundary_planner.check_dispositions(
+                decision,reviewed_lost,facts,editorial_output)
+            structure_replan_audit['dispositions'] = checked['decisions']
+            if checked['replan_required']:
+                # One explicit, bounded replan after visual review; never
+                # accept a provider's invented fact or silently loop.
+                structure_replan_audit['replan_attempts'] = 1
+                current = editorial_output
+                context = {**editor_input,
+                    'facts':[v for v in public_facts],
+                    'draft':current,
+                    'original_draft':editorial_draft,
+                    'verified_dispositions':checked['decisions'],
+                    'repair_instruction':'Replan only supported experiences. Honor supported KEEP_AS_MOMENT and KEEP_MERGED facts; do not force all original Chapter count.'}
+                proposed = ask('S08C_PRODUCT_BOUNDED_REPLAN',
+                    STRUCTURE_REVIEW_PROMPT + '\n根据已核验的dispositions重新决定章节/小记忆。只能引用当前已核验事实。',
+                    structure_wire_schema(facts,chapter_limit),context)
+                def _validate_replan(row):
+                    return compile_structure_wire(row,facts,asset_map,chapter_limit)
+                accepted,audit = chapter_boundary_planner.merge_replan_review(
+                    current,proposed,_validate_replan)
+                if audit['status']=='REPLAN_APPLIED':
+                    covered = {fid for c in accepted.get('chapters',[])
+                               for fid in c.get('fact_ids',[])}
+                    covered.update(m.get('fact_id') for m in accepted.get('moments',[]))
+                    needed = {fid for item in checked['decisions']
+                              if item['action'] in ('RESTORE_CHAPTER','KEEP_MERGED','KEEP_AS_MOMENT')
+                              for fid in item['supporting_fact_ids']}
+                    if needed<=covered:
+                        editorial_output = accepted
+                        chapters,moments,issues,coverage = _validate_replan(accepted)
+                        structure_replan_audit['status']='REPLAN_APPLIED'
+                    else:
+                        structure_replan_audit['status']='REPLAN_BLOCKED'
+                        audit['reason']='SUPPORTED_DISPOSITION_FACT_NOT_REPRESENTED'
+                if structure_replan_audit['status']!='REPLAN_APPLIED':
+                    structure_replan_audit.update(status='REPLAN_BLOCKED')
+                structure_replan_audit['validation']=audit
+            else:
+                structure_replan_audit['status']='EXPLICITLY_DISPOSITIONED'
+        except (KeyError,TypeError,ValueError,OSError,x02.X02Error) as exc:
+            # Failure is auditable; do not create or silently accept a Chapter.
+            structure_replan_audit.update(status='REPLAN_BLOCKED',
+                error_type=type(exc).__name__,
+                error_code=getattr(exc,'code','UNKNOWN'))
+            if isinstance(exc,x02.X02StageCallError):
+                if all(run is not exc.stage_run for run in stage_runs):
+                    stage_runs.append(exc.stage_run)
+        chapter_transition_post_review = chapter_transition.transition_audit(
+            editorial_draft,editorial_output,initial_facts,verified_facts=facts)
+        draft_at_risk_anchors = chapter_transition.unrepresented_anchor_proposals(
+            draft_scene_anchors,editorial_output,initial_facts)
+        if draft_at_risk_anchors:
+            editor_input['draft_scene_anchor_audit'] = {
+                'policy':'POST_REPLAN_UNRESOLVED_SCENE_ANCHORS',
+                'lost_draft_anchors':[{
+                    'draft_chapter_id':item['draft_chapter_id'],
+                    'lost_focus_fact_ids':item['anchor_fact_ids'],
+                    'verified_focus_fact_ids':[fid for fid in item['anchor_fact_ids'] if fid in facts],
+                } for item in draft_at_risk_anchors],
+                'replan_status':structure_replan_audit['status'],
+            }
+        else:
+            editor_input.pop('draft_scene_anchor_audit',None)
     media_selection_audit, media_selection_rejections = {}, []
     if facts:
         preferred = list(dict.fromkeys(facts[f]['asset_id'] for c in chapters for f in c['fact_ids'] if f in facts))
@@ -2906,14 +3013,30 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         # Ensure each visually supported S07 scene can supply a real candidate
         # to S09B; these synthetic reservation IDs are never published IDs.
         chapter_media_groups.update(draft_media_reservations)
-        shown_media_frames, media_evidence, media_selection_audit = media_selection_candidates(
-            facts, asset_map, bundle, preferred_assets=preferred,
-            chapter_fact_groups=chapter_media_groups)
+        use_global_media = bundle.manifest.get('bundle_version') == 'DIARY_ONE_APP_LIBRARY_BUNDLE_V05'
+        if use_global_media:
+            # V05: fair candidate pool across independent Chapter proposals;
+            # no first-18 chronological starvation. No image is assumed valid
+            # unless it retains a directly verified fact/frame reference.
+            from . import chapter_media_pool
+            shown_media_frames, media_evidence, media_selection_audit = (
+                chapter_media_pool.select_balanced_candidates(
+                    facts,asset_map,bundle,chapter_media_groups,
+                    max_per_chapter=5,max_total=32))
+        else:
+            shown_media_frames, media_evidence, media_selection_audit = media_selection_candidates(
+                facts,asset_map,bundle,preferred_assets=preferred,
+                chapter_fact_groups=chapter_media_groups)
         candidates = media_selection_audit['shown_frames']
         media_selection_audit['independent_scene_clues'] = frame_selection.scene_clues_from_visual_outputs(
             visual_outputs, candidates, facts)
-        scene_clues, observation_audit = frame_observation.review_frame_observations(
-            candidates, facts, ask, evidence=media_evidence, stage_runs=stage_runs)
+        if use_global_media:
+            scene_clues, observation_audit = frame_observation.review_frame_observations_batched(
+                candidates, facts, ask, evidence=media_evidence,
+                stage_runs=stage_runs, batch_size=12)
+        else:
+            scene_clues, observation_audit = frame_observation.review_frame_observations(
+                candidates, facts, ask, evidence=media_evidence, stage_runs=stage_runs)
         media_selection_audit['frame_observation'] = observation_audit
         editor_schema = frame_selection.augment_frame_selection_schema(
             structure_wire_schema(facts, chapter_limit, candidates=candidates), candidates, facts, scene_clues=scene_clues)
@@ -3194,6 +3317,16 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
                 'publication_status': 'STAGED_PREVIEW_VALIDATED'})
     public_reason_fallbacks = normalize_public_media_reasons(published_chapters,
         [('PRIMARY', written), ('RECOVERY', recovery_written)])
+    from . import chapter_coverage_gate
+    selected_chapters = [c for c in chapters if c['id'] in reviewed]
+    selected_moments = [m for m in moments if m['id'] in reviewed]
+    coverage_media_ids = {aid for c in selected_chapters for aid in c.get('selected_asset_ids',[])}
+    coverage_media_ids.update(facts[m['fact_id']]['asset_id'] for m in selected_moments
+                              if m['fact_id'] in facts)
+    global_coverage_audit = chapter_coverage_gate.audit_coverage(
+        global_scene_map,selected_chapters,selected_moments,
+        verified_fact_ids=facts,visible_media=coverage_media_ids,
+        available_asset_ids=asset_map)
     visible = len(published_chapters) + len(published_ahas)
     blocked = len(outcomes) - visible + sum(m['parent_chapter_id'] is not None and
         (m['id'] not in reviewed or m['parent_chapter_id'] not in reviewed) for m in moments)
@@ -3203,6 +3336,9 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
                 'NO_GROUNDED_MEMORY' if not visible else 'READY_WITH_ITEM_BLOCKS' if blocked or coverage_incomplete else 'READY_PRIMARY_COPY')
     if visible and verification_incomplete and not unresolved_asset_ids:
         delivery = 'READY_WITH_ITEM_BLOCKS'
+    if bundle.manifest.get('bundle_version') == 'DIARY_ONE_APP_LIBRARY_BUNDLE_V05':
+        if global_coverage_audit['status'] == 'REVIEW_REQUIRED' or structure_replan_audit['status'] == 'REPLAN_BLOCKED':
+            delivery = 'READY_WITH_ITEM_BLOCKS' if visible else 'PIPELINE_BLOCKED'
     semantic = 'CHAPTER_DAY' if published_chapters else 'HIGHLIGHT_DAY' if published_ahas else 'EMPTY_DAY'
     metrics = [x02._metric_from_run(r) for r in stage_runs]
     result = {'schema_version': SCHEMA_VERSION, 'editor_policy': POLICY_VERSION, 'experimental': True, 'production_ready': False,
@@ -3210,8 +3346,9 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         'semantic_day_state': semantic, 'output_mode': 'PIPELINE_BLOCKED' if delivery == 'PIPELINE_BLOCKED' else semantic,
         'delivery_state': delivery, 'selected_memory_outcomes': outcomes,
         'coverage_status': 'INCOMPLETE' if unresolved_asset_ids else 'COMPLETE', 'unresolved_asset_ids': unresolved_asset_ids,
-        'timeline_basis': 'IMPORT_SEQUENCE_ONLY', 'timeline_date': None,
-        'time_reliability': {'capture_time_reliable': False, 'interval_reliable': False, 'timezone_reliable': False},
+        'timeline_basis': timeline_basis, 'timeline_date': None,
+        'time_reliability': {'capture_time_reliable': timeline_basis == 'VERIFIED_CAPTURE',
+            'interval_reliable': timeline_basis == 'VERIFIED_CAPTURE', 'timezone_reliable': False},
         'observations': observations, 'moments': [], 'chapters': published_chapters, 'ahas': published_ahas,
         'decision_trace': {'editor_revision': EDITOR_REVISION,
             'observation_candidates': observation_ledger, 'evidence_selection': {'selected': evidence_ledger},
@@ -3220,6 +3357,10 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             'chapter_transition_post_visual_review': chapter_transition_post_review,
             'chapter_transition_final': chapter_transition_final,
             'draft_media_reservations': draft_media_reservations,
+            'global_scene_map': global_scene_map,
+            'global_chapter_plan': global_chapter_plan,
+            'structure_replan_audit': structure_replan_audit,
+            'global_coverage_audit': global_coverage_audit,
             'contract_repair_issues': contract_repairs, 'focused_contract_repairs': focused_contract_repairs,
             'copy_repair_ledger': copy_repair_ledger,
             'writer_output': raw_drafts, 'review_output': raw_review, 'copy_repair_output': raw_copy_repair,

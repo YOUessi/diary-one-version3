@@ -49,7 +49,7 @@ export function ResearchApiSettings() {
       </Text>
       <Text style={styles.subLabel}>Evidence bundle</Text>
       <View style={styles.versionRow}>
-        {(['V04', 'V03'] as BundleExportVersion[]).map((v) => (
+        {(['V05','V04', 'V03'] as BundleExportVersion[]).map((v) => (
           <Pressable
             key={v}
             onPress={() => setBundleExportVersion(v)}
@@ -62,7 +62,7 @@ export function ResearchApiSettings() {
         ))}
       </View>
       <Text style={styles.versionHint}>
-        Default {BUNDLE_VERSION_ID.V04} (letterbox). Use V03 only if your server expects center-crop.
+        Default {BUNDLE_VERSION_ID.V04} (letterbox). V05 adds verified capture provenance for Chapter V2; requires updated server. V03 remains center-crop.
       </Text>
       <TextInput
         value={draftUrl}

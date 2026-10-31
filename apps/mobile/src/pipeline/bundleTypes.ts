@@ -1,10 +1,11 @@
-export type BundleExportVersion = 'V03' | 'V04';
+export type BundleExportVersion = 'V03' | 'V04' | 'V05';
 
 export type SpatialTransform = 'CENTER_CROP_ASPECT_FILL' | 'ASPECT_FIT_LETTERBOX';
 
 export const BUNDLE_VERSION_ID: Record<BundleExportVersion, string> = {
   V03: 'DIARY_ONE_APP_LIBRARY_BUNDLE_V03',
   V04: 'DIARY_ONE_APP_LIBRARY_BUNDLE_V04',
+  V05: 'DIARY_ONE_APP_LIBRARY_BUNDLE_V05',
 };
 
 export function spatialTransformFor(version: BundleExportVersion): SpatialTransform {

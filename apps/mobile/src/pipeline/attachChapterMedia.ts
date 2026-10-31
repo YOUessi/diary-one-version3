@@ -89,7 +89,8 @@ function memoryOrder(selected: PreviewSelectedMedia[], index: Map<string, AssetF
 }
 
 function resolveSelectedMedia(id: string, selected: PreviewSelectedMedia[], assetIndex: Map<string, AssetFrames>,
-  sourceUris?: Record<string, SourceUriEntry>, timeLabel?: string): MemoryMedia[] {
+  sourceUris?: Record<string, SourceUriEntry>, timeLabel?: string,
+  enableMotion = false): MemoryMedia[] {
   return selected.map((media, index) => {
     const sourceId = media.source_asset_id ?? media.asset_id;
     const asset = assetIndex.get(sourceId);
@@ -100,7 +101,9 @@ function resolveSelectedMedia(id: string, selected: PreviewSelectedMedia[], asse
     if (kind === 'VIDEO' && !sourceUris?.[sourceId]?.uri) {
       throw new Error('Selected video source is unavailable.');
     }
-    const focus = media.focus_pts_ms;
+    const chosenFrameId = media.representative_frame_id ?? media.evidence_frame_ids?.[0];
+    const selectedFrame = asset?.frames?.find(f => f.frame_id === chosenFrameId);
+    const focus = media.focus_pts_ms ?? (enableMotion ? selectedFrame?.source_timestamp_ms : null);
     if (focus != null && (kind !== 'VIDEO' || !Number.isInteger(focus) || focus < 0
       || !(typeof asset?.durationMs === 'number' && focus < asset.durationMs)
       || !asset.frames?.some(f => media.evidence_frame_ids?.includes(f.frame_id ?? '') && f.source_timestamp_ms === focus))) {
@@ -112,6 +115,9 @@ function resolveSelectedMedia(id: string, selected: PreviewSelectedMedia[], asse
       posterUri: frame,
       playbackUri: playbackUriForAsset(sourceId, frame, kind, sourceUris),
       ...(focus != null ? { focusTimeSec: focus / 1000 } : {}),
+      ...(enableMotion ? { sourceAssetId:sourceId,
+        selectedFrameId:chosenFrameId,
+        sourceDurationSec:typeof asset?.durationMs === 'number' ? asset.durationMs / 1000 : undefined } : {}),
     };
   });
 }
@@ -155,6 +161,7 @@ export function applyChapterMediaHints(
   hintsByChapterId: Record<string, ChapterMediaHints>,
   assetIndex: Map<string, AssetFrames>,
   sourceUris?: Record<string, SourceUriEntry>,
+  enableMotion = false,
 ): Chapter[] {
   return chapters.map((ch) => {
     const hints = hintsByChapterId[ch.id];
@@ -181,11 +188,11 @@ export function applyChapterMediaHints(
     // or fall back to unrelated bundle frames (allUris / round-robin).
     const selected = hints.selectedMedia?.length ? hints.selectedMedia : [];
 
-    const moments = resolveSelectedMedia(ch.id, selected, assetIndex, sourceUris, hints.timeLabel);
+    const moments = resolveSelectedMedia(ch.id, selected, assetIndex, sourceUris, hints.timeLabel, enableMotion);
     const highlights = ch.highlights?.map(highlight => {
       const selection = hints.highlights?.find(h => h.id === highlight.id)?.selected_media;
       return selection?.length ? { ...highlight,
-        media: resolveSelectedMedia(highlight.id, selection, assetIndex, sourceUris) } : highlight;
+        media: resolveSelectedMedia(highlight.id, selection, assetIndex, sourceUris, undefined, enableMotion) } : highlight;
     });
 
     return {
@@ -254,7 +261,8 @@ export async function attachDiaryMediaFromBundle(
     if (source?.uri) source.uri = resolveBundleSourceUri(source.uri, bundleDir);
   }
   const hints = mediaHintsFromPreviewChapters(preview.chapters);
-  const attached = applyChapterMediaHints(mapped.chapters, hints, index, sourceUris);
+  const useMotion = manifest.bundle_version === 'DIARY_ONE_APP_LIBRARY_BUNDLE_V05';
+  const attached = applyChapterMediaHints(mapped.chapters, hints, index, sourceUris, useMotion);
   const smallMemories = mapped.smallMemories.map(memory => {
     const selected = preview.ahas.find(a => a.id === memory.id)?.selected_media ?? [];
     const m = selected[0];
@@ -279,5 +287,10 @@ export async function attachDiaryMediaFromBundle(
       throw new Error('Selected media bytes changed. Restore the original media before retrying.');
     }
   }
-  return { chapters: attached, smallMemories };
+  // Load the native/Expo-dependent exporter only for the opt-in V05 format.
+  // Legacy V03/V04 must not initialize motion modules or change test bindings.
+  const liveChapters = useMotion
+    ? await (await import('./buildLiveChapterCovers')).buildLiveChapterCovers(attached,bundleDir)
+    : attached;
+  return { chapters: liveChapters, smallMemories };
 }

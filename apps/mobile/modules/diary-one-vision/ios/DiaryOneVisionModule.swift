@@ -45,6 +45,27 @@ public class DiaryOneVisionModule: Module {
       return rows
     }
 
+    AsyncFunction("exportChapterMotion") { (
+      videoUri: String, destinationDir: String, assetKey: String,
+      focusMs: Double, durationMs: Double, promise: Promise
+    ) in
+      do {
+        try ChapterMotionExporter.export(
+          sourceURL:Self.fileURL(from:videoUri),
+          destinationDirectory:Self.fileURL(from:destinationDir),
+          assetKey:assetKey,focusMs:focusMs,targetMs:durationMs
+        ) { result in
+          switch result {
+          case .success(let data): promise.resolve(data)
+          case .failure(let error):
+            promise.reject("ERR_MOTION_EXPORT",(error as NSError).localizedDescription,error)
+          }
+        }
+      } catch {
+        promise.reject("ERR_MOTION_INPUT",(error as NSError).localizedDescription,error)
+      }
+    }
+
     AsyncFunction("normalizeEvidenceFrame") { (sourceUri: String, destUri: String) in
       _ = try EvidenceFrameNormalizer.normalize(source: Self.fileURL(from: sourceUri),
                                                 destination: Self.fileURL(from: destUri))
