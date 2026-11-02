@@ -5,6 +5,7 @@ Model judgments remain fallible. Missing/invalid judgments never count as a pass
 from collections import Counter
 from copy import deepcopy
 import unicodedata
+import re
 from . import scene_selection
 
 
@@ -188,7 +189,22 @@ def validate_corrections(row, original):
     return applied_text, edits
 
 
-def compile_visual(output, facts, shown):
+def explicit_temporal_camera_transition(text):
+    """A single still cannot prove the movement implied by this phrase.
+
+    Conservative patterns target explicit camera/viewpoint transitions rather
+    than scenery, positions, or generic verbs like "walks". This guard is
+    language-agnostic in policy and never guesses any source-specific place.
+    """
+    s=str(text or '')
+    return bool(re.search(
+        r'(?:镜头|画面|视角|摄像机|相机)[^。！？\\n]{0,55}?'
+        r'(?:平移|转向|转动|推进|拉近|拉远|扫过|逐渐移向|从[^。！？\\n]{1,24}移向)'
+        r'|\\b(?:camera|view|lens)\\s+(?:pans?|tilts?|zooms?|rotates?|moves?\\s+from)\\b',
+        s, re.IGNORECASE))
+
+
+def compile_visual(output, facts, shown, *, strict_static_transition=False):
     rows = output.get('items', []) if isinstance(output, dict) else []
     rows = rows if isinstance(rows, list) else []
     counts = Counter(r.get('fact_id') for r in rows if isinstance(r, dict) and isinstance(r.get('fact_id'), str))
@@ -215,6 +231,14 @@ def compile_visual(output, facts, shown):
             temporal = row.get('temporal_support')
             if temporal not in ('STATE', 'CHANGE') or (temporal == 'CHANGE' and len({p for p in pts if p is not None}) < 2):
                 raise ValueError('Change claim lacks distinct temporal evidence')
+            if (strict_static_transition and temporal == 'STATE'
+                    and explicit_temporal_camera_transition(applied_text)):
+                # S14 recovery may try to repair a previously unverified
+                # temporal claim. Do not admit it merely by changing the
+                # verdict to STATE while retaining explicit camera motion.
+                # Apply to targeted recovery only; historical S09A runs remain
+                # reproducible until a full source-fact migration is tested.
+                raise ValueError('STATE_CANNOT_PROVE_EXPLICIT_CAMERA_TRANSITION')
             verified[fid] = {**fact, 'text': applied_text.strip(), 'evidence_frame_ids': row['evidence_frame_ids'],
                              'frame_pts_ms': pts, 'temporal_support': temporal, 'visual_reviewed': True,
                              'original_text': fact['text']}
@@ -285,7 +309,8 @@ def review_visual_facts(facts, assets, bundle, ask, *, prefix='S09A_PRODUCT_VISU
         except (ValueError, OSError, x02.X02Error) as exc:
             terminal_failure = record_failure(exc)
             output = {'failure': type(exc).__name__, 'code': getattr(exc, 'code', 'UNKNOWN')}
-        checked, records = compile_visual(output, batch, shown)
+        checked, records = compile_visual(
+            output, batch, shown, strict_static_transition=prefix.startswith('S14'))
         invalid = {r['fact_id']: batch[r['fact_id']] for r in records if r['status'] == 'UNVERIFIED'}
         state_assets = {s['asset_id'] for s in scenes
                         if any(o['temporal_support'] == 'STATE' for o in s['observations'])}
@@ -316,7 +341,9 @@ def review_visual_facts(facts, assets, bundle, ask, *, prefix='S09A_PRODUCT_VISU
                     '有成立部分就通过corrections只保留该部分并引用直接证据。若独立观察只是别的内容、原事实没有任何成立部分，仍可DROP并说明。'
                     '\n不能将独立观察直接复制为新事实，不能为了覆盖素材而强行保留。',
                     VISUAL_SCHEMA, repair_context, evidence=evidence)
-                repaired, repaired_records = compile_visual(repaired_output, repair_facts, shown)
+                repaired, repaired_records = compile_visual(
+                    repaired_output, repair_facts, shown,
+                    strict_static_transition=prefix.startswith('S14'))
                 for record in repaired_records:
                     if record['fact_id'] in state_rechecks:
                         record['state_retention_review'] = {'VERIFIED': 'RETAINED_AFTER_REVIEW',
