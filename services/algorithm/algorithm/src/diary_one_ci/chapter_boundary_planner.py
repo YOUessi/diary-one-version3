@@ -57,7 +57,37 @@ def propose_chapters(scene_map, *, chapter_limit=MAX_CHAPTERS):
         score=boundary_strength(edge)
         if score>=1.2 and scenes[i-1]['fact_ids'] and scenes[i]['fact_ids']:
             choices.append((score,i,edge['reason']))
-    strongest=sorted(choices,key=lambda v:(-v[0],v[1]))[:chapter_limit-1]
+    # Pairwise scores are often tied across many small scenelets. Picking
+    # the earliest ties created four tiny intro Chapters and one enormous
+    # remainder. Select salient boundaries with GLOBAL spread, not raw
+    # source index, while retaining evidence-based candidate eligibility.
+    # A fully tied set has no local evidence favoring early cut points.
+    # Use balanced quantile targets *only among already eligible boundaries*.
+    # This is an advisory coverage safeguard, not an imposed Chapter count:
+    # homogeneous scenes produce no eligible boundaries and remain one chapter.
+    unique = {i: (score,i,reason) for score,i,reason in choices}
+    pending = list(unique.values())
+    if pending and len({score for score,_,_ in pending}) == 1:
+        k = min(chapter_limit-1,len(pending))
+        strongest=[]
+        for slot in range(1,k+1):
+            target=len(scenes)*slot/(k+1)
+            winner=min(pending,key=lambda x:(abs(x[1]-target),-x[0],x[1]))
+            strongest.append(winner)
+            pending.remove(winner)
+    else:
+        strongest=[]
+        while pending and len(strongest)<chapter_limit-1:
+            boundaries=[0,*sorted(i for _,i,_ in strongest),len(scenes)]
+            def candidate_priority(option):
+                score,i,_=option
+                left=max(x for x in boundaries if x<i)
+                right=min(x for x in boundaries if x>i)
+                ratio=min(i-left,right-i)/max(1,right-left)
+                return (score*(.9+ratio),min(i-left,right-i),-i)
+            winner=max(pending,key=candidate_priority)
+            strongest.append(winner)
+            pending.remove(winner)
     splits={i:reason for _,i,reason in strongest}
     groups=[]
     start=0

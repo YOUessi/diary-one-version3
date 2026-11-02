@@ -132,3 +132,32 @@ def test_no_scene_name_keyword_or_fixed_citywalk_count():
         f[fid]['text']=f[fid]['text'].replace('骑车','行进').replace('公园','绿地')
     next_plan=p.propose_chapters(s.build_scene_map(a,f,o))
     assert next_plan['recommended_count']==first['recommended_count']
+
+
+
+def test_tied_novelty_boundaries_are_spread_over_global_timeline():
+    # Uniformly strong scene transitions require a global coverage-aware
+    # proposal, not 4 tiny segments at the beginning and a 90-scene remainder.
+    scenelets = [
+        {'scenelet_id':f'S{i:03d}', 'asset_ids':[f'A{i:03d}'],
+         'fact_ids':[f'F{i:03d}']} for i in range(100)
+    ]
+    boundaries=[
+        {'left_asset_id':f'A{i-1:03d}', 'right_asset_id':f'A{i:03d}',
+         'reason':'ACTIVITY_AND_VISUAL_NOVELTY', 'similarities':{'lexical':0.}}
+        for i in range(1,100)
+    ]
+    scene_map={'scenelets':scenelets,'boundaries':boundaries,
+               'time_basis':'IMPORT_SEQUENCE_ONLY'}
+    recommendation=p.propose_chapters(scene_map)
+    sizes=[len(x['asset_ids']) for x in recommendation['chapter_candidates']]
+    assert recommendation['recommended_count']==5
+    assert min(sizes)>=15 and max(sizes)<=40
+    assert sum(sizes)==100
+
+
+def test_visual_review_budget_has_no_named_place_or_activity_exceptions():
+    from diary_one_ci import product_editor
+    assert product_editor.visual_review_batch_budget('DIARY_ONE_APP_LIBRARY_BUNDLE_V04')==8
+    assert product_editor.visual_review_batch_budget('DIARY_ONE_APP_LIBRARY_BUNDLE_V05')==24
+    assert product_editor.visual_review_batch_budget('UNKNOWN')==8

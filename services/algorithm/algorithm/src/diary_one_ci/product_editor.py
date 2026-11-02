@@ -2775,6 +2775,11 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
     return packet
 
 
+def visual_review_batch_budget(bundle_version):
+    """Bounded image review budget per bundle version, never per city/activity."""
+    return 24 if bundle_version == 'DIARY_ONE_APP_LIBRARY_BUNDLE_V05' else 8
+
+
 def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved_asset_ids,
         call_model, stage_runs, gateway, run_started, namespace):
     from . import x02, product_evidence, final_copy_evidence, model_recovery
@@ -2883,9 +2888,16 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
     # experiences invisible to later visual verification and media selection.
     visual_targets.update(chapter_transition.anchor_asset_ids(draft_at_risk_anchors))
     pending_facts = {f: v for f, v in facts.items() if v['asset_id'] not in visual_targets}
+    # V05 reviews a complete day. The legacy eight-batch cap was suitable
+    # for smaller evaluations but can silently truncate a long day. This is a
+    # bounded generic policy, never a particular Citywalk/source-ID exception.
+    visual_batch_budget = visual_review_batch_budget(bundle.manifest.get('bundle_version'))
     facts, visual_ledger, visual_outputs = product_evidence.review_visual_facts(
         {f: v for f, v in facts.items() if v['asset_id'] in visual_targets}, asset_map, bundle, ask,
-        stage_runs=stage_runs)
+        stage_runs=stage_runs, max_batches=visual_batch_budget)
+    visual_budget_exhausted = sum(
+        row.get('reason') == 'Visual review call budget exhausted'
+        for row in visual_ledger)
     public_facts = [{k: v for k, v in f.items() if k not in ('original_text', 'fact_id', 'source_asset_id', 'observation_id')}
                     for f in facts.values()]
     editor_input['facts'] = public_facts
@@ -3327,6 +3339,14 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         global_scene_map,selected_chapters,selected_moments,
         verified_fact_ids=facts,visible_media=coverage_media_ids,
         available_asset_ids=asset_map)
+    global_coverage_audit['visual_review_budget'] = {
+        'max_batches':visual_batch_budget,
+        'budget_exhausted_fact_count':visual_budget_exhausted,
+        'known_unverified_facts_not_negative_evidence':True,
+    }
+    if visual_budget_exhausted and bundle.manifest.get('bundle_version') == 'DIARY_ONE_APP_LIBRARY_BUNDLE_V05':
+        global_coverage_audit['status']='REVIEW_REQUIRED'
+        global_coverage_audit['reason']='VISUAL_REVIEW_BUDGET_EXHAUSTED'
     visible = len(published_chapters) + len(published_ahas)
     blocked = len(outcomes) - visible + sum(m['parent_chapter_id'] is not None and
         (m['id'] not in reviewed or m['parent_chapter_id'] not in reviewed) for m in moments)
