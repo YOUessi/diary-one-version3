@@ -101,11 +101,16 @@ def propose_chapters(scene_map, *, chapter_limit=MAX_CHAPTERS):
         aids=list(dict.fromkeys(aid for x in members for aid in x['asset_ids']))
         fids=list(dict.fromkeys(fid for x in members for fid in x['fact_ids']))
         sid='CP'+sha256('|'.join(x['scenelet_id'] for x in members).encode()).hexdigest()[:12]
+        # Coverage exemplars must include the middle and tail of a long
+        # proposal. The old fids[:3] silently erased distant experiences
+        # from the model's high-salience summary.
+        anchor_indices=[0,len(fids)//2,len(fids)-1] if fids else []
+        anchors=list(dict.fromkeys(fids[i] for i in anchor_indices))
         proposals.append({'proposal_id':sid,
             'order':order,'scenelet_ids':[x['scenelet_id'] for x in members],
             'asset_ids':aids,'fact_ids':fids,
             'boundary_from_previous':reason,
-            'anchor_fact_ids':fids[:3],
+            'anchor_fact_ids':anchors,
             'evidence_scenelet_count':sum(bool(x['fact_ids']) for x in members),
             'status':'PROPOSAL_NEEDS_SEMANTIC_EDITOR_REVIEW'})
     assert {aid for c in proposals for aid in c['asset_ids']} == {

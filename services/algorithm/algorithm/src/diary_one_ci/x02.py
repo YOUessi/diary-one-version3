@@ -1475,6 +1475,21 @@ def _run_x02_impl(
             evidence=evidence,
             context=call_context,
         )
+        # An exact, previously paid S04 image receipt is not a new provider
+        # attempt. Preserve legacy V04.1 accounting and count all real calls.
+        if (product_editor and input_bundle_version == APP_LIBRARY_BUNDLE_VERSION_V05
+                and result.call_status == 'COMPLETED' and result.model_calls == 0
+                and ((stage.startswith('S04_PERCEPTION_BATCH_')
+                      and (result.checkpoint_provenance or {}).get('reuse') in (
+                          'PRIOR_REAL_S04_MATCHED_FRAMES',
+                          'SCHEMA_REVALIDATED_SEMANTIC_GATES_PENDING'))
+                     or (result.checkpoint_provenance or {}).get('reuse') ==
+                         'PRIOR_REAL_STAGE_MATCHED_FRAMES')):
+            # Research resume supplies completed receipts only after model,
+            # stage and exact source-frame identities have been rechecked.
+            # A zero-call replay is not a new attempt; all real calls still
+            # hit the same safety stop-loss.
+            model_call_attempt_count -= 1
         if cache_key and result.call_status == 'COMPLETED':
             try:
                 # Saving a response never admits it to the product. All existing

@@ -240,14 +240,33 @@ def review_frame_observations_batched(candidates, facts, ask, *, evidence,
         images=evidence[offset:offset+batch_size]
         clues,audit=review_frame_observations(subset,facts,ask,evidence=images,
             stage=stage+'_BATCH_%02d'%(offset//batch_size+1),stage_runs=stage_runs)
-        all_clues.update(clues)
+        # Each single-batch review returns a structured envelope, not a raw
+        # P-ID map. Merging whole envelopes overwrote earlier batches and
+        # then nested them under a second candidate_scene_clues key.
+        # Flatten only the verified, immutable per-candidate references.
+        current = clues.get('candidate_scene_clues', {})
+        if not isinstance(current, dict) or set(current) != {
+                c['candidate_id'] for c in subset}:
+            raise ValueError('Frame observation batch clue contract mismatch')
+        if set(current) & set(all_clues):
+            raise ValueError('Duplicate frame clue across batches')
+        all_clues.update(current)
         supports.extend(audit.get('frame_claim_supports',[]))
         batches.append({'candidate_ids':[r['candidate_id'] for r in subset],
             'audit':audit})
         has_error=has_error or bool(audit.get('failure') or audit.get('whole_response_invalid')
                                    or any(r.get('status')=='UNVERIFIED'
                                           for r in audit.get('frame_ledger',[])))
-    return all_clues,{'revision':REVISION,'batching':'BOUNDED_CHAPTER_REVIEW_V01',
+    # Mirror review_frame_observations()'s structured clues contract.
+    # Earlier code mixed whole per-batch envelopes rather than merging the
+    # validated P keys; the downstream renderer then saw zero usable frames.
+    # Preserve the explicit batch failure scope, never invent missing clues.
+    return {'candidate_scene_clues':all_clues,
+            'issues':[issue for batch in batches
+                      for issue in batch['audit'].get('frame_ledger',[])
+                      if issue.get('status')=='UNVERIFIED'],
+            'evidence_scope':'DEDICATED_PER_IMAGE_MODEL_OBSERVATION_WITH_FACT_QUOTES_NOT_VISUAL_GROUND_TRUTH'
+           },{'revision':REVISION,'batching':'BOUNDED_CHAPTER_REVIEW_V01',
         'frame_claim_supports':supports,'batches':batches,
         'partial_failures':has_error,
         'all_candidate_ids':[r['candidate_id'] for r in candidates]}

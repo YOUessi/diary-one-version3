@@ -154,6 +154,14 @@ def test_tied_novelty_boundaries_are_spread_over_global_timeline():
     assert recommendation['recommended_count']==5
     assert min(sizes)>=15 and max(sizes)<=40
     assert sum(sizes)==100
+    for proposal in recommendation['chapter_candidates']:
+        # The whole region is represented in advisory evidence; a long
+        # region must not point only at its first three observations.
+        facts=proposal['fact_ids']
+        assert proposal['anchor_fact_ids'][0] == facts[0]
+        assert proposal['anchor_fact_ids'][-1] == facts[-1]
+        if len(facts) >= 3:
+            assert facts[len(facts)//2] in proposal['anchor_fact_ids']
 
 
 def test_visual_review_budget_has_no_named_place_or_activity_exceptions():
