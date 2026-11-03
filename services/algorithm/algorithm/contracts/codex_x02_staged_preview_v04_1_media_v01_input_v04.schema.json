@@ -315,20 +315,20 @@
         "model_call_attempted_count": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 96
+          "maximum": 180
         },
         "model_call_completed_count": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 96
+          "maximum": 180
         },
         "model_call_failed_count": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 96
+          "maximum": 180
         },
         "run_max_model_call_attempts": {
-          "const": 96
+          "enum": [96, 180]
         },
         "model_call_circuit_breaker_tripped": {
           "type": "boolean"
@@ -977,13 +977,13 @@
           "const": 1
         },
         "run_max_model_call_attempts": {
-          "const": 96
+          "enum": [96, 180]
         },
         "model_call_attempt_count": {
           "description": "Whole X02 V04.1 run count across Perception, Structure, and Writer provider-call attempts; not an S04-only count.",
           "type": "integer",
           "minimum": 0,
-          "maximum": 96
+          "maximum": 180
         },
         "circuit_breaker_tripped": {
           "type": "boolean"

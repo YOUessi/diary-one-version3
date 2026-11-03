@@ -19,7 +19,7 @@ from . import narrative_focus, frame_selection, frame_observation, final_moment_
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'CHAPTER_V2_EVIDENCE_ROUTER_S14_FOCUS_R5_25'
+EDITOR_REVISION = 'CHAPTER_V2_THEMATIC_FUSION_VALUE_MEDIA_R5_26'
 
 
 def obj(properties, required=None):
@@ -3294,15 +3294,18 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             'notice': 'Original count is advisory; compare grounded experiences, not labels.',
         }
     if use_episode_router:
-        from . import chapter_episode_router
-        episodes, episode_router_audit = chapter_episode_router.route(
-            asset_map, observations, ask, chapter_limit=chapter_limit)
-        locked_wire = chapter_episode_router.compile_wire(episodes, asset_map, facts)
+        from . import chapter_theme_hierarchy
+        # Discover provisional scene experiences first, then group by semantic
+        # content. A recurring subject may be part of the same Chapter even
+        # across nonadjacent source index ranges. Every F ID remains bound to
+        # its original source image and is allocated once by source ownership.
+        locked_wire, episode_router_audit = chapter_theme_hierarchy.plan(
+            asset_map, observations, facts, ask, chapter_limit=chapter_limit)
         routed_chapters, routed_moments, routed_issues, routed_coverage = (
             compile_structure_wire(locked_wire, facts, asset_map, chapter_limit))
-        if routed_issues or len(routed_chapters) != len(episodes):
+        if routed_issues or len(routed_chapters) != len(locked_wire['chapters']):
             raise x02.X02ContractError(
-                'EPISODE_ROUTING_FACT_BINDING_FAILED: ' + repr(routed_issues[:4]))
+                'THEMATIC_EPISODE_FACT_BINDING_FAILED: ' + repr(routed_issues[:4]))
         # Later picture selection has NO authority to rewrite these source-bound
         # fact memberships, avoiding remerging all day into one generic walk.
         editorial_output = deepcopy(locked_wire)
@@ -3313,8 +3316,8 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
              'fact_count':len(c['fact_ids'])} for c in chapters]
         episode_router_audit['unassigned_verified_facts'] = len(set(facts) -
             {fid for c in chapters for fid in c['fact_ids']})
-        structure_replan_audit = {'status':'EPISODE_ROUTE_APPLIED',
-                                  'source':'S07X_S07Y_EVIDENCE_BOUND_GLOBAL_ROUTER'}
+        structure_replan_audit = {'status':'THEMATIC_EPISODE_CHAPTER_FUSION_APPLIED',
+                                  'source':'S07T_S07U_EVIDENCE_BOUND_NONCONTIGUOUS_FUSION'}
     media_selection_audit, media_selection_rejections = {}, []
     if facts:
         preferred = list(dict.fromkeys(facts[f]['asset_id'] for c in chapters for f in c['fact_ids'] if f in facts))
@@ -3324,10 +3327,35 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         # to S09B; these synthetic reservation IDs are never published IDs.
         chapter_media_groups.update(draft_media_reservations)
         use_global_media = bundle.manifest.get('bundle_version') == 'DIARY_ONE_APP_LIBRARY_BUNDLE_V05'
-        if use_global_media:
-            # V05: fair candidate pool across independent Chapter proposals;
-            # no first-18 chronological starvation. No image is assumed valid
-            # unless it retains a directly verified fact/frame reference.
+        if use_global_media and use_episode_router:
+            # V05/R5_26 long days: reserve verified high-value image facts first.
+            # Independent Episode coverage is protected before a generic
+            # temporal spread. A recurring scene may contribute frames from
+            # multiple source ranges to one semantic Chapter. Neither the
+            # source index nor a landmark's name decides when to split.
+            from . import chapter_media_pool
+            thematic_groups = episode_router_audit['chapter_grouping']
+            microepisodes = {e['episode_id']:e for e in
+                             episode_router_audit['independent_episodes']}
+            ranges = {}
+            for i,chapter in enumerate(thematic_groups,1):
+                cid=f'C{i:02d}'
+                ranges[cid]=[{
+                    'episode_id':e,'start_index':microepisodes[e]['start_index'],
+                    'end_index':microepisodes[e]['end_index']}
+                    for e in chapter['episode_ids']]
+            protected_facts={c['id']:list(c['selection_focus']['fact_ids'])
+                             for c in chapters}
+            shown_media_frames, media_evidence, media_selection_audit = (
+                chapter_media_pool.select_balanced_candidates(
+                    facts,asset_map,bundle,chapter_media_groups,
+                    max_per_chapter=8,max_total=40,
+                    priority_fact_ids_by_chapter=protected_facts,
+                    episode_source_ranges_by_chapter=ranges,
+                    observations=observations))
+        elif use_global_media:
+            # V05 small bundles retain the existing production contract; no
+            # hierarchy is necessary or valid without 32+ source assets.
             from . import chapter_media_pool
             shown_media_frames, media_evidence, media_selection_audit = (
                 chapter_media_pool.select_balanced_candidates(

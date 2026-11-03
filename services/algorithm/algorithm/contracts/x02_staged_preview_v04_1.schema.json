@@ -127,10 +127,10 @@
         "request_id": {"type": "string"},
         "request_ids": {"type": "array", "items": {"type": "string"}},
         "model_calls": {"type": "integer", "minimum": 0},
-        "model_call_attempted_count": {"type": "integer", "minimum": 0, "maximum": 96},
-        "model_call_completed_count": {"type": "integer", "minimum": 0, "maximum": 96},
-        "model_call_failed_count": {"type": "integer", "minimum": 0, "maximum": 96},
-        "run_max_model_call_attempts": {"const": 96},
+        "model_call_attempted_count": {"type": "integer", "minimum": 0, "maximum": 180},
+        "model_call_completed_count": {"type": "integer", "minimum": 0, "maximum": 180},
+        "model_call_failed_count": {"type": "integer", "minimum": 0, "maximum": 180},
+        "run_max_model_call_attempts": {"enum": [96, 180]},
         "model_call_circuit_breaker_tripped": {"type": "boolean"},
         "asset_count": {"type": "integer", "minimum": 1},
         "evidence_frame_count": {"type": "integer", "minimum": 1},
@@ -454,10 +454,10 @@
         "max_frames": {"const": 18},
         "max_evidence_bytes": {"const": 4194304},
         "single_asset_retry_limit": {"const": 1},
-        "run_max_model_call_attempts": {"const": 96},
+        "run_max_model_call_attempts": {"enum": [96, 180]},
         "model_call_attempt_count": {
           "description": "Whole X02 V04.1 run count across Perception, Structure, and Writer provider-call attempts; not an S04-only count.",
-          "type": "integer", "minimum": 0, "maximum": 96
+          "type": "integer", "minimum": 0, "maximum": 180
         },
         "circuit_breaker_tripped": {"type": "boolean"},
         "planned_batch_count": {"type": "integer", "minimum": 0},

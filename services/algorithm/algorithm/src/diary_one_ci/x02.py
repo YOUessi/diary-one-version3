@@ -87,6 +87,18 @@ PERCEPTION_FACT_PAYLOAD_MAX_CHARS = 1_000
 # room for the complete supported day while still stopping recursive failure
 # amplification. This is an operational stop-loss, not a quality threshold.
 V041_RUN_MAX_MODEL_CALL_ATTEMPTS = 96
+# Cold-start V05 long-day sessions need extra independently image-bound
+# Scene/Chapter, frame-observation, copy verification and recovery stages.
+# Historical V04.1 and small V05 compatibility retain exactly 96 attempts.
+# Research cohorts previously needed up to ~150 genuine API calls; 180
+# remains a finite circuit-breaker and never silently bypasses safe gates.
+V05_LONG_DAY_MAX_MODEL_CALL_ATTEMPTS = 180
+
+def model_attempt_limit(input_bundle_version, asset_count, product_editor=False):
+    if (product_editor and input_bundle_version == "DIARY_ONE_APP_LIBRARY_BUNDLE_V05"
+            and asset_count >= 32):
+        return V05_LONG_DAY_MAX_MODEL_CALL_ATTEMPTS
+    return V041_RUN_MAX_MODEL_CALL_ATTEMPTS
 PERCEPTION_V03_BATCH_SIZE = 6
 MAX_CHAPTERS = 4
 MAX_AHAS = 3
@@ -1419,6 +1431,7 @@ def _run_x02_impl(
     }
     stage_runs: List[StageRun] = []
     model_call_attempt_count = 0
+    run_attempt_cap = model_attempt_limit(input_bundle_version, len(assets), product_editor)
     model_call_circuit_breaker_tripped = False
 
     def call_model(
@@ -1462,7 +1475,7 @@ def _run_x02_impl(
                 editorial_audit['events'].append({'status': 'CACHE_MISS', 'stage': stage,
                                                 'error_type': type(exc).__name__})
         if stop_loss_v041:
-            if model_call_attempt_count >= V041_RUN_MAX_MODEL_CALL_ATTEMPTS:
+            if model_call_attempt_count >= run_attempt_cap:
                 model_call_circuit_breaker_tripped = True
                 raise X02CallAttemptLimitReached(
                     "V04.1 model-call attempt circuit breaker is open"
@@ -1941,7 +1954,7 @@ def _run_x02_impl(
         structure_schema = active_recording_editor.response_schema(structure_schema)
     structure_model_skipped = bool(
         stop_loss_v041
-        and model_call_attempt_count >= V041_RUN_MAX_MODEL_CALL_ATTEMPTS
+        and model_call_attempt_count >= run_attempt_cap
     )
     if structure_model_skipped:
         model_call_circuit_breaker_tripped = True
@@ -2116,7 +2129,7 @@ def _run_x02_impl(
                 preview_chapters,
             )
             aha_editor_audit["status"] = "SKIPPED_NO_USABLE_FACT_PALETTE"
-        elif model_call_attempt_count >= V041_RUN_MAX_MODEL_CALL_ATTEMPTS:
+        elif model_call_attempt_count >= run_attempt_cap:
             model_call_circuit_breaker_tripped = True
             recording_plan = experience_editor.unavailable_plan(
                 aha_discovery_plan, "MODEL_CALL_CIRCUIT_BREAKER",
@@ -2187,7 +2200,7 @@ def _run_x02_impl(
                 preview_chapters, chapter_candidates, aha_candidates,
             )
             aha_editor_audit["status"] = "SKIPPED_NO_VALIDATED_SHORTLIST"
-        elif model_call_attempt_count >= V041_RUN_MAX_MODEL_CALL_ATTEMPTS:
+        elif model_call_attempt_count >= run_attempt_cap:
             model_call_circuit_breaker_tripped = True
             recording_plan = aha_set_editor.unavailable_plan(
                 aha_discovery_plan, "MODEL_CALL_CIRCUIT_BREAKER",
@@ -2326,7 +2339,7 @@ def _run_x02_impl(
                 evidence_bytes = sum(path.stat().st_size for _, _, path in evidence)
                 # Reuse the existing request-byte bound; never add uploads or retries.
                 writer_call_reserve = 2 * (len(selected_chapters) + len(selected_ahas))
-                if model_call_attempt_count + writer_call_reserve >= V041_RUN_MAX_MODEL_CALL_ATTEMPTS:
+                if model_call_attempt_count + writer_call_reserve >= run_attempt_cap:
                     fallback_reason = "CALL_BUDGET_RESERVED_FOR_EXISTING_PIPELINE"
                 elif len(evidence) > chapter_display.MAX_COMPARISON_FRAMES or evidence_bytes > PERCEPTION_BATCH_MAX_EVIDENCE_BYTES:
                     fallback_reason = "COMPARISON_EXCEEDS_EXISTING_REQUEST_BOUND"
@@ -2876,7 +2889,7 @@ def _run_x02_impl(
                 "max_evidence_bytes": PERCEPTION_BATCH_MAX_EVIDENCE_BYTES if stop_loss_v041 else None,
                 "single_asset_retry_limit": PERCEPTION_SINGLE_ASSET_RETRY_LIMIT if stop_loss_v041 else 0,
                 "run_max_model_call_attempts": (
-                    V041_RUN_MAX_MODEL_CALL_ATTEMPTS if stop_loss_v041 else None
+                    run_attempt_cap if stop_loss_v041 else None
                 ),
                 "model_call_attempt_count": model_call_attempt_count,
                 "circuit_breaker_tripped": model_call_circuit_breaker_tripped,
@@ -2939,7 +2952,7 @@ def _run_x02_impl(
                 run.model_calls for run in stage_runs if run.call_status != "COMPLETED"
             ),
             "run_max_model_call_attempts": (
-                V041_RUN_MAX_MODEL_CALL_ATTEMPTS if stop_loss_v041 else None
+                run_attempt_cap if stop_loss_v041 else None
             ),
             "model_call_circuit_breaker_tripped": model_call_circuit_breaker_tripped,
             "asset_count": len(assets),
@@ -3098,11 +3111,16 @@ def _validate_v041_result_state(
         or batching.get("single_asset_retry_limit") != PERCEPTION_SINGLE_ASSET_RETRY_LIMIT
     ):
         raise X02ContractError("V04.1 perception batching contract mismatch")
+    expected_cap = model_attempt_limit(
+        str(result.get("trace",{}).get("input_bundle_version")),
+        int(result.get("trace",{}).get("asset_count") or 0),
+        bool(result.get("editor_policy") or result.get("decision_trace",{}).get("product_editor")))
+    # V05 includes a product editor; its result records editor_policy.
     if (
         batching.get("run_max_model_call_attempts")
-        != V041_RUN_MAX_MODEL_CALL_ATTEMPTS
+        != expected_cap
         or result.get("trace", {}).get("run_max_model_call_attempts")
-        != V041_RUN_MAX_MODEL_CALL_ATTEMPTS
+        != expected_cap
         or batching.get("model_call_attempt_count")
         != result.get("trace", {}).get("model_call_attempted_count")
     ):
@@ -3111,7 +3129,7 @@ def _validate_v041_result_state(
     if (
         not isinstance(attempted_count, int)
         or isinstance(attempted_count, bool)
-        or not 0 <= attempted_count <= V041_RUN_MAX_MODEL_CALL_ATTEMPTS
+        or not 0 <= attempted_count <= expected_cap
     ):
         raise X02ContractError("V04.1 model-call attempt count invalid")
 

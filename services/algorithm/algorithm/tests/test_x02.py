@@ -1574,7 +1574,7 @@ class X02V041ContractAndBehaviorTests(unittest.TestCase):
         self.assertEqual(batching["properties"]["max_frames"]["const"], 18)
         self.assertEqual(batching["properties"]["max_evidence_bytes"]["const"], 4 * 1024 * 1024)
         self.assertEqual(batching["properties"]["single_asset_retry_limit"]["const"], 1)
-        self.assertEqual(batching["properties"]["run_max_model_call_attempts"]["const"], 96)
+        self.assertEqual(batching["properties"]["run_max_model_call_attempts"]["enum"], [96, 180])
         self.assertIn(
             "Whole X02 V04.1 run count",
             batching["properties"]["model_call_attempt_count"]["description"],
