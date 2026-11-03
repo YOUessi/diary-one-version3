@@ -14,7 +14,7 @@ import uuid
 
 from .scene_selection import (EXPERIENCE_KINDS, SELECTION_POLICY_PROMPT,
                               selection_policy_context, policy_for)
-from . import narrative_focus, frame_selection, frame_observation, final_moment_repair, chapter_transition, scenelet_builder, chapter_boundary_planner
+from . import narrative_focus, frame_selection, frame_observation, final_moment_repair, chapter_transition, scenelet_builder, chapter_boundary_planner, chapter_episode_router
 
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
