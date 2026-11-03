@@ -1,0 +1,1776 @@
+[
+  {
+    "offset": 0,
+    "status": "COMPLETE",
+    "chapters": 5,
+    "titles": [
+      "海滨步道与钟楼建筑",
+      "砖石街道与步行桥",
+      "商业拱廊与红砖建筑",
+      "城市步行区与室内拱廊",
+      "花园凉亭与池塘喷泉"
+    ],
+    "main_gallery": 19,
+    "highlights": 1,
+    "selected_media_total": 20,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 8,
+    "independent_episodes_covered_any": 8,
+    "independent_episodes_missing": [
+      "歌剧院收尾"
+    ],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 2,
+        "highlight": 1
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 3,
+        "highlight": 0
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 5,
+        "highlight": 0
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 4,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 0,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      0,
+      2880,
+      8640,
+      11520,
+      16320
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      -23.3,
+      -12.7,
+      -33.3,
+      -41.3
+    ],
+    "boundary_median_absolute_minutes": 28.3,
+    "reference_interval_iou_per_chapter": [
+      0.6729,
+      0.6687,
+      0.4344,
+      0.3846,
+      0.1788
+    ],
+    "reference_interval_macro_iou": 0.4679,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "海滨步道与钟楼建筑",
+        "hero": "sydney_00_000205-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E01",
+          "E02",
+          "E03"
+        ],
+        "story": "海滨步道上有行人走动或休息，右侧停靠一艘大型白色游轮，背景可见拱形大桥。露天咖啡座区域旁有一座米色钟楼建筑。"
+      },
+      {
+        "index": 2,
+        "title": "砖石街道与步行桥",
+        "hero": "sydney_00_000289-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E03",
+          "E04",
+          "E05"
+        ],
+        "story": "铺有砖石的街道上有多名行人行走，左侧可见带有“BOND”字样的招牌。一座宽阔的步行桥两侧排列着彩旗和路灯，多名行人在桥上漫步，背景可见白色帐篷状建筑及城市高楼。"
+      },
+      {
+        "index": 3,
+        "title": "商业拱廊与红砖建筑",
+        "hero": "sydney_00_001141-f1",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E05",
+          "E06"
+        ],
+        "story": "Queen Victoria Building底层的商铺设有遮阳棚与入口。一群行人穿过带有汉字和石狮雕像的红金拱门。"
+      },
+      {
+        "index": 4,
+        "title": "城市步行区与室内拱廊",
+        "hero": "sydney_00_001273-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E06",
+          "E07"
+        ],
+        "story": "宽阔的城市步行区域左侧可见带有拱门结构的古典砂岩建筑立面，街道两侧种有行道树并摆放着红色花卉长槽。室内商业拱廊右侧有带玻璃罩的柜台，左侧可见自动扶梯和“BALLY”招牌。"
+      },
+      {
+        "index": 5,
+        "title": "花园凉亭与池塘喷泉",
+        "hero": "sydney_00_001777-f1",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E08"
+        ],
+        "story": "花园中有一座带尖顶屋顶和柱子的木制凉亭，周围环绕着草坪和灌木。一个平静的池塘中央有一个喷泉装置。"
+      }
+    ],
+    "unreviewed_source_assets": 0,
+    "publication_status_counts": {
+      "REDUNDANT": 129,
+      "VISIBLE": 20,
+      "COPY_BLOCKED": 2,
+      "NO_SUPPORTED_FACTS": 2,
+      "NOT_SELECTED_VALUE": 1,
+      "CAPACITY_LIMIT": 1,
+      "INSUFFICIENT": 6
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 76,
+    "new_cost_usd": 0.178626,
+    "source_model_stoploss": 96,
+    "research_stoploss_override": false,
+    "failed_api_calls": 0
+  },
+  {
+    "offset": 10,
+    "status": "COMPLETE",
+    "chapters": 5,
+    "titles": [
+      "歌剧院建筑与柱廊远眺",
+      "岩石区历史街区漫步",
+      "达令港码头与海事探索",
+      "街头露天咖啡座",
+      "皇家植物园自然步道"
+    ],
+    "main_gallery": 15,
+    "highlights": 1,
+    "selected_media_total": 16,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 8,
+    "independent_episodes_covered_any": 8,
+    "independent_episodes_missing": [
+      "歌剧院收尾"
+    ],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 3,
+        "highlight": 1
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 3,
+        "highlight": 0
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 0,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      10,
+      1930,
+      4810,
+      8650,
+      15730
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      -39.2,
+      -76.5,
+      -81.2,
+      -51.2
+    ],
+    "boundary_median_absolute_minutes": 63.85,
+    "reference_interval_iou_per_chapter": [
+      0.4486,
+      0.071,
+      0.0,
+      0.2177,
+      0.1496
+    ],
+    "reference_interval_macro_iou": 0.1774,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "歌剧院建筑与柱廊远眺",
+        "hero": "sydney_01_000134-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E01"
+        ],
+        "story": "大型玻璃幕墙反射着景象，上方连接着混凝土结构。临海步道旁可见大型建筑的弧形外墙，海面上有帆船行驶。"
+      },
+      {
+        "index": 2,
+        "title": "岩石区历史街区漫步",
+        "hero": "sydney_01_000266-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E02",
+          "E03",
+          "E04"
+        ],
+        "story": "沿带遮阳棚走廊前行，可见“THE ROCKS CAFE”招牌及外侧黄白遮阳伞下的露天人群。集市摊位中，红色帐篷下的食品摊位招牌Ta'meya有人正在柜台前；邻近的PAELLA摊位可见大锅和排队的人群。两人在标有“PIER 2/3”和“HICKSON RD”路牌的砖砌建筑旁的人行道上行走。"
+      },
+      {
+        "index": 3,
+        "title": "达令港码头与海事探索",
+        "hero": "sydney_01_000854-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E04",
+          "E05"
+        ],
+        "story": "一条弧形木栈道旁是带有几何形玻璃外墙的现代建筑和水面。SEA LIFE水族馆入口处许多人正在排队等候进入；附近的步行道上有行人经过，右侧水域停靠着渡轮，背景矗立着密集的城市高楼群。"
+      },
+      {
+        "index": 4,
+        "title": "街头露天咖啡座",
+        "hero": "sydney_01_001238-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E05",
+          "E06"
+        ],
+        "story": "狭窄街道一侧摆放多张户外桌椅，数人围坐于桌旁，沿街可见MONTBLANC等店铺门面与垂直招牌。"
+      },
+      {
+        "index": 5,
+        "title": "皇家植物园自然步道",
+        "hero": "sydney_01_001838-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E07",
+          "E08"
+        ],
+        "story": "公园景观左侧可见一座古典风格的圆亭（Rotunda）和长椅，中间为弯曲的铺装道路，右侧有池塘，远处有零星行人。"
+      }
+    ],
+    "unreviewed_source_assets": 0,
+    "publication_status_counts": {
+      "VISIBLE": 16,
+      "REDUNDANT": 140,
+      "INSUFFICIENT": 2,
+      "NO_SUPPORTED_FACTS": 3
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "PIPELINE_BLOCKED",
+    "publication_complete": true,
+    "new_api_calls": 46,
+    "new_cost_usd": 0.04541,
+    "source_model_stoploss": 180,
+    "research_stoploss_override": true,
+    "failed_api_calls": 0
+  },
+  {
+    "offset": 20,
+    "status": "COMPLETE",
+    "chapters": 5,
+    "titles": [
+      "环形码头与岩石区市集",
+      "海港栈道与达令港漫步",
+      "维多利亚女王大厦内景",
+      "纪念建筑与水池",
+      "皇家植物园花园小径"
+    ],
+    "main_gallery": 20,
+    "highlights": 1,
+    "selected_media_total": 21,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 8,
+    "independent_episodes_covered_any": 8,
+    "independent_episodes_missing": [
+      "歌剧院收尾"
+    ],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 1,
+        "highlight": 1
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 7,
+        "highlight": 0
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 3,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 3,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 0,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      20,
+      2900,
+      9620,
+      12500,
+      15860
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      -23.0,
+      3.7,
+      -17.0,
+      -49.0
+    ],
+    "boundary_median_absolute_minutes": 20.0,
+    "reference_interval_iou_per_chapter": [
+      0.6729,
+      0.7619,
+      0.699,
+      0.3714,
+      0.1552
+    ],
+    "reference_interval_macro_iou": 0.5321,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "环形码头与岩石区市集",
+        "hero": "sydney_02_000279-f1",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E01",
+          "E02",
+          "E03"
+        ],
+        "story": "广场区域远处排列着红色的市集帐篷，有行人在其间走动。平静水面上停泊着一艘大型游轮，远景可见悉尼歌剧院贝壳状屋顶。"
+      },
+      {
+        "index": 2,
+        "title": "海港栈道与达令港漫步",
+        "hero": "sydney_02_000783-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E04",
+          "E05",
+          "E06"
+        ],
+        "story": "木质栈道上有多名行人正在行走或驻足，旁边停泊着一艘高桅帆船，右侧矗立一座白色灯塔。从高处可俯瞰海港和对岸城市视野。"
+      },
+      {
+        "index": 3,
+        "title": "维多利亚女王大厦内景",
+        "hero": "sydney_02_001167-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E06"
+        ],
+        "story": "室内展示了一面精细的石雕祭坛装饰墙，包含多个壁龛和人物雕像。右侧墙壁上可见“FIRE HYDRANT STORE REEL”标识牌，左侧有绿色发光展示板。"
+      },
+      {
+        "index": 4,
+        "title": "纪念建筑与水池",
+        "hero": "sydney_02_001419-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E06",
+          "E07"
+        ],
+        "story": "大型石质喷泉正在喷水，四周环绕绿树与雕塑。正面可见一座带拱门的浅色纪念建筑与长方形水池。"
+      },
+      {
+        "index": 5,
+        "title": "皇家植物园花园小径",
+        "hero": "sydney_02_001587-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E07",
+          "E08"
+        ],
+        "story": "正式的花园中央有一个喷泉，周围环绕着对称的圆形花坛和修剪整齐的草坪。路边泥土地面上可见一只小型爬行动物（蜥蜴），位于灌木丛旁。"
+      }
+    ],
+    "unreviewed_source_assets": 1,
+    "publication_status_counts": {
+      "REDUNDANT": 138,
+      "VISIBLE": 21,
+      "UNREVIEWED": 1,
+      "COPY_BLOCKED": 1
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 127,
+    "new_cost_usd": 0.214625,
+    "source_model_stoploss": 180,
+    "research_stoploss_override": true,
+    "failed_api_calls": 0
+  },
+  {
+    "offset": 30,
+    "status": "COMPLETE",
+    "chapters": 5,
+    "titles": [
+      "悉尼歌剧院与海港步道",
+      "岩石区市集与历史街道",
+      "达令港码头与帆船游览",
+      "市中心奢侈品商业街",
+      "皇家植物园自然漫步"
+    ],
+    "main_gallery": 17,
+    "highlights": 0,
+    "selected_media_total": 17,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 9,
+    "independent_episodes_covered_any": 9,
+    "independent_episodes_missing": [],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 3,
+        "highlight": 0
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 4,
+        "highlight": 0
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 4,
+        "highlight": 0
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 1,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      30,
+      1950,
+      3870,
+      9630,
+      13470
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      -38.8,
+      -92.2,
+      -64.8,
+      -88.8
+    ],
+    "boundary_median_absolute_minutes": 76.8,
+    "reference_interval_iou_per_chapter": [
+      0.4486,
+      0.0,
+      0.0238,
+      0.0,
+      0.092
+    ],
+    "reference_interval_macro_iou": 0.1129,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "悉尼歌剧院与海港步道",
+        "hero": "sydney_03_000052-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E01"
+        ],
+        "story": "一艘黄绿相间的渡轮在水面行驶，激起白色浪花。背景中有一座巨大的黑色钢拱桥横跨水面，远处是城市建筑群。仰视视角下可见标志性的白色层叠壳状结构。"
+      },
+      {
+        "index": 2,
+        "title": "岩石区市集与历史街道",
+        "hero": "sydney_03_000292-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E02",
+          "E03"
+        ],
+        "story": "路边排列着多个红色顶棚的市集摊位，摊位上挂有衣物，许多行人在树荫下穿行浏览。名为BRICKFIELDS的摊位展示着食物。"
+      },
+      {
+        "index": 3,
+        "title": "达令港码头与帆船游览",
+        "hero": "sydney_03_000796-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E03",
+          "E04",
+          "E05"
+        ],
+        "story": "一艘大型木质帆船停靠在码头，多名游客正在栈桥上走动并排队登船。海面上有一艘巨大的邮轮停靠在三桅帆船后方，岸边可见红砖尖顶建筑。码头上还停泊着一艘标有“C.L.S No.4”字样的红色灯船。"
+      },
+      {
+        "index": 4,
+        "title": "市中心奢侈品商业街",
+        "hero": "sydney_03_001240-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E06"
+        ],
+        "story": "室内长廊呈现古典拱门、马赛克地砖和红色墙面，远处可见商铺招牌。市场通道两侧排列着密集的纪念品摊位，头顶悬挂“SOUVENIR LANE”标牌。繁忙的人行道旁可见BOSS品牌标识和Louis Vuitton建筑。"
+      },
+      {
+        "index": 5,
+        "title": "皇家植物园自然漫步",
+        "hero": "sydney_03_001636-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E07",
+          "E08",
+          "E09"
+        ],
+        "story": "正式花园景观中有长条形草坪、低矮绿篱、木质长椅和一个银色球体雕塑。喷泉中央立有雕像，水柱向上喷射。"
+      }
+    ],
+    "unreviewed_source_assets": 2,
+    "publication_status_counts": {
+      "REDUNDANT": 141,
+      "VISIBLE": 17,
+      "COPY_BLOCKED": 1,
+      "UNREVIEWED": 2
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 137,
+    "new_cost_usd": 0.247776,
+    "source_model_stoploss": 180,
+    "research_stoploss_override": true,
+    "failed_api_calls": 0
+  },
+  {
+    "offset": 40,
+    "status": "COMPLETE",
+    "chapters": 5,
+    "titles": [
+      "环形码头与岩石区集市",
+      "达令港风光与中式牌坊",
+      "唐人街与CBD拱廊购物",
+      "阳光花园中的蜿蜒小路",
+      "重返歌剧院广场"
+    ],
+    "main_gallery": 22,
+    "highlights": 2,
+    "selected_media_total": 24,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 9,
+    "independent_episodes_covered_any": 9,
+    "independent_episodes_missing": [],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 1,
+        "highlight": 1
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 6,
+        "highlight": 0
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 4,
+        "highlight": 1
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 4,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      40,
+      3640,
+      9640,
+      13480,
+      18760
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      -10.7,
+      4.0,
+      -0.7,
+      -0.7
+    ],
+    "boundary_median_absolute_minutes": 2.35,
+    "reference_interval_iou_per_chapter": [
+      0.8411,
+      0.8533,
+      0.932,
+      0.985,
+      0.931
+    ],
+    "reference_interval_macro_iou": 0.9085,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "环形码头与岩石区集市",
+        "hero": "sydney_04_000353-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E01",
+          "E02",
+          "E03"
+        ],
+        "story": "白色帆状屋顶建筑前，宽阔的灰色石阶上散布着游客。一排排白色遮阳篷覆盖的户外市场通道里，行人正在其中行走浏览。"
+      },
+      {
+        "index": 2,
+        "title": "达令港风光与中式牌坊",
+        "hero": "sydney_04_000953-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E03",
+          "E04",
+          "E05",
+          "E06"
+        ],
+        "story": "红绿配色的中式牌坊匾额书写“四海一家”，下方有石狮子雕像，许多游客穿过或在前方驻足。多座排列整齐的黄色石砌仓库建筑旁，背景可见一座大型钢铁拱桥横跨水面。"
+      },
+      {
+        "index": 3,
+        "title": "唐人街与CBD拱廊购物",
+        "hero": "sydney_04_001157-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E06"
+        ],
+        "story": "室内市场通道两侧摊位挂满衣物、帽子和纪念品，左侧招牌写有“Sydney Souvenirs”。室内拱廊商业空间可见COACH、ROAM等店铺招牌及咖啡柜台，多人聚集于桌边或行走。"
+      },
+      {
+        "index": 4,
+        "title": "阳光花园中的蜿蜒小路",
+        "hero": "sydney_04_001733-f0",
+        "main_gallery_count": 5,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E06",
+          "E07",
+          "E08"
+        ],
+        "story": "阳光明媚的花园场景中，铺砌的小路蜿蜒穿过种植着龙舌兰和丝兰等植物的花坛。树荫下的小型人工水池水面平静倒映着树木，周围环绕着灌木。"
+      },
+      {
+        "index": 5,
+        "title": "重返歌剧院广场",
+        "hero": "sydney_04_001901-f0",
+        "main_gallery_count": 5,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E08",
+          "E09"
+        ],
+        "story": "沿海滨步道行走的人远处可见标志性的白色帆状屋顶建筑和海港大桥。白色帆状屋顶的大型建筑前方广场上，大量行人正在走动。"
+      }
+    ],
+    "unreviewed_source_assets": 2,
+    "publication_status_counts": {
+      "REDUNDANT": 118,
+      "INSUFFICIENT": 15,
+      "VISIBLE": 24,
+      "NOT_SELECTED_VALUE": 1,
+      "COPY_BLOCKED": 1,
+      "UNREVIEWED": 2
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 133,
+    "new_cost_usd": 0.235317,
+    "source_model_stoploss": 180,
+    "research_stoploss_override": true,
+    "failed_api_calls": 0
+  },
+  {
+    "offset": 50,
+    "status": "COMPLETE",
+    "chapters": 5,
+    "titles": [
+      "歌剧院与海港地标观光",
+      "岩石区集市漫步",
+      "滨水步道旁停泊游艇",
+      "红色灯塔与城市天际线",
+      "皇家植物园自然探索"
+    ],
+    "main_gallery": 14,
+    "highlights": 1,
+    "selected_media_total": 15,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 7,
+    "independent_episodes_covered_any": 7,
+    "independent_episodes_missing": [
+      "CBD/Chinatown拱廊",
+      "Hyde Park"
+    ],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 2,
+        "highlight": 1
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 4,
+        "highlight": 0
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 0,
+        "highlight": 0
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 0,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 1,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      50,
+      2210,
+      3890,
+      7730,
+      11570
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      -34.5,
+      -91.8,
+      -96.5,
+      -120.5
+    ],
+    "boundary_median_absolute_minutes": 94.15,
+    "reference_interval_iou_per_chapter": [
+      0.5047,
+      0.0,
+      0.0,
+      0.0,
+      0.0695
+    ],
+    "reference_interval_macro_iou": 0.1148,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "歌剧院与海港地标观光",
+        "hero": "sydney_05_000210-f1",
+        "main_gallery_count": 3,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E01",
+          "E02"
+        ],
+        "story": "滨水步道旁停泊着大型白色邮轮，远处可见悉尼歌剧院。"
+      },
+      {
+        "index": 2,
+        "title": "岩石区集市漫步",
+        "hero": "sydney_05_000342-f1",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E02",
+          "E03"
+        ],
+        "story": "挂有“TURKISH COZLEME”招牌的红色帐篷摊位前有人排队。旁边还有挂满衣物的红色帐篷摊位，一名女子手持白色杯子饮用。"
+      },
+      {
+        "index": 3,
+        "title": "滨水步道旁停泊游艇",
+        "hero": "sydney_05_000390-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E03",
+          "E04"
+        ],
+        "story": "宽阔的滨水木板步道右侧水面停泊着一艘白色游艇。步道左侧长椅上坐着两名穿夏装的人，远处背景中可见一座白色的帆状标志性建筑。"
+      },
+      {
+        "index": 4,
+        "title": "红色灯塔与城市天际线",
+        "hero": "sydney_05_000774-f0",
+        "main_gallery_count": 2,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E05"
+        ],
+        "story": "近处可见红色灯塔结构，远处水域对岸有高楼群及塔状建筑。河对岸的城市天际线清晰可见，前景有栏杆和系船柱。"
+      },
+      {
+        "index": 5,
+        "title": "皇家植物园自然探索",
+        "hero": "sydney_05_001734-f0",
+        "main_gallery_count": 2,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E08",
+          "E09"
+        ],
+        "story": "砖砌花坛里种着高大的仙人掌类植物，背景有红顶房屋。草坪上有三人站立，远处可见水面和桥梁。"
+      }
+    ],
+    "unreviewed_source_assets": 0,
+    "publication_status_counts": {
+      "REDUNDANT": 66,
+      "INSUFFICIENT": 79,
+      "VISIBLE": 15,
+      "COPY_BLOCKED": 1
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 130,
+    "new_cost_usd": 0.237611,
+    "source_model_stoploss": 180,
+    "research_stoploss_override": true,
+    "failed_api_calls": 0
+  },
+  {
+    "offset": 60,
+    "status": "COMPLETE",
+    "chapters": 3,
+    "titles": [
+      "临水露天餐饮区",
+      "岩石区集市购物与闲逛",
+      "Barangaroo海滨步道游览"
+    ],
+    "main_gallery": 11,
+    "highlights": 2,
+    "selected_media_total": 13,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 4,
+    "independent_episodes_covered_any": 4,
+    "independent_episodes_missing": [
+      "Circular Quay广场",
+      "CBD/Chinatown拱廊",
+      "Hyde Park",
+      "Botanical Gardens",
+      "歌剧院收尾"
+    ],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 0,
+        "highlight": 0
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 6,
+        "highlight": 1
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 1,
+        "highlight": 1
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 0,
+        "highlight": 0
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 0,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 0,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 0,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      60,
+      2820,
+      3900,
+      8820,
+      13500
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      -24.3,
+      -91.7,
+      -78.3,
+      -88.3
+    ],
+    "boundary_median_absolute_minutes": 83.3,
+    "reference_interval_iou_per_chapter": [
+      0.6449,
+      0.0,
+      0.0,
+      0.0,
+      0.0925
+    ],
+    "reference_interval_macro_iou": 0.1475,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "临水露天餐饮区",
+        "hero": "sydney_06_000139-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E01",
+          "E03"
+        ],
+        "story": "临水的露天餐饮区里，白色遮阳伞下有多人坐着，周围种植着棕榈树。繁华的步行街上有许多行人穿梭，街道两侧排列着红色和粉色遮阳伞和盆栽植物。"
+      },
+      {
+        "index": 2,
+        "title": "岩石区集市购物与闲逛",
+        "hero": "sydney_06_000283-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E03"
+        ],
+        "story": "一排红色的市集帐篷搭建在巷子里，摊位上挂满了各式色彩鲜艳的衣物。上方覆盖大型米色遮阳篷的集市通道两侧有各类商品摊位，行人众多。"
+      },
+      {
+        "index": 3,
+        "title": "Barangaroo海滨步道游览",
+        "hero": "sydney_06_000631-f1",
+        "main_gallery_count": 4,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E03",
+          "E04",
+          "E05"
+        ],
+        "story": "街角有一座带层叠绿植外墙的圆形现代建筑。广场上有多名行人站立或行走，前景地面上有两只白鸽。海滨步道上可见悉尼歌剧院的白色帆状结构，右侧停靠着一艘大型游轮。"
+      }
+    ],
+    "unreviewed_source_assets": 2,
+    "publication_status_counts": {
+      "REDUNDANT": 145,
+      "VISIBLE": 13,
+      "COPY_BLOCKED": 1,
+      "UNREVIEWED": 2
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 134,
+    "new_cost_usd": 0.227285,
+    "source_model_stoploss": 180,
+    "research_stoploss_override": true,
+    "failed_api_calls": 0
+  },
+  {
+    "offset": 70,
+    "status": "FAILED",
+    "stage": "S07X_PRODUCT_EPISODE_ROUTE",
+    "calls": 91,
+    "cost_usd": 0.15212,
+    "stoploss": 180,
+    "research_budget_override": true,
+    "error": "EPISODE_ROUTE_INCOMPLETE_COVERAGE"
+  },
+  {
+    "offset": 80,
+    "status": "COMPLETE",
+    "chapters": 5,
+    "titles": [
+      "海港地标与码头集市",
+      "栈桥、帆船与博物馆",
+      "纪念品与拱廊街区",
+      "喷泉、树荫与大榕树",
+      "歌剧院广场漫步"
+    ],
+    "main_gallery": 20,
+    "highlights": 3,
+    "selected_media_total": 23,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 8,
+    "independent_episodes_covered_any": 9,
+    "independent_episodes_missing": [],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 2,
+        "highlight": 1
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 0,
+        "highlight": 1
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 2,
+        "highlight": 1
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 6,
+        "highlight": 0
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 3,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 4,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      80,
+      3920,
+      9680,
+      13520,
+      18800
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      -6.0,
+      4.7,
+      0.0,
+      0.0
+    ],
+    "boundary_median_absolute_minutes": 2.35,
+    "reference_interval_iou_per_chapter": [
+      0.8972,
+      0.8889,
+      0.932,
+      1.0,
+      1.0
+    ],
+    "reference_interval_macro_iou": 0.9436,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "海港地标与码头集市",
+        "hero": "sydney_08_000009-f1",
+        "main_gallery_count": 3,
+        "highlight_count": 2,
+        "episode_ids_in_main_gallery": [
+          "E01",
+          "E03"
+        ],
+        "story": "一艘绿黄相间的渡轮从右向左驶入前景，岸边步道上有行人活动。远处水面停泊着一艘大型邮轮，左侧为城市高楼天际线。步行街左侧有红色帐篷摊位，右侧是石砌建筑，多名行人正在行走。"
+      },
+      {
+        "index": 2,
+        "title": "栈桥、帆船与博物馆",
+        "hero": "sydney_08_000813-f1",
+        "main_gallery_count": 4,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E04",
+          "E05",
+          "E06"
+        ],
+        "story": "木质栈桥步道一侧临水，远处可见跨海大桥。绘有蓝色海洋壁画的墙面旁，是写有National Maritime Museum字样的白色建筑入口。"
+      },
+      {
+        "index": 3,
+        "title": "纪念品与拱廊街区",
+        "hero": "sydney_08_000969-f0",
+        "main_gallery_count": 5,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E06"
+        ],
+        "story": "摊位台面上整齐堆叠着大量回旋镖，背景挂满毛绒考拉玩偶及钥匙扣等纪念品。带顶棚的城市街道走廊可见“幸福堂”及“MONEY CHANGE”招牌。室内拱廊式商业街区悬挂着ROAM广告牌，设有露天咖啡座，有多名行人行走。"
+      },
+      {
+        "index": 4,
+        "title": "喷泉、树荫与大榕树",
+        "hero": "sydney_08_001869-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E07",
+          "E08"
+        ],
+        "story": "城市公园内有一个正在喷水的喷泉，远处可见红砖尖顶建筑。一条蜿蜒的铺砌小径穿过树林，阳光透过树叶在地面投下斑驳阴影。一棵巨大的榕树枝条垂下形成拱形覆盖在步道上，光线较暗，背景隐约可见水面。"
+      },
+      {
+        "index": 5,
+        "title": "歌剧院广场漫步",
+        "hero": "sydney_08_001929-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E09"
+        ],
+        "story": "步道上有人迎面走来，背景清晰可见悉尼歌剧院的白色帆形屋顶结构以及远处的海港大桥。白天开阔的铺砌广场上，多人在白色帆状屋顶建筑及远处拱桥附近行走或停留。宽阔台阶上有零星人员走动。"
+      }
+    ],
+    "unreviewed_source_assets": 1,
+    "publication_status_counts": {
+      "VISIBLE": 23,
+      "REDUNDANT": 123,
+      "INSUFFICIENT": 13,
+      "CAPACITY_LIMIT": 1,
+      "UNREVIEWED": 1
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 0,
+    "new_cost_usd": 0,
+    "source_model_stoploss": 96,
+    "research_stoploss_override": false,
+    "failed_api_calls": null
+  },
+  {
+    "offset": 90,
+    "status": "COMPLETE",
+    "chapters": 3,
+    "titles": [
+      "海港大桥与游轮",
+      "教堂中殿与街景",
+      "歌剧院与蜻蜓花坛"
+    ],
+    "main_gallery": 14,
+    "highlights": 1,
+    "selected_media_total": 15,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 8,
+    "independent_episodes_covered_any": 8,
+    "independent_episodes_missing": [
+      "Darling Harbour滨水步行"
+    ],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 0,
+        "highlight": 0
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 3,
+        "highlight": 1
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 3,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 1,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      90,
+      8730,
+      13890
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": null,
+    "boundary_median_absolute_minutes": null,
+    "reference_interval_iou_per_chapter": [],
+    "reference_interval_macro_iou": null,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "海港大桥与游轮",
+        "hero": "sydney_09_000178-f0",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E01",
+          "E02",
+          "E03",
+          "E05"
+        ],
+        "story": "远处可见标志性的拱形大桥横跨水面，近处有一艘渡轮正在航行。一艘大型蓝白色游轮停靠在左侧码头。"
+      },
+      {
+        "index": 2,
+        "title": "教堂中殿与街景",
+        "hero": "sydney_09_001114-f0",
+        "main_gallery_count": 5,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E05",
+          "E06",
+          "E07"
+        ],
+        "story": "正对教堂中殿的视角，中央为高大的彩色玻璃窗，两侧排列着整齐的木质长椅，石柱耸立，地面有图案装饰。草坪、树木及远处的哥特式教堂建筑旁有行人经过；喷泉区域多人正在行走。"
+      },
+      {
+        "index": 3,
+        "title": "歌剧院与蜻蜓花坛",
+        "hero": "sydney_09_001930-f0",
+        "main_gallery_count": 5,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E07",
+          "E08",
+          "E09"
+        ],
+        "story": "公园内的一个由金属框架构成的蜻蜓造型花坛雕塑，随后视角转向铺砌的小路和竖立的深色指示牌。"
+      }
+    ],
+    "unreviewed_source_assets": 16,
+    "publication_status_counts": {
+      "VISIBLE": 15,
+      "REDUNDANT": 21,
+      "INSUFFICIENT": 106,
+      "COPY_BLOCKED": 2,
+      "UNREVIEWED": 16,
+      "CAPACITY_LIMIT": 1
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 118,
+    "new_cost_usd": 0.203589,
+    "source_model_stoploss": 180,
+    "research_stoploss_override": true,
+    "failed_api_calls": 0
+  },
+  {
+    "offset": 100,
+    "status": "COMPLETE",
+    "chapters": 4,
+    "titles": [
+      "海港大桥与街头漫步",
+      "海事博物馆码头掠影",
+      "悉尼历史街区漫步",
+      "歌剧院周边海滨步道"
+    ],
+    "main_gallery": 11,
+    "highlights": 4,
+    "selected_media_total": 15,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 8,
+    "independent_episodes_covered_any": 8,
+    "independent_episodes_missing": [
+      "Botanical Gardens"
+    ],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 1,
+        "highlight": 1
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 1,
+        "highlight": 1
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 2,
+        "highlight": 2
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 0,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 2,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      100,
+      4900,
+      8740,
+      14380,
+      18940
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      10.3,
+      -11.0,
+      14.3,
+      2.3
+    ],
+    "boundary_median_absolute_minutes": 10.65,
+    "reference_interval_iou_per_chapter": [
+      0.8531,
+      0.75,
+      0.7305,
+      0.8155,
+      0.7407
+    ],
+    "reference_interval_macro_iou": 0.778,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "海港大桥与街头漫步",
+        "hero": "sydney_10_000251-f1",
+        "main_gallery_count": 3,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E01",
+          "E02",
+          "E03"
+        ],
+        "story": "一艘绿黄相间的渡轮在水面上行驶，激起白色浪花，背景可见大型钢铁拱桥以及左侧的一艘大型白色游轮。前景有多名行人在街道上行走或停留，背景可见大型砂岩建筑立面及街边的橙色遮阳伞。"
+      },
+      {
+        "index": 2,
+        "title": "海事博物馆码头掠影",
+        "hero": "sydney_10_000767-f1",
+        "main_gallery_count": 3,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E04",
+          "E05"
+        ],
+        "story": "码头步道前景有带有图文的圆柱形展示牌和一座人物掌舵雕塑，背景可见博物馆建筑、帆船桅杆及现代摩天大楼天际线。国家海事博物馆的白色拱形外观建筑前方有一条通往展馆的木质栈桥。岸边停泊着一艘大型木质帆船，其复杂的索具结构占据画面主体。码头上还停有一艘黑色潜艇，旁边是带有弧形屋顶的现代建筑，前景有帆船桅杆。"
+      },
+      {
+        "index": 3,
+        "title": "悉尼历史街区漫步",
+        "hero": "sydney_10_001427-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 2,
+        "episode_ids_in_main_gallery": [
+          "E06",
+          "E07"
+        ],
+        "story": "多层历史建筑长廊两侧布满商店橱窗与装饰性栏杆，中央悬挂着NIESSING广告横幅，下方可见密集人群活动。拱廊街道内部有悬挂的圆形招牌和彩色马赛克地面。一辆红色的轻轨列车经过带有麦当劳标志的历史风格建筑。仰拍一座带雕塑装饰的浅色石质纪念建筑，旁有现代高楼与旗杆。"
+      },
+      {
+        "index": 4,
+        "title": "歌剧院周边海滨步道",
+        "hero": "sydney_10_001895-f0",
+        "main_gallery_count": 2,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E09"
+        ],
+        "story": "沿海滨步道拍摄，可见白色帆状屋顶建筑和蓝色水面，行人沿路行走。一段向上的石质台阶上方设有带尖顶的金属围栏和米色石柱，左侧可见岩石壁面。"
+      }
+    ],
+    "unreviewed_source_assets": 2,
+    "publication_status_counts": {
+      "VISIBLE": 17,
+      "REDUNDANT": 68,
+      "INSUFFICIENT": 73,
+      "NOT_SELECTED_VALUE": 1,
+      "UNREVIEWED": 2
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 154,
+    "new_cost_usd": 0.239597,
+    "source_model_stoploss": 180,
+    "research_stoploss_override": true,
+    "failed_api_calls": 0
+  },
+  {
+    "offset": 110,
+    "status": "COMPLETE",
+    "chapters": 4,
+    "titles": [
+      "环形码头与歌剧院漫步",
+      "岩石区集市与历史街区",
+      "达令港海事博物馆",
+      "皇家植物园与自然步道"
+    ],
+    "main_gallery": 15,
+    "highlights": 1,
+    "selected_media_total": 16,
+    "independent_episodes_total": 9,
+    "independent_episodes_covered_main": 7,
+    "independent_episodes_covered_any": 7,
+    "independent_episodes_missing": [
+      "Darling Harbour滨水步行",
+      "歌剧院收尾"
+    ],
+    "episodes_by_id": {
+      "E01": {
+        "title": "歌剧院与起点",
+        "gallery": 4,
+        "highlight": 0
+      },
+      "E02": {
+        "title": "Circular Quay广场",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E03": {
+        "title": "The Rocks老街市集",
+        "gallery": 4,
+        "highlight": 0
+      },
+      "E04": {
+        "title": "Darling Harbour滨水步行",
+        "gallery": 0,
+        "highlight": 0
+      },
+      "E05": {
+        "title": "码头与海事馆",
+        "gallery": 2,
+        "highlight": 1
+      },
+      "E06": {
+        "title": "CBD/Chinatown拱廊",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E07": {
+        "title": "Hyde Park",
+        "gallery": 1,
+        "highlight": 0
+      },
+      "E08": {
+        "title": "Botanical Gardens",
+        "gallery": 2,
+        "highlight": 0
+      },
+      "E09": {
+        "title": "歌剧院收尾",
+        "gallery": 0,
+        "highlight": 0
+      }
+    },
+    "route_start_seconds": [
+      110,
+      2030,
+      3950,
+      9710,
+      14510
+    ],
+    "boundary_error_minutes_vs_human_guided_reference": [
+      -37.5,
+      -90.8,
+      -63.5,
+      -71.5
+    ],
+    "boundary_median_absolute_minutes": 67.5,
+    "reference_interval_iou_per_chapter": [
+      0.4486,
+      0.0,
+      0.0324,
+      0.1089,
+      0.1118
+    ],
+    "reference_interval_macro_iou": 0.1403,
+    "chapters_details": [
+      {
+        "index": 1,
+        "title": "环形码头与歌剧院漫步",
+        "hero": "sydney_11_000012-f1",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E01"
+        ],
+        "story": "沿岸步道上有行人，远处可见白色帆状建筑。另一处建筑外墙呈现菱形瓷砖纹理，平台上也有行人走动。"
+      },
+      {
+        "index": 2,
+        "title": "岩石区集市与历史街区",
+        "hero": "sydney_11_000288-f1",
+        "main_gallery_count": 4,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E02",
+          "E03"
+        ],
+        "story": "红色帐篷摊位上展示着衣物架，路面由铺石构成。旁边是一排黄色砂岩建筑，具有连续的三角形山墙结构，前景设有带遮阳棚的户外露台和种植绿植的花坛。"
+      },
+      {
+        "index": 3,
+        "title": "达令港海事博物馆",
+        "hero": "sydney_11_000816-f1",
+        "main_gallery_count": 4,
+        "highlight_count": 1,
+        "episode_ids_in_main_gallery": [
+          "E03",
+          "E05",
+          "E06"
+        ],
+        "story": "水面上停泊着一艘白色单桅帆船，背景左侧可见黑色潜艇船体，右侧是海事博物馆建筑的一角。附近立有标着“PIER 26”的牌子，旁有一艘名为“BARANGAROO”的蓝黄相间小船。"
+      },
+      {
+        "index": 4,
+        "title": "皇家植物园与自然步道",
+        "hero": "sydney_11_001692-f0",
+        "main_gallery_count": 3,
+        "highlight_count": 0,
+        "episode_ids_in_main_gallery": [
+          "E07",
+          "E08"
+        ],
+        "story": "一条铺装小径光线明亮，两侧种有低矮灌木和花卉。海滨步道旁可见树木与石质护栏，远处水面波光粼粼。"
+      }
+    ],
+    "unreviewed_source_assets": 3,
+    "publication_status_counts": {
+      "VISIBLE": 16,
+      "REDUNDANT": 99,
+      "INSUFFICIENT": 40,
+      "UNREVIEWED": 3,
+      "COPY_BLOCKED": 1,
+      "NOT_SELECTED_VALUE": 2
+    },
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_complete": false,
+    "new_api_calls": 132,
+    "new_cost_usd": 0.241318,
+    "source_model_stoploss": 180,
+    "research_stoploss_override": true,
+    "failed_api_calls": 0
+  }
+]
