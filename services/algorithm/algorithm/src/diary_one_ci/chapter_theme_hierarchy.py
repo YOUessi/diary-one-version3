@@ -271,6 +271,55 @@ def validate_chapters(proposal, episodes, assets, facts, chapter_limit):
     return normalized
 
 
+
+def normalize_invalid_visual_anchors(proposal, episodes, assets, facts, chapter_limit):
+    """Post-LLM scope-only repair; never change a theme or Episode owner.
+
+    Repair is allowed only after the single explicit S07U provider repair
+    still repeats a cross-Episode image reference. A replacement must be a
+    truly image-reviewed F ID from one of the assigned Episodes. No facts
+    or source memberships are invented, and validation is rerun afterwards.
+    """
+    spans={e['episode_id']:set(range(e['start_index'],e['end_index']+1))
+           for e in episodes}
+    order={aid:a['sequence_index'] for aid,a in assets.items()}
+    valid=[fid for fid,f in facts.items() if f.get('visual_reviewed') is True
+           and f.get('asset_id') in order]
+    schema=chapter_schema(list(spans),valid,chapter_limit)
+    if not _valid(schema,proposal):
+        raise ValueError('Cannot recover malformed Chapter structure by editing visual anchor IDs')
+    amended=deepcopy(proposal)
+    corrections=[]
+    for row in amended['chapters']:
+        ids=row['episode_ids']
+        if not ids or len(set(ids))!=len(ids) or any(e not in spans for e in ids):
+            raise ValueError('Cannot repair unknown or repeated Episode identities')
+        members=set().union(*(spans[e] for e in ids))
+        allowed={fid for fid in valid if order[facts[fid]['asset_id']] in members}
+        if not allowed:
+            raise ValueError('Cannot repair Chapter without any verified image')
+        before=row['anchor_fact_ids']
+        after=[fid for fid in before if fid in allowed]
+        if len(after)==len(before):
+            continue
+        if not after:
+            # Prefer the first representative visual evidence listed from
+            # this Chapter's actual Episode; never fall back to a model-
+            # invented or foreign F ID. Frame/identity checks already ran.
+            actual=[fid for fid in valid if fid in allowed]
+            actual.sort(key=lambda fid:(order[facts[fid]['asset_id']],fid))
+            after=actual[:1]
+        row['anchor_fact_ids']=after
+        corrections.append({'title':row['title'],
+             'removed_foreign_or_unverified_anchor_facts':
+                [fid for fid in before if fid not in allowed],
+             'retained_actual_verified_anchor_facts':after,
+             'rule':'ONLY_VERIFIED_FACTS_FROM_ASSIGNED_EPISODES'})
+    if not corrections:
+        raise ValueError('No valid deterministic anchor correction possible')
+    return amended,corrections
+
+
 def build_wire(chapters, assets, facts):
     """Ground noncontiguous thematic group membership to the original asset F IDs."""
     order={aid:a['sequence_index'] for aid,a in assets.items()}
@@ -344,7 +393,20 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS)
         raw_chapters=ask('S07U_THEMATIC_CHAPTER_REPAIR',CHAPTER_REPAIR_PROMPT,
              schema,{**subcontext,'invalid_proposal':raw_chapters,
                      'validation_error':str(e)})
-        normalized=validate_chapters(raw_chapters,episodes,assets,facts,chapter_limit)
+        try:
+            normalized=validate_chapters(raw_chapters,episodes,assets,facts,chapter_limit)
+        except ValueError as second_error:
+            if str(second_error)!='CHAPTER_ANCHOR_OUTSIDE_EPISODE':
+                raise
+            amended,anchor_corrections=normalize_invalid_visual_anchors(
+                raw_chapters,episodes,assets,facts,chapter_limit)
+            # The Episode membership and original provider rationale are
+            # unchanged. Only image fact anchors are replaced with real
+            # verified F IDs from those already assigned source indices.
+            normalized=validate_chapters(amended,episodes,assets,facts,chapter_limit)
+            repairs.append({'stage':'S07U_ANCHOR_SCOPE_ONLY',
+                'reason':'MODEL_REPAIR_STILL_REFERENCED_FOREIGN_FACT',
+                'items':anchor_corrections})
     # The proposal compiler only guarantees ownership. A separate semantic
     # critique improves editorial coherence; invalid revisions are rejected
     # and the already-valid plan stays intact, never deleting evidence.
