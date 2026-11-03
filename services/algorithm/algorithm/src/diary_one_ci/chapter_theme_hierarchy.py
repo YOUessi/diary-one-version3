@@ -289,7 +289,13 @@ def build_wire(chapters, assets, facts):
         wire['chapters'].append({'id':f'C{i:02d}','theme':row['title'],
             'fact_ids':fids,'experience_kind':row['experience_kind'],
             'focus':row['title'],'focus_fact_ids':anchors,
-            'grouping_reason':row['reason']})
+            # This field enters the PUBLIC image-backed chapter contract.
+            # The model's grouping reason can mention an unproved trip
+            # relation such as 'again/return', even though its Episode/F IDs
+            # are valid. Keep raw model prose in the Episode audit, and bind
+            # the public grouping reason to a neutral deterministic
+            # fact-ownership statement without implying travel chronology.
+            'grouping_reason':'本章依照实际已核验图像事实中的共同视觉主体与活动组织。'})
     if used!=set(facts):
         raise ValueError("VERIFIED_FACT_LOST_DURING_CROSS_TIME_FUSION")
     for i,left in enumerate(wire['chapters']):
