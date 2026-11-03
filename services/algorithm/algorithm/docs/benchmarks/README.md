@@ -1,3 +1,13 @@
+## LLM-as-a-Judge：R5_26 全12组最终Chapter逐章评审（2026-11-04）
+
+- [全12组主观编辑评分与58章真实图文逐章问题](SYDNEY_R526_LLM_AS_JUDGE_ALL12_20261104.md)
+- [分维度评分 CSV](SYDNEY_R526_LLM_JUDGE_ALL12_20261104.csv)
+- [可机器读取的逐章审查记录 JSON](SYDNEY_R526_LLM_JUDGE_ALL12_PUBLIC_20261104.json)
+
+评审人在Mac端逐张查看了全部最终已发布主图及高光，并与最终文案交叉核对；单一LLM判分并不等于独立多人主观评分。没有任何一组达到80分良好编辑参考线；30秒74分、60秒71分相对更好，110秒因发布视频片尾推广卡严重失败。所有组production_ready=false。
+含实际JPG的交互浏览网页仅保存在用户Mac：
+~/Documents/Nexleap/work_logs/evidence/sydney-offset-sweep-r525-20261103/llm_judge_r526_all12/R526_LLM_JUDGE_ALL12_REAL_PHOTOS.html
+
 ## R5_26 全部偏移组真实云端运行（2026-11-04）
 
 - [0s 与 80s 已发布版本及质量对照](SYDNEY_R526_0_80_FULL_PUBLICATION_20261103.md)
