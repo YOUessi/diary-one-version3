@@ -2831,6 +2831,54 @@ def normalize_single_copy_response(output, memories, schema, *, stage):
         'raw_sha256': sha(output), 'normalized_sha256': sha(normalized)}]
 
 
+
+def normalize_explicit_empty_copy_removals(output, repair_items, *, stage):
+    """Normalize only explicit empty sentence tombstones, never invent content.
+
+    A multi-asset S13 model sometimes serializes "remove this sentence" as
+    {"text": "", "fact_ids": [], "source_index": k} even though the contract
+    wants an omitted sentence. In a non-local-scoped repair this is an exact
+    statement of *omission*, not permission to replace it with unsupported
+    prose. Preserve raw output and record removed indices; always rerun all
+    evidence checks and independent image verification on surviving sentences.
+    """
+    if not isinstance(output, dict) or not isinstance(output.get('items'), list):
+        return output, []
+    by_id={m['id']:m for m in repair_items}
+    updated=deepcopy(output)
+    ledger=[]
+    for row in updated['items']:
+        if not isinstance(row,dict) or row.get('id') not in by_id:
+            continue
+        memory=by_id[row['id']]
+        if 'local_repair_scope' in memory or memory.get('kind')!='CHAPTER':
+            continue
+        sentences=row.get('sentences')
+        if not isinstance(sentences,list):
+            continue
+        available={s.get('source_index') for s in memory.get('source_sentences',[])
+                   if type(s.get('source_index')) is int}
+        tombstones=[item for item in sentences if isinstance(item,dict)
+            and set(item)=={'text','fact_ids','source_index'}
+            and item.get('text')==''
+            and item.get('fact_ids')==[]
+            and type(item.get('source_index')) is int
+            and item['source_index'] in available]
+        if not tombstones:
+            continue
+        seen={item['source_index'] for item in tombstones}
+        if len(seen)!=len(tombstones):
+            continue
+        retained=[item for item in sentences if item not in tombstones]
+        if not retained:
+            continue
+        row['sentences']=retained
+        ledger.append({'stage':stage,'id':row['id'],
+            'rule':'EXPLICIT_EMPTY_SENTENCE_TOMBSTONE_OMITTED_NO_FACT_CREATED',
+            'removed_source_indices':sorted(seen),
+            'remaining_source_indices':[item.get('source_index') for item in retained]})
+    return updated,ledger
+
 def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_evidence=(), final_evidence_scope=None):
     """Shared by the live pipeline and fixed-structure copy comparisons."""
     from . import x02
@@ -2929,6 +2977,9 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
             repair_output, normalizations = normalize_single_copy_response(
                 packet['repair_output'], repair_items, repair_schema, stage=stages[2])
             packet['copy_response_normalizations'].extend(normalizations)
+            repair_output, explicit_removals = normalize_explicit_empty_copy_removals(
+                repair_output, repair_items, stage=stages[2])
+            packet['copy_response_normalizations'].extend(explicit_removals)
             repaired, packet['repair_ledger'] = compile_copy(repair_output,
                 repair_items, review=True, pending_transition_review=True)
             if repaired:
