@@ -1,0 +1,2522 @@
+[
+  {
+    "offset": 0,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000025",
+            "frame_index": 0,
+            "source_second": 246.006,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000037",
+            "frame_index": 0,
+            "source_second": 361.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000205",
+            "frame_index": 0,
+            "source_second": 2042.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000313",
+            "frame_index": 0,
+            "source_second": 3121.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000505",
+            "frame_index": 0,
+            "source_second": 5045.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000637",
+            "frame_index": 0,
+            "source_second": 6365.993,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000733",
+            "frame_index": 0,
+            "source_second": 7324.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000781",
+            "frame_index": 0,
+            "source_second": 7804.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000973",
+            "frame_index": 0,
+            "source_second": 9726.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001081",
+            "frame_index": 0,
+            "source_second": 10801.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001117",
+            "frame_index": 0,
+            "source_second": 11161.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001165",
+            "frame_index": 0,
+            "source_second": 11641.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001381",
+            "frame_index": 0,
+            "source_second": 13804.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001453",
+            "frame_index": 0,
+            "source_second": 14524.994,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001513",
+            "frame_index": 0,
+            "source_second": 15122.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001573",
+            "frame_index": 0,
+            "source_second": 15724.993,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001597",
+            "frame_index": 0,
+            "source_second": 15963.998,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001657",
+            "frame_index": 0,
+            "source_second": 16563.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001717",
+            "frame_index": 0,
+            "source_second": 17164.998,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001825",
+            "frame_index": 0,
+            "source_second": 18244.993,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 10,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000086",
+            "frame_index": 0,
+            "source_second": 858.992,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000038",
+            "frame_index": 0,
+            "source_second": 375.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000206",
+            "frame_index": 0,
+            "source_second": 2058.008,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000314",
+            "frame_index": 0,
+            "source_second": 3133.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000506",
+            "frame_index": 0,
+            "source_second": 5051.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000638",
+            "frame_index": 0,
+            "source_second": 6377.004,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000734",
+            "frame_index": 0,
+            "source_second": 7332.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000782",
+            "frame_index": 0,
+            "source_second": 7815.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000974",
+            "frame_index": 0,
+            "source_second": 9733.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001070",
+            "frame_index": 0,
+            "source_second": 10695.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001118",
+            "frame_index": 0,
+            "source_second": 11171.994,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001166",
+            "frame_index": 0,
+            "source_second": 11653.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001382",
+            "frame_index": 0,
+            "source_second": 13819.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001454",
+            "frame_index": 0,
+            "source_second": 14536.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001514",
+            "frame_index": 0,
+            "source_second": 15134.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001574",
+            "frame_index": 0,
+            "source_second": 15730.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001598",
+            "frame_index": 0,
+            "source_second": 15973.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001658",
+            "frame_index": 0,
+            "source_second": 16578.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001718",
+            "frame_index": 0,
+            "source_second": 17177.994,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001826",
+            "frame_index": 0,
+            "source_second": 18250.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 20,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000087",
+            "frame_index": 0,
+            "source_second": 865.005,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000039",
+            "frame_index": 0,
+            "source_second": 385.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000207",
+            "frame_index": 0,
+            "source_second": 2060.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000315",
+            "frame_index": 0,
+            "source_second": 3141.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000495",
+            "frame_index": 0,
+            "source_second": 4944.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000627",
+            "frame_index": 0,
+            "source_second": 6265.993,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000723",
+            "frame_index": 1,
+            "source_second": 7229.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000783",
+            "frame_index": 0,
+            "source_second": 7821.998,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000963",
+            "frame_index": 1,
+            "source_second": 9624.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001071",
+            "frame_index": 0,
+            "source_second": 10702.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001107",
+            "frame_index": 0,
+            "source_second": 11067.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001155",
+            "frame_index": 1,
+            "source_second": 11549.004,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001371",
+            "frame_index": 0,
+            "source_second": 13707.994,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001455",
+            "frame_index": 0,
+            "source_second": 14541.994,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001515",
+            "frame_index": 0,
+            "source_second": 15140.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001575",
+            "frame_index": 0,
+            "source_second": 15742.994,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001599",
+            "frame_index": 0,
+            "source_second": 15984.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001659",
+            "frame_index": 0,
+            "source_second": 16580.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001719",
+            "frame_index": 0,
+            "source_second": 17180.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001827",
+            "frame_index": 0,
+            "source_second": 18264.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 30,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000100",
+            "frame_index": 0,
+            "source_second": 992.002,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000028",
+            "frame_index": 1,
+            "source_second": 278.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000196",
+            "frame_index": 1,
+            "source_second": 1957.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000304",
+            "frame_index": 0,
+            "source_second": 3031.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000496",
+            "frame_index": 0,
+            "source_second": 4953.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000628",
+            "frame_index": 0,
+            "source_second": 6271.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000724",
+            "frame_index": 0,
+            "source_second": 7236.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000772",
+            "frame_index": 1,
+            "source_second": 7716.993,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000964",
+            "frame_index": 0,
+            "source_second": 9634.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001072",
+            "frame_index": 1,
+            "source_second": 10716.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001108",
+            "frame_index": 1,
+            "source_second": 11075.998,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001156",
+            "frame_index": 1,
+            "source_second": 11557.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001372",
+            "frame_index": 0,
+            "source_second": 13716.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001444",
+            "frame_index": 1,
+            "source_second": 14437.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001504",
+            "frame_index": 0,
+            "source_second": 15033.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001564",
+            "frame_index": 1,
+            "source_second": 15637.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001600",
+            "frame_index": 0,
+            "source_second": 15993.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001648",
+            "frame_index": 1,
+            "source_second": 16478.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001708",
+            "frame_index": 0,
+            "source_second": 17074.991,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001816",
+            "frame_index": 0,
+            "source_second": 18153.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 40,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000089",
+            "frame_index": 0,
+            "source_second": 885.005,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000029",
+            "frame_index": 1,
+            "source_second": 287.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000197",
+            "frame_index": 1,
+            "source_second": 1968.008,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000305",
+            "frame_index": 0,
+            "source_second": 3047.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000497",
+            "frame_index": 1,
+            "source_second": 4966.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000629",
+            "frame_index": 0,
+            "source_second": 6283.994,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000725",
+            "frame_index": 0,
+            "source_second": 7244.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000773",
+            "frame_index": 1,
+            "source_second": 7729.989,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000965",
+            "frame_index": 0,
+            "source_second": 9643.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001073",
+            "frame_index": 0,
+            "source_second": 10724.998,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001109",
+            "frame_index": 0,
+            "source_second": 11084.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001157",
+            "frame_index": 1,
+            "source_second": 11569.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001373",
+            "frame_index": 0,
+            "source_second": 13725.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001445",
+            "frame_index": 1,
+            "source_second": 14449.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001505",
+            "frame_index": 1,
+            "source_second": 15049.985,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001565",
+            "frame_index": 1,
+            "source_second": 15647.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001601",
+            "frame_index": 0,
+            "source_second": 16004.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001649",
+            "frame_index": 0,
+            "source_second": 16487.004,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001709",
+            "frame_index": 0,
+            "source_second": 17087.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001817",
+            "frame_index": 0,
+            "source_second": 18163.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 50,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000054",
+            "frame_index": 0,
+            "source_second": 537.007,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000030",
+            "frame_index": 0,
+            "source_second": 295.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000198",
+            "frame_index": 1,
+            "source_second": 1978.008,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000306",
+            "frame_index": 1,
+            "source_second": 3058.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000498",
+            "frame_index": 1,
+            "source_second": 4978.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000630",
+            "frame_index": 0,
+            "source_second": 6296.991,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000726",
+            "frame_index": 1,
+            "source_second": 7257.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000774",
+            "frame_index": 0,
+            "source_second": 7735.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000966",
+            "frame_index": 1,
+            "source_second": 9657.998,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001074",
+            "frame_index": 2,
+            "source_second": 10738.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001110",
+            "frame_index": 0,
+            "source_second": 11096.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001158",
+            "frame_index": 1,
+            "source_second": 11576.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001374",
+            "frame_index": 0,
+            "source_second": 13737.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001446",
+            "frame_index": 0,
+            "source_second": 14454.991,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001506",
+            "frame_index": 1,
+            "source_second": 15058.994,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001566",
+            "frame_index": 1,
+            "source_second": 15656.991,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001602",
+            "frame_index": 0,
+            "source_second": 16012.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001650",
+            "frame_index": 0,
+            "source_second": 16494.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001710",
+            "frame_index": 1,
+            "source_second": 17098.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001818",
+            "frame_index": 0,
+            "source_second": 18175.991,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 60,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000019",
+            "frame_index": 0,
+            "source_second": 181.001,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000031",
+            "frame_index": 0,
+            "source_second": 307.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000199",
+            "frame_index": 0,
+            "source_second": 1986.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000307",
+            "frame_index": 0,
+            "source_second": 3065.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000499",
+            "frame_index": 0,
+            "source_second": 4988.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000631",
+            "frame_index": 1,
+            "source_second": 6307.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000727",
+            "frame_index": 0,
+            "source_second": 7268.011,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000775",
+            "frame_index": 0,
+            "source_second": 7744.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000967",
+            "frame_index": 1,
+            "source_second": 9667.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001075",
+            "frame_index": 1,
+            "source_second": 10749.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001111",
+            "frame_index": 1,
+            "source_second": 11107.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001159",
+            "frame_index": 0,
+            "source_second": 11585.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001375",
+            "frame_index": 0,
+            "source_second": 13745.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001447",
+            "frame_index": 0,
+            "source_second": 14460.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001507",
+            "frame_index": 0,
+            "source_second": 15065.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001567",
+            "frame_index": 1,
+            "source_second": 15669.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001603",
+            "frame_index": 0,
+            "source_second": 16022.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001651",
+            "frame_index": 0,
+            "source_second": 16505.99,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001711",
+            "frame_index": 0,
+            "source_second": 17106.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001819",
+            "frame_index": 0,
+            "source_second": 18186.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 70,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000020",
+            "frame_index": 0,
+            "source_second": 192.002,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000032",
+            "frame_index": 0,
+            "source_second": 313.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000200",
+            "frame_index": 0,
+            "source_second": 1994.004,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000308",
+            "frame_index": 1,
+            "source_second": 3077.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000500",
+            "frame_index": 0,
+            "source_second": 4992.004,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000632",
+            "frame_index": 0,
+            "source_second": 6314.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000728",
+            "frame_index": 0,
+            "source_second": 7274.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000776",
+            "frame_index": 0,
+            "source_second": 7756.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000968",
+            "frame_index": 1,
+            "source_second": 9678.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001076",
+            "frame_index": 0,
+            "source_second": 10753.993,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001112",
+            "frame_index": 0,
+            "source_second": 11117.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001160",
+            "frame_index": 1,
+            "source_second": 11599.004,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001376",
+            "frame_index": 1,
+            "source_second": 13756.993,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001448",
+            "frame_index": 1,
+            "source_second": 14477.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001508",
+            "frame_index": 1,
+            "source_second": 15076.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001568",
+            "frame_index": 0,
+            "source_second": 15673.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001604",
+            "frame_index": 0,
+            "source_second": 16036.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001652",
+            "frame_index": 0,
+            "source_second": 16517.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001712",
+            "frame_index": 0,
+            "source_second": 17115.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001820",
+            "frame_index": 0,
+            "source_second": 18193.008,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 80,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000021",
+            "frame_index": 0,
+            "source_second": 208.008,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000033",
+            "frame_index": 0,
+            "source_second": 322.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000201",
+            "frame_index": 0,
+            "source_second": 2006.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000309",
+            "frame_index": 1,
+            "source_second": 3087.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000501",
+            "frame_index": 0,
+            "source_second": 5001.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000633",
+            "frame_index": 0,
+            "source_second": 6323.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000729",
+            "frame_index": 0,
+            "source_second": 7289.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000777",
+            "frame_index": 1,
+            "source_second": 7766.993,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000969",
+            "frame_index": 0,
+            "source_second": 9680.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001077",
+            "frame_index": 0,
+            "source_second": 10762.001,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001113",
+            "frame_index": 0,
+            "source_second": 11123.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001161",
+            "frame_index": 0,
+            "source_second": 11603.008,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001377",
+            "frame_index": 0,
+            "source_second": 13762.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001449",
+            "frame_index": 0,
+            "source_second": 14486.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001509",
+            "frame_index": 0,
+            "source_second": 15086.004,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001569",
+            "frame_index": 1,
+            "source_second": 15684.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001593",
+            "frame_index": 0,
+            "source_second": 15923.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001653",
+            "frame_index": 2,
+            "source_second": 16528.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001713",
+            "frame_index": 1,
+            "source_second": 17128.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001821",
+            "frame_index": 0,
+            "source_second": 18207.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 90,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000022",
+            "frame_index": 0,
+            "source_second": 211.001,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000034",
+            "frame_index": 0,
+            "source_second": 330.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000202",
+            "frame_index": 0,
+            "source_second": 2013.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000310",
+            "frame_index": 0,
+            "source_second": 3090.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000502",
+            "frame_index": 0,
+            "source_second": 5010.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000634",
+            "frame_index": 0,
+            "source_second": 6332.993,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000730",
+            "frame_index": 0,
+            "source_second": 7297.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000778",
+            "frame_index": 0,
+            "source_second": 7772.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000970",
+            "frame_index": 0,
+            "source_second": 9696.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001078",
+            "frame_index": 0,
+            "source_second": 10774.998,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001114",
+            "frame_index": 0,
+            "source_second": 11135.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001162",
+            "frame_index": 0,
+            "source_second": 11615.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001378",
+            "frame_index": 0,
+            "source_second": 13772.008,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001450",
+            "frame_index": 0,
+            "source_second": 14493.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001510",
+            "frame_index": 0,
+            "source_second": 15093.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001570",
+            "frame_index": 0,
+            "source_second": 15691.009,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001594",
+            "frame_index": 0,
+            "source_second": 15931.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001654",
+            "frame_index": 0,
+            "source_second": 16531.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001714",
+            "frame_index": 0,
+            "source_second": 17137.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001822",
+            "frame_index": 0,
+            "source_second": 18213.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 100,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000095",
+            "frame_index": 0,
+            "source_second": 945.005,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000035",
+            "frame_index": 0,
+            "source_second": 344.004,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000203",
+            "frame_index": 0,
+            "source_second": 2022.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000311",
+            "frame_index": 0,
+            "source_second": 3108.008,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000503",
+            "frame_index": 0,
+            "source_second": 5022.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000635",
+            "frame_index": 0,
+            "source_second": 6345.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000731",
+            "frame_index": 0,
+            "source_second": 7301.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000779",
+            "frame_index": 0,
+            "source_second": 7780.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000971",
+            "frame_index": 0,
+            "source_second": 9703.994,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001079",
+            "frame_index": 0,
+            "source_second": 10782.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001115",
+            "frame_index": 0,
+            "source_second": 11142.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001163",
+            "frame_index": 0,
+            "source_second": 11625.998,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001379",
+            "frame_index": 0,
+            "source_second": 13785.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001451",
+            "frame_index": 0,
+            "source_second": 14503.005,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001511",
+            "frame_index": 0,
+            "source_second": 15105.991,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001571",
+            "frame_index": 0,
+            "source_second": 15706.991,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001595",
+            "frame_index": 0,
+            "source_second": 15945.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001655",
+            "frame_index": 0,
+            "source_second": 16544.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001715",
+            "frame_index": 0,
+            "source_second": 17144.995,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001823",
+            "frame_index": 0,
+            "source_second": 18225.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "offset": 110,
+    "version": "SYDNEY_R525_USER_CORRECTED_SCENE_FIRST_20261103",
+    "repeated_landmark_is_not_independent": {
+      "tag": "REPEATED_LANDMARK_VISIT_NOT_INDEPENDENT_EPISODE",
+      "landmark": "Sydney Opera House",
+      "repeat_relative_window_seconds": [
+        18800,
+        19340
+      ],
+      "policy": "same place repetition or narrative ending alone MUST NOT create a Chapter; only new distinct sustained activity can justify new boundary",
+      "should_be_hard_recall_target": false
+    },
+    "source_is_per_offset_independent_human_annotation": false,
+    "chapters": [
+      {
+        "reference_id": "R1",
+        "theme": "悉尼歌剧院与海港地标、Circular Quay、The Rocks老街市集",
+        "human_episode_ids": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "scene_evidence": "歌剧院帆形建筑、港湾大桥、码头广场、历史石墙与市集；首章不靠最后重返来命名",
+        "bounds": [
+          0,
+          4280
+        ],
+        "reference_images": [
+          {
+            "clip": "000012",
+            "frame_index": 1,
+            "source_second": 115.005,
+            "selection_method": "independent manual review of real original JPEG; chosen to visibly show iconic Sydney Opera House, never from cloud final predictions"
+          },
+          {
+            "clip": "000036",
+            "frame_index": 0,
+            "source_second": 358.992,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000204",
+            "frame_index": 0,
+            "source_second": 2033.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000312",
+            "frame_index": 0,
+            "source_second": 3112.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R2",
+        "theme": "Darling Harbour与临水步道、渡轮和海事建筑",
+        "human_episode_ids": [
+          "E4",
+          "E5"
+        ],
+        "scene_evidence": "滨水木栈道、游艇、古船和海事博物馆",
+        "bounds": [
+          4280,
+          9400
+        ],
+        "reference_images": [
+          {
+            "clip": "000504",
+            "frame_index": 0,
+            "source_second": 5036.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000636",
+            "frame_index": 0,
+            "source_second": 6352.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000732",
+            "frame_index": 0,
+            "source_second": 7310.0,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "000780",
+            "frame_index": 0,
+            "source_second": 7799.976,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R3",
+        "theme": "CBD、Chinatown与历史建筑、购物拱廊",
+        "human_episode_ids": [
+          "E6"
+        ],
+        "scene_evidence": "市场商品、教堂建筑、室内商业廊与市中心街道",
+        "bounds": [
+          9400,
+          13520
+        ],
+        "reference_images": [
+          {
+            "clip": "000972",
+            "frame_index": 0,
+            "source_second": 9714.004,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001080",
+            "frame_index": 0,
+            "source_second": 10792.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001116",
+            "frame_index": 0,
+            "source_second": 11151.007,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001164",
+            "frame_index": 0,
+            "source_second": 11631.003,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R4",
+        "theme": "Hyde Park城市绿地、纪念像与喷泉",
+        "human_episode_ids": [
+          "E7"
+        ],
+        "scene_evidence": "公园入口、纪念雕塑、开阔城市绿地、喷泉和历史建筑",
+        "bounds": [
+          13520,
+          15920
+        ],
+        "reference_images": [
+          {
+            "clip": "001380",
+            "frame_index": 0,
+            "source_second": 13792.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001452",
+            "frame_index": 0,
+            "source_second": 14511.998,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001512",
+            "frame_index": 0,
+            "source_second": 15111.997,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001572",
+            "frame_index": 0,
+            "source_second": 15714.999,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      },
+      {
+        "reference_id": "R5",
+        "theme": "Royal Botanic Gardens园艺景观与自然步道",
+        "human_episode_ids": [
+          "E8"
+        ],
+        "scene_evidence": "棕榈林、花坛、水池、植物展示与灌木小径",
+        "bounds": [
+          15920,
+          19340
+        ],
+        "reference_images": [
+          {
+            "clip": "001596",
+            "frame_index": 0,
+            "source_second": 15951.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001656",
+            "frame_index": 0,
+            "source_second": 16552.002,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001716",
+            "frame_index": 0,
+            "source_second": 17156.006,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          },
+          {
+            "clip": "001824",
+            "frame_index": 0,
+            "source_second": 18230.996,
+            "selection_method": "nearest real JPEG to independently human-curated scene anchor; not computer vision aesthetic score"
+          }
+        ]
+      }
+    ]
+  }
+]

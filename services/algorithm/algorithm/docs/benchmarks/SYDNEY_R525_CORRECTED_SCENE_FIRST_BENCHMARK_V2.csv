@@ -1,0 +1,13 @@
+offset,state,number_of_planned_chapters,number_of_published_chapters,gallery_count,highlight_count,covered_novel_episodes,opera_in_early_published_media,opera_in_late_published_media,opera_in_published_chapter_title,macro_iou_five_corrected_scene_chapters,coverage_status,delivery_status
+0,COMPLETE,5,5,19,1,8,False,False,False,0.6318,INCOMPLETE,READY_WITH_ITEM_BLOCKS
+10,COMPLETE,5,5,15,1,8,False,False,True,0.3542,INCOMPLETE,PIPELINE_BLOCKED
+20,COMPLETE,5,5,20,1,8,False,False,False,0.7602,INCOMPLETE,READY_WITH_ITEM_BLOCKS
+30,COMPLETE,5,5,17,0,8,True,False,True,0.211,INCOMPLETE,READY_WITH_ITEM_BLOCKS
+40,COMPLETE,5,5,22,2,8,True,True,True,0.6501,INCOMPLETE,READY_WITH_ITEM_BLOCKS
+50,COMPLETE,5,5,14,1,6,True,False,True,0.189,INCOMPLETE,READY_WITH_ITEM_BLOCKS
+60,COMPLETE,5,3,11,2,4,False,False,False,0.2461,INCOMPLETE,READY_WITH_ITEM_BLOCKS
+70,FAILED,,,,,,,,,,,
+80,COMPLETE,5,5,20,3,8,False,True,True,0.6661,INCOMPLETE,READY_WITH_ITEM_BLOCKS
+90,COMPLETE,3,3,14,1,7,False,True,True,,INCOMPLETE,READY_WITH_ITEM_BLOCKS
+100,COMPLETE,5,4,11,4,7,False,True,True,0.5469,INCOMPLETE,READY_WITH_ITEM_BLOCKS
+110,COMPLETE,5,4,15,1,7,True,False,True,0.2697,INCOMPLETE,READY_WITH_ITEM_BLOCKS

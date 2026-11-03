@@ -1,3 +1,11 @@
+# 旧版评测已撤回：参考规则不正确
+
+**此文档为历史运行记录，不应用作质量排名或分章真值。** 第一版错误地把结尾再次出现的 Sydney Opera House 设为必需的独立 Chapter，导致九段覆盖与五章时间区间IoU评价偏差。
+
+修正版见 [场景优先、重复地点不强制拆章的详细检查](SYDNEY_R525_CORRECTED_SCENE_FIRST_AND_OPERA_AUDIT_20261103.md) 及 [修正后的评测表](SYDNEY_R525_CORRECTED_SCENE_FIRST_BENCHMARK_V2.csv)。
+
+---
+
 # Sydney Citywalk：12 偏移组 R5_25 Chapter 真实对照
 
 日期：2026-11-03。源代码：YOUessi/diary-one-version3，R5_25（实验分支 feature/2026-10-30-chapter-v2-boundary）。全部云端调用使用 Qwen3.8-Flash 和 Mac 已有真实 JPEG，不上传原视频。

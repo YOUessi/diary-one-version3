@@ -1,0 +1,597 @@
+[
+  {
+    "offset": 0,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 5,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "海滨步道与钟楼建筑",
+      "砖石街道与步行桥",
+      "商业拱廊与红砖建筑",
+      "城市步行区与室内拱廊",
+      "花园凉亭与池塘喷泉"
+    ],
+    "gallery_count": 19,
+    "highlight_count": 1,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 8,
+    "uncovered_novel_episodes": [],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": true,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": true,
+      "Hyde Park雕塑与绿地": true,
+      "Royal Botanic Gardens园艺景观": true
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 3,
+    "early_opera_verified_fact_count": 3,
+    "opera_in_early_published_media": false,
+    "opera_in_late_published_media": false,
+    "opera_in_published_chapter_title": false,
+    "opera_in_final_story": false,
+    "selected_gallery_opera_reviewed_clue_count": 0,
+    "macro_iou_five_corrected_scene_chapters": 0.6318,
+    "boundary_offsets_minutes": [
+      -23.33,
+      -12.67,
+      -33.33,
+      6.67
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [],
+    "reference_file": "offset_000/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 10,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 5,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "歌剧院建筑与柱廊远眺",
+      "岩石区历史街区漫步",
+      "达令港码头与海事探索",
+      "街头露天咖啡座",
+      "皇家植物园自然步道"
+    ],
+    "gallery_count": 15,
+    "highlight_count": 1,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 8,
+    "uncovered_novel_episodes": [],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": true,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": true,
+      "Hyde Park雕塑与绿地": true,
+      "Royal Botanic Gardens园艺景观": true
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 3,
+    "early_opera_verified_fact_count": 3,
+    "opera_in_early_published_media": false,
+    "opera_in_late_published_media": false,
+    "opera_in_published_chapter_title": true,
+    "opera_in_final_story": false,
+    "selected_gallery_opera_reviewed_clue_count": 0,
+    "macro_iou_five_corrected_scene_chapters": 0.3542,
+    "boundary_offsets_minutes": [
+      -39.17,
+      -76.5,
+      -81.17,
+      -3.17
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "PIPELINE_BLOCKED",
+    "production_ready": false,
+    "final_verification_rejections": [],
+    "reference_file": "offset_010/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 20,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 5,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "环形码头与岩石区市集",
+      "海港栈道与达令港漫步",
+      "维多利亚女王大厦内景",
+      "纪念建筑与水池",
+      "皇家植物园花园小径"
+    ],
+    "gallery_count": 20,
+    "highlight_count": 1,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 8,
+    "uncovered_novel_episodes": [],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": true,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": true,
+      "Hyde Park雕塑与绿地": true,
+      "Royal Botanic Gardens园艺景观": true
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 1,
+    "early_opera_verified_fact_count": 1,
+    "opera_in_early_published_media": false,
+    "opera_in_late_published_media": false,
+    "opera_in_published_chapter_title": false,
+    "opera_in_final_story": true,
+    "selected_gallery_opera_reviewed_clue_count": 0,
+    "macro_iou_five_corrected_scene_chapters": 0.7602,
+    "boundary_offsets_minutes": [
+      -23.0,
+      3.67,
+      -17.0,
+      -1.0
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [
+      [
+        "C04",
+        "BLOCKED",
+        "Local title failed independent semantic verification"
+      ]
+    ],
+    "reference_file": "offset_020/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 30,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 5,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "悉尼歌剧院与海港步道",
+      "岩石区市集与历史街道",
+      "达令港码头与帆船游览",
+      "市中心奢侈品商业街",
+      "皇家植物园自然漫步"
+    ],
+    "gallery_count": 17,
+    "highlight_count": 0,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 8,
+    "uncovered_novel_episodes": [],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": true,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": true,
+      "Hyde Park雕塑与绿地": true,
+      "Royal Botanic Gardens园艺景观": true
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 3,
+    "early_opera_verified_fact_count": 3,
+    "opera_in_early_published_media": true,
+    "opera_in_late_published_media": false,
+    "opera_in_published_chapter_title": true,
+    "opera_in_final_story": false,
+    "selected_gallery_opera_reviewed_clue_count": 1,
+    "macro_iou_five_corrected_scene_chapters": 0.211,
+    "boundary_offsets_minutes": [
+      -38.83,
+      -92.17,
+      -64.83,
+      -40.83
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [
+      [
+        "C04",
+        "BLOCKED",
+        "Local title failed independent semantic verification"
+      ]
+    ],
+    "reference_file": "offset_030/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 40,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 5,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "环形码头与岩石区集市",
+      "达令港风光与中式牌坊",
+      "唐人街与CBD拱廊购物",
+      "阳光花园中的蜿蜒小路",
+      "重返歌剧院广场"
+    ],
+    "gallery_count": 22,
+    "highlight_count": 2,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 8,
+    "uncovered_novel_episodes": [],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": true,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": true,
+      "Hyde Park雕塑与绿地": true,
+      "Royal Botanic Gardens园艺景观": true
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 4,
+    "early_opera_verified_fact_count": 4,
+    "opera_in_early_published_media": true,
+    "opera_in_late_published_media": true,
+    "opera_in_published_chapter_title": true,
+    "opera_in_final_story": true,
+    "selected_gallery_opera_reviewed_clue_count": 4,
+    "macro_iou_five_corrected_scene_chapters": 0.6501,
+    "boundary_offsets_minutes": [
+      -10.67,
+      4.0,
+      -0.67,
+      47.33
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [
+      [
+        "C04",
+        "BLOCKED",
+        "Local title failed independent semantic verification"
+      ]
+    ],
+    "reference_file": "offset_040/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 50,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 5,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "歌剧院与海港地标观光",
+      "岩石区集市漫步",
+      "滨水步道旁停泊游艇",
+      "红色灯塔与城市天际线",
+      "皇家植物园自然探索"
+    ],
+    "gallery_count": 14,
+    "highlight_count": 1,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 6,
+    "uncovered_novel_episodes": [
+      "CBD/Chinatown/历史拱廊",
+      "Hyde Park雕塑与绿地"
+    ],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": true,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": false,
+      "Hyde Park雕塑与绿地": false,
+      "Royal Botanic Gardens园艺景观": true
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 3,
+    "early_opera_verified_fact_count": 3,
+    "opera_in_early_published_media": true,
+    "opera_in_late_published_media": false,
+    "opera_in_published_chapter_title": true,
+    "opera_in_final_story": true,
+    "selected_gallery_opera_reviewed_clue_count": 2,
+    "macro_iou_five_corrected_scene_chapters": 0.189,
+    "boundary_offsets_minutes": [
+      -34.5,
+      -91.83,
+      -96.5,
+      -72.5
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [
+      [
+        "C03",
+        "BLOCKED",
+        "Local title failed independent semantic verification"
+      ],
+      [
+        "C04",
+        "BLOCKED",
+        "Local title failed independent semantic verification"
+      ]
+    ],
+    "reference_file": "offset_050/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 60,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 3,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "临水露天餐饮区",
+      "岩石区集市购物与闲逛",
+      "Barangaroo海滨步道游览"
+    ],
+    "gallery_count": 11,
+    "highlight_count": 2,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 4,
+    "uncovered_novel_episodes": [
+      "Circular Quay码头广场",
+      "CBD/Chinatown/历史拱廊",
+      "Hyde Park雕塑与绿地",
+      "Royal Botanic Gardens园艺景观"
+    ],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": false,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": true,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": false,
+      "Hyde Park雕塑与绿地": false,
+      "Royal Botanic Gardens园艺景观": false
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 3,
+    "early_opera_verified_fact_count": 3,
+    "opera_in_early_published_media": false,
+    "opera_in_late_published_media": false,
+    "opera_in_published_chapter_title": false,
+    "opera_in_final_story": true,
+    "selected_gallery_opera_reviewed_clue_count": 1,
+    "macro_iou_five_corrected_scene_chapters": 0.2461,
+    "boundary_offsets_minutes": [
+      -24.33,
+      -91.67,
+      -78.33,
+      -40.33
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [
+      [
+        "C01",
+        "BLOCKED",
+        "Local title failed independent semantic verification"
+      ],
+      [
+        "C04",
+        "BLOCKED",
+        "Title was not evaluated against complete image evidence"
+      ],
+      [
+        "C05",
+        "BLOCKED",
+        "Title was not evaluated against complete image evidence"
+      ]
+    ],
+    "reference_file": "offset_060/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 70,
+    "state": "FAILED",
+    "failure_stage": "S07X_PRODUCT_EPISODE_ROUTE",
+    "failure_detail": "Route covers indices 0..159, missing actual final index 160; no bounded repair",
+    "presented_chapters": 0,
+    "meaningful_episodes_represented": 0,
+    "reference_novel_episodes": 8,
+    "opera_input_visual_evidence": "TRUE, prior S04 real image stages completed",
+    "opera_in_early_published_media": null,
+    "opera_in_late_published_media": null,
+    "reference_file": "offset_070/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 80,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 5,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "海港地标与码头集市",
+      "栈桥、帆船与博物馆",
+      "纪念品与拱廊街区",
+      "喷泉、树荫与大榕树",
+      "歌剧院广场漫步"
+    ],
+    "gallery_count": 20,
+    "highlight_count": 3,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 8,
+    "uncovered_novel_episodes": [],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": true,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": true,
+      "Hyde Park雕塑与绿地": true,
+      "Royal Botanic Gardens园艺景观": true
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 1,
+    "early_opera_verified_fact_count": 1,
+    "opera_in_early_published_media": false,
+    "opera_in_late_published_media": true,
+    "opera_in_published_chapter_title": true,
+    "opera_in_final_story": true,
+    "selected_gallery_opera_reviewed_clue_count": 4,
+    "macro_iou_five_corrected_scene_chapters": 0.6661,
+    "boundary_offsets_minutes": [
+      -6.0,
+      4.67,
+      0.0,
+      48.0
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [],
+    "reference_file": "offset_080/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 90,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 3,
+    "number_of_planned_chapters": 3,
+    "chapter_titles": [
+      "海港大桥与游轮",
+      "教堂中殿与街景",
+      "歌剧院与蜻蜓花坛"
+    ],
+    "gallery_count": 14,
+    "highlight_count": 1,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 7,
+    "uncovered_novel_episodes": [
+      "Darling Harbour水岸漫步"
+    ],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": false,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": true,
+      "Hyde Park雕塑与绿地": true,
+      "Royal Botanic Gardens园艺景观": true
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 1,
+    "early_opera_verified_fact_count": 1,
+    "opera_in_early_published_media": false,
+    "opera_in_late_published_media": true,
+    "opera_in_published_chapter_title": true,
+    "opera_in_final_story": false,
+    "selected_gallery_opera_reviewed_clue_count": 1,
+    "macro_iou_five_corrected_scene_chapters": null,
+    "boundary_offsets_minutes": null,
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [],
+    "reference_file": "offset_090/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 100,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 4,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "海港大桥与街头漫步",
+      "海事博物馆码头掠影",
+      "悉尼历史街区漫步",
+      "歌剧院周边海滨步道"
+    ],
+    "gallery_count": 11,
+    "highlight_count": 4,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 7,
+    "uncovered_novel_episodes": [
+      "Royal Botanic Gardens园艺景观"
+    ],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": true,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": true,
+      "Hyde Park雕塑与绿地": true,
+      "Royal Botanic Gardens园艺景观": false
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 0,
+    "early_opera_verified_fact_count": 0,
+    "opera_in_early_published_media": false,
+    "opera_in_late_published_media": true,
+    "opera_in_published_chapter_title": true,
+    "opera_in_final_story": true,
+    "selected_gallery_opera_reviewed_clue_count": 1,
+    "macro_iou_five_corrected_scene_chapters": 0.5469,
+    "boundary_offsets_minutes": [
+      10.33,
+      -11.0,
+      14.33,
+      50.33
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [],
+    "reference_file": "offset_100/reference/reference_5_chapters_user_corrected.json"
+  },
+  {
+    "offset": 110,
+    "state": "COMPLETE",
+    "number_of_published_chapters": 4,
+    "number_of_planned_chapters": 5,
+    "chapter_titles": [
+      "环形码头与歌剧院漫步",
+      "岩石区集市与历史街区",
+      "达令港海事博物馆",
+      "皇家植物园与自然步道"
+    ],
+    "gallery_count": 15,
+    "highlight_count": 1,
+    "human_novel_episodes": 8,
+    "covered_novel_episodes": 7,
+    "uncovered_novel_episodes": [
+      "Darling Harbour水岸漫步"
+    ],
+    "per_episode_visible": {
+      "歌剧院海港起点": true,
+      "Circular Quay码头广场": true,
+      "The Rocks历史街区市集": true,
+      "Darling Harbour水岸漫步": false,
+      "码头船只与海事馆": true,
+      "CBD/Chinatown/历史拱廊": true,
+      "Hyde Park雕塑与绿地": true,
+      "Royal Botanic Gardens园艺景观": true
+    },
+    "repeat_opera_at_end_is_not_novel_episode": true,
+    "early_opera_verifiable_input_count": 2,
+    "early_opera_verified_fact_count": 2,
+    "opera_in_early_published_media": true,
+    "opera_in_late_published_media": false,
+    "opera_in_published_chapter_title": true,
+    "opera_in_final_story": true,
+    "selected_gallery_opera_reviewed_clue_count": 1,
+    "macro_iou_five_corrected_scene_chapters": 0.2697,
+    "boundary_offsets_minutes": [
+      -37.5,
+      -90.83,
+      -63.5,
+      -23.5
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_status": "READY_WITH_ITEM_BLOCKS",
+    "production_ready": false,
+    "final_verification_rejections": [
+      [
+        "C04",
+        "BLOCKED",
+        "Invalid sentence count：正文不能为空；高光/小记忆只写一句"
+      ]
+    ],
+    "reference_file": "offset_110/reference/reference_5_chapters_user_corrected.json"
+  }
+]
