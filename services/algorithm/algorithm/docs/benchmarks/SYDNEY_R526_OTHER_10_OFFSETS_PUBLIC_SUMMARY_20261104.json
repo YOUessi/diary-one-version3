@@ -1,0 +1,340 @@
+[
+  {
+    "offset_seconds": 10,
+    "original_r525_published_chapter_count": 5,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 5,
+    "final_published_titles": [
+      "歌剧院台阶与高架步道",
+      "岩石区市集与红砖建筑",
+      "达令港码头栈道",
+      "CBD拱廊教堂唐人街",
+      "仙人掌与多肉花园"
+    ],
+    "final_gallery_count": 18,
+    "final_highlight_count": 2,
+    "eight_reference_scene_window_coverage": 7,
+    "missing_reference_scene_windows": [
+      "Circular Quay广场"
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "PIPELINE_BLOCKED",
+    "publication_coverage_review_complete": true,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "COMPLETE",
+        "new_api_calls": 81,
+        "usd_estimated": 0.193632,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.193632,
+    "total_incremental_api_calls_including_failed_runs": 81
+  },
+  {
+    "offset_seconds": 20,
+    "original_r525_published_chapter_count": 5,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 5,
+    "final_published_titles": [
+      "歌剧院与环形码头",
+      "岩石区市集摊位",
+      "海事博物馆帆船",
+      "CBD购物漫步",
+      "公园喷泉与蜥蜴"
+    ],
+    "final_gallery_count": 20,
+    "final_highlight_count": 2,
+    "eight_reference_scene_window_coverage": 7,
+    "missing_reference_scene_windows": [
+      "Darling Harbour滨水步行"
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_coverage_review_complete": false,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "COMPLETE",
+        "new_api_calls": 85,
+        "usd_estimated": 0.176556,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.176556,
+    "total_incremental_api_calls_including_failed_runs": 85
+  },
+  {
+    "offset_seconds": 30,
+    "original_r525_published_chapter_count": 5,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 5,
+    "final_published_titles": [
+      "悉尼歌剧院与环形码头",
+      "岩石区历史街区与市集",
+      "海事博物馆与历史帆船",
+      "古典拱廊与大教堂内部",
+      "皇家植物园自然探索"
+    ],
+    "final_gallery_count": 20,
+    "final_highlight_count": 2,
+    "eight_reference_scene_window_coverage": 7,
+    "missing_reference_scene_windows": [
+      "Circular Quay广场"
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_coverage_review_complete": false,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "FAILED",
+        "new_api_calls": 42,
+        "usd_estimated": 0.114104,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      },
+      {
+        "run": "r526_hotfix_30",
+        "state": "COMPLETE",
+        "new_api_calls": 60,
+        "usd_estimated": 0.094488,
+        "source_commit": "6b6e57548be59945c703eda2b1da58033ce380cb"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.208592,
+    "total_incremental_api_calls_including_failed_runs": 102
+  },
+  {
+    "offset_seconds": 40,
+    "original_r525_published_chapter_count": 5,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 5,
+    "final_published_titles": [
+      "歌剧院帆顶与集市伞影",
+      "棕榈步道与岩石泳池",
+      "四海一家牌坊与海港帆船",
+      "纪念品摊位与拱廊穹顶",
+      "青铜鹿像与公园蜥蜴"
+    ],
+    "final_gallery_count": 19,
+    "final_highlight_count": 0,
+    "eight_reference_scene_window_coverage": 7,
+    "missing_reference_scene_windows": [
+      "Circular Quay广场"
+    ],
+    "coverage_status": "COMPLETE",
+    "delivery_state": "READY_PRIMARY_COPY",
+    "publication_coverage_review_complete": true,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "COMPLETE",
+        "new_api_calls": 75,
+        "usd_estimated": 0.19678,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.19678,
+    "total_incremental_api_calls_including_failed_runs": 75
+  },
+  {
+    "offset_seconds": 50,
+    "original_r525_published_chapter_count": 5,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 4,
+    "final_published_titles": [
+      "岩石区历史集市漫步",
+      "塔姆巴隆公园喷泉广场",
+      "CBD拱廊与圣玛丽大教堂",
+      "海德公园阿奇博尔德喷泉"
+    ],
+    "final_gallery_count": 19,
+    "final_highlight_count": 1,
+    "eight_reference_scene_window_coverage": 7,
+    "missing_reference_scene_windows": [
+      "歌剧院海港起点"
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_coverage_review_complete": false,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "COMPLETE",
+        "new_api_calls": 83,
+        "usd_estimated": 0.199727,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.199727,
+    "total_incremental_api_calls_including_failed_runs": 83
+  },
+  {
+    "offset_seconds": 60,
+    "original_r525_published_chapter_count": 3,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 5,
+    "final_published_titles": [
+      "海港地标与歌剧院",
+      "历史市集与唐人街",
+      "达令港海事区",
+      "CBD遗产漫步",
+      "红色砾石间的金琥仙人掌"
+    ],
+    "final_gallery_count": 23,
+    "final_highlight_count": 2,
+    "eight_reference_scene_window_coverage": 8,
+    "missing_reference_scene_windows": [],
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_coverage_review_complete": false,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "FAILED",
+        "new_api_calls": 39,
+        "usd_estimated": 0.114586,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      },
+      {
+        "run": "r526_hotfix_60",
+        "state": "COMPLETE",
+        "new_api_calls": 56,
+        "usd_estimated": 0.094719,
+        "source_commit": "8e533ccc3927a12c42549d6da21ca03b94db76ce"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.209305,
+    "total_incremental_api_calls_including_failed_runs": 95
+  },
+  {
+    "offset_seconds": 70,
+    "original_r525_published_chapter_count": null,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 5,
+    "final_published_titles": [
+      "歌剧院旁木桌与白色屋顶",
+      "拱廊旗帜与市集红帐篷",
+      "桥底步道与玻璃幕墙高楼",
+      "达令港蓝白渡轮",
+      "植物园花境与古典建筑"
+    ],
+    "final_gallery_count": 24,
+    "final_highlight_count": 1,
+    "eight_reference_scene_window_coverage": 8,
+    "missing_reference_scene_windows": [],
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_coverage_review_complete": false,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "COMPLETE",
+        "new_api_calls": 87,
+        "usd_estimated": 0.185056,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.185056,
+    "total_incremental_api_calls_including_failed_runs": 87
+  },
+  {
+    "offset_seconds": 90,
+    "original_r525_published_chapter_count": 3,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 5,
+    "final_published_titles": [
+      "环形码头广场与石凳",
+      "悉尼歌剧院与桥塔",
+      "海事博物馆与潜艇",
+      "中央车站与拱廊",
+      "库克船长与蜻蜓花坛"
+    ],
+    "final_gallery_count": 21,
+    "final_highlight_count": 2,
+    "eight_reference_scene_window_coverage": 8,
+    "missing_reference_scene_windows": [],
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_coverage_review_complete": false,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "COMPLETE",
+        "new_api_calls": 80,
+        "usd_estimated": 0.173315,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.173315,
+    "total_incremental_api_calls_including_failed_runs": 80
+  },
+  {
+    "offset_seconds": 100,
+    "original_r525_published_chapter_count": 4,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 5,
+    "final_published_titles": [
+      "海港大桥与岩石区酒吧",
+      "达令港潜艇与码头",
+      "唐人街花树与市场",
+      "CBD历史街区巡礼",
+      "皇家植物园海滨步道"
+    ],
+    "final_gallery_count": 16,
+    "final_highlight_count": 2,
+    "eight_reference_scene_window_coverage": 7,
+    "missing_reference_scene_windows": [
+      "Hyde Park"
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_coverage_review_complete": false,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "COMPLETE",
+        "new_api_calls": 82,
+        "usd_estimated": 0.173311,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.173311,
+    "total_incremental_api_calls_including_failed_runs": 82
+  },
+  {
+    "offset_seconds": 110,
+    "original_r525_published_chapter_count": 4,
+    "r526_actual_result": "COMPLETE",
+    "r526_final_published_chapter_count": 4,
+    "final_published_titles": [
+      "海事博物馆帆船与栈桥",
+      "CBD地标：牌楼与教堂",
+      "植物园巨大榕树板根",
+      "视频结尾推广界面"
+    ],
+    "final_gallery_count": 16,
+    "final_highlight_count": 0,
+    "eight_reference_scene_window_coverage": 5,
+    "missing_reference_scene_windows": [
+      "歌剧院海港起点",
+      "Circular Quay广场",
+      "Darling Harbour滨水步行"
+    ],
+    "coverage_status": "INCOMPLETE",
+    "delivery_state": "READY_WITH_ITEM_BLOCKS",
+    "publication_coverage_review_complete": false,
+    "all_actual_cloud_attempts": [
+      {
+        "run": "r526_frozen_full_20261104",
+        "state": "COMPLETE",
+        "new_api_calls": 84,
+        "usd_estimated": 0.194225,
+        "source_commit": "c80611438f9d674d1364829423aa56b74bea2a68"
+      }
+    ],
+    "total_incremental_usd_including_failed_paid_runs": 0.194225,
+    "total_incremental_api_calls_including_failed_runs": 84
+  }
+]
