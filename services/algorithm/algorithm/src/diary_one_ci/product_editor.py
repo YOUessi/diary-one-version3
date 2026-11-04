@@ -19,7 +19,7 @@ from . import narrative_focus, frame_selection, frame_observation, final_moment_
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'CHAPTER_V2_THEMATIC_FUSION_VALUE_MEDIA_R5_26'
+EDITOR_REVISION = 'CHAPTER_V2_GLOBAL_MEMORY_STORY_SOURCE_GATE_R5_27'
 
 
 def obj(properties, required=None):
@@ -134,6 +134,23 @@ evidence_quote是原事实的连续摘句，不是完整事件。表达应自然
 合格：水渠里的水从水泥台阶落下，旁边是菜地和民居。
 你写的是本次资料，例子只是笔法参考。返回items，每项id/title/story，标题不超过16字，正文不设长度目标。
 以上为CHAPTER要求。AHA/HIGHLIGHT仍返回id/title/title_fact_ids/sentences；一句具体短句、最多28字，每句附同一视频内的fact_ids，不能引用其他记忆的事实。'''
+
+
+# The V05 long-day writing input carries *actual* gallery-supported Episode
+# outlines. This is an editorial coverage constraint, not new evidence.
+WRITER_PROMPT += '''
+有chapter_experience_outline时，你编辑的是一个完整经历Chapter，而不是单张封面图片的说明：
+- 先逐项阅读verified_experiences，每项包含实际选中图片支持的视觉事实与所属Episode。
+- 主标题保留整个Chapter的真实主题，不因最容易写的一张石阶、军舰或仙人掌把一段港区/园林/商业体验缩成该物品。
+- 如果多个Episode都有真实入选帧和不同值得回忆的主体，请用若干自然短句分别表达这些内容；
+  不要求每个Episode机械写一句，也不强制字数，但不能只写封面对象而完全忽略其它重要已展示的经历。
+- selected_visual_evidence里的fact_id与frame_id是唯一可用的故事事实边界。某个Episode没有入选图片
+  则不能凭时间位置补写它的内容，应保留在未覆盖审计中，不创造故事。
+- 句子不能因多个Episode在同一个Chapter就虚构用户先去了A、后来抵达B，跨视频路线和人物关系需要额外证据。
+- 主题、特定对象和互补视觉证据之间要形成自然的一段记忆，而不是把建筑、街道、人物直接列成清单。
+保留已有S11与S12的所有逐事实验证要求。
+'''
+
 
 REVIEW_PROMPT = '''你是独立的发布编辑，核对草稿与给定事实，同时让文字保持自然、具体、克制。
 Chapter草稿的story已是一段文字：按原来的句子补上事实引用，返回sentences；不是让你重新按facts写一篇。
@@ -2879,7 +2896,8 @@ def normalize_explicit_empty_copy_removals(output, repair_items, *, stage):
             'remaining_source_indices':[item.get('source_index') for item in retained]})
     return updated,ledger
 
-def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_evidence=(), final_evidence_scope=None):
+def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_evidence=(),
+                     final_evidence_scope=None, chapter_experience_briefs=None):
     """Shared by the live pipeline and fixed-structure copy comparisons."""
     from . import x02
     packet = {'draft_output': {}, 'review_output': {}, 'repair_output': {}, 'drafts': {}, 'reviewed': {},
@@ -2887,6 +2905,9 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
     if not items:
         return packet
     writer_input = {'locale': 'zh-Hans', 'time_basis': time_basis, 'items': items}
+    # Chapter-wide selected-frame experience outlines are purely editorial
+    # context. Every quote/ID remains grounded and independently verified.
+    chapter_experience_briefs=chapter_experience_briefs or {}
     failure_scope = None
     try:
         chapters = [m for m in items if m['kind'] == 'CHAPTER']
@@ -2908,7 +2929,12 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
         # Keep excerpts concise, while carrying the original verified subject
         # and chapter direction separately so selection cannot erase them.
         prose_input = {**writer_input, 'items': [
-            narrative_focus.writing_context(m, briefs.get(m['id'])) if m['kind'] == 'CHAPTER' else m
+            {**narrative_focus.writing_context(m, briefs.get(m['id'])),
+             'chapter_experience_outline':deepcopy(chapter_experience_briefs[m['id']]),
+             'writing_scope':'MULTI_EPISODE_GROUNDED_VISUAL_EVIDENCE'}
+            if m['kind']=='CHAPTER' and m['id'] in chapter_experience_briefs else
+            narrative_focus.writing_context(m, briefs.get(m['id']))
+            if m['kind']=='CHAPTER' else m
             for m in items]}
         packet['writer_material_scope'] = {m['id']: m.get('writing_scope') for m in prose_input['items']
                                             if m['kind'] == 'CHAPTER'}
@@ -2934,6 +2960,8 @@ def write_and_review(items, stages, *, ask, time_basis, stage_runs, final_eviden
                 m['source_sentences'] = [{'source_index': i, 'text': text} for i, text in enumerate(
                     re.findall(r'[^。！？!?]+[。！？!?]?', story)) if text.strip()]
         review_input = {**writer_input, 'items': review_items,
+            'chapter_experience_outlines':chapter_experience_briefs,
+            'review_policy':'CHECK_EPISODE_WIDE_STORY_RECALL_WITHOUT_ADDING_NEW_FACTS',
             'contract_issues': packet['writer_ledger']}
         packet['review_output'] = ask(stages[1], REVIEW_PROMPT, copy_schema(review_items, review=True), review_input)
         packet['reviewed'], packet['review_ledger'] = compile_copy(packet['review_output'], review_items, review=True)
@@ -3061,15 +3089,31 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
     from . import x02, product_evidence, final_copy_evidence, model_recovery
     assets = bundle.manifest['assets']
     facts, asset_map = catalog(assets, observations)
-    initial_facts = deepcopy(facts)
-    # Long V05 days use independently routed source ranges. Small days and
-    # frozen research behavior retain their established editorial path.
+    # Original observations remain immutable in the result. A high-confidence
+    # post-production outro is not a real first-person experience even when
+    # S04 identified all of its UI text correctly. Filter only the temporary
+    # editorial scope; preserve excluded source identities in the audit.
     use_episode_router = (bundle.manifest.get('bundle_version') ==
         'DIARY_ONE_APP_LIBRARY_BUNDLE_V05' and len(asset_map) >= 32)
+    source_gate_audit = {'version':'NOT_APPLIED_SMALL_OR_LEGACY_SESSION',
+                          'excluded_asset_ids':[],'decisions':[]}
+    editorial_observations = observations
+    route_assets = asset_map
+    route_to_original = {a['sequence_index']:a['sequence_index']
+                         for a in asset_map.values()}
+    if use_episode_router:
+        from . import source_content_gate
+        source_gate_audit = source_content_gate.evaluate(asset_map, observations)
+        facts, editorial_observations, route_assets, route_to_original = (
+            source_content_gate.editorial_scope(
+                asset_map,observations,facts,source_gate_audit))
+    initial_facts = deepcopy(facts)
     episode_router_audit = {}
+    global_memory_audit = {}
     public_facts = [{k: v for k, v in f.items() if k not in ('fact_id', 'source_asset_id', 'observation_id')}
                     for f in facts.values()]
-    global_scene_map = scenelet_builder.build_scene_map(asset_map, facts, observations)
+    global_scene_map = scenelet_builder.build_scene_map(
+        route_assets, facts, editorial_observations)
     global_chapter_plan = chapter_boundary_planner.propose_chapters(global_scene_map)
     # Full 100+ micro-scenelets stay in the deterministic audit, while the
     # model receives compact hierarchical context plus distant anchor quotes.
@@ -3345,13 +3389,21 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             'notice': 'Original count is advisory; compare grounded experiences, not labels.',
         }
     if use_episode_router:
-        from . import chapter_theme_hierarchy
+        from . import chapter_theme_hierarchy, global_visual_memory
+        # Verified facts are indexed only after the image fact review. The
+        # model receives global source-backed anchors and hypothetical
+        # cross-time mentions, not a fabricated GPS route or clock.
+        global_memory_audit = global_visual_memory.build(
+            route_assets, facts, editorial_observations)
+        editor_input['global_visual_memory'] = global_visual_memory.editor_context(
+            global_memory_audit, max_anchors=36)
         # Discover provisional scene experiences first, then group by semantic
         # content. A recurring subject may be part of the same Chapter even
         # across nonadjacent source index ranges. Every F ID remains bound to
         # its original source image and is allocated once by source ownership.
         locked_wire, episode_router_audit = chapter_theme_hierarchy.plan(
-            asset_map, observations, facts, ask, chapter_limit=chapter_limit)
+            route_assets, editorial_observations, facts, ask,
+            chapter_limit=chapter_limit, visual_memory=global_memory_audit)
         routed_chapters, routed_moments, routed_issues, routed_coverage = (
             compile_structure_wire(locked_wire, facts, asset_map, chapter_limit))
         if routed_issues or len(routed_chapters) != len(locked_wire['chapters']):
@@ -3392,8 +3444,9 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             for i,chapter in enumerate(thematic_groups,1):
                 cid=f'C{i:02d}'
                 ranges[cid]=[{
-                    'episode_id':e,'start_index':microepisodes[e]['start_index'],
-                    'end_index':microepisodes[e]['end_index']}
+                    'episode_id':e,
+                    'start_index':route_to_original[microepisodes[e]['start_index']],
+                    'end_index':route_to_original[microepisodes[e]['end_index']]}
                     for e in chapter['episode_ids']]
             protected_facts={c['id']:list(c['selection_focus']['fact_ids'])
                              for c in chapters}
@@ -3403,7 +3456,7 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
                     max_per_chapter=8,max_total=40,
                     priority_fact_ids_by_chapter=protected_facts,
                     episode_source_ranges_by_chapter=ranges,
-                    observations=observations))
+                    observations=editorial_observations))
         elif use_global_media:
             # V05 small bundles retain the existing production contract; no
             # hierarchy is necessary or valid without 32+ source assets.
@@ -3445,7 +3498,8 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         )
         if use_episode_router:
             editorial_output, router_media_audit = chapter_episode_router.select_media(
-                locked_wire, candidates, scene_clues, ask, evidence=media_evidence, facts=facts)
+                locked_wire, candidates, scene_clues, ask, evidence=media_evidence,
+                facts=facts)
             media_selection_audit['episode_router_media'] = router_media_audit
         else:
             editorial_output = ask('S09B_PRODUCT_VERIFIED_STRUCTURE', STRUCTURE_REVIEW_PROMPT + MEDIA_SELECTION_PROMPT + frame_selection.FRAME_SELECTION_PROMPT +
@@ -3538,13 +3592,23 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         editorial_draft, editorial_output, initial_facts, verified_facts=facts)
     moments, moment_value_ledger, moment_value_output = product_evidence.review_moments(
         moments, chapters, facts, ask, stage_runs=stage_runs, assets=asset_map, bundle=bundle)
+    chapter_story_audit = {}
+    chapter_experience_briefs = {}
+    if use_episode_router:
+        from . import chapter_story_outline
+        chapter_story_audit = chapter_story_outline.build(
+            chapters, episode_router_audit, asset_map, facts,
+            route_to_original=route_to_original)
+        chapter_experience_briefs = chapter_story_outline.writer_context(
+            chapter_story_audit)
     memories = memory_specs(chapters, moments, facts,
         frame_claim_supports=media_selection_audit.get('frame_observation', {}).get('frame_claim_supports', []))
     final_images, final_image_scope = final_copy_evidence.build_final_copy_scope(memories, asset_map, bundle, max_frames=None)
 
     written = write_and_review(memories, ('S11_PRODUCT_WRITER', 'S12_PRODUCT_FACT_REVIEW', 'S13_PRODUCT_COPY_REPAIR'),
                                ask=ask, time_basis=editor_input['time_basis'], stage_runs=stage_runs,
-                               final_evidence=final_images, final_evidence_scope=final_image_scope)
+                               final_evidence=final_images, final_evidence_scope=final_image_scope,
+                               chapter_experience_briefs=chapter_experience_briefs)
     raw_drafts, raw_review, raw_copy_repair = (written[k] for k in ('draft_output', 'review_output', 'repair_output'))
     drafts, reviewed = written['drafts'], written['reviewed']
     writer_ledger, review_ledger, copy_repair_ledger = (written[k] for k in ('writer_ledger', 'review_ledger', 'repair_ledger'))
@@ -3557,7 +3621,8 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
     # Check coverage AFTER copy review, because selected memories can fail to
     # publish. Review only absent assets; similar footage need not be repeated.
     represented = visible_assets(chapters, moments, reviewed, facts)
-    missing_assets = {f['asset_id'] for f in initial_facts.values()} - represented
+    missing_assets = ({f['asset_id'] for f in initial_facts.values()} - represented
+                      - set(source_gate_audit.get('excluded_asset_ids', [])))
     published_structure = [c for c in chapters if c['id'] in reviewed]
     active_moments = [m for m in moments if m['id'] in reviewed and
                       (m['parent_chapter_id'] is None or m['parent_chapter_id'] in reviewed)]
@@ -3656,6 +3721,7 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
     declined_assets = {facts[r['moment']['fact_id']]['asset_id']: declined_ids[r['moment']['id']]
                        for r in recovery_ledger if isinstance(r.get('moment'), dict)
                        and r['moment'].get('id') in declined_ids and r['moment'].get('fact_id') in facts}
+    excluded_content_assets=set(source_gate_audit.get('excluded_asset_ids', []))
     for aid in asset_map:
         decision = next((r for r in recovery_ledger if r.get('asset_id') == aid), {})
         decision_ok = decision.get('status') == 'VALIDATED'
@@ -3667,7 +3733,8 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
         # Retain the rejected fact as a separate outstanding obligation.
         no_verified_image = partial_image_review and aid not in verified_assets
         publication_coverage.append({'asset_id': aid, 'visible_media': aid in final_assets,
-            'status': 'VISIBLE' if aid in final_assets else
+            'status': 'NON_LIVED_SOURCE_CONTENT' if aid in excluded_content_assets else
+                      'VISIBLE' if aid in final_assets else
                       'UNREVIEWED' if no_verified_image else
                       'NOT_SELECTED_VALUE' if aid in declined_assets else
                       'COPY_BLOCKED' if decision_ok and added else
@@ -3676,7 +3743,9 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             'visual_review_incomplete': partial_image_review,
             'verified_visual_fact_count': sum(f['asset_id']==aid and f.get('visual_reviewed') is True
                                               for f in facts.values()),
-            'reason': declined_assets.get(aid, decision.get('reason'))})
+            'reason': ('EXPLICIT_VIDEO_END_CARD_NOT_USER_LIVED_EXPERIENCE'
+                       if aid in excluded_content_assets
+                       else declined_assets.get(aid, decision.get('reason')))})
 
     def stable(kind, mid):
         return str(uuid.uuid5(namespace, POLICY_VERSION + ':' + kind + ':' + mid))
@@ -3823,6 +3892,9 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             'global_scene_map': global_scene_map,
             'global_chapter_plan': global_chapter_plan,
             'episode_router_audit': episode_router_audit,
+            'chapter_experience_outlines': chapter_story_audit,
+            'source_content_gate': source_gate_audit,
+            'global_visual_memory': global_memory_audit,
             'structure_replan_audit': structure_replan_audit,
             'global_coverage_audit': global_coverage_audit,
             'contract_repair_issues': contract_repairs, 'focused_contract_repairs': focused_contract_repairs,

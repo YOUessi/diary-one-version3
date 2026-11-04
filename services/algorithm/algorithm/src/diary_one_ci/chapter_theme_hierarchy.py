@@ -358,15 +358,22 @@ def build_wire(chapters, assets, facts):
     return wire
 
 
-def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS):
+def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
+         visual_memory=None):
     if not facts:
         raise ValueError("NO_VISUALLY_VERIFIED_FACTS_TO_PLAN")
     ctx=legacy.context(assets,observations,chapter_limit=chapter_limit)
     n=ctx['source_count']
     limit=min(MAX_MICRO_EPISODES,n)
+    from . import global_visual_memory
+    if visual_memory is None:
+        visual_memory=global_visual_memory.build(assets,facts,observations)
+    compact=global_visual_memory.editor_context(visual_memory,max_anchors=48)
     context={**ctx,'max_episodes':limit,
         'episode_count_not_limited_to_chapter_limit':True,
-        'policy':VERSION,'cross_time_theme_fusion_allowed':True}
+        'policy':VERSION,'cross_time_theme_fusion_allowed':True,
+        'global_memory':compact,
+        'global_entity_candidates_are_hypotheses_not_proven_identifications':True}
     raw=ask('S07T_THEMATIC_EPISODE_DISCOVERY',EPISODE_PROMPT,
             episode_schema(n,limit),context)
     repairs=[]
@@ -383,6 +390,7 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS)
     schema=chapter_schema([e['episode_id'] for e in episodes],ids,chapter_limit)
     subcontext={'policy':VERSION,'chapter_limit':chapter_limit,
          'episodes':grounded,'allowed_fact_ids':ids,
+         'global_memory':compact,
          'do_not_split_repeated_location':True,
          'time_basis':'IMPORT_SEQUENCE_ONLY'}
     raw_chapters=ask('S07U_THEMATIC_CHAPTER_FUSION',CHAPTER_PROMPT,schema,subcontext)
