@@ -208,3 +208,30 @@ def test_sixteen_or_more_provisional_episodes_are_not_forced_to_five():
     valid=p.validate_episodes({'episodes':episodes},n)
     assert len(valid)==18
     assert valid[-1]['end_index']==17
+
+
+def test_valid_five_fact_focus_is_bounded_without_deleting_any_episode():
+    a,f,o=day()
+    eps=p.validate_episodes({'episodes':spans()},20)
+    proposal=theme_output()
+    proposal['chapters'][0]['anchor_fact_ids']=[
+        'F001','F002','F003','F017','F020']
+    fixed,trace=p.normalize_only_excess_visual_anchors(
+        proposal,eps,a,f,5)
+    assert len(trace)==1
+    assert len(fixed['chapters'][0]['anchor_fact_ids'])==4
+    assert 'F001' in fixed['chapters'][0]['anchor_fact_ids']
+    assert 'F020' in fixed['chapters'][0]['anchor_fact_ids']
+    assert p.validate_chapters(fixed,eps,a,f,5)
+    assert proposal['chapters'][0]['anchor_fact_ids']==[
+        'F001','F002','F003','F017','F020']
+
+
+def test_nonverified_and_foreign_fact_cannot_be_recovered_by_trim():
+    a,f,o=day()
+    eps=p.validate_episodes({'episodes':spans()},20)
+    proposal=theme_output()
+    proposal['chapters'][0]['anchor_fact_ids']=[
+        'F001','F002','F003','F017','F006']
+    with pytest.raises(ValueError,match='INVALID_EXCESS_ANCHOR_OWNERSHIP'):
+        p.normalize_only_excess_visual_anchors(proposal,eps,a,f,5)

@@ -286,7 +286,8 @@ def verified_frame_assessments(candidates, scene_clues, chapters):
     return assessments,audited
 
 
-def select_media(wire,candidates,scene_clues,ask,*,evidence,facts=None):
+def select_media(wire,candidates,scene_clues,ask,*,evidence,facts=None,
+                 episode_media_plan=None):
     """Select covers and their evidence-bound focus; never alter Chapter ranges."""
     from jsonschema import Draft202012Validator
     from .product_editor import unsupported_editorial_context
@@ -307,6 +308,10 @@ def select_media(wire,candidates,scene_clues,ask,*,evidence,facts=None):
     model_schema=media_schema(chapters,model_candidates)
     verified_observations={pid:scene_clues['candidate_scene_clues'][pid]
                            for pid in permitted}
+    if episode_media_plan is not None:
+        from . import chapter_media_episode_plan
+        episode_media_plan=chapter_media_episode_plan.restrict_to_independently_verified_frames(
+            episode_media_plan,initial_assessments)
     context={'policy':VERSION,'chapter_media_scope':[
             {'chapter_id':c['id'],'theme':c['theme'],
              'experience_kind':c['experience_kind'],
@@ -317,6 +322,10 @@ def select_media(wire,candidates,scene_clues,ask,*,evidence,facts=None):
         'selection_limit_per_chapter':5,
         'focus_policy':'FOCUS_CHOSEN_FROM_REAL_HERO_IMAGE_NOT_FROM_GENERIC_ACTIVITY_LABEL',
         'cover_selection_policy':'COMPARE_THEME_SPECIFICITY_SUBJECT_VISIBILITY_COMPOSITION_AND_GALLERY_DIVERSITY'}
+    if episode_media_plan is not None:
+        # Already-owned Episode images are *advice for generation*, not
+        # a second LLM reviewer or a way to borrow foreign frame IDs.
+        context['episode_gallery_coverage_plan']=episode_media_plan
     output=ask('S09B_PRODUCT_EPISODE_MEDIA_ONLY',MEDIA_PROMPT,model_schema,
                context,evidence=evidence)
     errors=list(Draft202012Validator(model_schema).iter_errors(output))
@@ -461,7 +470,13 @@ def select_media(wire,candidates,scene_clues,ask,*,evidence,facts=None):
     assessments,audit=verified_frame_assessments(candidates,scene_clues,completed['chapters'])
     completed['media_choices']=media
     completed['frame_assessments']=assessments
+    coverage_audit={}
+    if episode_media_plan is not None:
+        from . import chapter_media_episode_plan
+        coverage_audit=chapter_media_episode_plan.selected_coverage(
+            episode_media_plan,output)
     return completed,{'raw_media_selection':output,'frame_assessment_provenance':audit,
+                      'episode_media_coverage':coverage_audit,
                       'initial_assessment_provenance':initial_audit,
                       'focus_updates':focus_audit,'media_contract_repairs':repair_audit,
                       'policy':VERSION}

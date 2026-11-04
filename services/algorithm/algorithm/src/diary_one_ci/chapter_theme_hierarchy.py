@@ -13,7 +13,7 @@ from . import chapter_episode_router as legacy
 from .scene_selection import EXPERIENCE_KINDS
 from .scenelet_builder import tokens
 
-VERSION = "GLOBAL_THEMATIC_EPISODES_AND_CHAPTERS_V02"
+VERSION = "GLOBAL_THEMATIC_EPISODES_AND_CHAPTERS_V03"
 MAX_MICRO_EPISODES = 18
 
 EPISODE_PROMPT = """你是一名第一人称生活日记的全局素材编辑。请先观察全部逐段视觉事实，
@@ -53,21 +53,37 @@ CHAPTER_PROMPT = """你是全局生活日记主编。现在阅读全部有视觉
 只从输入已经有可靠视觉事实的fact_id中选择，并且必须属于该章分配的Episode。
 注意：选出锚点不表示图片画质已通过；真正的图片审核还要在后续逐帧执行。
 不能编造事实、图片、时间或人物关系，也不能把同一地点重现当成固定章节理由。
+
+按如下“可复核编辑决策顺序”直接形成可发布结构，不要输出私有思维过程：
+①对每个Episode先写下具体可见的独特活动、人物或主体，不把所有WALKING概括成相同主题。
+②比较同主题Episode，即使时间不连续也可归一章；不同活动即使相邻也不必一章。
+③检查整个Day是否漏掉值得记住的地点/作品/事件；如果Chapter数量有限，将次要但真实的
+  小经历收进相关Chapter的Episode，不得直接删掉来源事实。
+④比较相似的两章是否重复；比较每章内部是否存在错放的Episode。
+⑤以本章多个事实共同定义主题，1..4条anchor_fact_ids必须都来自本章真实已核验图片。
+⑥最终章数是内容选择后的结果，不是先凑满5章。仅输出严格JSON，不报告未经证实的推理步骤。
 返回严格JSON。"""
 
 CHAPTER_REPAIR_PROMPT = """此前Chapter方案遗漏/重复分配了Episode，或者选了
 不属于本章Episode的视觉事实锚点。只修改错误项，每个Episode必须且只能有一个父章；
 允许同一地点非连续地融合到同一个Chapter。不得创造事实ID、地点或素材，返回合法JSON。"""
 
-CHAPTER_COHERENCE_REPAIR_PROMPT = """上一版经独立编辑核查有严重的内容混合：
-一个Chapter同时承担购物/商业市场等活动和独立的自然公园/园林经历，已经形成主题松散的大杂烩。
-这里列出的mixed_theme_chapters是需重点修正的编辑问题，不是要强制不同地标都开新章。
-请重新进行全局Episode归属：可以合并两个相似的海滨或市场Chapter，释放一个Chapter席位给园林；
-也可以直接把有不同主题的Episode归入已有最相关Chapter。允许少于五章，不能凑数字。
-请认真分析每个Episode的内容，再把不连贯的主题重新组织；不是仅修改标题、reason。
-不同时间的相同地点/同一主题允许直接融合；不需要再次单开新章。
-所有真实Episode必须恰好归属一次、所有1..4条高价值视觉事实锚点必须归属于其Chapter。
-禁止捏造事实、素材、拍摄时钟或额外Episode，返回完整合法JSON。"""
+CHAPTER_COHERENCE_REPAIR_PROMPT = """你正在对已提出的日记Chapter作一次有证据的全局编辑修改，
+不是第二个独立的LLM-as-a-Judge；你必须完成可以用于正式生成的合法Chapter结构。
+
+输入的editorial_edit_actions只代表由已验证Episode/F ID计算得到的候选编辑动作，
+不代表这些文字相似的主体已经被证明相同。请逐项根据实际视觉事实考虑：
+- MIXED_THEME_REVIEW：如果两种独立活动确实难以在同一记忆主题下自然表达，把错误归属的
+  Episode移动到已有更相关章节；若真正发生一次自然混合活动，可以保留而不强制拆分。
+- SAME_THEME_CROSS_CHAPTER_MERGE_REVIEW：如果两章其实在表达同一经历，融合成一个Chapter；
+  但同一个普通建筑类别、同样都是WALKING并不证明是同一地点，更不能仅凭时间强制合并。
+- OUTLIER_EPISODE_REVIEW：检查被放入错误主题的具体视觉经历，移到真实主题相关的Chapter。
+优先对现有Chapter合并、调整Episode归属，必要时减少章数。不为填满5章硬拆，
+也不能因两个场景时间相邻就强合。保持重要具体作品、建筑、动物、购物、自然、
+运动等视觉内容被合理表达，短暂的独特记忆可以作为本章Episode而非单独开章。
+只改有证据的地方；允许原方案已经合理时保持不变。
+只能使用真实Episode ID和属于其所有权的已核验F ID。严禁猜测拍摄地点路线、人物
+关系、真实经过时间、购买成功、返回情绪。返回完整合法JSON。"""
 
 
 def thematic_coherence_conflicts(grouping, episodes):
@@ -84,38 +100,29 @@ def thematic_coherence_conflicts(grouping, episodes):
        (frozenset({'MARKET_SHOPPING'}),frozenset({'GARDEN','PARK_LEISURE'})),
        (frozenset({'DINING'}),frozenset({'GARDEN','PARK_LEISURE'})),
     ]
-    # A Chapter with several subexperiences can hide a completely unrelated
-    # episode. This is a review signal only: spelling/lexical overlap is
-    # NEVER used as a hard factual judgement or a new-Chapter rule.
-    common={'the','and','with','into','through','from','near','area',
-            'walk','walking','views','view','exploration','visit',
-            'day','journey','chapter','local','around'}
-    def meaningful(text):
-        return {x for x in tokens(text) if x not in common}
+    from . import chapter_editorial_decision_flow
+    advice=chapter_editorial_decision_flow.action_hints(grouping,episodes,max_actions=20)
+    actual_moves={}
+    for row in advice['actions']:
+        if row['action']=='OUTLIER_EPISODE_REVIEW':
+            actual_moves.setdefault(row['chapter_index'],[]).append({
+                'episode_id':row['episode_ids'][0],
+                'existing_target_chapter_index':row['suggested_existing_chapter_index'],
+                'strong_shared_named_subjects':row['strong_shared_named_subjects'],
+                'reason':'BETTER_EXISTING_CHAPTER_WITH_SOURCE_NAMED_SUBJECT'})
     conflicts=[]
-    for idx,c in enumerate(grouping,1):
+    for index,c in enumerate(grouping):
         rows=[byid[e] for e in c['episode_ids']]
         kinds={e['experience_kind'] for e in rows}
         triggers=[{'left':sorted(a),'right':sorted(b)}
-          for a,b in incompatible if kinds & a and kinds & b]
-        lexical_outliers=[]
-        if len(rows)>=3:
-            theme_tokens=meaningful(c['title'])
-            for e in rows:
-                evidence=meaningful(e['theme'])
-                other=set().union(*(meaningful(other['theme'])
-                                    for other in rows if other is not e))
-                if (len(evidence)>=2 and not evidence.intersection(theme_tokens)
-                        and not evidence.intersection(other)):
-                    lexical_outliers.append({'episode_id':e['episode_id'],
-                        'episode_theme':e['theme'],
-                        'reason':'EPISODE_SUBJECT_NOT_PRESENT_IN_CHAPTER_OR_PEER_THEMES'})
+             for a,b in incompatible if kinds&a and kinds&b]
+        lexical_outliers=actual_moves.get(index,[])
         if triggers or lexical_outliers:
-            conflicts.append({'chapter_index':idx,'chapter_theme':c['title'],
-              'episode_ids':c['episode_ids'],
-              'episode_themes':[e['theme'] for e in rows],
-              'kinds':sorted(kinds),'incompatible_activity_groups':triggers,
-              'lexical_subject_outliers':lexical_outliers})
+            conflicts.append({'chapter_index':index+1,'chapter_theme':c['title'],
+                'episode_ids':c['episode_ids'],
+                'episode_themes':[e['theme'] for e in rows],
+                'kinds':sorted(kinds),'incompatible_activity_groups':triggers,
+                'lexical_subject_outliers':lexical_outliers})
     return conflicts
 
 
@@ -187,9 +194,18 @@ def validate_episodes(output, count, limit=MAX_MICRO_EPISODES):
             for i,e in enumerate(output['episodes'])]
 
 
-def _episode_facts(episodes, assets, facts, observations):
-    """Distributed, directly verified fact evidence for each provisional episode."""
+def _episode_facts(episodes, assets, facts, observations, visual_memory=None):
+    """Full episode coverage plus diverse, globally distinctive verified facts.
+
+    R5_27 originally sampled up to 16 evenly spaced observations and 4 high
+    *frequency* lexical rows. That could miss a brief but valuable object
+    (artwork, building, activity) even when S04 had already verified it.
+    The global-memory anchor list adds high-value proof without creating a
+    geographic or domain-specific rule. Every F is still in candidate_fact_ids.
+    """
     order={aid:a['sequence_index'] for aid,a in assets.items()}
+    globally_protected={r['fact_id'] for r in
+        (visual_memory or {}).get('priority_anchors',[]) if r.get('fact_id') in facts}
     by_source={o.get('source_asset_id'):o for o in observations if isinstance(o,dict)}
     out=[]
     for episode in episodes:
@@ -200,12 +216,20 @@ def _episode_facts(episodes, assets, facts, observations):
         candidates.sort(key=lambda t:(order[t[1]['asset_id']],t[0]))
         if not candidates:
             raise ValueError("EPISODE_WITHOUT_VISUALLY_REVIEWED_EVIDENCE")
-        count=min(16,len(candidates))
+        count=min(12,len(candidates))
         positions={round(i*(len(candidates)-1)/(count-1)) for i in range(count)} if count>1 else {0}
         chosen=[candidates[i] for i in sorted(positions)]
         excerpt=[{'fact_id':fid,'text':f['text'][:170],
                   'source_index':order[f['asset_id']]}
                  for fid,f in chosen]
+        protected=[(fid,f) for fid,f in candidates if fid in globally_protected]
+        protected.sort(key=lambda pair:(order[pair[1]['asset_id']],pair[0]))
+        chosen_fact_ids={z['fact_id'] for z in excerpt}
+        for fid,f in protected[:8]:
+            if fid not in chosen_fact_ids:
+                excerpt.append({'fact_id':fid,'text':f['text'][:170],
+                    'source_index':order[f['asset_id']]})
+                chosen_fact_ids.add(fid)
         # Secondary lexical richness merely broadens context; it is not used
         # to replace image verification or hardcode any geographic landmark.
         local=Counter()
@@ -222,6 +246,7 @@ def _episode_facts(episodes, assets, facts, observations):
                 seen.add(fid)
         out.append({**episode,'fact_count':len(candidates),
           'candidate_fact_ids':[fid for fid,_ in candidates],
+          'globally_protected_fact_ids':[fid for fid,_ in protected[:8]],
           'representative_verified_facts':excerpt,
           'activities':sorted({by_source.get(assets[f['asset_id']]['asset_id'],{}).get('activity_code','UNKNOWN')
                                for _,f in candidates}),
@@ -245,6 +270,49 @@ def chapter_schema(episode_ids, fact_ids, chapter_limit):
     return {'type':'object','additionalProperties':False,'required':['chapters'],
       'properties':{'chapters':{'type':'array','minItems':1,
             'maxItems':min(chapter_limit,len(episode_ids)),'items':row}}}
+
+
+def normalize_only_excess_visual_anchors(proposal, episodes, assets, facts,
+                                         chapter_limit):
+    """Bounded formatting recovery: cannot change any Episode or visual fact.
+
+    A valid proposal can emit five verified focus facts when the public schema
+    permits four. Preserve Episode ownership and remove only surplus refs;
+    malformed identity, provenance or other schema violations fail closed.
+    """
+    if not isinstance(proposal,dict) or set(proposal)!={'chapters'} or not isinstance(proposal['chapters'],list):
+        raise ValueError('NOT_AN_EXCESS_ANCHOR_ONLY_RESPONSE')
+    updated=deepcopy(proposal)
+    schema=chapter_schema([e['episode_id'] for e in episodes],
+                          list(facts),chapter_limit)
+    order={aid:a['sequence_index'] for aid,a in assets.items()}
+    corrections=[]
+    for row in updated['chapters']:
+        if not isinstance(row,dict) or not isinstance(row.get('anchor_fact_ids'),list):
+            raise ValueError('NOT_AN_EXCESS_ANCHOR_ONLY_RESPONSE')
+        anchors=row['anchor_fact_ids']
+        if len(anchors)<=4:continue
+        if len(anchors)>12 or len(set(anchors))!=len(anchors):
+            raise ValueError('INVALID_EXCESS_ANCHOR_IDENTITIES')
+        owned={index for e in episodes if e['episode_id'] in row.get('episode_ids',[])
+               for index in range(e['start_index'],e['end_index']+1)}
+        if not owned or any(fid not in facts or
+                 facts[fid].get('visual_reviewed') is not True or
+                 facts[fid].get('asset_id') not in order or
+                 order[facts[fid]['asset_id']] not in owned for fid in anchors):
+            raise ValueError('INVALID_EXCESS_ANCHOR_OWNERSHIP')
+        ranked=sorted(anchors,key=lambda fid:(order[facts[fid]['asset_id']],fid))
+        slots=sorted({round(i*(len(ranked)-1)/3) for i in range(4)})
+        if len(slots)!=4:raise ValueError('ANCHOR_SPREAD_UNAVAILABLE')
+        selected=[ranked[i] for i in slots]
+        row['anchor_fact_ids']=selected
+        corrections.append({'chapter_title':row['title'],
+            'original_verified_anchor_ids':anchors,
+            'kept_verified_anchor_ids':selected,
+            'reason':'SCHEMA_MAX4_ONLY_NO_EPISODES_OR_FACTS_REMOVED'})
+    if not corrections or not _valid(schema,updated):
+        raise ValueError('NOT_AN_EXCESS_ANCHOR_ONLY_RESPONSE')
+    return updated,corrections
 
 
 def validate_chapters(proposal, episodes, assets, facts, chapter_limit):
@@ -385,16 +453,32 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
                 episode_schema(n,limit),
                 {**context,'invalid_proposal':raw,'validation_error':str(e)})
         episodes=validate_episodes(raw,n,limit)
-    grounded=_episode_facts(episodes,assets,facts,observations)
+    grounded=_episode_facts(episodes,assets,facts,observations,
+                            visual_memory=visual_memory)
+    from . import chapter_editorial_decision_flow
+    evidence_cards=chapter_editorial_decision_flow.episode_cards(grounded,limit=9)
     ids=sorted(facts)
     schema=chapter_schema([e['episode_id'] for e in episodes],ids,chapter_limit)
     subcontext={'policy':VERSION,'chapter_limit':chapter_limit,
          'episodes':grounded,'allowed_fact_ids':ids,
+         'episode_editorial_evidence_cards':evidence_cards,
          'global_memory':compact,
          'do_not_split_repeated_location':True,
+         'editorial_process':['RECOVER_WORTH_REMEMBERING_EXPERIENCES',
+                              'FUSE_SAME_REAL_EXPERIENCE_ACROSS_SOURCE_SPANS',
+                              'REMOVE_UNRELATED_EPISODE_MISASSIGNMENTS',
+                              'KEEP_CHAPTER_SUBJECT_AND_FACT_ANCHORS_ALIGNED',
+                              'PRESERVE_IMPORTANT_EXPERIENCES_WITHIN_CHAPTER_BUDGET'],
          'time_basis':'IMPORT_SEQUENCE_ONLY'}
     raw_chapters=ask('S07U_THEMATIC_CHAPTER_FUSION',CHAPTER_PROMPT,schema,subcontext)
     try:
+        if not _valid(schema,raw_chapters):
+            amended,fixes=normalize_only_excess_visual_anchors(
+                raw_chapters,episodes,assets,facts,chapter_limit)
+            raw_chapters=amended
+            repairs.append({'stage':'S07U_ANCHOR_CARDINALITY_ONLY',
+                'reason':'PROVIDER_EMITTED_MORE_THAN_FOUR_VALID_FOCUS_FACTS',
+                'items':fixes})
         normalized=validate_chapters(raw_chapters,episodes,assets,facts,chapter_limit)
     except (ValueError,TypeError,KeyError) as e:
         repairs.append({'stage':'S07U','reason':str(e)})
@@ -402,6 +486,12 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
              schema,{**subcontext,'invalid_proposal':raw_chapters,
                      'validation_error':str(e)})
         try:
+            if not _valid(schema,raw_chapters):
+                amended,fixes=normalize_only_excess_visual_anchors(
+                    raw_chapters,episodes,assets,facts,chapter_limit)
+                raw_chapters=amended
+                repairs.append({'stage':'S07U_ANCHOR_CARDINALITY_ONLY_AFTER_MODEL_REPAIR',
+                    'items':fixes})
             normalized=validate_chapters(raw_chapters,episodes,assets,facts,chapter_limit)
         except ValueError as second_error:
             if str(second_error)!='CHAPTER_ANCHOR_OUTSIDE_EPISODE':
@@ -425,34 +515,66 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
         'review_mode':'CONTENT_COHERENCE_AND_REPEATED_SUBJECT_FUSION'})
     try:
         validated_review=validate_chapters(reviewed,episodes,assets,facts,chapter_limit)
-        reviewer.update(accepted=True,status='APPLIED_VALID_INDEPENDENT_REVIEW',
-                        changed=validated_review!=normalized)
-        normalized=validated_review
+        from . import chapter_editorial_decision_flow
+        previous_actions=chapter_editorial_decision_flow.action_hints(
+            normalized,grounded,max_actions=20)['actions']
+        suggested_actions=chapter_editorial_decision_flow.action_hints(
+            validated_review,grounded,max_actions=20)['actions']
+        previous_penalty=coherence_penalty(normalized,episodes)
+        proposed_penalty=coherence_penalty(validated_review,episodes)
+        reviewer.update(previous_concrete_concerns=len(previous_actions),
+                        candidate_concrete_concerns=len(suggested_actions),
+                        previous_known_penalty=previous_penalty,
+                        candidate_known_penalty=proposed_penalty)
+        if (proposed_penalty<=previous_penalty
+                and len(suggested_actions)<=len(previous_actions)):
+            reviewer.update(accepted=True,status='APPLIED_VALID_GENERATION_REVISION',
+                            changed=validated_review!=normalized)
+            normalized=validated_review
+        else:
+            reviewer.update(accepted=False,status='RETAINED_SOURCE_GROUNDED_INITIAL',
+                            changed=False)
     except (ValueError,TypeError,KeyError) as exc:
         reviewer.update(status='REJECTED_INVALID_REVIEW',
                         error_type=type(exc).__name__)
     original_conflicts=thematic_coherence_conflicts(normalized,episodes)
+    edit_plan=chapter_editorial_decision_flow.action_hints(normalized,grounded,max_actions=8)
     reviewer['mixed_theme_conflicts_before_correction']=original_conflicts
-    if original_conflicts:
+    reviewer['evidence_grounded_editorial_actions_before']=edit_plan
+    if original_conflicts or edit_plan['actions']:
         alternate=ask('S07W_THEMATIC_COHERENCE_CORRECTION',
             CHAPTER_COHERENCE_REPAIR_PROMPT,schema,
             {**subcontext,
              'previous_proposal':{'chapters':[
                   {k:v for k,v in row.items() if k not in ('first_index','source_indices')}
                   for row in normalized]},
-             'mixed_theme_chapters':original_conflicts})
+             'mixed_theme_chapters':original_conflicts,
+             'editorial_edit_actions':edit_plan['actions'],
+             'budgeted_content_first_layout_candidate':
+                chapter_editorial_decision_flow.budgeted_edit_recipe(
+                    normalized,grounded,chapter_limit=chapter_limit),
+             'instruction':'请按证据决定是否合并、移动或保留现有内容，而不是为增加章数而改。候选layout只是编辑建议，不能省略真实证据的核对。'})
         try:
             revised=validate_chapters(alternate,episodes,assets,facts,chapter_limit)
             remaining=thematic_coherence_conflicts(revised,episodes)
+            revised_plan=chapter_editorial_decision_flow.action_hints(
+                revised,grounded,max_actions=8)
             before_memberships=[c['episode_ids'] for c in normalized]
             after_memberships=[c['episode_ids'] for c in revised]
             before_penalty=coherence_penalty(normalized,episodes)
             after_penalty=coherence_penalty(revised,episodes)
+            before_action_count=len(edit_plan['actions'])
+            after_action_count=len(revised_plan['actions'])
             reviewer['coherence_penalty_before']=before_penalty
             reviewer['coherence_penalty_after']=after_penalty
-            if (after_penalty<before_penalty
-                    and (before_memberships!=after_memberships
-                         or any(c['incompatible_activity_groups'] for c in original_conflicts))):
+            reviewer['candidate_edit_actions_before']=before_action_count
+            reviewer['candidate_edit_actions_after']=after_action_count
+            improved=(after_penalty < before_penalty or
+                      (after_penalty <= before_penalty and
+                       after_action_count < before_action_count))
+            if (improved and
+                    (before_memberships!=after_memberships
+                     or any(c['incompatible_activity_groups'] for c in original_conflicts))):
                 normalized=revised
                 reviewer.update(status='APPLIED_COHERENT_REPLAN',
                                 scoped_correction=True,
@@ -470,6 +592,8 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
        'chapter_grouping':normalized,'source_count':n,
        'time_basis':'IMPORT_SEQUENCE_ONLY','repairs':repairs,
        'semantic_coherence_review':reviewer,
+       'episode_evidence_cards':evidence_cards,
+       'editorial_edit_policy':chapter_editorial_decision_flow.VERSION,
        'noncontiguous_theme_fusion_enabled':True,
        'unassigned_verified_facts':len(set(facts)-
          {fid for c in wire['chapters'] for fid in c['fact_ids']})}

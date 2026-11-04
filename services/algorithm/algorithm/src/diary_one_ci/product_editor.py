@@ -19,7 +19,7 @@ from . import narrative_focus, frame_selection, frame_observation, final_moment_
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'CHAPTER_V2_GLOBAL_MEMORY_STORY_SOURCE_GATE_R5_27'
+EDITOR_REVISION = 'CHAPTER_V2_CONTENT_FIRST_EDITORIAL_ACTIONS_R5_28'
 
 
 def obj(properties, required=None):
@@ -3497,9 +3497,14 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             if draft_at_risk_anchors else ''
         )
         if use_episode_router:
+            from . import chapter_media_episode_plan
+            episode_media_plan=chapter_media_episode_plan.candidate_map(
+                episode_router_audit['chapter_grouping'],
+                episode_router_audit['independent_episodes'],
+                candidates,asset_map,route_to_original)
             editorial_output, router_media_audit = chapter_episode_router.select_media(
                 locked_wire, candidates, scene_clues, ask, evidence=media_evidence,
-                facts=facts)
+                facts=facts,episode_media_plan=episode_media_plan)
             media_selection_audit['episode_router_media'] = router_media_audit
         else:
             editorial_output = ask('S09B_PRODUCT_VERIFIED_STRUCTURE', STRUCTURE_REVIEW_PROMPT + MEDIA_SELECTION_PROMPT + frame_selection.FRAME_SELECTION_PROMPT +
