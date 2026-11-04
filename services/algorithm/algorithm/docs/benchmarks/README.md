@@ -1,3 +1,15 @@
+## Direct VLM all-228 JPEG baseline (2026-11-04)
+
+- [一次多模态 API 生成 7 章：真实成本、全部封面及逐章质量报告](SYDNEY_DIRECT_VLM_228_IMAGES_REAL_EXPERIMENT_20261104.md)
+- [直接 VLM 的脱敏结构化 7 章结果与独立质检反馈](SYDNEY_DIRECT_VLM_228_IMAGES_PUBLIC_SUMMARY_20261104.json)
+
+完全跳过多阶段S04→Episode→S07→S09，原始228张JPEG在一次Qwen3.8-Flash调用中完成直接编辑。
+一通请求输入184,177 Token、输出7,582 Token，估算¥0.167813，116.938秒。
+未经用户路线图/72s开场人工注入。首次本地经验帧24项上限报4项；
+仅放宽该非发布字段至64并对全部Frame ID重验通过，模型答复未改动、没有二次请求。
+外部实际图片审查：有积极的章节主题融合和成本优势，但仍存在视觉叙述不实、封面不优、过度拆章。
+Mac的原始图片和交互版真图对照不上传GitHub，不能声称production ready。
+
 ## LLM-as-a-Judge：R5_26 全12组最终Chapter逐章评审（2026-11-04）
 
 - [全12组主观编辑评分与58章真实图文逐章问题](SYDNEY_R526_LLM_AS_JUDGE_ALL12_20261104.md)
