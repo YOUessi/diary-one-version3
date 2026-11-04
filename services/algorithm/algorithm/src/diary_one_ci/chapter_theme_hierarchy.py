@@ -47,6 +47,23 @@ CHAPTER_PROMPT = """你是全局生活日记主编。现在阅读全部有视觉
 园林植物、运动或其它有辨识度的经历不应被泛泛的城市漫步描述吞并。
 若连续同一骑行活动很久，允许只有一章；不是为了凑满五章而拆碎视频。
 
+最终Chapter数量由内容价值决定，不以chapter_limit凑数。每新增一章都必须有独立的
+可回忆主题/活动、不同的实际视觉主体及确切的源事实。若已有海港/建筑/购物/园林等
+主题可以自然容纳一段短暂支线，请优先合入作为Episode，而非把一个街角、渡轮、
+桥下通道、回访同一地标分别命名为新章。若确实有6–8种不同且有足够视觉事实
+支持的完整经历，可以超过5章。特别检查每章是否“单独成章比放入相关主题更好”：
+没有实质独立记忆的，宁可减少章数。不要机械合并真正独立的博物馆/公园/购物，
+也不能把标签或普通地名直接当成真实活动的证明。
+对章节数量进行内容价值权衡：
+- 每新增一章，须提供与已经存在的章节相比真正不同的活动/事件或足够独特、
+  可独立回忆的视觉主体。一个河港桥下步道与同一海港观光通常可以是一章内
+  不同Episode；两个零散街景、另一角度的同一建筑不构成增加一章的理由。
+- 即使输入中出现八个地名，也不意味着当天有八个独立Chapter；地点标签
+  不能取代真实视觉事实，更不能仅凭名称证明发生了独立记忆。
+- 如果多个不同体验都证据充分，六、七甚至八章完全允许，不能为了“最多五章”
+  丢掉实际内容；但七八章相比四五章需要更充分的非重复记忆价值。
+- 逐章自问：若把本章作为另一相关Chapter的Episode，会不会失去独立活动和
+  重要视觉记忆？若不会，优先合并。相邻时间和地名本身不是依据。
 每个Episode必须恰好分配到一章，不能遗漏、不能重复。
 每个Chapter选择1..4条高价值anchor_fact_ids，为后续图片候选保留有辨识度的
 真实建筑、作品、活动、事件或具体自然主体，优先于普通道路、墙面、背景人群。
@@ -64,9 +81,26 @@ CHAPTER_PROMPT = """你是全局生活日记主编。现在阅读全部有视觉
 ⑥最终章数是内容选择后的结果，不是先凑满5章。仅输出严格JSON，不报告未经证实的推理步骤。
 返回严格JSON。"""
 
-CHAPTER_REPAIR_PROMPT = """此前Chapter方案遗漏/重复分配了Episode，或者选了
-不属于本章Episode的视觉事实锚点。只修改错误项，每个Episode必须且只能有一个父章；
-允许同一地点非连续地融合到同一个Chapter。不得创造事实ID、地点或素材，返回合法JSON。"""
+CHAPTER_REPAIR_PROMPT = """你正在修复一个已有真实素材的Chapter生成方案，不是重新编故事。
+注意：**减少Chapter数量绝不等于删掉Episode！** 每一个输入Episode都必须恰好归属
+一个实际Chapter，既不多也不少；数量上限只是显示容量，不是要凑满的目标。
+若原方案超过chapter_limit，请通过将内容相近的Chapter合并来减少章数；
+将原有Episode ID完整搬进合并目标，不许为了满足容量直接删掉园林、博物馆、购物、
+人物活动或任何其他Episode。看输入的assignment_contract_diagnostics，其中
+missing_episode_ids必须全部补回、duplicate_episode_ids必须只保留一个父章、
+chapter_count_excess表示超出容量应合并而不能删除。
+同一景点远距离重现可与原来的相关Chapter融合；不凭时间开新章。
+若最初方案有过多片段，可让一段短而独特的内容成为相关主题Chapter下的Episode，
+并保留它的事实与来源。视觉锚点仅选该章Episode真实核验的F ID。
+不能编造新的Episode、来源图像、活动、路线或时间。返回完整合法JSON。"""
+
+CHAPTER_LAST_RESORT_OWNERSHIP_PROMPT = """此处仅是生成阶段的最后一次**Episode全覆盖合同修复**，
+并不是新增外部LLM-as-a-Judge。先核对输入actual_missing_episode_ids和duplicates，
+确保每个合法Episode恰好出现一次。减少章节时必须合并相关主题，并保留全部原Episode；
+不得像先前失败输出一样简单丢弃公园、园林或其它真实经历。
+若无法在显示上限内合理组织，只能返回合法JSON或由程序安全阻断，
+绝不输出缺Episode的结果伪装成成功。只选输入中已验证且属于本章的F锚点。
+不按时间均分、不凭普通地点标签猜测到访、不补写新的用户生活经历。"""
 
 CHAPTER_COHERENCE_REPAIR_PROMPT = """你正在对已提出的日记Chapter作一次有证据的全局编辑修改，
 不是第二个独立的LLM-as-a-Judge；你必须完成可以用于正式生成的合法Chapter结构。
@@ -126,7 +160,11 @@ def thematic_coherence_conflicts(grouping, episodes):
     return conflicts
 
 
-CHAPTER_COHERENCE_PROMPT = """请作为独立复核编辑审查上一版全局Chapter，而不是机械地保持其5章数量。
+CHAPTER_COHERENCE_PROMPT = """请作为现有Chapter生成流程的修订编辑复核上一版全局结构，
+不要机械地保持旧章数，也不要凑满chapter_limit。必须判断增加的每一章是否具有真正独立的
+活动/视觉记忆价值，而不是因为出现更多地点名称或来源视频片段较多。
+特别审核：同一活动中的不同建筑视角和相邻散步画面可能构成同一次体验；但有明确独立
+内容的海事博物馆参观、购物市集、自然园林不能为了减少数字而硬吞并。
 逐项对照所有Episode的主题与实际画面描述，判断每个Chapter是否有共同的内容主线。
 如果一章不自然地拼接了两个独立的活动/场景（例如一个展览场景与无关的商店活动），
 应把它们分别归入有主题关联的其它章，或在章数允许时分开。允许最终从5章降为4章。
@@ -270,6 +308,140 @@ def chapter_schema(episode_ids, fact_ids, chapter_limit):
     return {'type':'object','additionalProperties':False,'required':['chapters'],
       'properties':{'chapters':{'type':'array','minItems':1,
             'maxItems':min(chapter_limit,len(episode_ids)),'items':row}}}
+
+
+def assignment_contract_diagnostics(proposal, episodes, chapter_limit):
+    """Describe a model's explicit coverage error without losing F/E evidence."""
+    from collections import Counter
+    allowed={e['episode_id'] for e in episodes}
+    rows=proposal.get('chapters',[]) if isinstance(proposal,dict) else []
+    if not isinstance(rows,list): rows=[]
+    assigned=[eid for row in rows if isinstance(row,dict)
+              for eid in row.get('episode_ids',[]) if isinstance(eid,str)]
+    counts=Counter(assigned)
+    return {'chapter_count':len(rows),'chapter_limit':chapter_limit,
+      'chapter_count_excess':max(0,len(rows)-chapter_limit),
+      'expected_episode_ids':sorted(allowed),
+      'actual_episode_ids':assigned,
+      'missing_episode_ids':sorted(allowed-set(assigned)),
+      'duplicate_episode_ids':sorted(eid for eid,count in counts.items() if count>1),
+      'invented_episode_ids':sorted(set(assigned)-allowed),
+      'cannot_fix_by_deleting_episodes':True,
+      'required_unique_episode_count':len(allowed)}
+
+
+OVERFLOW_MERGE_PROMPT = """这不是让你重新生成或压缩整份Episode列表。
+输入original_complete_chapter_groups包含所有合法的已核验Episode，每个恰好出现一次，
+但是章数超过技术安全上限。请只回答**哪几组已有Chapter能自然合并**。
+例如同一港口观景、桥畔水岸、附近渡轮等可融合成一次海港体验；同一建筑再次
+出现时可以合并，而不是因为时间距离拆两章。但是不能仅凭CITYWALK、相邻视频或
+普通地点类别，把真实无关的购物活动、园林与展览硬拼。
+不要从输入中删除一个Episode！也不重新选择各个原Chapter原有事实范围。
+每个merge_group给出要合并的原始Chapter序号（从0起）、新主题title、
+真实experience_kind、支持合并的至少一个**来自每个合并组**的实际Episode ID，
+以及具体视觉事实理由。可以一次合并多个自然相关的Chapter；
+merge_groups必须刚好把原章数减少到chapter_limit以内，
+不能重复使用某个原章，不要列完全不需要合并的原章。
+若没有证据支持的自然合并，应返回can_safely_merge=false，触发安全阻断，
+而不是编造共同地点或牺牲重要经历。
+仅输出JSON；真实Episode原始所有权由程序原封不动迁移。"""
+
+
+def overflow_merge_schema(original, episodes, max_chapters):
+    rows=original['chapters']
+    if len(rows)<=max_chapters:
+        raise ValueError('NOT_AN_OVERFLOW_MERGE_PROBLEM')
+    ids=[e['episode_id'] for e in episodes]
+    n=len(rows)
+    row={'type':'object','additionalProperties':False,
+      'required':['chapter_indices','title','experience_kind',
+                  'reason','evidence_episode_ids'],
+      'properties':{
+        'chapter_indices':{'type':'array','minItems':2,'maxItems':min(n,9),
+                           'uniqueItems':True,
+                           'items':{'type':'integer','minimum':0,'maximum':n-1}},
+        'title':{'type':'string','minLength':3,'maxLength':90},
+        'experience_kind':{'enum':sorted(EXPERIENCE_KINDS)},
+        'reason':{'type':'string','minLength':12,'maxLength':650},
+        'evidence_episode_ids':{'type':'array','minItems':2,
+             'uniqueItems':True,'items':{'enum':ids}}}}
+    return {'type':'object','additionalProperties':False,
+       'required':['can_safely_merge','merge_groups'],
+       'properties':{'can_safely_merge':{'type':'boolean'},
+          'merge_groups':{'type':'array','minItems':0,
+             'maxItems':min(n-max_chapters,8),'items':row}}}
+
+
+def compact_overflow_with_source_safe_merge(initial, episodes, assets, facts,
+                                           chapter_limit, ask, global_context):
+    """Only existing complete ownership is merged, never recreated or truncated."""
+    if not isinstance(initial,dict) or 'chapters' not in initial:
+        raise ValueError('NO_COMPLETE_INITIAL_CHAPTER_PROPOSAL')
+    original=deepcopy(initial)
+    n=len(original['chapters'])
+    if not chapter_limit<n<=min(16,len(episodes)):
+        raise ValueError('INVALID_INITIAL_OVERFLOW_BOUNDS')
+    # The original may have overrun the *count*, but every row, F identity
+    # and Episode must otherwise be completely valid.
+    normalized=validate_chapters(original,episodes,assets,facts,n)
+    allowed={e['episode_id'] for e in episodes}
+    schema=overflow_merge_schema(original,episodes,chapter_limit)
+    response=ask('S07U_SAFE_OVERFLOW_MERGE_ONLY',OVERFLOW_MERGE_PROMPT,schema,
+      {**global_context,
+       'original_complete_chapter_groups':original['chapters'],
+       'source_chapter_count':n,'chapter_limit':chapter_limit,
+       'required_episode_ids':sorted(allowed),
+       'merge_rule':'PRESERVE_ALL_REAL_EPISODES_AND_ALL_ORIGINAL_FACT_MEMBERSHIP'})
+    if not _valid(schema,response) or not response['can_safely_merge']:
+        raise ValueError('NO_EVIDENCE_BACKED_OVERFLOW_MERGE')
+    groups=response['merge_groups']
+    touched=set()
+    merge_by_first={}
+    source_indices={aid:asset['sequence_index'] for aid,asset in assets.items()}
+    changed_count=0
+    for g in groups:
+        indices=sorted(g['chapter_indices'])
+        if len(indices)>4 or touched.intersection(indices):
+            raise ValueError('MERGE_REUSES_CHAPTER_OR_MORE_THAN_FOUR_GROUPS')
+        touched.update(indices)
+        changed_count+=len(indices)-1
+        original_groups=[original['chapters'][i] for i in indices]
+        selected=set().union(*(set(c['episode_ids']) for c in original_groups))
+        cited=set(g['evidence_episode_ids'])
+        if not cited<=selected:
+            raise ValueError('MERGE_CITED_FOREIGN_EPISODE')
+        if any(not (cited&set(row['episode_ids'])) for row in original_groups):
+            raise ValueError('MERGE_MISSING_SOURCE_EVIDENCE_FOR_ONE_PART')
+        anchors=list(dict.fromkeys(fid for c in original_groups
+                                   for fid in c['anchor_fact_ids']))
+        # Preserve at least one *directly verified* picture focus from each
+        # participating group before filling any remaining four slots.
+        focus=[row['anchor_fact_ids'][0] for row in original_groups]
+        for fid in anchors:
+            if len(focus)>=4:break
+            if fid not in focus:focus.append(fid)
+        merged={'title':g['title'],'experience_kind':g['experience_kind'],
+            'episode_ids':list(dict.fromkeys(eid for row in original_groups
+                                             for eid in row['episode_ids'])),
+            'anchor_fact_ids':focus,
+            'reason':g['reason']}
+        merge_by_first[indices[0]]=merged
+    if changed_count<n-chapter_limit:
+        raise ValueError('INSUFFICIENT_MERGES_TO_PRESERVE_ALL_EPISODES')
+    out=[]
+    for i,row in enumerate(original['chapters']):
+        if i in merge_by_first:out.append(merge_by_first[i])
+        elif i not in touched:out.append(row)
+    candidate={'chapters':out}
+    validated=validate_chapters(candidate,episodes,assets,facts,chapter_limit)
+    audit={'source_chapter_count':n,'result_chapter_count':len(out),
+        'all_original_episode_ids_preserved':True,
+        'merged_existing_chapter_groups':[{'source_indices':sorted(g['chapter_indices']),
+            'title':g['title'],'cited_episode_ids':g['evidence_episode_ids']}
+            for g in groups],
+        'model_did_not_rewrite_episode_memberships':True,
+        'no_new_fact_ids':True}
+    return candidate,audit
 
 
 def normalize_only_excess_visual_anchors(proposal, episodes, assets, facts,
@@ -471,6 +643,7 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
                               'PRESERVE_IMPORTANT_EXPERIENCES_WITHIN_CHAPTER_BUDGET'],
          'time_basis':'IMPORT_SEQUENCE_ONLY'}
     raw_chapters=ask('S07U_THEMATIC_CHAPTER_FUSION',CHAPTER_PROMPT,schema,subcontext)
+    original_raw_chapters=deepcopy(raw_chapters)
     try:
         if not _valid(schema,raw_chapters):
             amended,fixes=normalize_only_excess_visual_anchors(
@@ -484,7 +657,9 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
         repairs.append({'stage':'S07U','reason':str(e)})
         raw_chapters=ask('S07U_THEMATIC_CHAPTER_REPAIR',CHAPTER_REPAIR_PROMPT,
              schema,{**subcontext,'invalid_proposal':raw_chapters,
-                     'validation_error':str(e)})
+                     'validation_error':str(e),
+                     'assignment_contract_diagnostics':
+                         assignment_contract_diagnostics(raw_chapters,episodes,chapter_limit)})
         try:
             if not _valid(schema,raw_chapters):
                 amended,fixes=normalize_only_excess_visual_anchors(
@@ -494,17 +669,46 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
                     'items':fixes})
             normalized=validate_chapters(raw_chapters,episodes,assets,facts,chapter_limit)
         except ValueError as second_error:
-            if str(second_error)!='CHAPTER_ANCHOR_OUTSIDE_EPISODE':
+            if str(second_error)=='CHAPTER_ANCHOR_OUTSIDE_EPISODE':
+                amended,anchor_corrections=normalize_invalid_visual_anchors(
+                    raw_chapters,episodes,assets,facts,chapter_limit)
+                normalized=validate_chapters(amended,episodes,assets,facts,chapter_limit)
+                repairs.append({'stage':'S07U_ANCHOR_SCOPE_ONLY',
+                    'reason':'MODEL_REPAIR_STILL_REFERENCED_FOREIGN_FACT',
+                    'items':anchor_corrections})
+            elif str(second_error) in ('EPISODE_ASSIGNMENT_NOT_EXACTLY_ONCE',
+                                        'THEMATIC_CHAPTER_SCHEMA_INVALID'):
+                diagnostics=assignment_contract_diagnostics(
+                    raw_chapters,episodes,chapter_limit)
+                repaired=ask('S07U_COMPLETE_EPISODE_OWNERSHIP_REPAIR',
+                    CHAPTER_LAST_RESORT_OWNERSHIP_PROMPT,schema,
+                    {**subcontext,'invalid_proposal':raw_chapters,
+                     'assignment_contract_diagnostics':diagnostics,
+                     'repair_mode':'RETAIN_ALL_REAL_EPISODES_WHILE_MERGING_RELATED_CHAPTERS'})
+                try:
+                    normalized=validate_chapters(repaired,episodes,assets,facts,chapter_limit)
+                    repairs.append({'stage':'S07U_COMPLETE_EPISODE_OWNERSHIP_REPAIR',
+                        'reason':'MODEL_REPAIR_WOULD_HAVE_DROPPED_OR_DUPLICATED_EPISODES',
+                        'prior_assignment_diagnostics':diagnostics,
+                        'result':'FULL_EPISODE_COVERAGE_VALIDATED'})
+                    raw_chapters=repaired
+                except ValueError as further_error:
+                    if str(further_error) not in (
+                        'EPISODE_ASSIGNMENT_NOT_EXACTLY_ONCE',
+                        'THEMATIC_CHAPTER_SCHEMA_INVALID'):
+                        raise
+                    merged,overflow_audit=compact_overflow_with_source_safe_merge(
+                        original_raw_chapters,episodes,assets,facts,chapter_limit,
+                        ask,subcontext)
+                    normalized=validate_chapters(
+                        merged,episodes,assets,facts,chapter_limit)
+                    raw_chapters=merged
+                    repairs.append({'stage':'S07U_SAFE_OVERFLOW_MERGE_ONLY',
+                        'reason':'KEEP_INITIAL_SOURCE_COMPLETE_EPISODES_NOT_BAD_REPAIR',
+                        'prior_assignment_diagnostics':diagnostics,
+                        'merge_audit':overflow_audit})
+            else:
                 raise
-            amended,anchor_corrections=normalize_invalid_visual_anchors(
-                raw_chapters,episodes,assets,facts,chapter_limit)
-            # The Episode membership and original provider rationale are
-            # unchanged. Only image fact anchors are replaced with real
-            # verified F IDs from those already assigned source indices.
-            normalized=validate_chapters(amended,episodes,assets,facts,chapter_limit)
-            repairs.append({'stage':'S07U_ANCHOR_SCOPE_ONLY',
-                'reason':'MODEL_REPAIR_STILL_REFERENCED_FOREIGN_FACT',
-                'items':anchor_corrections})
     # The proposal compiler only guarantees ownership. A separate semantic
     # critique improves editorial coherence; invalid revisions are rejected
     # and the already-valid plan stays intact, never deleting evidence.
@@ -541,7 +745,12 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
     edit_plan=chapter_editorial_decision_flow.action_hints(normalized,grounded,max_actions=8)
     reviewer['mixed_theme_conflicts_before_correction']=original_conflicts
     reviewer['evidence_grounded_editorial_actions_before']=edit_plan
-    if original_conflicts or edit_plan['actions']:
+    # A model tends to fill a technical 8-slot cap even with overlapping
+    # waterfront/pedestrian themes. A generation-stage compactness revision
+    # must compare the actual experiences, never merely enforce five.
+    cap_filling_compactness_review=(len(normalized)>=7 and chapter_limit>=7)
+    reviewer['independent_chapter_count_review_requested']=cap_filling_compactness_review
+    if original_conflicts or edit_plan['actions'] or cap_filling_compactness_review:
         alternate=ask('S07W_THEMATIC_COHERENCE_CORRECTION',
             CHAPTER_COHERENCE_REPAIR_PROMPT,schema,
             {**subcontext,
@@ -550,6 +759,12 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
                   for row in normalized]},
              'mixed_theme_chapters':original_conflicts,
              'editorial_edit_actions':edit_plan['actions'],
+             'chapter_count_review':{
+                'technical_maximum_not_target':chapter_limit,
+                'current_chapter_count':len(normalized),
+                'require_specific_distinct_visual_experience_to_add_one_chapter':True,
+                'do_not_force_five':True,
+                'do_not_merge_unrelated_nature_market_or_museum_just_to_reduce_count':True},
              'budgeted_content_first_layout_candidate':
                 chapter_editorial_decision_flow.budgeted_edit_recipe(
                     normalized,grounded,chapter_limit=chapter_limit),
@@ -569,9 +784,13 @@ def plan(assets, observations, facts, ask, *, chapter_limit=legacy.MAX_CHAPTERS,
             reviewer['coherence_penalty_after']=after_penalty
             reviewer['candidate_edit_actions_before']=before_action_count
             reviewer['candidate_edit_actions_after']=after_action_count
+            compactness_gain=(cap_filling_compactness_review and
+                             len(revised)<len(normalized) and
+                             len(revised)>=1)
             improved=(after_penalty < before_penalty or
                       (after_penalty <= before_penalty and
-                       after_action_count < before_action_count))
+                       (after_action_count < before_action_count or
+                        compactness_gain)))
             if (improved and
                     (before_memberships!=after_memberships
                      or any(c['incompatible_activity_groups'] for c in original_conflicts))):

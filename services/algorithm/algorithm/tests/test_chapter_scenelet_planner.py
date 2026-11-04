@@ -151,8 +151,12 @@ def test_tied_novelty_boundaries_are_spread_over_global_timeline():
                'time_basis':'IMPORT_SEQUENCE_ONLY'}
     recommendation=p.propose_chapters(scene_map)
     sizes=[len(x['asset_ids']) for x in recommendation['chapter_candidates']]
-    assert recommendation['recommended_count']==5
-    assert min(sizes)>=15 and max(sizes)<=40
+    # 99 genuine activity-and-visual-novelty boundaries in this synthetic
+    # adversarial fixture exceed the technical limit: all 8 coarse advisory
+    # slots can be proposed. S07 thematic content, not these placeholders,
+    # still decides the final published Chapter count.
+    assert recommendation['recommended_count']==p.MAX_CHAPTERS
+    assert min(sizes)>=100//p.MAX_CHAPTERS-1 and max(sizes)<=100//p.MAX_CHAPTERS+2
     assert sum(sizes)==100
     for proposal in recommendation['chapter_candidates']:
         # The whole region is represented in advisory evidence; a long

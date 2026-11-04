@@ -9,7 +9,7 @@ from copy import deepcopy
 from hashlib import sha256
 
 VERSION='CHAPTER_GLOBAL_PLAN_V01'
-MAX_CHAPTERS=5
+MAX_CHAPTERS=8
 REPLAN_SCHEMA_VERSION='DRAFT_MERGE_DISPOSITION_V01'
 DISPOSITION_PROMPT = '''S07只是候选，不是最终真值。请检查S08后丢失的章节焦点事实，并基于本轮真实图片核验后仍成立的内容，为每个候选返回唯一去向。KEEP_MERGED必须指向已有章节且其事实确实属于同一经历；KEEP_AS_MOMENT表示独立细节不足以单独成章但值得保留；RESTORE_CHAPTER需有足够事实支持完整独立经历；DROP_UNSUPPORTED需明确说明视觉事实虽成立但没有独立记忆价值；REVIEW_REQUIRED表示证据不足或编辑冲突。只使用提供的已核验fact_ids，不要把同类活动自动合并，也不要把每处景物变化拆成新章。你是在提供待核验的编辑决定，而非真值。'''
 ACTIONS=('KEEP_MERGED','KEEP_AS_MOMENT','RESTORE_CHAPTER','DROP_UNSUPPORTED','REVIEW_REQUIRED')

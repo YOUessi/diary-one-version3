@@ -19,7 +19,7 @@ from . import narrative_focus, frame_selection, frame_observation, final_moment_
 SCHEMA_VERSION = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 POLICY_VERSION = 'EXPERIENCE_HIGHLIGHTS_NATURAL_COPY_V07'
 PIPELINE_VERSION = 'X02_PRODUCT_EDITOR_V07'
-EDITOR_REVISION = 'CHAPTER_V2_CONTENT_FIRST_EDITORIAL_ACTIONS_R5_28'
+EDITOR_REVISION = 'CHAPTER_V2_CONTENT_ONLY_DYNAMIC_COUNT_R5_29'
 
 
 def obj(properties, required=None):
@@ -44,8 +44,8 @@ MOMENT = obj({'id': STRING, 'parent_chapter_id': {'type': ['string', 'null']}, '
 CHAPTER_BOUNDARY = obj({'chapter_ids': {**IDS, 'minItems': 2, 'maxItems': 2},
     'basis': {'enum': ['DIFFERENT_ACTIVITY', 'SEPARATE_EXPERIENCE']},
     'evidence_fact_ids': {**IDS, 'minItems': 2}, 'reason': STRING})
-EDITOR_SCHEMA = obj({'chapter_boundaries': {'type': 'array', 'maxItems': 10, 'items': CHAPTER_BOUNDARY},
-                     'chapters': {'type': 'array', 'maxItems': 5, 'items': CHAPTER},
+EDITOR_SCHEMA = obj({'chapter_boundaries': {'type': 'array', 'maxItems': 28, 'items': CHAPTER_BOUNDARY},
+                     'chapters': {'type': 'array', 'maxItems': 8, 'items': CHAPTER},
                      'moments': {'type': 'array', 'maxItems': 8, 'items': MOMENT},
                      'unselected_facts': {'type': 'array', 'items': obj({'fact_id': STRING, 'reason': STRING})}})
 SENTENCE = obj({'text': STRING, 'fact_ids': IDS})
@@ -3152,8 +3152,18 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
     draft_media_reservations = {}
     raw_drafts, raw_review, raw_copy_repair = {}, {}, {}
     writer_ledger, review_ledger = [], []
-    chapter_limit = min(chapter_boundary_planner.MAX_CHAPTERS, len(asset_map))
+    # This is a technical safety maximum, not a target or a request to fill
+    # all eight slots. A day with one continuous activity may deserve one
+    # Chapter; a scene-rich day can preserve six or seven real experiences.
+    # Small legacy V01–V04 paths keep their historical 4-Chapter envelope.
+    chapter_limit = min(
+        chapter_boundary_planner.MAX_CHAPTERS if use_episode_router else 5,
+        len(route_assets))
     editor_input['chapter_limit'] = chapter_limit
+    editor_input['chapter_count_policy'] = (
+        'CONTENT_DEFINED_1_TO_8_NO_FORCED_FIVE;'
+        'ALLOW_MORE_THAN_FIVE_ONLY_FOR_EVIDENCE_BACKED_DISTINCT_EXPERIENCES'
+        if use_episode_router else 'LEGACY_PREVIOUS_PRODUCT_CAPACITY_5')
     editor_input['selection_budget_rule'] = '先按证据确定经历边界，不按素材数量定章数。每章最多5段展示素材，无最低数量；chapter_limit只控制总容量。'
     editor_input['chapter_boundary_policy'] = 'PAIRWISE_FACT_REFERENCED_EXPERIENCE_DIFFERENCE_NOT_SCENERY_OR_CAPACITY'
     editor_schema = structure_wire_schema(facts, chapter_limit)
@@ -3453,7 +3463,8 @@ def run(*, bundle, observations, observation_ledger, evidence_ledger, unresolved
             shown_media_frames, media_evidence, media_selection_audit = (
                 chapter_media_pool.select_balanced_candidates(
                     facts,asset_map,bundle,chapter_media_groups,
-                    max_per_chapter=8,max_total=40,
+                    max_per_chapter=8,
+                    max_total=min(64,max(40,8*len(chapter_media_groups))),
                     priority_fact_ids_by_chapter=protected_facts,
                     episode_source_ranges_by_chapter=ranges,
                     observations=editorial_observations))

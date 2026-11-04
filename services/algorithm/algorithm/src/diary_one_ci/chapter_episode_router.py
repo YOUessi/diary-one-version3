@@ -14,7 +14,7 @@ from .scenelet_builder import tokens
 from .scene_selection import EXPERIENCE_KINDS
 
 VERSION = 'GLOBAL_EVIDENCE_BOUND_EPISODES_V01'
-MAX_CHAPTERS = 5
+MAX_CHAPTERS = 8
 
 ROUTE_PROMPT = '''你是第一人称生活视频的章节编辑，只规划经历区间，不选择图片，也不写最终故事。
 输入是多段视频的逐项视觉观察，每项有source_index，不是拍摄时间。
@@ -99,8 +99,10 @@ def needs_review(chapters, count):
     if count < 24 or len(chapters) < 2:
         return False
     sizes=[c['end_index']-c['start_index']+1 for c in chapters]
-    return (max(sizes)/count>0.45 or
-            (len(chapters)==MAX_CHAPTERS and min(sizes)/count<0.08))
+    # A short, possibly over-fragmented chapter deserves semantic review
+    # whether the adjustable technical ceiling is five or eight. No forced
+    # split/merge follows merely from its relative duration.
+    return max(sizes)/count>0.45 or min(sizes)/count<0.08
 
 def route(assets, observations, ask, *, chapter_limit=MAX_CHAPTERS):
     ctx=context(assets,observations,chapter_limit=chapter_limit)

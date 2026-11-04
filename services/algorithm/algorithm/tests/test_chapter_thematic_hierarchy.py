@@ -235,3 +235,75 @@ def test_nonverified_and_foreign_fact_cannot_be_recovered_by_trim():
         'F001','F002','F003','F017','F006']
     with pytest.raises(ValueError,match='INVALID_EXCESS_ANCHOR_OWNERSHIP'):
         p.normalize_only_excess_visual_anchors(proposal,eps,a,f,5)
+
+
+def test_complete_overflow_can_merge_source_groups_without_losing_any_experience():
+    a,f,o=day()
+    episodes=p.validate_episodes({'episodes':spans()},20)
+    # A structured but over-cap original with all five Episodes preserved.
+    draft={'chapters':[]}
+    for k in range(5):
+        draft['chapters'].append({'title':f'完整可见体验组{k+1}',
+             'experience_kind':'CITYWALK',
+             'episode_ids':[f'E{k+1:02d}'],
+             'anchor_fact_ids':[f'F{k*4+1:03d}'],
+             'reason':'真实视觉事实支持原来单独分开的观察阶段'})
+    seen=[]
+    def ask(stage,prompt,schema,context):
+        seen.append(stage)
+        assert context['source_chapter_count']==5
+        assert len(context['required_episode_ids'])==5
+        return {'can_safely_merge':True,
+            'merge_groups':[{'chapter_indices':[0,4],
+                'title':'两端属于同一海港城市漫步体验',
+                'experience_kind':'CITYWALK',
+                'reason':'两组实际看到的海港地标相同且均有视觉证据可以合理合并',
+                'evidence_episode_ids':['E01','E05']}]}
+    compact,audit=p.compact_overflow_with_source_safe_merge(
+        draft,episodes,a,f,4,ask,{'chapter_limit':4})
+    assert len(compact['chapters'])==4
+    assert set(e for c in compact['chapters'] for e in c['episode_ids'])=={
+        'E01','E02','E03','E04','E05'}
+    assert compact['chapters'][0]['episode_ids']==['E01','E05']
+    assert audit['all_original_episode_ids_preserved']
+    assert audit['merged_existing_chapter_groups'][0]['source_indices']==[0,4]
+    assert p.validate_chapters(compact,episodes,a,f,4)
+    assert draft['chapters'][0]['episode_ids']==['E01']
+    assert seen==['S07U_SAFE_OVERFLOW_MERGE_ONLY']
+
+
+def test_overflow_merge_fails_closed_when_model_has_no_supported_merge():
+    a,f,o=day()
+    episodes=p.validate_episodes({'episodes':spans()},20)
+    draft={'chapters':[{'title':f'独立场景和人物体验{k}',
+        'experience_kind':'CITYWALK','episode_ids':[f'E{k+1:02d}'],
+        'anchor_fact_ids':[f'F{k*4+1:03d}'],
+        'reason':'不同的真实活动具有独立视觉图像事实'}
+        for k in range(5)]}
+    def refuse(stage,prompt,schema,ctx):
+        return {'can_safely_merge':False,'merge_groups':[]}
+    with pytest.raises(ValueError,match='NO_EVIDENCE_BACKED_OVERFLOW_MERGE'):
+        p.compact_overflow_with_source_safe_merge(
+            draft,episodes,a,f,4,refuse,{'chapter_limit':4})
+    def foreign(stage,prompt,schema,ctx):
+        return {'can_safely_merge':True,'merge_groups':[{
+            'chapter_indices':[0,4],'title':'街头漫步统一体验',
+            'experience_kind':'CITYWALK',
+            'reason':'虽然有各自视觉描述但没有证明它们相关',
+            'evidence_episode_ids':['E01','E02']}]}
+    with pytest.raises(ValueError,match='MERGE_CITED_FOREIGN_EPISODE'):
+        p.compact_overflow_with_source_safe_merge(
+            draft,episodes,a,f,4,foreign,{'chapter_limit':4})
+
+
+def test_complete_source_episodes_must_exist_before_overflow_compaction():
+    a,f,o=day()
+    episodes=p.validate_episodes({'episodes':spans()},20)
+    draft={'chapters':[{'title':f'体验{k}',
+        'experience_kind':'CITYWALK','episode_ids':[f'E{k+1:02d}'],
+        'anchor_fact_ids':[f'F{k*4+1:03d}'],
+        'reason':'图像包含具体活动的真实来源证据'}
+        for k in range(4)]}
+    with pytest.raises(ValueError,match='INVALID_INITIAL_OVERFLOW_BOUNDS'):
+        p.compact_overflow_with_source_safe_merge(
+            draft,episodes,a,f,4,lambda *x: None,{'chapter_limit':4})
