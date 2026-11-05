@@ -1,5 +1,6 @@
 import { ALGORITHM_LOCK } from '../config/algorithmLock';
 import type { AppLibraryBundle } from '../pipeline/bundleTypes';
+import { validateDirectVlmResult } from './validateDirectVlmResult';
 
 type Row = Record<string, unknown>;
 export type ResultInput = { manifest: AppLibraryBundle; manifestSha256: string; frameSha256?: Record<string, string>; productIdentities?: Record<string, string> };
@@ -51,6 +52,10 @@ export function validateResultBinding(value: unknown, input: ResultInput, requir
       || envelope.session_id !== result.session_id || envelope.bundle_version !== input.manifest.bundle_version) {
       throw new Error('Cloud server has not verified this input contract. Update the service, then retry the saved job.');
     }
+  }
+  if (schema === ALGORITHM_LOCK.directPreviewSchema) {
+    validateDirectVlmResult(result, input.manifest, input.frameSha256);
+    return;
   }
   const product = schema === ALGORITHM_LOCK.productPreviewSchema;
   const trace = row(result.trace);

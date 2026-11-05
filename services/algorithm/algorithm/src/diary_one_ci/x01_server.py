@@ -75,6 +75,16 @@ from .x02 import (
 )
 from .codex_chapter_media import POLICY_VERSION as CHAPTER_MEDIA_POLICY_VERSION
 from . import product_editor
+from .direct_vlm import (
+    run_direct_vlm, SCHEMA_VERSION as DIRECT_VLM_SCHEMA_VERSION,
+    PIPELINE_VERSION as DIRECT_VLM_PIPELINE_VERSION,
+    EDITOR_POLICY as DIRECT_VLM_EDITOR_POLICY,
+)
+
+def _direct_vlm_enabled():
+    # New X02 default. Set DIARY_ONE_X02_EDITOR=product_v1 to roll back.
+    return os.environ.get('DIARY_ONE_X02_EDITOR', 'direct_vlm') == 'direct_vlm'
+
 
 
 def _product_editor_enabled():
@@ -244,7 +254,9 @@ def _write_x02_run_audit(
     run_id = _normalized_session_id(trace.get("run_id") or str(uuid.uuid4()))
     trace["run_id"] = run_id
     result_schema_version = result.get("schema_version")
-    if result_schema_version == product_editor.SCHEMA_VERSION:
+    if result_schema_version == DIRECT_VLM_SCHEMA_VERSION:
+        audit_schema_version = 'DIARY_ONE_X02_DIRECT_VLM_RUN_AUDIT_V01'
+    elif result_schema_version == product_editor.SCHEMA_VERSION:
         audit_schema_version = 'DIARY_ONE_X02_PRODUCT_RUN_AUDIT_V01'
     elif result_schema_version == X02_SCHEMA_VERSION:
         audit_schema_version = X02_RUN_AUDIT_SCHEMA_VERSION
@@ -799,14 +811,14 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             return
         self._json(200, {
             "status": "ok",
-            "schemaVersion": product_editor.SCHEMA_VERSION if _product_editor_enabled() else X02_SCHEMA_VERSION,
-            "editorPolicy": product_editor.POLICY_VERSION if _product_editor_enabled() else 'LEGACY_V04_1',
-            "editorRevision": product_editor.EDITOR_REVISION if _product_editor_enabled() else None,
-            "experiment": X02_EXPERIMENT,
+            "schemaVersion": DIRECT_VLM_SCHEMA_VERSION if _direct_vlm_enabled() else product_editor.SCHEMA_VERSION if _product_editor_enabled() else X02_SCHEMA_VERSION,
+            "editorPolicy": DIRECT_VLM_EDITOR_POLICY if _direct_vlm_enabled() else product_editor.POLICY_VERSION if _product_editor_enabled() else 'LEGACY_V04_1',
+            "editorRevision": 'DIRECT_VLM_V01' if _direct_vlm_enabled() else product_editor.EDITOR_REVISION if _product_editor_enabled() else None,
+            "experiment": "DIRECT_FULL_DAY_JPEG_VLM" if _direct_vlm_enabled() else X02_EXPERIMENT,
             "experimental": True,
             "leaderboardEligible": False,
             "productionReady": bool(
-                not _product_editor_enabled() and self.stage_gateway.ready
+                not _direct_vlm_enabled() and not _product_editor_enabled() and self.stage_gateway.ready
                 and (
                     "alibaba" in str(self.stage_gateway.provider or "").lower()
                     or "qwen" in str(self.stage_gateway.model or "").lower()
@@ -827,7 +839,7 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             "fieldDegradationContractSHA256": X02_FIELD_DEGRADATION_SHA256,
             "writerSurfacePolicyVersion": product_editor.POLICY_VERSION if _product_editor_enabled() else X02_WRITER_SURFACE_POLICY_VERSION,
             "chapterMediaPolicyVersion": product_editor.POLICY_VERSION if _product_editor_enabled() else CHAPTER_MEDIA_POLICY_VERSION,
-            "runtimePolicies": ({"product_editor": product_editor.POLICY_VERSION} if _product_editor_enabled() else x02_runtime_policies()),
+            "runtimePolicies": ({"direct_vlm": DIRECT_VLM_PIPELINE_VERSION, "max_images_per_call": 250, "max_model_calls": 2} if _direct_vlm_enabled() else {"product_editor": product_editor.POLICY_VERSION} if _product_editor_enabled() else x02_runtime_policies()),
             "perceptionBatchMaxAssets": PERCEPTION_BATCH_MAX_ASSETS,
             "perceptionBatchMaxFrames": PERCEPTION_BATCH_MAX_FRAMES,
             "perceptionBatchMaxEvidenceBytes": PERCEPTION_BATCH_MAX_EVIDENCE_BYTES,
@@ -893,7 +905,7 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             X02_V03_RUN_SIDECAR_PATH,
         ):
             if request_path == X02_RUN_SIDECAR_PATH:
-                expected_pipeline_version = product_editor.PIPELINE_VERSION if _product_editor_enabled() else X02_PIPELINE_VERSION
+                expected_pipeline_version = DIRECT_VLM_PIPELINE_VERSION if _direct_vlm_enabled() else product_editor.PIPELINE_VERSION if _product_editor_enabled() else X02_PIPELINE_VERSION
             elif request_path == X02_V03_RUN_SIDECAR_PATH:
                 expected_pipeline_version = X02_V03_PIPELINE_VERSION
             else:
@@ -939,7 +951,9 @@ class X01RequestHandler(BaseHTTPRequestHandler):
                 manifest = loaded_manifest
                 pipeline_started = time.monotonic()
                 if request_path == X02_PREVIEW_PATH:
-                    if _product_editor_enabled():
+                    if _direct_vlm_enabled():
+                        result = run_direct_vlm(manifest_path, self.stage_gateway)
+                    elif _product_editor_enabled():
                         result = run_x02_product(manifest_path, self.stage_gateway,
                             checkpoint_dir=self.x02_run_audit_dir / 'perception_checkpoints')
                     else:
@@ -1223,7 +1237,12 @@ def make_server(
     if adapter_name == "fixture":
         adapter = FixtureEditorialAdapter()
     elif adapter_name == "qwen":
-        adapter = QwenChatCompletionsAdapter(api_key=qwen_api_key)
+        direct_model = (os.environ.get("DIARY_ONE_DIRECT_VLM_MODEL")
+                        or os.environ.get("DIARY_ONE_X01_QWEN_MODEL")
+                        or "qwen3.8-flash") if _direct_vlm_enabled() else None
+        adapter = QwenChatCompletionsAdapter(
+            api_key=qwen_api_key, model=direct_model,
+            timeout_seconds=900.0 if _direct_vlm_enabled() else 180.0)
     elif adapter_name == "openai":
         adapter = OpenAIResponsesAdapter()
     else:

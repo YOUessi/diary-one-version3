@@ -15,13 +15,16 @@ from jsonschema import Draft202012Validator
 from shared.evidence_input import validate_evidence_bytes
 
 from shared.job_contract import validate_real_result
+from shared.direct_result_contract import validate_direct_result
 
 CONTRACT_VERSION = 'DIARY_ONE_INPUT_BOUND_RESULT_V01'
 STAGED = 'DIARY_ONE_X02_STAGED_PREVIEW_V04_1'
 PRODUCT = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
+DIRECT = 'DIARY_ONE_DIRECT_VLM_CHAPTER_V01'
 SCHEMA_PATHS = {
     STAGED: Path(__file__).parent / 'contracts/x02_staged_preview_v04_1.schema.json',
     PRODUCT: Path(__file__).parent / 'contracts/x02_product_preview_v01.schema.json',
+    DIRECT: Path(__file__).parent / 'contracts/direct_vlm_chapter_v01.schema.json',
 }
 SCHEMA_SHA256 = {key: hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
                  for key, path in SCHEMA_PATHS.items()}
@@ -114,6 +117,9 @@ def validate_result_contract(result, manifest_bytes, bundle_dir=None):
     if error:
         raise ValueError('result_schema_invalid:' + '/'.join(map(str, error.absolute_path)))
     validate_real_result(payload)
+    if schema == DIRECT:
+        validate_direct_result(payload, manifest_bytes, bundle_dir)
+        return SCHEMA_SHA256[DIRECT]
     incomplete = incomplete_input_reason(payload)
     _require(incomplete is None, incomplete)
     _require(isinstance(manifest_bytes, bytes) and bool(manifest_bytes), 'missing_input_manifest')

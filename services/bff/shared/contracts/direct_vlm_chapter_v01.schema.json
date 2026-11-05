@@ -1,0 +1,412 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Diary One Direct VLM input-bound Chapter V01",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "editor_policy",
+    "experimental",
+    "production_ready",
+    "session_id",
+    "bundle_manifest_sha256",
+    "delivery_state",
+    "coverage_status",
+    "unresolved_asset_ids",
+    "chapters",
+    "ahas",
+    "selected_memory_outcomes",
+    "trace",
+    "decision_trace",
+    "day_summary",
+    "chapter_count_rationale",
+    "excluded_non_lived_frame_ids",
+    "observations",
+    "moments"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "DIARY_ONE_DIRECT_VLM_CHAPTER_V01"
+    },
+    "editor_policy": {
+      "const": "DIRECT_VLM_GLOBAL_EDITOR_V01"
+    },
+    "experimental": {
+      "const": true
+    },
+    "production_ready": {
+      "const": false
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bundle_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "delivery_state": {
+      "const": "READY_PRIMARY_COPY"
+    },
+    "coverage_status": {
+      "const": "INPUT_ALL_FRAMES_SUBMITTED"
+    },
+    "unresolved_asset_ids": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "day_summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "chapter_count_rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "excluded_non_lived_frame_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "observations": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "moments": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "chapters": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 14,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "story",
+          "preview_story",
+          "hero_asset_id",
+          "hero_frame_id",
+          "selected_media",
+          "experience_frame_ids",
+          "key_moments",
+          "tags",
+          "highlights",
+          "claims",
+          "moment_ids",
+          "publication_status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "story": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1800
+          },
+          "preview_story": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hero_asset_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hero_frame_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "selected_media": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "required": [
+                "asset_id",
+                "source_asset_id",
+                "media_kind",
+                "role",
+                "representative_frame_id",
+                "evidence_frame_ids",
+                "start_ms",
+                "end_ms",
+                "focus_pts_ms",
+                "range_basis"
+              ],
+              "properties": {
+                "asset_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "source_asset_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "media_kind": {
+                  "enum": [
+                    "PHOTO",
+                    "VIDEO"
+                  ]
+                },
+                "role": {
+                  "enum": [
+                    "HERO",
+                    "SUPPORT"
+                  ]
+                },
+                "representative_frame_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidence_frame_ids": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1,
+                  "maxItems": 2
+                },
+                "start_ms": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "end_ms": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "focus_pts_ms": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "range_basis": {
+                  "enum": [
+                    "STILL_IMAGE",
+                    "WHOLE_SOURCE_CLIP",
+                    "EVIDENCE_ONLY_NO_VIDEO_RANGE"
+                  ]
+                }
+              }
+            }
+          },
+          "experience_frame_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "maxItems": 250
+          },
+          "key_moments": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 12,
+            "items": {
+              "type": "object",
+              "required": [
+                "description",
+                "frame_ids"
+              ],
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "frame_ids": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1,
+                  "maxItems": 12
+                }
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "highlights": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "claims": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "moment_ids": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "publication_status": {
+            "const": "STAGED_PREVIEW_VALIDATED"
+          }
+        }
+      }
+    },
+    "ahas": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "selected_memory_outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 14,
+      "items": {
+        "type": "object",
+        "required": [
+          "memory_id",
+          "memory_type",
+          "visibility_state"
+        ],
+        "properties": {
+          "memory_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "memory_type": {
+            "const": "CHAPTER"
+          },
+          "visibility_state": {
+            "const": "VISIBLE_PREVIEW"
+          }
+        }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "required": [
+        "pipeline_version",
+        "model",
+        "provider",
+        "request_ids",
+        "model_calls",
+        "input_tokens",
+        "output_tokens",
+        "estimated_cost_usd",
+        "stage_metrics"
+      ],
+      "properties": {
+        "pipeline_version": {
+          "const": "X02_DIRECT_VLM_CHAPTER_V01"
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "request_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 2
+        },
+        "model_calls": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "estimated_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stage_metrics": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2
+        }
+      }
+    },
+    "decision_trace": {
+      "type": "object",
+      "required": [
+        "no_staged_pipeline",
+        "visual_fact_reviewed",
+        "semantic_copy_verified",
+        "input_coverage",
+        "prompt_sha256"
+      ],
+      "properties": {
+        "no_staged_pipeline": {
+          "const": true
+        },
+        "visual_fact_reviewed": {
+          "const": false
+        },
+        "semantic_copy_verified": {
+          "const": false
+        },
+        "prompt_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "input_coverage": {
+          "type": "object",
+          "required": [
+            "frames_submitted",
+            "clips_received",
+            "image_bytes"
+          ],
+          "properties": {
+            "frames_submitted": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250
+            },
+            "clips_received": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "image_bytes": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}
