@@ -443,6 +443,7 @@ class StageRun:
     call_status: str = "COMPLETED"
     transport_diagnostics: Dict[str, object] = field(default_factory=dict)
     checkpoint_provenance: Dict[str, object] = field(default_factory=dict)
+    finish_reason: Optional[str] = None
 
     @property
     def estimated_cost_native(self) -> float:
@@ -637,9 +638,14 @@ class QwenStageGateway(StageModelGateway):
                     raise X02ContractError("Direct VLM per-frame chronology labels missing")
                 frame_id = str(frame["frame_id"])
                 time_label = chronology.get(frame_id)
-                if not isinstance(time_label, str) or not time_label.startswith("CLIP_SEQUENCE_1_BASED="):
+                compact_label = context.get("_direct_vlm_compact") is True
+                expected_prefix = "IMAGE_INDEX_1_BASED=" if compact_label else "CLIP_SEQUENCE_1_BASED="
+                if not isinstance(time_label, str) or not time_label.startswith(expected_prefix):
                     raise X02ContractError("Direct VLM chronology label missing for " + frame_id)
-                label += " " + time_label
+                # Compact editor uses only short numeric indices; opaque UUID and
+                # frame IDs remain in the private provider receipt, not the
+                # model's text input (avoids long identifier transcription).
+                label = time_label if context.get("_direct_vlm_compact") is True else label + " " + time_label
             content.append({"type": "text", "text": label})
             encoded = base64.b64encode(path.read_bytes()).decode("ascii")
             content.append({
@@ -773,12 +779,15 @@ class QwenStageGateway(StageModelGateway):
                 stage_run=failure_run,
                 code="MODEL_STRUCTURED_OUTPUT_INVALID",
             ) from exc
+        choices = payload_object.get("choices") or []
+        choice = choices[0] if isinstance(choices, list) and choices and isinstance(choices[0], dict) else {}
         return StageRun(
             stage=stage,
             output=output,
             provider=self.adapter.provider,
             model=self.adapter.model,
             request_id=request_id,
+            finish_reason=choice.get("finish_reason") if isinstance(choice.get("finish_reason"), str) else None,
             input_tokens=int(usage.get("prompt_tokens", usage.get("input_tokens", 0))),
             output_tokens=int(usage.get("completion_tokens", usage.get("output_tokens", 0))),
             latency_seconds=latency,

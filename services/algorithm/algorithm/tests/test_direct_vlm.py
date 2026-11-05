@@ -26,15 +26,11 @@ def specimen(tmp_path):
     manifest.write_text(json.dumps(bundle))
     wrapped = SimpleNamespace(manifest=bundle, manifest_path=manifest)
     evidence = [(owners[f]["asset"], owners[f]["frame"], owners[f]["path"]) for f in owners]
-    proposal = {"schema_version": direct.MODEL_SCHEMA_VERSION,
-        "day_summary": "日常城市漫步，途中出现不同地点和景观。",
-        "chapter_count_rationale": "这些画面在同一主题下，合并成一章。",
-        "excluded_non_lived_frame_ids": [],
-        "chapters": [{"id": "C01", "title": "城市漫步", "story": "看见城市街区、道路和不同的建筑景观。",
-            "hero_frame_id": "f0", "gallery_frame_ids": ["f0", "f1", "f2"],
-            "experience_frame_ids": ["f0", "f1", "f2", "f3"],
-            "key_moments": [{"description": "街区及建筑景观", "frame_ids": ["f0", "f2"]}],
-            "editorial_summary": "同一组街区主题图像互补。"}]}
+    proposal = {"chapters": [{
+        "title": "城市漫步", "story": "看见城市街区、道路和不同的建筑景观。",
+        "start_clip": 1, "end_clip": 4, "selected_images": [1, 2, 3],
+        "key_moments": [{"text": "街区及建筑景观", "image_index": 2}]
+    }], "excluded_images": []}
     return wrapped, evidence, owners, proposal
 
 
@@ -74,7 +70,7 @@ def test_empty_array_triggers_one_bounded_retry(monkeypatch, tmp_path):
     result = direct.run_direct_vlm(tmp_path / "bundle.json", gw)
     assert len(gw.calls) == 2 and result["trace"]["model_calls"] == 2
     assert result["trace"]["input_tokens"] == 200
-    assert result["decision_trace"]["attempt_validation_errors"][0] == ["model_output_not_object"]
+    assert result["decision_trace"]["attempt_validation_errors"][0] == ["top_level_not_object"]
 
 
 def test_persistent_invalid_output_fails_closed(monkeypatch, tmp_path):
@@ -90,17 +86,26 @@ def test_persistent_invalid_output_fails_closed(monkeypatch, tmp_path):
 def test_unknown_or_excluded_frame_rejected(tmp_path):
     _, _, owners, good = specimen(tmp_path)
     bad = copy.deepcopy(good)
-    bad["chapters"][0]["gallery_frame_ids"][1] = "invented"
-    assert any("unknown_frame_id" in e for e in direct.validate_proposal(bad, owners))
-    bad = copy.deepcopy(good)
-    bad["excluded_non_lived_frame_ids"] = ["f0"]
-    assert any("excluded_frame" in e for e in direct.validate_proposal(bad, owners))
+    from diary_one_ci import direct_vlm_compact as compact
+    evidence = [(owners[f]["asset"], owners[f]["frame"], owners[f]["path"]) for f in owners]
+    proposal, errs, _ = compact.convert(good, evidence)
+    assert not errs
+    proposal["chapters"][0]["gallery_frame_ids"][1] = "invented"
+    assert any("unknown_frame_id" in e for e in direct.validate_proposal(proposal, owners))
+    proposal, errs, _ = compact.convert(good, evidence)
+    proposal["excluded_non_lived_frame_ids"] = ["f0"]
+    assert any("excluded_frame" in e for e in direct.validate_proposal(proposal, owners))
 
 
 def test_same_clip_different_actual_frames_allowed(tmp_path):
     _, _, owners, good = specimen(tmp_path)
+    from diary_one_ci import direct_vlm_compact as compact
     owners["f1"]["asset"] = owners["f0"]["asset"]
-    assert not direct.validate_proposal(good, owners)
+    good["chapters"][0]["end_clip"] = 3
+    evidence = [(owners[f]["asset"], owners[f]["frame"], owners[f]["path"]) for f in owners]
+    proposal, errors, _ = compact.convert(good, evidence)
+    assert not errors
+    assert not direct.validate_proposal(proposal, owners)
 
 
 def test_frame_cap_preflight_is_fail_closed(tmp_path, monkeypatch):

@@ -100,3 +100,36 @@ def test_direct_gateway_refuses_missing_labels_before_billing(tmp_path):
             evidence=[image], context={}
         )
     assert not calls
+
+
+
+def test_compact_gateway_uses_short_image_indices_and_real_times(tmp_path):
+    from diary_one_ci import direct_vlm_compact as compact
+    evidence = [
+        _frame(tmp_path, "sydney_08_000009", "sydney_08_000009-f1", 3003, 0),
+        _frame(tmp_path, "sydney_08_000021", "sydney_08_000021-f0", 8008, 1),
+    ]
+    from diary_one_ci.direct_vlm import frame_chronology_labels
+    labels = compact.image_labels(evidence, frame_chronology_labels(evidence))
+    def transport(url, headers, body, timeout):
+        content = json.loads(body)["messages"][0]["content"]
+        assert len(content) == 5
+        assert content[1]["text"].startswith("IMAGE_INDEX_1_BASED=1 CLIP_SEQUENCE_1_BASED=1")
+        assert "SOURCE_VIDEO_FRAME_TIME_MS=83003" in content[1]["text"]
+        assert content[3]["text"].startswith("IMAGE_INDEX_1_BASED=2 CLIP_SEQUENCE_1_BASED=2")
+        assert "SOURCE_VIDEO_FRAME_TIME_MS=208008" in content[3]["text"]
+        assert "sydney_08_000021-f0" not in content[3]["text"]
+        return 200, {}, json.dumps({
+            "choices": [{"finish_reason": "stop", "message": {"content": '{"chapters":[]}'}}],
+            "usage": {"prompt_tokens": 200, "completion_tokens": 5}
+        }).encode()
+    adapter = QwenChatCompletionsAdapter(api_key="test-only", model="qwen3.8-flash", transport=transport)
+    run = QwenStageGateway(adapter).call(
+        "DIRECT_VLM_GLOBAL_EDITOR",
+        compact.prompt(image_count=2, clip_count=2), compact.SCHEMA,
+        evidence=evidence,
+        context={"_audit_stage_failures":True,"_direct_vlm_compact":True,
+                 "_direct_vlm_frame_chronology":labels},
+    )
+    assert run.output == {"chapters":[]}
+    assert run.finish_reason == "stop"

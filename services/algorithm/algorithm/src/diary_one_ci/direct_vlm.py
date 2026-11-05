@@ -7,6 +7,7 @@ request. Retries are bounded and billable failures remain in trace.
 from __future__ import annotations
 
 import hashlib
+import json
 import math
 import os
 import re
@@ -19,6 +20,7 @@ from jsonschema import Draft202012Validator
 
 from .bundle import load_app_library_bundle
 from .core import sha256_file
+from . import direct_vlm_compact as compact
 from .x02 import (
     StageModelGateway,
     StageRun,
@@ -395,15 +397,53 @@ def build_result(proposal: Mapping[str, Any], bundle, owners, runs: Sequence[Sta
     }
 
 
-def run_direct_vlm(manifest_path: Path, gateway: StageModelGateway) -> dict:
+def _write_attempt_audit(
+    audit_dir: Path | None, attempt: int, run: StageRun,
+    errors: Sequence[str], repairs: Sequence[str],
+) -> None:
+    # Local private model text only; never store JPEG Base64 or provider API key.
+    # The response itself can contain private diary text: restrict file permissions.
+    if audit_dir is None:
+        return
+    audit_dir = Path(audit_dir)
+    audit_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
+    audit_dir.chmod(0o700)
+    obj = {
+        "attempt": attempt,
+        "stage": STAGE,
+        "model_protocol": compact.MODEL_PROTOCOL,
+        "request_id": run.request_id, "provider": run.provider, "model": run.model,
+        "input_tokens": run.input_tokens, "output_tokens": run.output_tokens,
+        "estimated_cost_native": run.estimated_cost_native,
+        "latency_seconds": run.latency_seconds, "finish_reason": run.finish_reason,
+        "validation_errors": list(errors),
+        "safe_repairs": list(repairs), "model_output": run.output,
+    }
+    data = json.dumps(obj, ensure_ascii=False, indent=2).encode()
+    dst = audit_dir / f"attempt_{attempt:02d}.json"
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    fd = os.open(dst, flags, 0o600)
+    with os.fdopen(fd, "wb") as output:
+        output.write(data)
+
+
+def run_direct_vlm(
+    manifest_path: Path,
+    gateway: StageModelGateway,
+    *,
+    audit_dir: Path | None = None,
+) -> dict:
+    """Single direct full-day VLM call; at most one whole-call retry.
+
+    VLM returns compact chapter decisions only. All public Frame IDs, hero,
+    clips, evidence lineage and app metadata come from deterministic conversion.
+    """
     if not gateway.ready:
         raise X02ModelNotReady("Direct VLM requires a configured real model API key")
     bundle, evidence, owners, total_bytes = prepare_evidence(manifest_path)
-    # Conservative upper estimate for two calls. Config is independent of provider
-    # actual bill; billed usage is always recorded in the result trace.
     max_budget = _positive_float_env("DIARY_ONE_DIRECT_VLM_BUDGET_CNY", 1.20)
     input_est = len(evidence) * 800 + 12_000
-    output_est = 12_000
+    output_est = 5_000
     adapter = getattr(gateway, "adapter", None)
     if adapter is not None:
         approximate_cost = MAX_CALLS * (
@@ -414,30 +454,49 @@ def run_direct_vlm(manifest_path: Path, gateway: StageModelGateway) -> dict:
             _fail("DIRECT_VLM_BUDGET_PREFLIGHT", "Model cost estimate exceeds configured guard")
     runs: list[StageRun] = []
     errors_by_attempt: list[list[str]] = []
+    clip_count = len(bundle.manifest["assets"])
+    labels = compact.image_labels(evidence, frame_chronology_labels(evidence))
     for i in range(MAX_CALLS):
         try:
             run = gateway.call(
                 STAGE,
-                prompt_for_day(retry=i > 0),
-                MODEL_SCHEMA,
+                compact.prompt(
+                    image_count=len(evidence), clip_count=clip_count, retry=i > 0,
+                ),
+                compact.SCHEMA,
                 evidence=evidence,
                 context={
                     "_audit_stage_failures": True,
                     "_x02_policy_version": "V04_1",
-                    "_direct_vlm_frame_chronology": frame_chronology_labels(evidence),
+                    "_direct_vlm_frame_chronology": labels,
+                    "_direct_vlm_compact": True,
                 },
             )
         except X02StageCallError as exc:
-            # Provider failed: never infinitely retry transport errors.
             _fail(exc.code, "Direct VLM provider request failed", [*runs, exc.stage_run])
         except Exception as exc:
             _fail("DIRECT_VLM_TRANSPORT_FAILURE", type(exc).__name__ + " during direct VLM call", runs)
         runs.append(run)
-        errors = validate_proposal(run.output, owners)
-        if not errors:
-            return build_result(run.output, bundle, owners, runs,
-                                total_bytes=total_bytes, attempt_errors=errors_by_attempt)
+        proposal, errors, repairs = compact.convert(run.output, evidence)
+        if not errors and proposal is not None:
+            errors = validate_proposal(proposal, owners)
+        _write_attempt_audit(audit_dir, i + 1, run, errors, repairs)
+        if proposal is not None and not errors:
+            result = build_result(
+                proposal, bundle, owners, runs,
+                total_bytes=total_bytes, attempt_errors=errors_by_attempt,
+            )
+            result["decision_trace"]["compact_model_protocol"] = compact.MODEL_PROTOCOL
+            result["decision_trace"]["deterministic_structure_repairs"] = repairs
+            result["decision_trace"]["model_output_requires_no_frame_ids"] = True
+            result["decision_trace"]["prompt_sha256"] = hashlib.sha256(
+                compact.prompt(image_count=len(evidence), clip_count=clip_count).encode()
+            ).hexdigest()
+            return result
         errors_by_attempt.append(errors)
-        if i == 0:
-            continue
-    _fail("DIRECT_VLM_OUTPUT_INVALID", "Direct VLM produced invalid structured chapters after bounded retry", runs)
+    _fail(
+        "DIRECT_VLM_OUTPUT_INVALID",
+        "Compact Direct VLM returned invalid chapter decisions after bounded retry: "
+        + ";".join(errors_by_attempt[-1][:8]),
+        runs,
+    )
