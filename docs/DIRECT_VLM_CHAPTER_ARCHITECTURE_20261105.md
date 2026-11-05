@@ -39,3 +39,12 @@ BFF 契约：services/bff/shared/direct_result_contract.py 与 shared/contracts/
 - iOS/Android TS 类型检查：在 apps/mobile 内执行 npm run typecheck。
 - 真实悉尼组：161 段、232 张本地原始 JPEG 通过真实提供商实测，并验证返回新 schema 后能通过 BFF apply_admission。
 - 上线前仍需独立部署预发布环境，验收费用/超时、缺失重要场景、非生活片头和多次抽帧覆盖。单次直接 VLM 语义效果高于基线的结论不能由 JSON 结构检查推导。
+
+
+## 2026-11-05 Chronology correction（时间信息显式传递）
+
+- 原算法虽然按图片顺序发送，但 Qwen 逐图文本只有 asset_id / frame_id / 片内 source_timestamp_ms / canonical_offset_ms，未传明确 sequence_index、完整视频相对时间；提示词亦过分强调跨时间合并。
+- Direct VLM 现在在 **每张 JPEG 前面**明确附带 CLIP_SEQUENCE_1_BASED。悉尼源视频有经校验的 10 秒连续编号切片，补 SOURCE_VIDEO_CLIP_START_MS 和 SOURCE_VIDEO_FRAME_TIME_MS（相对于视频起点，不是绝对拍摄时钟）；其他正常手机用户无此编号时只传顺序，不伪造相邻片段间隔。手机 capture_time_confidence=VERIFIED 且来源可信时才传 VERIFIED_CAPTURE_TIME_UNIX_MS。
+- 模型提示词调整为按时间线组织经历，并明确新的地点与活动通常意味着新的 Chapter；同一地点连续可合章，不因恰好属于 citywalk 就合并不同区域；同一地标隔很久再次出现，不默认并到前一章。不会固定每120秒必须开新章。
+- S04/S07 旧模型路径完全不变，只有 Direct VLM stage 追加时间标签；新单元测试使用内存模拟 Provider 请求，确认时间标签出现在对应 JPEG 之前。
+- 这是算法输入/提示词契约修复；具体分章稳定性仍须用删除前72秒的新干净数据组进行独立真实 VLM 质量对照。不能把时间标签测试通过当作质量实测改善。

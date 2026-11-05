@@ -112,6 +112,56 @@ def guard_sydney_intro_not_in_input(assets: Sequence[Mapping[str, Any]]) -> None
 
 
 
+def frame_chronology_labels(
+    evidence: Sequence[tuple[Mapping[str, Any], Mapping[str, Any], Path]],
+) -> dict[str, str]:
+    """Per-frame time labels exposed next to each JPEG in Direct VLM calls.
+
+    All inputs have upload order; source video time is reconstructed only for
+    the explicitly numbered Sydney split dataset. Verified wall-clock metadata
+    may also be forwarded. Never invent times for other user recordings.
+    """
+    labels: dict[str, str] = {}
+    sequence_fallback: dict[str, int] = {}
+    prev_source_start_ms: int | None = None
+    for asset, frame, _ in evidence:
+        aid = str(asset["asset_id"])
+        if aid not in sequence_fallback:
+            sequence_fallback[aid] = len(sequence_fallback)
+        idx = asset.get("sequence_index")
+        seq = idx + 1 if isinstance(idx, int) and not isinstance(idx, bool) else sequence_fallback[aid] + 1
+        parts = [f"CLIP_SEQUENCE_1_BASED={seq}", "CHRONOLOGICAL_ORDER=true"]
+        match = _SYDNEY_CLIP_ID.fullmatch(aid)
+        pts_ms = frame.get("source_timestamp_ms")
+        if match:
+            # Sydney original video was split into numbered 10-second segments:
+            # clip 1 = 0s, clip 9 = 80s, clip 17 = 160s, etc.
+            start_ms = (int(match.group(1)) - 1) * 10_000
+            if prev_source_start_ms is not None and start_ms < prev_source_start_ms:
+                _fail("SYDNEY_CHRONOLOGY_ORDER_INVALID", "Sydney evidence is not ordered by source time")
+            prev_source_start_ms = start_ms
+            parts.append(f"SOURCE_VIDEO_CLIP_START_MS={start_ms}")
+            if isinstance(pts_ms, int) and not isinstance(pts_ms, bool):
+                # Relative timestamp WITHIN the 10-second clip.
+                parts.append(f"SOURCE_VIDEO_FRAME_TIME_MS={start_ms + pts_ms}")
+            parts.append("SOURCE_VIDEO_TIME_IS_RELATIVE_NOT_WALL_CLOCK=true")
+        else:
+            # A V05 capture timestamp is only reliable when the phone explicitly
+            # classifies its provenance as independently VERIFIED.
+            timestamp = asset.get("capture_time_ms")
+            confidence = asset.get("capture_time_confidence")
+            source = asset.get("capture_time_source")
+            if (confidence == "VERIFIED" and source in ("EXIF_OFFSET", "DEVICE_VERIFIED")
+                    and isinstance(timestamp, int) and not isinstance(timestamp, bool)):
+                parts.append(f"VERIFIED_CAPTURE_TIME_UNIX_MS={timestamp}")
+                if isinstance(pts_ms, int) and not isinstance(pts_ms, bool):
+                    parts.append(f"FRAME_OFFSET_WITHIN_CLIP_MS={pts_ms}")
+            else:
+                parts.append("INTER_CLIP_ELAPSED_TIME_UNKNOWN=true")
+        labels[str(frame["frame_id"])] = " ".join(parts)
+    return labels
+
+
 def _positive_float_env(name: str, default: float) -> float:
     value = float(os.getenv(name, default))
     if not math.isfinite(value) or value <= 0:
@@ -121,11 +171,15 @@ def _positive_float_env(name: str, default: float) -> float:
 
 def prompt_for_day(*, retry: bool = False) -> str:
     prompt = """你是一位负责整理可穿戴第一人称生活记录的专业日记编辑。收到的是某天完整、按采集顺序排列的抽帧 JPEG，不是完整视频。
-每张图片后附有来源片段的 asset_id、准确的 frame_id、片内相对 PTS；PTS 不是一天中的绝对时间。
+每张图片旁附有来源片段的 asset_id、准确的 frame_id、片内相对 source_timestamp_ms；这是该10秒片段内的真实PTS，不是一天中的绝对时刻。canonical_offset_ms是抽帧角色的名义偏移，不能代替真实PTS。
 相机已对每段视频做稀疏语义抽帧：单帧不意味着片段没有变化，多帧不意味着场景更重要。
 请直接看完全部图片，在一个全局编辑决策中给出 Day 的章节、封面、互补图库、正文以及重要瞬间。不要逐帧分类、不要固定章节数，不按等长时间拆章。
-按真实的视觉主题与经历组织：相同主题可以跨时间合并，市集/演出/建筑/公园/动物/餐饮等独特内容不要被普通重复背景淹没。
-一个地标在不同时间出现不自动拆成多章；不同但连续的内容可以合理共章。Chapter 的正文和图库都要反映章内重要经历，而不只是封面。
+【时间线优先】图片按真实采集时间排序。每张图旁的 CLIP_SEQUENCE_1_BASED 是源片段顺序；如果提供 SOURCE_VIDEO_CLIP_START_MS / SOURCE_VIDEO_FRAME_TIME_MS，是原视频起点以来的毫秒，不是当日真实时钟时间。如果只知道顺序、无法核定片段间隔，不得编造时间。
+把“连续时间内发生的完整经历”当作 Chapter 的主要组织单元。随着时间推进，当画面地点、活动或经历主题发生实质变化时，通常应考虑开启新 Chapter；特别是不同区域和不同活动，不要仅因为都属于 citywalk 就合并掉。
+同一地点的连续相似活动可以合理合章；但相隔很远时间才重新出现的同一地标，不应仅因为外观相同就把中间无关经历并入同章。它也可能只是后续经历中的背景。
+不强制每两分钟或每个片段新开章节。时间先后与有证据的视觉场景变化必须同时考虑；章内来源尽量时间连续，允许有依据的少量非连续补图，但不能破坏实际发生顺序。
+重要的市集、演出、建筑、海事、商业街、教堂、公园、动物、餐饮等不同真实经历，不要被相似景物标签或笼统“城市漫步”吸收。
+Chapter 的正文和图库都要反映章内重要经历，而不只是封面。
 关键视觉内容即使短暂出现，也要考虑是否在 key_moments 或图库中保留。
 禁止把视频片头预览/路线缩略图、字幕 UI、广告片尾当作用户真实经历；字幕叠加在真实场景上时要区分实际现场与视频标题。
 不能凭图片确定星期、时钟时间、旅行起终点、真实行动路线、购买完成、进入建筑内部、身份、情绪、用户意图时，不要写作确定事实。
@@ -308,6 +362,7 @@ def build_result(proposal: Mapping[str, Any], bundle, owners, runs: Sequence[Sta
             "visual_fact_reviewed": False,
             "semantic_copy_verified": False,
             "no_staged_pipeline": True,
+            "chronology_model_input": "CLIP_SEQUENCE_PER_FRAME_AND_VERIFIED_TIMELINE_IF_AVAILABLE",
             "attempt_validation_errors": list(attempt_errors),
             "prompt_sha256": hashlib.sha256(prompt_for_day().encode()).hexdigest(),
             "input_coverage": {"frames_submitted": len(owners), "clips_received": len(bundle.manifest["assets"]),
@@ -366,7 +421,11 @@ def run_direct_vlm(manifest_path: Path, gateway: StageModelGateway) -> dict:
                 prompt_for_day(retry=i > 0),
                 MODEL_SCHEMA,
                 evidence=evidence,
-                context={"_audit_stage_failures": True, "_x02_policy_version": "V04_1"},
+                context={
+                    "_audit_stage_failures": True,
+                    "_x02_policy_version": "V04_1",
+                    "_direct_vlm_frame_chronology": frame_chronology_labels(evidence),
+                },
             )
         except X02StageCallError as exc:
             # Provider failed: never infinitely retry transport errors.

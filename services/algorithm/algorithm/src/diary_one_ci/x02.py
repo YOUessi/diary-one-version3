@@ -629,6 +629,17 @@ class QwenStageGateway(StageModelGateway):
         selected = []
         for order, (asset, frame, path) in enumerate(evidence):
             label = _evidence_label(asset, frame)
+            # Only Direct VLM gets per-frame, source-grounded chronology. Legacy
+            # S04/S07/etc prompts and their source contracts remain unchanged.
+            if stage == "DIRECT_VLM_GLOBAL_EDITOR":
+                chronology = context.get("_direct_vlm_frame_chronology")
+                if not isinstance(chronology, dict):
+                    raise X02ContractError("Direct VLM per-frame chronology labels missing")
+                frame_id = str(frame["frame_id"])
+                time_label = chronology.get(frame_id)
+                if not isinstance(time_label, str) or not time_label.startswith("CLIP_SEQUENCE_1_BASED="):
+                    raise X02ContractError("Direct VLM chronology label missing for " + frame_id)
+                label += " " + time_label
             content.append({"type": "text", "text": label})
             encoded = base64.b64encode(path.read_bytes()).decode("ascii")
             content.append({
