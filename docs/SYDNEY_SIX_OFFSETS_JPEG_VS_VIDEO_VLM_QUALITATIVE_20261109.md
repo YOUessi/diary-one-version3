@@ -99,3 +99,26 @@ Mac 本地实验根目录：
 - image/offset_020、offset_030/status.json：意外重启的两次图片请求已停止，成本待外部平台对账。
 
 该实验只在 Mac 本地进行，没有把新视频模式直接部署到线上，也没有对生产环境原有 Chapter 做任何修改。
+
+
+## 8. 六组 Chapter 的网页 Live 3 秒动态照片预览（2026-11-09）
+
+六组完整章节页已增强为真实原片 3 秒动态画面：
+
+**Mac 上直接打开：** http://127.0.0.1:8810/
+
+本地路径：~/Documents/Nexleap/work_logs/evidence/sydney-six-offset-image-vs-video-20261109/SIX_GROUPS_JPEG_VS_VIDEO_REAL_CHAPTER_COMPARISON.html
+
+页面包含 129 个 Chapter 完整故事以及 701 个入选图片的 **▶ Live 3s** 按钮。选择偏移组、展开 Chapter 后，任意选图都可通过原始视频来源 ID 与真实选中时间戳，在 Mac 本地**首次点击时**提取 3 秒视频（960×540、24fps、H264、无声）并缓存 MP4，再由浏览器真实循环播放；不会一次性开启 701 个视频播放器，也不会重新调用模型。缓存的本地预览不是系统 Apple Live Photo、没有做 iOS 真机照片库配对保存。
+
+- 图片 V03：selected_media 中的 source_asset_id + focus_pts_ms → 原始10s MP4。
+- 视频 VLM：part_id + video_time_ms → source_asset_id + source_clip_focus_ms → 原始10s MP4。
+- 读取范围只允许已确认的 960 个悉尼原始10s MP4；本地服务只绑定 127.0.0.1，不会公开源文件链接。
+- 视频窗起点 clamp(focus_pts_ms / 1000 − 1.5, 0, 7)，时长约3秒；视频重复点击复用 cache，不重复导出。
+- 原完整网页文件不改路径、全部真实 JPG 不被移除；手机端已有 AVFoundation Motion 和本次 Mac Web 预览是两个不同平台的实现。
+
+**服务器启动：**
+
+    ~/miniforge3/bin/python3.13 scripts/sydney_six_offset_live_server.py --port 8810
+
+**真实浏览器验收：** Google Chrome 中 JPEG+VLM、纯视频 1fps、20s/1fps 以及 70s/0.5fps 的四组真实源视频均完成播放。HTTP / file:// 两种网页入口均验证 3 秒循环。所生成的实际 MP4，经 ffprobe 确认视频为 72 帧、24fps、恰好 3.000 秒。验证仅消耗 Mac 本地运算，无 VLM 模型调用和新增 API 费用。详细启动说明保存在 Mac 实验目录 LIVE_PREVIEW_README.md。
