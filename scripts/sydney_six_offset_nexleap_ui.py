@@ -30,6 +30,7 @@ ALT_NAME = "NEXLEAP_ONE_SIX_GROUPS_INTERACTIVE.html"
 BACKUP_NAME = "SIX_GROUPS_PRE_NEXLEAP_EDITORIAL_BACKUP.html"
 SOURCE_CSS = REPO / "scripts/review_ui/nexleap.css"
 SOURCE_JS = REPO / "scripts/review_ui/nexleap.js"
+SOURCE_AUTOLIVE = REPO / "scripts/review_ui/nexleap-autolive.js"
 ASSET_RE = re.compile(r"^sydney_\d{2}_(\d{6})$")
 
 
@@ -244,6 +245,7 @@ def render_html(data):
 <meta name="description" content="悉尼 Citywalk，六个偏移组。真实 Day 时间线、Chapter 故事、照片和三秒 Live 动态视频。">
 <link rel="stylesheet" href="nexleap.css">
 <script src="nexleap.js" defer></script>
+<script src="nexleap-autolive.js" defer></script>
 </head>
 <body>
 <div class="page">
@@ -304,7 +306,7 @@ def main():
     backup=BASE/BACKUP_NAME
     if current.exists() and not backup.exists():
         shutil.copy2(current,backup)
-    for file in [SOURCE_CSS,SOURCE_JS]:
+    for file in [SOURCE_CSS,SOURCE_JS,SOURCE_AUTOLIVE]:
         assert file.exists(),file
         shutil.copy2(file,BASE/file.name)
     content=render_html(data)
@@ -324,6 +326,8 @@ def main():
         "main_script":str(Path(__file__).resolve()),
         "css_sha256":hashlib.sha256((BASE/"nexleap.css").read_bytes()).hexdigest(),
         "js_sha256":hashlib.sha256((BASE/"nexleap.js").read_bytes()).hexdigest(),
+        "autolive_js_sha256":hashlib.sha256((BASE/"nexleap-autolive.js").read_bytes()).hexdigest(),
+        "live_autoplay":"visible_day_hero_and_gallery_muted_3s_loop_one_shared_video",
         "new_api_calls":0,
         "cropped_old_letterbox_media_count":len(list(CROPPED.rglob("*.jpg"))),
         "cost_cny":0,

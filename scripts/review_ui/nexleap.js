@@ -62,7 +62,7 @@ function timelineItem(ch,i) {
    <div class="time-marker" title="原片相对时间，并非拍摄钟点">${movieTime(ch.firstSourceSecond)}</div>
    <span class="time-dot"></span>
    <button class="timeline-link" type="button" data-open-chapter="${i}" aria-label="打开${esc(ch.title)}">
-     <div class="timeline-photo">
+     <div class="timeline-photo" data-live-kind="timeline" data-live-asset="${esc(ch.photos[0].sourceAsset)}" data-live-focus-ms="${ch.photos[0].focusMs}">
        <img src="${esc(ch.photos[0].src)}" alt="${esc(ch.title)}" loading="${i<2?"eager":"lazy"}">
        <span class="tiny-count">${String(i+1).padStart(2,"0")} / ${String(chapters().length).padStart(2,"0")}</span>
        <span class="chapter-label">${esc(ch.title)}</span>
@@ -113,7 +113,7 @@ function mediaTile(p,i){
  const valid=p.sourceAsset&&Number.isInteger(p.focusMs)&&p.focusMs>=0&&p.focusMs<10000;
  return `<article class="live-tile ${i===0?"is-hero":""}">
   <div style="position:relative">
-    <button type="button" class="live-picture" data-photo-index="${i}"
+    <button type="button" class="live-picture" data-photo-index="${i}" ${valid?`data-live-kind="gallery" data-live-asset="${esc(p.sourceAsset)}" data-live-focus-ms="${p.focusMs}"`:""}
       ${valid?`aria-label="播放第${i+1}张照片的三秒Live"`:'disabled title="没有可验证的视频时间"'} >
       <img src="${esc(p.src)}" loading="${i<2?"eager":"lazy"}" alt="${esc(p.caption)}">
       <span class="live-pill">${valid?"LIVE":"PHOTO"}</span>
@@ -130,14 +130,14 @@ function renderDetail(){
  if(!ch){$("#detail-zone").innerHTML='<div class="empty-main"><div class="empty-inner"><h3>没有 Chapter</h3></div></div>';return}
  const first=ch.photos[0],saved=!!favorites[ch.id],next=chapters()[(state.chapter+1)%chapters().length];
  $("#detail-zone").innerHTML=`<article class="detail-sheet" data-chapter-id="${esc(ch.id)}">
-   <div class="hero-media">
+   <div class="hero-media" data-live-kind="hero" data-live-asset="${esc(first.sourceAsset)}" data-live-focus-ms="${first.focusMs}">
      <img src="${esc(first.src)}" alt="${esc(ch.title)}" fetchpriority="high">
      <div class="hero-top-controls">
        <button type="button" class="circle-control" id="back-to-day" aria-label="返回 Day 时间线">${svg("back")}</button>
        <button type="button" class="circle-control favorite ${saved?"is-fav":""}" id="favorite-chapter"
          aria-pressed="${saved}" aria-label="${saved?"取消收藏":"收藏"}这个Chapter">${svg("star",24)}</button>
      </div>
-     <button type="button" id="play-hero" class="hero-live">${svg("play",18)} &nbsp; LIVE · 3s</button>
+     <button type="button" id="play-hero" class="hero-live">${svg("play",18)} &nbsp; LIVE · 自动播放</button>
      <div class="hero-brand">Nexleap one</div>
    </div>
    <div class="detail-copy">
@@ -160,7 +160,7 @@ function renderDetail(){
      <section class="media-sect" id="chapter-photos">
        <div class="my-story-header"><h3 class="section-heading">影像里的片刻</h3>
          <span class="media-count">${ch.photos.length} PHOTOS / LIVE</span></div>
-       <p class="section-sub">点击照片播放原始 3 秒 Live，右上角可复制图片本地链接。</p>
+       <p class="section-sub">滑动到照片就会静音自动播放 3 秒 Live，点击可放大，右上角可复制本地图片链接。</p>
        <div class="media-grid">${ch.photos.map(mediaTile).join("")}</div>
      </section>
      <footer class="chapter-footer">
@@ -170,6 +170,7 @@ function renderDetail(){
      </footer>
    </div>
  </article>`;
+ document.dispatchEvent(new Event("nexleap:rendered"));
 }
 function refresh(){
  state.chapter=Math.max(0,Math.min(state.chapter,chapters().length-1));
@@ -210,6 +211,7 @@ function stopLive(){
 }
 function closeLive(){
  const d=$("#liveDialog");if(d?.open)d.close();stopLive();
+ document.dispatchEvent(new Event("nexleap:modal-close"));
 }
 function openLive(p){
  if(!p||!/^sydney_(01|02|03|05|06|07)_\d{6}$/.test(p.sourceAsset||"")||
@@ -221,6 +223,7 @@ function openLive(p){
  $("#playerStatus").textContent="正在从原始视频生成三秒 Live；首次播放会在 Mac 本地缓存…";
  $("#playerCaption").textContent=p.caption+" · 原片 "+movieTime(p.originalSecond);
  dialog.showModal();
+ document.dispatchEvent(new Event("nexleap:modal-open"));
  const host=location.protocol==="file:"?"http://127.0.0.1:8810":location.origin;
  v.src=host+"/api/live3s/"+encodeURIComponent(p.sourceAsset)+"/"+p.focusMs+".mp4";
  v.load();
@@ -264,7 +267,10 @@ document.querySelectorAll(".nav-button").forEach(btn=>
   else{state.view="detail";refresh();window.scrollTo(0,0);}
  }));
 $("#playerClose").addEventListener("click",closeLive);
-$("#liveDialog").addEventListener("close",stopLive);
+$("#liveDialog").addEventListener("close",()=>{
+ stopLive();
+ document.dispatchEvent(new Event("nexleap:modal-close"));
+});
 $("#liveDialog").addEventListener("click",e=>{if(e.target===e.currentTarget)closeLive()});
 $("#playerToggle").addEventListener("click",()=>{
  const v=$("#liveVideo");if(!v.src)return;

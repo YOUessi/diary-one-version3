@@ -80,3 +80,33 @@ Chrome 的桌面、iPhone 390×844 模拟测试已执行，验收项目：
 ## 后续真正产品迁移
 
 当前是在真实研究数据上的独立可交互网页，复用 app/mobile 既有 Motion 语义（3 秒原片动态），但**并未直接修改手机端 React Native 生产页面设计**。下一步如需把同样 UI 落到 iPhone，可将本次的颜色、边距、卡片、时间线与详情布局映射到 `apps/mobile/src/screens/diary/` 和 `src/components/`，再做 iPhone 真机尺寸、Live 视频性能与可访问性验收。
+
+
+## 2026-11-09 更新：Live 图无需点击即可自动播放
+
+按照产品交互要求，Day 时间线、Chapter 大封面和图库所有可见真实照片已经接入**进入视口即静音自动播放、三秒循环**的网页 Live 行为：
+
+- 网页渲染时给 Day 时间线封面、Chapter HERO 和各个入选图片绑定 `source_asset_id` 与 `focus_pts_ms`。无需点击，进入可见区域后自动向 Mac 上仅绑定 127.0.0.1 的服务请求原始 10s 视频对应的 3s MP4（首次 FFmpeg 导出，之后命中本机缓存）。
+- 用单个复用的 `video` 节点在可见照片之间移动：优先显示 Chapter 的 HERO，向下滚动后切换到当前可见的图库照片；离开屏幕、切换 Chapter、切换偏移组、进入后台时暂停或移除源。不同时解码几百张视频，未显示的照片仅加载真实静止 JPG。
+- `video` 设置 `muted`、`autoplay`、`loop`、`playsinline`。真实动视频加载或播放失败时不显示空白，始终保留对应的静态封面。
+- 点击卡片仍可打开大图播放对话框，但**自动播放不依赖点击**；进入大图时暂停自动播放器，关闭后恢复自动播放。
+- 手机单列大图布局继续保留；纯视频与 MobileCLIP＋JPEG 两条算法输出使用完全一致的自动 Live 机制。
+
+实现：`scripts/review_ui/nexleap-autolive.js`（可见性管理、单视频复用、实时切换与生命周期）、`scripts/review_ui/nexleap.js`（来源绑定与数据切换事件）、`scripts/review_ui/nexleap.css`（静止帧到视频淡入与防止遮挡标题）、`scripts/sydney_six_offset_nexleap_ui.py`（将模块打包到实验网页）。
+
+### 真实验收
+
+在 Chrome **没有设置跳过自动播放策略**的情况下测试成功：
+
+- 桌面 Chapter HERO 初始自动播放，进入其他 Chapter 自动切换；
+- 桌面滚动到图库时自动播放图库；
+- iPhone 390×844 视口中，Day 卡片自动播放、进入 Chapter 后 HERO 自动播放、滚动到图库自动播放；
+- 继续滚动后能切换到第二个真实原始视频源，并自动播放；
+- 5 秒内确认至少发生一次真正的 3 秒视频循环；
+- 打开全屏 Live 时自动播放器暂停，关闭后恢复；返回 Day、切换偏移组及视频算法后依然自动播放；
+- 每次保持 **1 个内联视频解码播放器**，原视频来源与代表帧 PTS 均被校验；
+- 原来的 129 Chapter 和 701 张代表图完整保留，没有重新调用模型或修改费用数据。
+
+回归测试保存在 `scripts/review_ui/test_autoplay_live.cjs`，浏览器输出和移动端截图在 Mac 的 `work_logs/evidence/sydney-six-offset-image-vs-video-20261109/` 下。
+
+**说明：这仍是研究网页上的三秒 Motion 实现，不是 HEIC/MOV 配对的 Apple Photos 系统 Live Photo，也没有直接修改或部署 iOS App。**

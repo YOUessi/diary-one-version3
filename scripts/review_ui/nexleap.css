@@ -162,6 +162,23 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .player-foot{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:10px 22px 24px}
 .player-foot p{font-size:11px;color:#a5afb5;margin:0;line-height:1.7}
 .player-toggle{border:1px solid #697178;color:#fff;border-radius:999px;background:#33393d;padding:10px 15px;font-size:12px}
+/* Only one muted 3-second decoder is attached to the most visible image.
+   Its poster remains in place until playback actually starts. */
+.auto-live-video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  display:block;opacity:0;pointer-events:none;transition:opacity .28s ease;
+  background:transparent;
+}
+.auto-live-video.is-playing{opacity:1}
+.timeline-photo .auto-live-video{z-index:1}
+.hero-media .auto-live-video{z-index:0;object-position:center 45%;filter:saturate(.87) contrast(.96)}
+.live-picture .auto-live-video{z-index:1}
+.auto-live-active .live-pill::before{
+  content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:#f8e1d7;box-shadow:0 0 0 2px #ffffff42;
+  margin-right:6px;vertical-align:middle
+}
+@media(prefers-reduced-motion:reduce){.auto-live-video{transition:none}}
 .mobile-back{display:none}
 .mobile-nav{display:none}
 .utility-footer{text-align:center;color:#aaa49c;font-size:11px;padding:20px 10px 60px}
