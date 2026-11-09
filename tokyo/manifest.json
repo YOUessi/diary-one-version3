@@ -1,0 +1,16 @@
+{
+  "source_repo": "13021068599zyf-glitch/nexleap-chapter-examples",
+  "source_git_commit": "b61d684ab8765c93b5c75ccaabd91bfbcfe8470d",
+  "region": "tokyo",
+  "offsets": [
+    0
+  ],
+  "chapters": 6,
+  "final_selected": 47,
+  "all_images": 165,
+  "is_human_labeled": true,
+  "has_original_video": false,
+  "genuine_live_available": false,
+  "no_vlm_calls": true,
+  "built_utc": "2026-11-09T08:13:55.010609+00:00"
+}

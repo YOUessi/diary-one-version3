@@ -1,0 +1,18 @@
+{
+  "source_repo": "13021068599zyf-glitch/nexleap-chapter-examples",
+  "source_git_commit": "b61d684ab8765c93b5c75ccaabd91bfbcfe8470d",
+  "region": "manning-park",
+  "offsets": [
+    0,
+    10,
+    20
+  ],
+  "chapters": 3,
+  "final_selected": 49,
+  "all_images": 478,
+  "is_human_labeled": true,
+  "has_original_video": false,
+  "genuine_live_available": false,
+  "no_vlm_calls": true,
+  "built_utc": "2026-11-09T08:13:55.025848+00:00"
+}
