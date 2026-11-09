@@ -1,0 +1,12 @@
+{
+  "version": "NEXLEAP_ONE_SYDNEY_OFFLINE_V1",
+  "date_utc": "2026-11-09T07:20:52.691360+00:00",
+  "chapters": 129,
+  "selected_images": 701,
+  "unique_live_clips": 694,
+  "no_original_10s_or_5h_video": true,
+  "no_provider_secrets": true,
+  "no_mac_localhost_needed": true,
+  "total_uncompressed_bytes": 172165257,
+  "source_rights": "Third-party footage; public reuse needs permission"
+}
