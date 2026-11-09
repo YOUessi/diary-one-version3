@@ -6,7 +6,7 @@ Output: separate, JPEG-only, hash-verified sanitized input directory.
 The original source video and previous experiments remain unchanged.
 
 Any 10s clip overlapping [0, cutoff) is dropped completely. This is
-deliberate: keeping a 70-80s clip would be able to reintroduce 70-72s
+deliberate: keeping a 70-80s clip is part of the 00:00-01:20 recap, even if its end is exactly the cutoff
 when a Chapter later plays its source video.
 """
 from __future__ import annotations
@@ -35,7 +35,7 @@ def digest(path: Path) -> str:
 
 
 def create_clean_input(manifest: Path, index_csv: Path, output: Path,
-                       cutoff: Decimal = Decimal("72")) -> dict:
+                       cutoff: Decimal = Decimal("80")) -> dict:
     manifest = manifest.resolve()
     index_csv = index_csv.resolve()
     output = output.resolve()
@@ -67,7 +67,7 @@ def create_clean_input(manifest: Path, index_csv: Path, output: Path,
             raise ValueError("Invalid source clip range")
         if int(asset.get("sequence_index", -1)) != original_sequence:
             raise ValueError("Source sequence index inconsistent")
-        # Drop any intersecting intro clip, including 70-80s at 72s cutoff.
+        # Drop any intersecting intro clip, including 70-80s at 80s cutoff.
         if start < cutoff:
             excluded.append({
                 "asset_id": asset["asset_id"], "source_start_seconds": str(start),
@@ -154,7 +154,7 @@ def main() -> None:
     parser.add_argument("--manifest", required=True, type=Path)
     parser.add_argument("--index", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
-    parser.add_argument("--cutoff-seconds", type=Decimal, default=Decimal("72"))
+    parser.add_argument("--cutoff-seconds", type=Decimal, default=Decimal("80"))
     args = parser.parse_args()
     if args.cutoff_seconds <= 0:
         raise ValueError("Cutoff must be positive")

@@ -34,7 +34,7 @@ def prepare():
         m=re.fullmatch(r"sydney_01_(\d{6})",aid)
         assert m,aid
         source_index=int(m.group(1))
-        assert (source_index-1)*10>=72
+        assert (source_index-1)*10>=80, "Sydney overview 00:00-01:20 must be excluded"
         match=list(CLIPS_DIR.glob(f"sydney_{source_index:06d}_*.mp4"))
         assert len(match)==1,(aid,match)
         clips.append({"slot":j+1,"source_asset_id":aid,"file":str(match[0]),

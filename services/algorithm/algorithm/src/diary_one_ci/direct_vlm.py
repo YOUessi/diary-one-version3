@@ -89,12 +89,12 @@ MODEL_SCHEMA: dict[str, Any] = {
 _MODEL_VALIDATOR = Draft202012Validator(MODEL_SCHEMA)
 
 # One explicit *dataset* content constraint, not a rule for real user days.
-# The Sydney public source video has 00:00–01:12 recap/route-map footage.
+# The Sydney public source video has 00:00–01:20 recap/route-map footage.
 # These asset IDs encode physical 10-second source clip indices (1 = 0s).
 # Failing closed here prevents accidentally sending a historical, unsanitized
 # Sydney bundle to the VLM. All other inputs keep their own timeline intact.
 _SYDNEY_CLIP_ID = re.compile(r"^sydney_\d{2}_(\d{6})$")
-_SYDNEY_INTRO_CUTOFF_SECONDS = 72
+_SYDNEY_INTRO_CUTOFF_SECONDS = 80
 
 
 def guard_sydney_intro_not_in_input(assets: Sequence[Mapping[str, Any]]) -> None:
@@ -107,7 +107,7 @@ def guard_sydney_intro_not_in_input(assets: Sequence[Mapping[str, Any]]) -> None
         if original_start_seconds < _SYDNEY_INTRO_CUTOFF_SECONDS:
             _fail(
                 "SYDNEY_INTRO_NOT_REMOVED",
-                "Sydney source 00:00–01:12 is forbidden in VLM input. "
+                "Sydney source 00:00–01:20 is forbidden in VLM input. "
                 "Use scripts/trim_sydney_intro_for_chapter.py to rebuild "
                 "the image-only bundle before calling the provider.",
             )

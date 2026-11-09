@@ -72,7 +72,7 @@ def input_clips() -> list[dict]:
         match=re.fullmatch(r"sydney_01_(\d{6})",aid)
         assert match,aid
         original_s=(int(match.group(1))-1)*10
-        assert original_s >= 72, ("intro leaked",aid)
+        assert original_s >= 80, ("intro 00:00–01:20 leaked",aid)
         if prev_start is not None:
             assert original_s-prev_start==120,(aid,original_s,prev_start)
         prev_start=original_s
@@ -219,7 +219,7 @@ def prepare(workers:int):
     (BASE/"shared_prompt.txt").write_text(prompt)
     data={
         "source":"Sydney Citywalk phase_01_offset_010s full 160 video clips",
-        "intro_00_to_72s_removed":True,
+        "confirmed_00_to_80s_absent":True,
         "all_clips_have_original_120s_sampling_gaps":True,
         "total_original_video_clips":ORIGINAL_CLIPS,
         "total_recorded_seconds":1600,

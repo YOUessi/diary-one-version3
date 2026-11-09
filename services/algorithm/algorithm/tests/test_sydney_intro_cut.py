@@ -1,4 +1,4 @@
-"""Sydney 00:00-01:12 exclusion occurs BEFORE direct VLM input assembly."""
+"""Sydney 00:00-01:20 exclusion occurs BEFORE direct VLM input assembly."""
 import csv
 from decimal import Decimal
 import hashlib
@@ -61,7 +61,7 @@ def test_other_days_and_after_cutoff_are_not_blocked():
 def test_pre_vlm_cut_physically_omits_intro_images_but_preserves_original(tmp_path):
     source, timestamps = _dataset(tmp_path)
     output = tmp_path / "clean" / "input"
-    receipt = create_clean_input(source, timestamps, output, Decimal("72"))
+    receipt = create_clean_input(source, timestamps, output, Decimal("80"))
     result = json.loads((output / "bundle.json").read_text())
     assert len(result["assets"]) == 1
     assert result["assets"][0]["asset_id"] == "sydney_04_000017"
@@ -72,14 +72,14 @@ def test_pre_vlm_cut_physically_omits_intro_images_but_preserves_original(tmp_pa
     assert (source.parent / "frames" / "sydney_04_000005_f0.jpg").is_file()
     assert result["session"]["session_id"] != json.loads(source.read_text())["session"]["session_id"]
     with pytest.raises(FileExistsError):
-        create_clean_input(source, timestamps, output, Decimal("72"))
+        create_clean_input(source, timestamps, output, Decimal("80"))
 
 
-def test_crossing_seventy_to_eighty_interval_removed_whole(tmp_path):
+def test_seventy_to_eighty_is_still_intro_and_removed(tmp_path):
     source, timestamps = _dataset(tmp_path, clips=(8, 20))
     receipt = create_clean_input(source, timestamps, tmp_path / "clean" / "input")
     assert receipt["removed_assets"] == 1
-    assert receipt["removed_intervals"][0]["crosses_cutoff"] is True
+    assert receipt["removed_intervals"][0]["crosses_cutoff"] is False
     assert receipt["first_remaining_clip_start_seconds"] == "190"
 
 
@@ -88,3 +88,20 @@ def test_unknown_absolute_start_fails_not_guessed(tmp_path):
     timestamps.write_text("original_clip_id,start_seconds,end_seconds\n17,160,170\n")
     with pytest.raises(ValueError):
         create_clean_input(source, timestamps, tmp_path / "clean" / "input")
+
+
+
+def test_cutoff_exactly_eighty_seconds_keeps_clip_starting_80(tmp_path):
+    source, timestamps = _dataset(tmp_path, clips=(7, 8, 9, 17))
+    output = tmp_path / "cut80" / "input"
+    receipt = create_clean_input(source, timestamps, output)
+    result = json.loads((output / "bundle.json").read_text())
+    assert receipt["source_intro_cutoff_seconds"] == "80"
+    assert receipt["removed_assets"] == 2
+    assert receipt["first_remaining_clip_start_seconds"] == "80"
+    assert [asset["asset_id"] for asset in result["assets"]] == [
+        "sydney_04_000009", "sydney_04_000017"]
+    assert [asset["sequence_index"] for asset in result["assets"]] == [0, 1]
+    guard_sydney_intro_not_in_input(result["assets"])
+    with pytest.raises(X02ExecutionError):
+        guard_sydney_intro_not_in_input([{"asset_id": "sydney_04_000008"}])
