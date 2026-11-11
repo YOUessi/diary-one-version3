@@ -632,7 +632,7 @@ class QwenStageGateway(StageModelGateway):
             label = _evidence_label(asset, frame)
             # Only Direct VLM gets per-frame, source-grounded chronology. Legacy
             # S04/S07/etc prompts and their source contracts remain unchanged.
-            if stage == "DIRECT_VLM_GLOBAL_EDITOR":
+            if stage in ("DIRECT_VLM_GLOBAL_EDITOR", "DIRECT_VLM_CHAPTER_PLANNER_V02", "DIRECT_VLM_CHAPTER_GALLERY_V02"):
                 chronology = context.get("_direct_vlm_frame_chronology")
                 if not isinstance(chronology, dict):
                     raise X02ContractError("Direct VLM per-frame chronology labels missing")

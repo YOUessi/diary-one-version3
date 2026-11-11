@@ -16,15 +16,18 @@ from shared.evidence_input import validate_evidence_bytes
 
 from shared.job_contract import validate_real_result
 from shared.direct_result_contract import validate_direct_result
+from shared.planner_gallery_result_contract import validate_planner_gallery_result
 
 CONTRACT_VERSION = 'DIARY_ONE_INPUT_BOUND_RESULT_V01'
 STAGED = 'DIARY_ONE_X02_STAGED_PREVIEW_V04_1'
 PRODUCT = 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01'
 DIRECT = 'DIARY_ONE_DIRECT_VLM_CHAPTER_V01'
+PLANNER_GALLERY = 'DIARY_ONE_PLANNER_GALLERY_CHAPTER_V02'
 SCHEMA_PATHS = {
     STAGED: Path(__file__).parent / 'contracts/x02_staged_preview_v04_1.schema.json',
     PRODUCT: Path(__file__).parent / 'contracts/x02_product_preview_v01.schema.json',
     DIRECT: Path(__file__).parent / 'contracts/direct_vlm_chapter_v01.schema.json',
+    PLANNER_GALLERY: Path(__file__).parent / 'contracts/planner_gallery_chapter_v02.schema.json',
 }
 SCHEMA_SHA256 = {key: hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
                  for key, path in SCHEMA_PATHS.items()}
@@ -120,6 +123,9 @@ def validate_result_contract(result, manifest_bytes, bundle_dir=None):
     if schema == DIRECT:
         validate_direct_result(payload, manifest_bytes, bundle_dir)
         return SCHEMA_SHA256[DIRECT]
+    if schema == PLANNER_GALLERY:
+        validate_planner_gallery_result(payload, manifest_bytes, bundle_dir)
+        return SCHEMA_SHA256[PLANNER_GALLERY]
     incomplete = incomplete_input_reason(payload)
     _require(incomplete is None, incomplete)
     _require(isinstance(manifest_bytes, bytes) and bool(manifest_bytes), 'missing_input_manifest')

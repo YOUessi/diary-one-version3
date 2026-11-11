@@ -36,7 +36,12 @@ def unique_ids(value, possible, reason: str, *, allow_empty=False) -> list[str]:
     return value
 
 
-def validate_direct_result(result: dict, manifest_bytes: bytes, bundle_dir: Path | None) -> None:
+def validate_direct_result(
+    result: dict, manifest_bytes: bytes, bundle_dir: Path | None,
+    *, expected_pipeline: str = PIPELINE_VERSION,
+    id_prefix: str = "direct_vlm_v01:", max_gallery: int = 8,
+    max_calls: int = 2,
+) -> None:
     """Raise ValueError on all structural, lineage, upload, cover, or order mismatches."""
     require(isinstance(manifest_bytes, bytes), "missing_manifest")
     require(bundle_dir is not None and Path(bundle_dir).is_dir(), "missing_original_jpegs")
@@ -44,7 +49,7 @@ def validate_direct_result(result: dict, manifest_bytes: bytes, bundle_dir: Path
     manifest = json.loads(manifest_bytes)
     require(result["bundle_manifest_sha256"] == hashlib.sha256(manifest_bytes).hexdigest(), "manifest_sha")
     require(result["session_id"] == manifest["session"]["session_id"], "session")
-    require(result["trace"]["pipeline_version"] == PIPELINE_VERSION, "pipeline")
+    require(result["trace"]["pipeline_version"] == expected_pipeline, "pipeline")
     require(not result.get("dev_lite_fallback") and result["delivery_state"] == "READY_PRIMARY_COPY", "not_ready")
     assets, frames, app_ids = {}, {}, set()
     for asset in manifest["assets"]:
@@ -75,11 +80,11 @@ def validate_direct_result(result: dict, manifest_bytes: bytes, bundle_dir: Path
         candidate = chapter.get("candidate_id")
         require(isinstance(candidate, str) and candidate not in candidate_ids, "duplicate_candidate_id")
         candidate_ids.add(candidate)
-        require(cid == str(uuid.uuid5(uuid.UUID(result["session_id"]), "direct_vlm_v01:" + candidate)),
+        require(cid == str(uuid.uuid5(uuid.UUID(result["session_id"]), id_prefix + candidate)),
                 "non_deterministic_chapter_id")
         hero = chapter["hero_frame_id"]
         gallery = chapter["selected_media"]
-        require(len(gallery) <= 8, "too_many_gallery_frames")
+        require(1 <= len(gallery) <= max_gallery, "too_many_gallery_frames")
         hero_media = [item for item in gallery if item["role"] == "HERO"]
         require(len(hero_media) == 1 and hero_media[0]["representative_frame_id"] == hero, "hero_mismatch")
         require(hero_media[0]["asset_id"] == chapter["hero_asset_id"], "hero_asset_mismatch")
@@ -124,5 +129,5 @@ def validate_direct_result(result: dict, manifest_bytes: bytes, bundle_dir: Path
                 and outcome["memory_id"] in expected
                 and outcome["memory_id"] not in actual, "outcome_mismatch")
         actual.add(outcome["memory_id"])
-    require(actual == expected and result["trace"]["model_calls"] in (1, 2), "missing_outcomes_or_calls")
+    require(actual == expected and 1 <= result["trace"]["model_calls"] <= max_calls, "missing_outcomes_or_calls")
     require(len(result["trace"]["request_ids"]) == result["trace"]["model_calls"], "request_id_accounting")

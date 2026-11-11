@@ -31,13 +31,21 @@ export function validateDirectVlmResult(resultValue: unknown, manifest: AppLibra
   frameSha256?: Record<string, string>): void {
   const result = obj(resultValue);
   const trace = obj(result.trace);
-  if (result.schema_version !== 'DIARY_ONE_DIRECT_VLM_CHAPTER_V01'
-    || result.editor_policy !== 'DIRECT_VLM_GLOBAL_EDITOR_V01'
-    || trace.pipeline_version !== 'X02_DIRECT_VLM_CHAPTER_V01'
+  const plannerGallery = result.schema_version === 'DIARY_ONE_PLANNER_GALLERY_CHAPTER_V02';
+  if (result.schema_version !== 'DIARY_ONE_DIRECT_VLM_CHAPTER_V01' && !plannerGallery) {
+    throw new Error('Unknown Direct/Planner Gallery result contract');
+  }
+  const expectedPolicy = plannerGallery
+    ? 'PLANNER_GALLERY_SCOPED_EDITOR_V02' : 'DIRECT_VLM_GLOBAL_EDITOR_V01';
+  const expectedPipeline = plannerGallery
+    ? 'X02_PLANNER_GALLERY_CHAPTER_V02' : 'X02_DIRECT_VLM_CHAPTER_V01';
+  if (result.editor_policy !== expectedPolicy
+    || trace.pipeline_version !== expectedPipeline
     || result.experimental !== true || result.production_ready !== false
     || result.delivery_state !== 'READY_PRIMARY_COPY'
     || result.coverage_status !== 'INPUT_ALL_FRAMES_SUBMITTED'
-    || ![1, 2].includes(trace.model_calls)
+    || !Number.isInteger(trace.model_calls) || trace.model_calls < 1
+    || trace.model_calls > (plannerGallery ? 30 : 2)
     || !Array.isArray(trace.request_ids) || trace.request_ids.length !== trace.model_calls
     || result.unresolved_asset_ids?.length || arr(result.observations).length
     || arr(result.moments).length || arr(result.ahas).length) {
@@ -74,7 +82,21 @@ export function validateDirectVlmResult(resultValue: unknown, manifest: AppLibra
   const excluded = new Set(refs(result.excluded_non_lived_frame_ids, known, true));
   const publicIds = new Set<string>();
   const galleryIds = new Set<string>();
-  for (const chapter of arr(result.chapters)) {
+  const decision = obj(result.decision_trace);
+  const intervals = plannerGallery ? arr(decision.chapter_clip_intervals) : [];
+  const frameCounts = plannerGallery ? decision.gallery_model_input_frames : [];
+  const chapters = arr(result.chapters);
+  if (plannerGallery && (decision.clip_ownership !== 'EXPLICIT_CONTIGUOUS_ONE_CHAPTER_PER_CLIP'
+    || decision.no_staged_pipeline !== false
+    || decision.visual_fact_reviewed !== false
+    || decision.semantic_copy_verified !== false
+    || intervals.length !== chapters.length || !Array.isArray(frameCounts)
+    || frameCounts.length !== chapters.length
+    || trace.execution_mode !== 'GLOBAL_PLANNER_SCOPED_GALLERY_WITH_BOUNDED_RETRY')) {
+    throw new Error('Invalid Planner/Gallery clip ownership contract');
+  }
+  let previousEnd = 0;
+  for (const chapter of chapters) {
     if (!txt(chapter.id) || publicIds.has(chapter.id) || !txt(chapter.title)
       || !txt(chapter.story) || !txt(chapter.hero_frame_id)
       || chapter.publication_status !== 'STAGED_PREVIEW_VALIDATED'
@@ -86,15 +108,45 @@ export function validateDirectVlmResult(resultValue: unknown, manifest: AppLibra
     publicIds.add(chapter.id);
     const experience = refs(chapter.experience_frame_ids, known);
     if (experience.some(fid => excluded.has(fid))) throw new Error('Excluded experience');
+    let ownedFrameIds: Set<string> | undefined;
+    if (plannerGallery) {
+      const index = publicIds.size - 1;
+      const start = chapter.source_clip_start;
+      const end = chapter.source_clip_end;
+      const interval = intervals[index];
+      if (!Number.isInteger(start) || !Number.isInteger(end)
+        || start !== previousEnd + 1 || end < start || end > manifest.assets.length
+        || interval.candidate_id !== chapter.candidate_id
+        || chapter.candidate_id !== 'C' + String(index + 1).padStart(2, '0')
+        || interval.start_clip !== start || interval.end_clip !== end) {
+        throw new Error('Planner/Gallery Chapter interval not contiguous or bound');
+      }
+      const expected = manifest.assets.slice(start - 1, end)
+        .flatMap((sourceAsset) => {
+          const asset = sourceAsset as { frames: { frame_id: string }[] };
+          return asset.frames.map((frame) => frame.frame_id);
+        })
+        .filter((fid) => !excluded.has(fid));
+      if (!expected.length || JSON.stringify(experience) !== JSON.stringify(expected)
+        || frameCounts[index] !== expected.length) {
+        throw new Error('Planner/Gallery experience does not own its whole interval');
+      }
+      ownedFrameIds = new Set(expected);
+      previousEnd = end;
+    }
     const moments = arr(chapter.key_moments);
     if (!moments.length) throw new Error('Missing chapter key moments');
     for (const moment of moments) {
-      if (!txt(moment.description) || refs(moment.frame_ids, known).some(fid => excluded.has(fid))) {
-        throw new Error('Unsupported key moment');
+      const momentRefs = refs(moment.frame_ids, known);
+      if (!txt(moment.description) || momentRefs.some(fid => excluded.has(fid))
+        || (ownedFrameIds && momentRefs.some(fid => !ownedFrameIds.has(fid)))) {
+        throw new Error('Unsupported or cross-Chapter key moment');
       }
     }
     const gallery = arr(chapter.selected_media);
-    if (!gallery.length || gallery.length > 8) throw new Error('Invalid gallery count');
+    if (!gallery.length || gallery.length > (plannerGallery ? 20 : 8)) {
+      throw new Error('Invalid gallery count');
+    }
     const heroes = gallery.filter(m => m.role === 'HERO');
     if (heroes.length !== 1 || heroes[0].representative_frame_id !== chapter.hero_frame_id
       || heroes[0].asset_id !== chapter.hero_asset_id) throw new Error('Hero mismatch');
@@ -104,6 +156,9 @@ export function validateDirectVlmResult(resultValue: unknown, manifest: AppLibra
         || galleryIds.has(media.representative_frame_id)) throw new Error('Gallery reused/excluded');
       const fid = media.representative_frame_id as string;
       galleryIds.add(fid);
+      if (ownedFrameIds && !ownedFrameIds.has(fid)) {
+        throw new Error('Gallery JPEG outside owning Chapter interval');
+      }
       const expected = frameOwners.get(fid);
       if (!expected || expected.source !== media.source_asset_id || media.asset_id !== assets.get(expected.source)?.appId
         || media.media_kind !== expected.kind || JSON.stringify(media.evidence_frame_ids) !== JSON.stringify([fid])) {
@@ -124,6 +179,24 @@ export function validateDirectVlmResult(resultValue: unknown, manifest: AppLibra
     }
   }
   if (!publicIds.size || publicIds.size > 14) throw new Error('Direct chapter count invalid');
+  if (plannerGallery) {
+    if (previousEnd !== manifest.assets.length || trace.model_calls < chapters.length + 1) {
+      throw new Error('Planner/Gallery unowned final clips or missing model calls');
+    }
+    const stages = arr(trace.stage_metrics);
+    if (stages.length !== trace.model_calls
+      || stages.some((stage, i) => stage.request_id !== trace.request_ids[i])) {
+      throw new Error('Planner/Gallery model call ledger mismatch');
+    }
+    const planCount = stages.filter(stage => stage.stage === 'DIRECT_VLM_CHAPTER_PLANNER_V02').length;
+    const galleryCount = stages.filter(stage => stage.stage === 'DIRECT_VLM_CHAPTER_GALLERY_V02').length;
+    if (planCount < 1 || planCount > 2 || galleryCount < chapters.length
+      || galleryCount > chapters.length * 2 || planCount + galleryCount !== stages.length
+      || stages.slice(0, planCount).some(stage => stage.stage !== 'DIRECT_VLM_CHAPTER_PLANNER_V02')
+      || stages.slice(planCount).some(stage => stage.stage !== 'DIRECT_VLM_CHAPTER_GALLERY_V02')) {
+      throw new Error('Planner/Gallery stage accounting mismatch');
+    }
+  }
   const outcomeIds = new Set<string>();
   for (const outcome of arr(result.selected_memory_outcomes)) {
     if (outcome.memory_type !== 'CHAPTER' || outcome.visibility_state !== 'VISIBLE_PREVIEW'
