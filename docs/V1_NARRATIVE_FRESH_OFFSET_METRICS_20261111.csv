@@ -1,0 +1,13 @@
+﻿dataset,arm,state,chapters,valid_gallery_count,timeline_tenths,dHash_near_duplicate_pairs,narration_marker_count,named_artwork_mention_count
+museum_offset040,A,COMPLETE,4,25,10,0,0,1
+museum_offset040,B,REJECTED,0,0,0,0,0,0
+museum_offset040,B2,COMPLETE,4,26,9,4,0,1
+museum_offset040,C,COMPLETE,6,39,9,4,7,2
+nature_offset070,A,COMPLETE,4,47,10,5,2,0
+nature_offset070,B,REJECTED,0,0,0,0,0,0
+nature_offset070,B2,REJECTED_ALIGNMENT,0,0,0,0,0,0
+nature_offset070,C,REJECTED_GALLERY,7,0,0,0,2,0
+sydney_offset030_cut072,A,REJECTED_INVALID_V1_REFERENCES,8,160,8,20,3,0
+sydney_offset030_cut072,B,SKIPPED_INVALID_FROZEN_V1,0,0,0,0,0,0
+sydney_offset030_cut072,B2,REJECTED_ALIGNMENT,0,0,0,0,0,0
+sydney_offset030_cut072,C,COMPLETE,12,89,10,6,6,0
