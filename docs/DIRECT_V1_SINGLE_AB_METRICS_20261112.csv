@@ -1,0 +1,16 @@
+dataset,variant,repeat,model,chapter_count,gallery_count,strict_valid,error_codes,input_tokens,output_tokens,estimated_cost_cny,latency_s
+museum_offset040,noquota_cap8,run_01,qwen3.8-flash,2,16,False,C2:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:46>=34,73793,715,0.0609649,19.15
+museum_offset040,noquota_cap8,run_02,qwen3.8-flash,10,78,False,C7:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:38>=38;C9:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:47>=47,73793,1760,0.0637864,27.74
+museum_offset040,noquota_open,run_01,qwen3.8-flash,4,20,False,C3:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:45>=19,73786,752,0.0610592,18.15
+museum_offset040,noquota_open,run_02,qwen3.8-flash,6,27,False,C3:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:29>=26,73786,1647,0.0634757,28.05
+museum_offset040,noquota_scope,run_01,qwen3.8-flash,5,34,False,C2:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:19>=17;C3:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:29>=27,73819,1182,0.0622466,27.97
+nature_offset070,noquota_cap8,run_01,qwen3.8-flash,5,19,True,,162241,879,0.1321661,42.31
+nature_offset070,noquota_cap8,run_02,qwen3.8-flash,4,18,True,,162241,973,0.1324199,38.05
+nature_offset070,noquota_open,run_01,qwen3.8-flash,6,29,True,,162234,946,0.1323414,39.3
+nature_offset070,noquota_open,run_02,qwen3.8-flash,6,12,True,,162234,946,0.1323414,36.35
+nature_offset070,noquota_scope,run_01,qwen3.8-flash,4,16,True,,162267,811,0.1320033,44.77
+sydney_offset030_cut072,noquota_cap8,run_01,qwen3.8-flash,8,32,True,,197234,1668,0.1622908,47.59
+sydney_offset030_cut072,noquota_cap8,run_02,qwen3.8-flash,6,46,False,C5:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:101>=93,197234,2164,0.16363,57.22
+sydney_offset030_cut072,noquota_open,run_01,qwen3.8-flash,6,21,True,,197227,1131,0.1608353,50.46
+sydney_offset030_cut072,noquota_open,run_02,qwen3.8-flash,5,35,False,C2:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:32>=18,197227,1278,0.1612322,39.36
+sydney_offset030_cut072,noquota_scope,run_01,qwen3.8-flash,8,38,False,C4:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:70>=62;C6:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:108>=94;C7:ADJACENT_GALLERY_CLIP_SCOPE_OVERLAP:101>=91,197260,2128,0.1635536,54.51
