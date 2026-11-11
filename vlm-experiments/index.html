@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Nexleap · Diary One | VLM Chapter Research</title>
+<meta name="description" content="Diary One 的 VLM Chapter Prompt、跨场景、稳定性、时间边界和逐章选图实验，可核验的原始输出与图片。">
+<style>
+:root{--ink:#1b2633;--sub:#5a6674;--line:#e1e5e9;--bg:#f6f8fa;--white:#fff;--brand:#304f71;}
+*{box-sizing:border-box} body{margin:0;font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:var(--bg);color:var(--ink)}
+.container{max-width:1160px;margin:0 auto;padding:0 24px}
+header{background:#152337;color:#fff;padding:44px 0 52px}
+.kicker{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#95aec5;font-weight:700}
+h1{font-size:clamp(28px,4vw,45px);line-height:1.22;margin:14px 0 16px;font-weight:730;letter-spacing:-.025em}
+.intro{color:#d5deea;max-width:750px;font-size:16px}
+.meta{display:flex;gap:12px;flex-wrap:wrap;margin:27px 0 0}
+.meta span{border:1px solid #ffffff38;color:#d8e5f4;padding:7px 12px;border-radius:40px;font-size:13px}
+main{padding:34px 0 56px} h2{font-size:23px;letter-spacing:-.02em;margin:8px 0 18px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.exp-card{display:block;border:1px solid var(--line);background:white;border-radius:16px;padding:25px;color:inherit;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.exp-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px #19243712}
+.eyebrow{display:block;font-size:12px;color:#567492;font-weight:700}
+h3{font-size:19px;line-height:1.4;margin:10px 0}
+.exp-card p{color:var(--sub);min-height:46px;font-size:14px}
+.look{display:inline-block;margin-top:10px;color:#294e73;font-weight:690;font-size:13px}
+.summary{margin-top:34px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px}
+.summary p{color:var(--sub);margin-bottom:0}
+footer{border-top:1px solid var(--line);padding:21px 0 32px;color:#78818d;font-size:12px}
+@media(max-width:720px){.cards{grid-template-columns:1fr}.exp-card p{min-height:0}header{padding:34px 0}}
+</style></head><body>
+<header><div class="container">
+<div class="kicker">Nexleap One / Diary Research Archive</div>
+<h1>VLM Chapter 实验档案</h1>
+<p class="intro">从原始抽帧出发，比较 Prompt 如何影响 Chapter 划分、图库选图、封面、命名和时间归属。所有页面展示模型的原始输出，不对错误章节或图片作人工改写。</p>
+<div class="meta"><span>4 类原始素材</span><span>多组独立 Prompt A/B</span><span>原始 JPEG 与 Chapter 结果</span><span>2026-11</span></div>
+</div></header>
+<main class="container"><h2>选择实验</h2><div class="cards"><a class="exp-card" href="cross-domain/index.html">
+  <span class="eyebrow">01 · Prompt 组合与多场景</span>
+  <h3>4 类素材 × 5 种方案</h3>
+  <p>V1、P1、P123Cover、Boundaries、MinimalEnd；查看每章实际图片、标题、Story 与 Schema。</p><span class="look">打开完整原始实验 <span aria-hidden="true">↗</span></span>
+  </a><a class="exp-card" href="cross-domain/cover.html">
+  <span class="eyebrow">02 · 全部原始封面总览</span>
+  <h3>跨场景封面接触表</h3>
+  <p>四种场景的模型封面矩阵，可查看同一场景不同 Prompt 的封面差异。</p><span class="look">打开完整原始实验 <span aria-hidden="true">↗</span></span>
+  </a><a class="exp-card" href="isolated/index.html">
+  <span class="eyebrow">03 · V1 单因素消融</span>
+  <h3>冻结 V1，每次只改一个因素</h3>
+  <p>时间覆盖、主体层级、命名证据、封面选择；独立 API 调用，拒绝无限叠加约束。</p><span class="look">打开完整原始实验 <span aria-hidden="true">↗</span></span>
+  </a><a class="exp-card" href="stability/index.html">
+  <span class="eyebrow">04 · V1 重复运行</span>
+  <h3>采样稳定性与时间优先</h3>
+  <p>对同一数据多次调用，比较 Chapter 数量、图库数量、真实封面和原始 JSON。</p><span class="look">打开完整原始实验 <span aria-hidden="true">↗</span></span>
+  </a><a class="exp-card" href="contracts/index.html">
+  <span class="eyebrow">05 · 可验证的 Chapter 时间合同</span>
+  <h3>end_clip 与 Plan/Gallery A/B</h3>
+  <p>按模型原始 end_clip 验证时间范围、跨章图库与索引；完整保留失败输出。</p><span class="look">打开完整原始实验 <span aria-hidden="true">↗</span></span>
+  </a><a class="exp-card" href="physical/index.html">
+  <span class="eyebrow">06 · 分章后物理限定图片</span>
+  <h3>真实 JPEG / 原始模型输出</h3>
+  <p>全日规划后，每章只收到所属原始 JPEG；浏览博物馆和悉尼全章的真实图文内容。</p><span class="look">打开完整原始实验 <span aria-hidden="true">↗</span></span>
+  </a></div>
+<div class="summary"><h2>如何阅读这些实验</h2>
+<p><b>Chapter 数量多、图片数量多、JSON 合法，都不等于质量更好。</b>
+实验重视时间顺序、独立经历召回、封面主旨与图像证据。旧 V1 没有显式 clip 归属；后续方案使用动态 Schema、应用端校验和逐章图片输入。独立审查也可能出现 IMAGE_INDEX / CLIP_SEQUENCE 混淆，因此请以原图与实际片段编号为准。</p>
+<p>图片只用于实验结果展示，不代表拍摄者本人的真实生活日志。此页面是静态研究档案，不提供模型调用、修改或上传接口。</p></div>
+</main><footer><div class="container">NEXLEAP ONE · RESEARCH ONLY · SOURCE: FROZEN VLM OUTPUTS AND ORIGINAL JPG EVIDENCE</div></footer>
+</body></html>

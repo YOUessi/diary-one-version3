@@ -1,0 +1,342 @@
+<!doctype html><html lang='zh-CN'><head><meta charset='utf-8'><title>Diary One 物理分章图库验证</title><style>body{font:15px -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;background:#f5f3ed;color:#25211c}
+ main{max-width:1420px;margin:auto;padding:22px}article{background:white;margin:18px 0;padding:18px;border:1px solid #e5e1d9;border-radius:12px}
+ h1{font-size:30px}h3 span{font-size:12px;background:#efece4;padding:5px;border-radius:6px}
+ p{line-height:1.7}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px}
+ figure{margin:0;background:#eae8e3;border-radius:6px;overflow:hidden}figure img{width:100%;height:220px;object-fit:contain;background:#171719}
+ figcaption{font-size:12px;padding:8px}pre{white-space:pre-wrap}summary{cursor:pointer}</style><meta name="robots" content="noindex,nofollow"></head><body><style id="research-nav-style">.research-topnav{position:relative;z-index:60;display:flex;gap:14px;flex-wrap:wrap;align-items:center;padding:12px 20px;background:#16202c;color:#fff;font:600 13px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;}.research-topnav a{color:#d9e9fb;text-decoration:none!important;border:1px solid #ffffff40;border-radius:100px;padding:6px 10px;}.research-topnav b{font-weight:700;color:#fff;margin-right:8px;}.research-topnav small{color:#adb8c7;}</style><nav class="research-topnav" aria-label="实验研究导航"><b>Nexleap · VLM Research</b><a href="../index.html">实验入口</a><a href="../cross-domain/index.html">跨场景实验</a><a href="../isolated/index.html">单因素</a><a href="../stability/index.html">稳定性</a><a href="../contracts/index.html">时间合同</a><a href="../physical/index.html">逐章选图</a><small>2026-11 · 原始实验，不代表已上线</small></nav><main><h1>Diary One · 物理分章图库 vs V1 原始结果</h1><p>第一阶段模型规划范围，第二阶段每章仅上传该章 JPEG。展示模型原文及真实照片，机器不修改内容。此处没有外部路线图和人工标注输入。</p><section><h2>museum_local · 物理分章选图</h2><p>6 Chapter；浏览模型原始标题、故事与真实图片。请独立检查：是否该拆章、是否漏场景、名称是否有充分视觉证据、封面是否代表主题。</p>
+<article><h3>C01 · 古典建筑与早期绘画 <span>结束 Clip 10</span></h3><p>旅程始于宏伟的古典主义建筑外观，随后进入室内展厅。这里陈列着大量文艺复兴时期的宗教题材画作和肖像画，包括多幅圣母像以及描绘圣人场景的作品，如《圣母子与施洗者圣约翰》（Madonna and Child with the Infant Saint John）。画面中还能看到精美的半身雕塑和拱形构图的艺术品，展现了早期西方艺术的庄重与细腻。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/museum_local/001.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/001.jpg'></a><figcaption>封面 · IMAGE 1 · Clip 1</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/002.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/002.jpg'></a><figcaption>支持图 · IMAGE 2 · Clip 2</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/003.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/003.jpg'></a><figcaption>支持图 · IMAGE 3 · Clip 3</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/004.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/004.jpg'></a><figcaption>支持图 · IMAGE 4 · Clip 4</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/006.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/006.jpg'></a><figcaption>支持图 · IMAGE 6 · Clip 5</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/008.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/008.jpg'></a><figcaption>支持图 · IMAGE 8 · Clip 6</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;宏伟的古典主义建筑外观，带有多立克柱式的门廊和宽阔的台阶&quot;,
+    &quot;image_index&quot;: 1
+  },
+  {
+    &quot;text&quot;: &quot;室内展厅角落，陈列着哥特式尖顶画作、白色半身雕塑以及拱形构图的宗教艺术品&quot;,
+    &quot;image_index&quot;: 2
+  },
+  {
+    &quot;text&quot;: &quot;文艺复兴时期的圣母像与施洗者圣约翰场景画作《圣母子与施洗者圣约翰》&quot;,
+    &quot;image_index&quot;: 4
+  },
+  {
+    &quot;text&quot;: &quot;精美的早期西方艺术肖像画与半身雕塑展示&quot;,
+    &quot;image_index&quot;: 3
+  },
+  {
+    &quot;text&quot;: &quot;描绘圣人场景的大型宗教题材画作，色彩庄重细腻&quot;,
+    &quot;image_index&quot;: 6
+  }
+]</pre></details></article>
+<article><h3>C02 · 历史肖像与巴洛克艺术 <span>结束 Clip 25</span></h3><p>随着参观深入，展厅风格转变为更为厚重的木质墙面装饰。重点展示了大量人物肖像画，捕捉了不同时代人物的神态与服饰细节。除了个人肖像，还有表现家庭或群体生活的场景画作。这一区域的灯光较为柔和，营造出一种沉浸式的观展氛围，让人得以细细品味巴洛克及之后时期绘画的色彩与光影运用。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/museum_local/018.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/018.jpg'></a><figcaption>封面 · IMAGE 18 · Clip 14</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/024.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/024.jpg'></a><figcaption>支持图 · IMAGE 24 · Clip 20</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/026.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/026.jpg'></a><figcaption>支持图 · IMAGE 26 · Clip 21</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;木质墙面的巴洛克风格展厅&quot;,
+    &quot;image_index&quot;: 18
+  },
+  {
+    &quot;text&quot;: &quot;精美的古典女性肖像画&quot;,
+    &quot;image_index&quot;: 24
+  },
+  {
+    &quot;text&quot;: &quot;大型历史战争浮雕雕塑&quot;,
+    &quot;image_index&quot;: 26
+  }
+]</pre></details></article>
+<article><h3>C03 · 战争纪念与美国艺术 <span>结束 Clip 34</span></h3><p>视线被一面巨大的青铜浮雕墙吸引，生动刻画了骑兵冲锋的战争场面，极具视觉冲击力。旁边的展板详细介绍了亚伯拉罕·林肯（Abraham Lincoln）与美国内战的历史背景，并展示了他的人物肖像。随后的展厅转向美国本土艺术，挂满了风景油画，描绘了山脉、河流等自然景观，以及带有船模展柜的海洋主题区域，展现了独特的国家记忆与地理风貌。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/museum_local/034.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/034.jpg'></a><figcaption>封面 · IMAGE 34 · Clip 26</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/037.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/037.jpg'></a><figcaption>支持图 · IMAGE 37 · Clip 29</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/041.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/041.jpg'></a><figcaption>支持图 · IMAGE 41 · Clip 32</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;雕塑中庭花园&quot;,
+    &quot;image_index&quot;: 34
+  },
+  {
+    &quot;text&quot;: &quot;美国风景油画展厅&quot;,
+    &quot;image_index&quot;: 37
+  },
+  {
+    &quot;text&quot;: &quot;森林题材画作&quot;,
+    &quot;image_index&quot;: 41
+  }
+]</pre></details></article>
+<article><h3>C04 · 印象派与现代雕塑 <span>结束 Clip 44</span></h3><p>穿过一段走廊，来到了印象派和后印象派作品的集中展示区。可以看到点彩风格的风景画和静物写生，色彩明亮轻快。紧接着是现当代雕塑展区，陈列着各种材质的人体雕塑，既有写实风格的站立人像，也有抽象动态的金属作品。其中一件女性持弓造型的青铜雕像尤为引人注目，展示了现代艺术对人体线条的独特诠释。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/museum_local/049.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/049.jpg'></a><figcaption>封面 · IMAGE 49 · Clip 36</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/056.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/056.jpg'></a><figcaption>支持图 · IMAGE 56 · Clip 40</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/060.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/060.jpg'></a><figcaption>支持图 · IMAGE 60 · Clip 43</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;走廊转角处的动态青铜雕塑与点彩派画作&quot;,
+    &quot;image_index&quot;: 49
+  },
+  {
+    &quot;text&quot;: &quot;古典风格展厅内的群雕陈列&quot;,
+    &quot;image_index&quot;: 56
+  },
+  {
+    &quot;text&quot;: &quot;木饰面墙上的巴洛克人物肖像画&quot;,
+    &quot;image_index&quot;: 60
+  }
+]</pre></details></article>
+<article><h3>C05 · 欧洲大师杰作与织毯 <span>结束 Clip 52</span></h3><p>这部分展厅汇聚了众多欧洲古典大师的真迹。其中包括委拉斯开兹（Velázquez）笔下的著名肖像，如《教皇英诺森十世肖像》（Portrait of Innocent X），其深沉的色调令人印象深刻。此外还有大型的历史题材油画、精致的微型画框以及宏伟的挂毯作品。展厅设计典雅，通过壁灯和深色木护墙板烘托出浓厚的艺术殿堂气息。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/museum_local/067.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/067.jpg'></a><figcaption>封面 · IMAGE 67 · Clip 46</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/064.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/064.jpg'></a><figcaption>支持图 · IMAGE 64 · Clip 45</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/068.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/068.jpg'></a><figcaption>支持图 · IMAGE 68 · Clip 46</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/071.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/071.jpg'></a><figcaption>支持图 · IMAGE 71 · Clip 48</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/073.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/073.jpg'></a><figcaption>支持图 · IMAGE 73 · Clip 48</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/079.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/079.jpg'></a><figcaption>支持图 · IMAGE 79 · Clip 51</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;挂毯展厅全景&quot;,
+    &quot;image_index&quot;: 67
+  },
+  {
+    &quot;text&quot;: &quot;雕塑与浮雕细节&quot;,
+    &quot;image_index&quot;: 64
+  },
+  {
+    &quot;text&quot;: &quot;古典大师肖像画&quot;,
+    &quot;image_index&quot;: 71
+  },
+  {
+    &quot;text&quot;: &quot;壁龛中的雕像&quot;,
+    &quot;image_index&quot;: 73
+  },
+  {
+    &quot;text&quot;: &quot;古董家具陈列室&quot;,
+    &quot;image_index&quot;: 79
+  }
+]</pre></details></article>
+<article><h3>C06 · 当代艺术与生活空间 <span>结束 Clip 55</span></h3><p>最后几章涵盖了从波普艺术到生活美学的跨越。出现了安迪·沃霍尔（Andy Warhol）标志性的丝网印刷作品，如玛丽莲·梦露系列，以及爱德华·霍普（Edward Hopper）著名的《夜游者》（Nighthawks），这些作品以其独特的现代视角引发思考。随后场景转换至布置精美的古董家具展厅，还原了历史上的居家环境，最终停留在博物馆礼品店，结束了这场丰富的文化之旅。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/museum_local/085.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/085.jpg'></a><figcaption>封面 · IMAGE 85 · Clip 54</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/083.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/083.jpg'></a><figcaption>支持图 · IMAGE 83 · Clip 53</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/086.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/086.jpg'></a><figcaption>支持图 · IMAGE 86 · Clip 55</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;安迪·沃霍尔（Andy Warhol）标志性的丝网印刷作品，如玛丽莲·梦露系列&quot;,
+    &quot;image_index&quot;: 83
+  },
+  {
+    &quot;text&quot;: &quot;爱德华·霍普（Edward Hopper）著名的《夜游者》（Nighthawks）等画作&quot;,
+    &quot;image_index&quot;: 85
+  },
+  {
+    &quot;text&quot;: &quot;博物馆宏伟的古典柱式建筑与雕塑展厅&quot;,
+    &quot;image_index&quot;: 86
+  }
+]</pre></details></article>
+<h2>冻结 V1 历史结果（对照，不作人工修正）</h2>
+<article><h3>C01 · 国家美术馆的古典与印象派长廊</h3><p>旅程从宏伟的新古典主义建筑立面开始，步入馆内首先映入眼帘的是欧洲早期大师作品。在意大利文艺复兴展厅中，近距离欣赏了拉斐尔的《圣母子的异象》（The Vision of Ezekiel）和乔凡尼·贝利尼的《圣母子与圣人》（Madonna and Child with Saints）。随后穿过大理石圆厅进入17至18世纪的绘画区，依次经过荷兰画派的肖像与静物、弗兰斯·哈尔斯的画作以及西班牙宫廷的委拉斯开兹作品。在印象派展厅，修拉的点彩风景画《海峡，大营》（The Channel at Grandcamp）与莫奈的花园题材并置，展现了光影艺术的演变。最后漫步于布满雕塑的内庭花园，感受艺术与建筑的交融。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/museum_local/001.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/001.jpg'></a><figcaption>封面 · IMAGE 1 · Clip 1</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/002.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/002.jpg'></a><figcaption>支持图 · IMAGE 2 · Clip 2</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/004.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/004.jpg'></a><figcaption>支持图 · IMAGE 4 · Clip 4</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/006.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/006.jpg'></a><figcaption>支持图 · IMAGE 6 · Clip 5</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/008.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/008.jpg'></a><figcaption>支持图 · IMAGE 8 · Clip 6</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/011.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/011.jpg'></a><figcaption>支持图 · IMAGE 11 · Clip 9</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/019.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/019.jpg'></a><figcaption>支持图 · IMAGE 19 · Clip 15</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/020.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/020.jpg'></a><figcaption>支持图 · IMAGE 20 · Clip 16</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/038.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/038.jpg'></a><figcaption>支持图 · IMAGE 38 · Clip 30</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/039.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/039.jpg'></a><figcaption>支持图 · IMAGE 39 · Clip 30</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/034.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/034.jpg'></a><figcaption>支持图 · IMAGE 34 · Clip 26</figcaption></figure></div></article>
+<article><h3>C02 · 美国艺术史：从建国到现代</h3><p>随着参观路线深入，展览主题转向美国本土艺术的发展。首先看到的是表现美国独立战争历史的巨幅浮雕，以及亚伯拉罕·林肯等历史人物的肖像。接着进入19世纪哈德逊河画派展区，壮丽的自然风光如阿尔伯特·比尔施塔特的《落基山脉》（Rocky Mountain Landscape）令人震撼。在镀金时代的展厅里，萨金特（John Singer Sargent）著名的《X夫人像》（Madame X）以其独特的构图吸引了众人目光。此外，还浏览了包括杜尚、波普艺术在内的现代主义杰作，以及复原的历史生活场景和精致的装饰艺术家具。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/museum_local/026.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/026.jpg'></a><figcaption>封面 · IMAGE 26 · Clip 21</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/028.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/028.jpg'></a><figcaption>支持图 · IMAGE 28 · Clip 21</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/041.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/041.jpg'></a><figcaption>支持图 · IMAGE 41 · Clip 32</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/050.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/050.jpg'></a><figcaption>支持图 · IMAGE 50 · Clip 37</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/060.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/060.jpg'></a><figcaption>支持图 · IMAGE 60 · Clip 43</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/073.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/073.jpg'></a><figcaption>支持图 · IMAGE 73 · Clip 48</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/077.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/077.jpg'></a><figcaption>支持图 · IMAGE 77 · Clip 50</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/078.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/078.jpg'></a><figcaption>支持图 · IMAGE 78 · Clip 50</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/079.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/079.jpg'></a><figcaption>支持图 · IMAGE 79 · Clip 51</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/080.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/080.jpg'></a><figcaption>支持图 · IMAGE 80 · Clip 52</figcaption></figure></div></article>
+<article><h3>C03 · 西翼大厅与现代馆藏</h3><p>离开主楼区域后，进入了拥有高耸黑色大理石柱的西翼大厅，气势恢宏。这里主要展出20世纪及当代艺术品。最引人注目的是格兰特·伍德那幅家喻户晓的《美国哥特式》（American Gothic），画中人物严肃的表情依旧充满趣味。随后逛到了博物馆的艺术礼品店，店内悬挂着色彩斑斓的纸伞装置，货架上摆满了文创周边。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/museum_local/086.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/086.jpg'></a><figcaption>封面 · IMAGE 86 · Clip 55</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/085.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/085.jpg'></a><figcaption>支持图 · IMAGE 85 · Clip 54</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/082.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/082.jpg'></a><figcaption>支持图 · IMAGE 82 · Clip 53</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/museum_local/083.jpg'><img loading='lazy' src='../cross-domain/images/museum_local/083.jpg'></a><figcaption>支持图 · IMAGE 83 · Clip 53</figcaption></figure></div></article>
+</section>
+<section><h2>sydney_local · 物理分章选图</h2><p>10 Chapter；浏览模型原始标题、故事与真实图片。请独立检查：是否该拆章、是否漏场景、名称是否有充分视觉证据、封面是否代表主题。</p>
+<article><h3>C01 · 环形码头与悉尼歌剧院漫步 <span>结束 Clip 20</span></h3><p>旅程从繁忙的环形码头（Circular Quay）开始，这里高楼林立，邮轮停靠。镜头转向标志性的悉尼歌剧院（Sydney Opera House），近距离捕捉其独特的白色贝壳状屋顶结构。随后，视线穿过开阔的广场和阶梯，远眺雄伟的悉尼海港大桥（Sydney Harbour Bridge），并在阳光明媚的海滨步道旁驻足，感受港口城市的活力与现代建筑的宏伟。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/002.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/002.jpg'></a><figcaption>封面 · IMAGE 2 · Clip 1</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/004.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/004.jpg'></a><figcaption>支持图 · IMAGE 4 · Clip 2</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/008.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/008.jpg'></a><figcaption>支持图 · IMAGE 8 · Clip 4</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/015.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/015.jpg'></a><figcaption>支持图 · IMAGE 15 · Clip 8</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/017.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/017.jpg'></a><figcaption>支持图 · IMAGE 17 · Clip 9</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/020.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/020.jpg'></a><figcaption>支持图 · IMAGE 20 · Clip 11</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/021.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/021.jpg'></a><figcaption>支持图 · IMAGE 21 · Clip 12</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/024.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/024.jpg'></a><figcaption>支持图 · IMAGE 24 · Clip 15</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;Circular Quay waterfront with a green and yellow ferry passing by&quot;,
+    &quot;image_index&quot;: 2
+  },
+  {
+    &quot;text&quot;: &quot;Walking along the promenade past outdoor cafes towards the Sydney Opera House&quot;,
+    &quot;image_index&quot;: 4
+  },
+  {
+    &quot;text&quot;: &quot;Distant view of the Sydney Harbour Bridge across the water&quot;,
+    &quot;image_index&quot;: 8
+  },
+  {
+    &quot;text&quot;: &quot;Close-up looking up at the iconic white shell-like roof structures of the Sydney Opera House&quot;,
+    &quot;image_index&quot;: 15
+  },
+  {
+    &quot;text&quot;: &quot;Panoramic view from the Opera House plaza showing the city skyline and cruise ships&quot;,
+    &quot;image_index&quot;: 17
+  },
+  {
+    &quot;text&quot;: &quot;Crowds of tourists walking on the busy streets near Circular Quay&quot;,
+    &quot;image_index&quot;: 20
+  },
+  {
+    &quot;text&quot;: &quot;Traditional brick buildings and palm trees lining the quay&quot;,
+    &quot;image_index&quot;: 21
+  },
+  {
+    &quot;text&quot;: &quot;Elevated view of the wharves with docked ferries and a large cruise ship in front of the bridge&quot;,
+    &quot;image_index&quot;: 24
+  }
+]</pre></details></article>
+<article><h3>C02 · 岩石区的历史街区与周末市集 <span>结束 Clip 31</span></h3><p>场景切换至充满历史韵味的岩石区（The Rocks）。穿梭在古老的砂岩建筑、狭窄的小巷和拱廊之间，这里保留着殖民时期的风貌。恰逢热闹的岩石区市集（The Rocks Markets），街道两旁摆满了手工艺品摊位，露天咖啡座坐满了休闲的人群。街头艺人的吉他弹唱为这片古老街区增添了浓厚的生活气息和艺术氛围。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/037.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/037.jpg'></a><figcaption>封面 · IMAGE 37 · Clip 23</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/042.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/042.jpg'></a><figcaption>支持图 · IMAGE 42 · Clip 27</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/036.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/036.jpg'></a><figcaption>支持图 · IMAGE 36 · Clip 23</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/038.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/038.jpg'></a><figcaption>支持图 · IMAGE 38 · Clip 24</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/039.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/039.jpg'></a><figcaption>支持图 · IMAGE 39 · Clip 25</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/041.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/041.jpg'></a><figcaption>支持图 · IMAGE 41 · Clip 26</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/045.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/045.jpg'></a><figcaption>支持图 · IMAGE 45 · Clip 29</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;在岩石区历史街区（The Rocks）的拱廊和露天咖啡座之间漫步&quot;,
+    &quot;image_index&quot;: 32
+  },
+  {
+    &quot;text&quot;: &quot;穿过古老的砂岩建筑，进入拥挤热闹的岩石区市集街道&quot;,
+    &quot;image_index&quot;: 37
+  },
+  {
+    &quot;text&quot;: &quot;参观具有殖民时期风格的 Capt Tench Arcade 拱廊通道&quot;,
+    &quot;image_index&quot;: 33
+  },
+  {
+    &quot;text&quot;: &quot;街头艺人在古老街区的露天酒吧前进行吉他弹唱表演&quot;,
+    &quot;image_index&quot;: 42
+  },
+  {
+    &quot;text&quot;: &quot;穿梭于手工艺品摊位林立的白色帐篷长廊下&quot;,
+    &quot;image_index&quot;: 41
+  }
+]</pre></details></article>
+<article><h3>C03 · 麦考利夫人角与海港大桥脚下 <span>结束 Clip 45</span></h3><p>离开岩石区，来到风景绝佳的麦考利夫人角（Mrs Macquaries Point）。这里是拍摄悉尼歌剧院和海港大桥同框的经典角度，碧蓝的海水映衬着两大地标。沿着海滨步道前行，可以看到巨大的皇家海军军舰（HMAS Vampire）停泊在岸边。随后，视角转至大桥脚下，仰望钢铁巨兽般的桥底结构和坚固的石砌桥墩，体验工业建筑的压迫感与壮丽。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/050.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/050.jpg'></a><figcaption>封面 · IMAGE 50 · Clip 32</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/049.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/049.jpg'></a><figcaption>支持图 · IMAGE 49 · Clip 32</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/052.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/052.jpg'></a><figcaption>支持图 · IMAGE 52 · Clip 34</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/054.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/054.jpg'></a><figcaption>支持图 · IMAGE 54 · Clip 34</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/061.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/061.jpg'></a><figcaption>支持图 · IMAGE 61 · Clip 38</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/062.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/062.jpg'></a><figcaption>支持图 · IMAGE 62 · Clip 38</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/063.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/063.jpg'></a><figcaption>支持图 · IMAGE 63 · Clip 39</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;在麦考利夫人角（Mrs Macquaries Point）眺望悉尼歌剧院与海港大桥同框的经典视角，前景可见停泊的皇家海军军舰。&quot;,
+    &quot;image_index&quot;: 50
+  },
+  {
+    &quot;text&quot;: &quot;沿海滨步道前行，经过巨大的棕榈树和草坪区域，向大桥方向移动。&quot;,
+    &quot;image_index&quot;: 52
+  },
+  {
+    &quot;text&quot;: &quot;视角转至大桥脚下，近距离仰望宏伟的钢铁拱形结构。&quot;,
+    &quot;image_index&quot;: 54
+  },
+  {
+    &quot;text&quot;: &quot;体验工业建筑的压迫感，特写展示大桥底部的复杂钢结构细节。&quot;,
+    &quot;image_index&quot;: 61
+  },
+  {
+    &quot;text&quot;: &quot;从桥下向外回望，透过大桥底部框架看到远处的邮轮和城市天际线。&quot;,
+    &quot;image_index&quot;: 62
+  },
+  {
+    &quot;text&quot;: &quot;欣赏坚固的石砌桥墩基座，感受历史建筑与自然植被的结合。&quot;,
+    &quot;image_index&quot;: 63
+  }
+]</pre></details></article>
+<article><h3>C04 · 巴兰加鲁 reserve 与情人港现代风光 <span>结束 Clip 65</span></h3><p>进入巴兰加鲁保护区（Barangaroo Reserve），这里有茂密的本土植被和蜿蜒的步行道。穿过绿意盎然的公园，视野豁然开朗，来到了现代化的达令港（Darling Harbour）。沿途经过极具设计感的建筑，如带有垂直绿化的国际会议中心（ICC Sydney），以及拥有独特黑色层叠外观的建筑。宽阔的水面上游船穿梭，岸边的步道整洁舒适，展现了城市的新貌。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/074.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/074.jpg'></a><figcaption>封面 · IMAGE 74 · Clip 46</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/083.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/083.jpg'></a><figcaption>支持图 · IMAGE 83 · Clip 53</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/092.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/092.jpg'></a><figcaption>支持图 · IMAGE 92 · Clip 59</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/090.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/090.jpg'></a><figcaption>支持图 · IMAGE 90 · Clip 58</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;巴兰加鲁保护区步道与城市天际线&quot;,
+    &quot;image_index&quot;: 74
+  },
+  {
+    &quot;text&quot;: &quot;情人港标志性黑色层叠建筑&quot;,
+    &quot;image_index&quot;: 83
+  },
+  {
+    &quot;text&quot;: &quot;情人港游船码头与现代建筑群&quot;,
+    &quot;image_index&quot;: 92
+  },
+  {
+    &quot;text&quot;: &quot;皮尔蒙特大桥步行道&quot;,
+    &quot;image_index&quot;: 90
+  }
+]</pre></details></article>
+<article><h3>C05 · 皮尔蒙特桥与澳大利亚国家海事博物馆 <span>结束 Clip 80</span></h3><p>走过连接两岸的皮尔蒙特桥（Pyrmont Bridge），桥上飘扬着各国旗帜。下桥后抵达达令港的核心区域，参观澳大利亚国家海事博物馆（Australian National Maritime Museum）。博物馆外停泊着多艘历史船只，包括高大的风帆船和二战时期的潜艇。广场上还设有展示海洋生物知识的科普柱，充满了探索海洋的乐趣。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/106.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/106.jpg'></a><figcaption>封面 · IMAGE 106 · Clip 69</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/101.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/101.jpg'></a><figcaption>支持图 · IMAGE 101 · Clip 66</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/102.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/102.jpg'></a><figcaption>支持图 · IMAGE 102 · Clip 67</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/104.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/104.jpg'></a><figcaption>支持图 · IMAGE 104 · Clip 68</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/108.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/108.jpg'></a><figcaption>支持图 · IMAGE 108 · Clip 70</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/110.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/110.jpg'></a><figcaption>支持图 · IMAGE 110 · Clip 72</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/112.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/112.jpg'></a><figcaption>支持图 · IMAGE 112 · Clip 74</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/117.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/117.jpg'></a><figcaption>支持图 · IMAGE 117 · Clip 78</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/120.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/120.jpg'></a><figcaption>支持图 · IMAGE 120 · Clip 80</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;澳大利亚国家海事博物馆入口&quot;,
+    &quot;image_index&quot;: 106
+  },
+  {
+    &quot;text&quot;: &quot;博物馆外的高大风帆船&quot;,
+    &quot;image_index&quot;: 101
+  },
+  {
+    &quot;text&quot;: &quot;海洋生物科普柱与壁画&quot;,
+    &quot;image_index&quot;: 102
+  },
+  {
+    &quot;text&quot;: &quot;达令港核心区域景观&quot;,
+    &quot;image_index&quot;: 108
+  },
+  {
+    &quot;text&quot;: &quot;连接两岸的皮尔蒙特桥&quot;,
+    &quot;image_index&quot;: 110
+  },
+  {
+    &quot;text&quot;: &quot;广场上的休闲喷泉区&quot;,
+    &quot;image_index&quot;: 112
+  },
+  {
+    &quot;text&quot;: &quot;唐人街的中式牌楼&quot;,
+    &quot;image_index&quot;: 117
+  },
+  {
+    &quot;text&quot;: &quot;室内市集购物场景&quot;,
+    &quot;image_index&quot;: 120
+  }
+]</pre></details></article>
+<article><h3>C06 · 唐人街与海德公园的绿色静谧 <span>结束 Clip 97</span></h3><p>从港口转入内陆，首先来到悉尼唐人街（Chinatown）。街道两旁是中式牌楼和商铺，空气中似乎弥漫着美食的香气。穿过繁华的商业街区，瞬间进入了宁静的海德公园（Hyde Park）。高大的榕树遮天蔽日，阳光透过树叶洒下斑驳光影，草坪上有人在休憩。著名的阿奇博尔德喷泉（Archibald Fountain）在阳光下闪耀，雕塑精美绝伦，为喧嚣的城市提供了一片绿洲。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/121.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/121.jpg'></a><figcaption>封面 · IMAGE 121 · Clip 81</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/132.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/132.jpg'></a><figcaption>支持图 · IMAGE 132 · Clip 89</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;唐人街纪念品商店&quot;,
+    &quot;image_index&quot;: 121
+  },
+  {
+    &quot;text&quot;: &quot;唐人街店铺林立的街道&quot;,
+    &quot;image_index&quot;: 132
+  }
+]</pre></details></article>
+<article><h3>C07 · 圣玛丽大教堂与悉尼市中心购物长廊 <span>结束 Clip 110</span></h3><p>在海德公园边缘，耸立着宏伟的悉尼圣玛丽大教堂（St Mary&#x27;s Cathedral），其哥特式尖顶直插云霄。离开教堂，步入市中心的商业大动脉乔治街（George Street）。这里不仅有传统的百货商店，还有著名的维多利亚女王大厦（Queen Victoria Building, QVB）和悉尼拱廊（Sydney Arcade）。QVB内部装饰华丽，彩色玻璃窗和圆顶令人叹为观止；而悉尼塔（Sydney Tower）也在街头一瞥中显露身影。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/147.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/147.jpg'></a><figcaption>封面 · IMAGE 147 · Clip 102</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/142.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/142.jpg'></a><figcaption>支持图 · IMAGE 142 · Clip 98</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/143.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/143.jpg'></a><figcaption>支持图 · IMAGE 143 · Clip 99</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/149.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/149.jpg'></a><figcaption>支持图 · IMAGE 149 · Clip 103</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/150.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/150.jpg'></a><figcaption>支持图 · IMAGE 150 · Clip 104</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;乔治街与Market St路口的繁华街景&quot;,
+    &quot;image_index&quot;: 142
+  },
+  {
+    &quot;text&quot;: &quot;Dymocks大楼入口处的零售中心&quot;,
+    &quot;image_index&quot;: 143
+  },
+  {
+    &quot;text&quot;: &quot;维多利亚女王大厦（QVB）内部标志性的红色走廊与精美拱廊&quot;,
+    &quot;image_index&quot;: 147
+  },
+  {
+    &quot;text&quot;: &quot;悉尼拱廊（Sydney Arcade）的入口标识&quot;,
+    &quot;image_index&quot;: 149
+  },
+  {
+    &quot;text&quot;: &quot;乔治街繁忙的交通与街角建筑&quot;,
+    &quot;image_index&quot;: 150
+  }
+]</pre></details></article>
+<article><h3>C08 · 新南威尔士美术馆与皇家植物园 <span>结束 Clip 135</span></h3><p>行程来到文化区，首先映入眼帘的是新南威尔士美术馆（Art Gallery of NSW）的主馆，其古典主义立面庄严肃穆。旁边则是拥有独特三角形屋顶的现代馆。穿过街道，进入广阔的皇家植物园（Royal Botanic Garden）。这里花团锦簇，有精致的玫瑰园和温室，更有著名的“新芽”雕塑（New and Old Growth）静静伫立在草坪上，象征着生命的延续。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/164.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/164.jpg'></a><figcaption>封面 · IMAGE 164 · Clip 114</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/179.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/179.jpg'></a><figcaption>支持图 · IMAGE 179 · Clip 126</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/180.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/180.jpg'></a><figcaption>支持图 · IMAGE 180 · Clip 127</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/185.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/185.jpg'></a><figcaption>支持图 · IMAGE 185 · Clip 131</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/190.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/190.jpg'></a><figcaption>支持图 · IMAGE 190 · Clip 133</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;穿过美术馆附近的街道，背景可见带有“AG”标志的旗帜&quot;,
+    &quot;image_index&quot;: 164
+  },
+  {
+    &quot;text&quot;: &quot;参观历史建筑，正面有三角山花和时钟&quot;,
+    &quot;image_index&quot;: 179
+  },
+  {
+    &quot;text&quot;: &quot;古典主义立面建筑旁设有露天咖啡座&quot;,
+    &quot;image_index&quot;: 180
+  },
+  {
+    &quot;text&quot;: &quot;进入植物园区域，看到一座现代风格的喷泉雕塑&quot;,
+    &quot;image_index&quot;: 185
+  },
+  {
+    &quot;text&quot;: &quot;花园中一只白色的鸟停在石质结构上&quot;,
+    &quot;image_index&quot;: 190
+  }
+]</pre></details></article>
+<article><h3>C09 · 植物园的隐秘花园与水景 <span>结束 Clip 150</span></h3><p>深入皇家植物园的腹地，探访更为幽静的区域。这里有专门培育仙人掌和多肉植物的园区，形态各异的植物在阳光下显得生机勃勃。穿过林荫小道，来到一片宁静的水域旁，天鹅在水面游弋。远处的麦考利夫人座椅（Mrs Macquaries Chair）虽然未直接特写，但这一带正是回望歌剧院的最佳位置之一。整个区域充满了自然的野趣与人工园艺的完美结合。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/195.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/195.jpg'></a><figcaption>封面 · IMAGE 195 · Clip 137</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/204.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/204.jpg'></a><figcaption>支持图 · IMAGE 204 · Clip 143</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/215.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/215.jpg'></a><figcaption>支持图 · IMAGE 215 · Clip 149</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/198.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/198.jpg'></a><figcaption>支持图 · IMAGE 198 · Clip 138</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/199.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/199.jpg'></a><figcaption>支持图 · IMAGE 199 · Clip 139</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/203.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/203.jpg'></a><figcaption>支持图 · IMAGE 203 · Clip 143</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/212.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/212.jpg'></a><figcaption>支持图 · IMAGE 212 · Clip 148</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/216.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/216.jpg'></a><figcaption>支持图 · IMAGE 216 · Clip 149</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;探访植物园内的凉亭与雕塑景观&quot;,
+    &quot;image_index&quot;: 195
+  },
+  {
+    &quot;text&quot;: &quot;观察仙人掌和多肉植物培育区&quot;,
+    &quot;image_index&quot;: 204
+  },
+  {
+    &quot;text&quot;: &quot;在水景旁欣赏天鹅游弋及远眺海湾&quot;,
+    &quot;image_index&quot;: 215
+  }
+]</pre></details></article>
+<article><h3>C10 · 重返环形码头：歌剧院的全景终章 <span>结束 Clip 161</span></h3><p>旅程接近尾声，再次回到悉尼歌剧院附近。从不同的角度欣赏这座世界文化遗产，这次是在更开阔的视野下。夕阳下的光线柔和了建筑的棱角，海港大桥依然横跨天际。游客们在宽阔的台阶上聚集，享受着这最后的时刻。画面定格在歌剧院壮丽的正面全景，为这段悉尼Citywalk画上了完美的句号。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/232.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/232.jpg'></a><figcaption>封面 · IMAGE 232 · Clip 161</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/229.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/229.jpg'></a><figcaption>支持图 · IMAGE 229 · Clip 159</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/230.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/230.jpg'></a><figcaption>支持图 · IMAGE 230 · Clip 160</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/231.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/231.jpg'></a><figcaption>支持图 · IMAGE 231 · Clip 160</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/227.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/227.jpg'></a><figcaption>支持图 · IMAGE 227 · Clip 157</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/228.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/228.jpg'></a><figcaption>支持图 · IMAGE 228 · Clip 158</figcaption></figure></div><details><summary>原始关键瞬间</summary><pre>[
+  {
+    &quot;text&quot;: &quot;沿着皇家植物园内的海滨步道漫步&quot;,
+    &quot;image_index&quot;: 227
+  },
+  {
+    &quot;text&quot;: &quot;从远处欣赏悉尼歌剧院和海港大桥的景观&quot;,
+    &quot;image_index&quot;: 229
+  },
+  {
+    &quot;text&quot;: &quot;在歌剧院宽阔的台阶前聚集和休息的游客&quot;,
+    &quot;image_index&quot;: 230
+  },
+  {
+    &quot;text&quot;: &quot;包含邮轮和大桥背景的歌剧院广场全景&quot;,
+    &quot;image_index&quot;: 231
+  }
+]</pre></details></article>
+<h2>冻结 V1 历史结果（对照，不作人工修正）</h2>
+<article><h3>C01 · 环形码头与歌剧院漫步</h3><p>旅程从繁忙的环形码头（Circular Quay）开始，这里停靠着巨大的游轮和标志性的绿色黄色渡轮。随后沿着海滨步道前行，经过皇家植物园边缘，来到悉尼歌剧院（Sydney Opera House）。我们在宏伟的白色贝壳建筑前驻足，拾级而上，在宽阔的台阶上俯瞰海港大桥与波光粼粼的海面，感受这座地标建筑的独特魅力。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/002.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/002.jpg'></a><figcaption>封面 · IMAGE 2 · Clip 1</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/004.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/004.jpg'></a><figcaption>支持图 · IMAGE 4 · Clip 2</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/008.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/008.jpg'></a><figcaption>支持图 · IMAGE 8 · Clip 4</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/015.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/015.jpg'></a><figcaption>支持图 · IMAGE 15 · Clip 8</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/016.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/016.jpg'></a><figcaption>支持图 · IMAGE 16 · Clip 9</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/232.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/232.jpg'></a><figcaption>支持图 · IMAGE 232 · Clip 161</figcaption></figure></div></article>
+<article><h3>C02 · 岩石区集市与历史街巷</h3><p>离开码头区域，我们进入了充满历史韵味的岩石区（The Rocks）。穿过古老的拱廊和狭窄的街道，这里正在举办热闹的周末集市。摊位琳琅满目，售卖着各种手工艺品和纪念品。路边有街头艺人在表演吉他弹唱，游客们在露天咖啡馆享受悠闲时光，空气中弥漫着老街区特有的生活气息。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/026.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/026.jpg'></a><figcaption>封面 · IMAGE 26 · Clip 17</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/033.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/033.jpg'></a><figcaption>支持图 · IMAGE 33 · Clip 22</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/037.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/037.jpg'></a><figcaption>支持图 · IMAGE 37 · Clip 23</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/040.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/040.jpg'></a><figcaption>支持图 · IMAGE 40 · Clip 26</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/043.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/043.jpg'></a><figcaption>支持图 · IMAGE 43 · Clip 27</figcaption></figure></div></article>
+<article><h3>C03 · 海港公园与桥下风景</h3><p>走出集市，视线豁然开朗，来到了美丽的伍尔卢莫卢湾（Walsh Bay）及附近的绿地公园。这里可以清晰地看到海港大桥高耸的桥墩和复杂的钢结构。我们在修剪整齐的草坪上漫步，穿过树荫小径，近距离仰望这座钢铁巨兽，感受工业结构与自然景观的和谐共存。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/051.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/051.jpg'></a><figcaption>封面 · IMAGE 51 · Clip 33</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/054.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/054.jpg'></a><figcaption>支持图 · IMAGE 54 · Clip 34</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/059.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/059.jpg'></a><figcaption>支持图 · IMAGE 59 · Clip 37</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/061.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/061.jpg'></a><figcaption>支持图 · IMAGE 61 · Clip 38</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/066.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/066.jpg'></a><figcaption>支持图 · IMAGE 66 · Clip 41</figcaption></figure></div></article>
+<article><h3>C04 · 达令港与现代都市探索</h3><p>继续向南行进，抵达繁华的达令港（Darling Harbour）。这里不仅有著名的国家海事博物馆（Australian National Maritime Museum），展示着退役的军舰和历史帆船，还有现代化的购物中心如 World Square。我们经过了色彩斑斓的艺术装置区，并在 W 酒店附近的水边栈道漫步，欣赏城市的新面貌。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/083.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/083.jpg'></a><figcaption>封面 · IMAGE 83 · Clip 53</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/090.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/090.jpg'></a><figcaption>支持图 · IMAGE 90 · Clip 58</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/099.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/099.jpg'></a><figcaption>支持图 · IMAGE 99 · Clip 65</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/106.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/106.jpg'></a><figcaption>支持图 · IMAGE 106 · Clip 69</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/108.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/108.jpg'></a><figcaption>支持图 · IMAGE 108 · Clip 70</figcaption></figure></div></article>
+<article><h3>C05 · 唐人街市井与中央车站</h3><p>穿过港口区，我们进入了充满活力的唐人街（Chinatown）。街道两旁挂满了中文招牌，商铺林立，售卖着各类亚洲商品和生鲜蔬果。这里烟火气十足，既有传统的药店，也有时髦的奶茶店。随后经过宏伟的砂岩建筑——中央火车站（Central Station），感受交通枢纽的历史厚重感。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/117.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/117.jpg'></a><figcaption>封面 · IMAGE 117 · Clip 78</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/121.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/121.jpg'></a><figcaption>支持图 · IMAGE 121 · Clip 81</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/122.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/122.jpg'></a><figcaption>支持图 · IMAGE 122 · Clip 82</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/131.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/131.jpg'></a><figcaption>支持图 · IMAGE 131 · Clip 88</figcaption></figure></div></article>
+<article><h3>C06 · CBD 购物长廊与教堂静思</h3><p>回到市中心商业区（CBD），我们穿梭于乔治街（George Street）的各大购物拱廊之间。这里汇集了世界知名品牌和高端百货，建筑风格华丽典雅。在喧嚣的购物之余，我们走进了一座宁静的教堂，阳光透过彩色玻璃窗洒在长椅上，为这段旅程增添了一份神圣与平和。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/135.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/135.jpg'></a><figcaption>封面 · IMAGE 135 · Clip 92</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/140.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/140.jpg'></a><figcaption>支持图 · IMAGE 140 · Clip 96</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/143.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/143.jpg'></a><figcaption>支持图 · IMAGE 143 · Clip 99</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/144.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/144.jpg'></a><figcaption>支持图 · IMAGE 144 · Clip 100</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/151.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/151.jpg'></a><figcaption>支持图 · IMAGE 151 · Clip 104</figcaption></figure></div></article>
+<article><h3>C07 · 海德公园与圣玛丽大教堂</h3><p>午后时光留给了绿意盎然的海德公园（Hyde Park）。这里是城市的绿肺，巨大的无花果树投下浓密的树荫，安zac 纪念喷泉静静流淌。不远处耸立着宏伟的圣玛丽大教堂（St Mary&#x27;s Cathedral），其双塔尖顶直插云霄。我们在公园的小径上散步，看人们休憩、喂鸟，享受难得的静谧。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/166.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/166.jpg'></a><figcaption>封面 · IMAGE 166 · Clip 115</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/172.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/172.jpg'></a><figcaption>支持图 · IMAGE 172 · Clip 121</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/185.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/185.jpg'></a><figcaption>支持图 · IMAGE 185 · Clip 131</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/187.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/187.jpg'></a><figcaption>支持图 · IMAGE 187 · Clip 132</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/190.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/190.jpg'></a><figcaption>支持图 · IMAGE 190 · Clip 133</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/198.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/198.jpg'></a><figcaption>支持图 · IMAGE 198 · Clip 138</figcaption></figure></div></article>
+<article><h3>C08 · 皇家植物园归途</h3><p>行程的最后，我们回到了位于歌剧院旁的皇家植物园（Royal Botanic Garden）。这里种植着来自世界各地的珍稀植物，棕榈树林郁郁葱葱。沿着蜿蜒的林荫道行走，再次经过那些熟悉的地标：新南威尔士艺术学院、总督府等历史建筑。最终，视线重新落回悉尼歌剧院和海港大桥，为这一天的徒步画上完美的句号。</p><div class='grid'><figure><a target='_blank' href='../cross-domain/images/sydney_local/179.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/179.jpg'></a><figcaption>封面 · IMAGE 179 · Clip 126</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/195.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/195.jpg'></a><figcaption>支持图 · IMAGE 195 · Clip 137</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/200.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/200.jpg'></a><figcaption>支持图 · IMAGE 200 · Clip 140</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/216.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/216.jpg'></a><figcaption>支持图 · IMAGE 216 · Clip 149</figcaption></figure><figure><a target='_blank' href='../cross-domain/images/sydney_local/229.jpg'><img loading='lazy' src='../cross-domain/images/sydney_local/229.jpg'></a><figcaption>支持图 · IMAGE 229 · Clip 159</figcaption></figure></div></article>
+</section></main></body></html>
