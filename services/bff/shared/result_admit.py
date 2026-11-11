@@ -60,6 +60,11 @@ def build_publish_envelope(
         admit = False
         fail_job = True
         reason = "planner_gallery_v02_not_enabled"
+    elif (result.get("experiment") == "DIRECT_V1_SINGLE_QUALITY_RESEARCH_V01"
+            and os.environ.get("DIARY_ONE_ALLOW_DIRECT_V1_QUALITY_PUBLISH", "0") != "1"):
+        admit = False
+        fail_job = True
+        reason = "direct_v1_quality_research_not_enabled"
     elif is_mock and not allow_mock:
         admit = False
         fail_job = True

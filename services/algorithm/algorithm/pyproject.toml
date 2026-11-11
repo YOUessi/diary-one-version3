@@ -26,3 +26,4 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 "diary_one_ci.contracts" = ["*.json"]
+"diary_one_ci" = ["v1_frozen_resources/*.txt", "v1_frozen_resources/*.json"]
