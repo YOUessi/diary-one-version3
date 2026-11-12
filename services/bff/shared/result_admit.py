@@ -60,6 +60,11 @@ def build_publish_envelope(
         admit = False
         fail_job = True
         reason = "planner_gallery_v02_not_enabled"
+    elif (result.get("experiment") == "DIRECT_VLM_V03PLUS_ONECALL_EXPERIMENT_20261112"
+            and os.environ.get("DIARY_ONE_ALLOW_V03PLUS_PUBLISH", "0") != "1"):
+        admit = False
+        fail_job = True
+        reason = "direct_v03plus_research_not_enabled"
     elif is_mock and not allow_mock:
         admit = False
         fail_job = True
