@@ -1,0 +1,15 @@
+﻿dataset,arm,repeat,state,chapter_count,gallery_count,gallery_fraction,timeline_tenths_with_selected_images,adjacent_gallery_span_overlap_proxy,perceptually_similar_image_pairs_dhash_5,covers_dark_under_55,estimated_cost_cny,model_calls,wall_seconds
+museum_local,historical_V1,0,COMPLETE,3,25,0.2907,10,1,0,2,0.061793,1,29.68
+museum_local,direct_v03,1,COMPLETE,9,41,0.4767,10,0,4,8,0.06099019,1,68.36
+museum_local,planner_gallery_v02,1,REJECTED,0,0,0.0,0,0,0,0,0.1704864,4,196.99
+museum_local,planner_gallery_v02,2,COMPLETE,4,35,0.407,10,0,2,3,0.14095951,6,213.38
+nature_local,historical_V1,0,COMPLETE,3,38,0.2,10,0,2,3,0.1312711,1,38.84
+nature_local,direct_v03,1,COMPLETE,4,13,0.0684,8,0,1,4,0.12449858,1,122.72
+nature_local,planner_gallery_v02,1,COMPLETE,6,43,0.2263,10,0,10,5,0.26656258,8,516.9
+sydney_local,historical_V1,0,COMPLETE,8,41,0.1767,10,2,0,8,0.1616683,1,82.84
+sydney_local,direct_v03,1,COMPLETE,7,28,0.1207,10,0,0,7,0.15334819,1,256.07
+sydney_local,planner_gallery_v02,1,COMPLETE,8,65,0.2802,10,0,3,6,0.35198453,11,616.6
+sydney_local,planner_gallery_v02,2,REJECTED,0,0,0.0,0,0,0,0,0.3366335,10,532.03
+tokyo_github_raw,historical_V1,0,COMPLETE,4,29,0.1747,9,0,0,4,0.1161291,1,64.41
+tokyo_github_raw,direct_v03,1,COMPLETE,6,29,0.1747,9,1,0,6,0.10961539,1,307.72
+tokyo_github_raw,planner_gallery_v02,1,COMPLETE,7,72,0.4337,10,0,0,7,0.22512319,8,488.02

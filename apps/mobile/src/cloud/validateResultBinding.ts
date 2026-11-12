@@ -53,7 +53,7 @@ export function validateResultBinding(value: unknown, input: ResultInput, requir
       throw new Error('Cloud server has not verified this input contract. Update the service, then retry the saved job.');
     }
   }
-  if (schema === ALGORITHM_LOCK.directPreviewSchema) {
+  if (schema === ALGORITHM_LOCK.directPreviewSchema || schema === ALGORITHM_LOCK.plannerGalleryPreviewSchema) {
     validateDirectVlmResult(result, input.manifest, input.frameSha256);
     return;
   }

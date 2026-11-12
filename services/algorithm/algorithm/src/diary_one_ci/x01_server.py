@@ -75,11 +75,23 @@ from .x02 import (
 )
 from .codex_chapter_media import POLICY_VERSION as CHAPTER_MEDIA_POLICY_VERSION
 from . import product_editor
+from .planner_gallery_v02 import (
+    run_planner_gallery,
+    SCHEMA_VERSION as PLANNER_GALLERY_SCHEMA_VERSION,
+    PIPELINE_VERSION as PLANNER_GALLERY_PIPELINE_VERSION,
+    EDITOR_POLICY as PLANNER_GALLERY_EDITOR_POLICY,
+    MAX_MODEL_CALLS as PLANNER_GALLERY_MAX_CALLS,
+)
 from .direct_vlm import (
     run_direct_vlm, SCHEMA_VERSION as DIRECT_VLM_SCHEMA_VERSION,
     PIPELINE_VERSION as DIRECT_VLM_PIPELINE_VERSION,
     EDITOR_POLICY as DIRECT_VLM_EDITOR_POLICY,
 )
+
+def _planner_gallery_enabled() -> bool:
+    # Explicit research opt-in. The default stays DIRECT_VLM_V01.
+    return os.environ.get("DIARY_ONE_X02_EDITOR", "direct_vlm") == "planner_gallery_v02"
+
 
 def _direct_vlm_enabled():
     # New X02 default. Set DIARY_ONE_X02_EDITOR=product_v1 to roll back.
@@ -254,7 +266,9 @@ def _write_x02_run_audit(
     run_id = _normalized_session_id(trace.get("run_id") or str(uuid.uuid4()))
     trace["run_id"] = run_id
     result_schema_version = result.get("schema_version")
-    if result_schema_version == DIRECT_VLM_SCHEMA_VERSION:
+    if result_schema_version == PLANNER_GALLERY_SCHEMA_VERSION:
+        audit_schema_version = 'DIARY_ONE_X02_PLANNER_GALLERY_RUN_AUDIT_V02'
+    elif result_schema_version == DIRECT_VLM_SCHEMA_VERSION:
         audit_schema_version = 'DIARY_ONE_X02_DIRECT_VLM_RUN_AUDIT_V01'
     elif result_schema_version == product_editor.SCHEMA_VERSION:
         audit_schema_version = 'DIARY_ONE_X02_PRODUCT_RUN_AUDIT_V01'
@@ -811,14 +825,14 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             return
         self._json(200, {
             "status": "ok",
-            "schemaVersion": DIRECT_VLM_SCHEMA_VERSION if _direct_vlm_enabled() else product_editor.SCHEMA_VERSION if _product_editor_enabled() else X02_SCHEMA_VERSION,
-            "editorPolicy": DIRECT_VLM_EDITOR_POLICY if _direct_vlm_enabled() else product_editor.POLICY_VERSION if _product_editor_enabled() else 'LEGACY_V04_1',
-            "editorRevision": 'DIRECT_VLM_V01' if _direct_vlm_enabled() else product_editor.EDITOR_REVISION if _product_editor_enabled() else None,
-            "experiment": "DIRECT_FULL_DAY_JPEG_VLM" if _direct_vlm_enabled() else X02_EXPERIMENT,
+            "schemaVersion": PLANNER_GALLERY_SCHEMA_VERSION if _planner_gallery_enabled() else DIRECT_VLM_SCHEMA_VERSION if _direct_vlm_enabled() else product_editor.SCHEMA_VERSION if _product_editor_enabled() else X02_SCHEMA_VERSION,
+            "editorPolicy": PLANNER_GALLERY_EDITOR_POLICY if _planner_gallery_enabled() else DIRECT_VLM_EDITOR_POLICY if _direct_vlm_enabled() else product_editor.POLICY_VERSION if _product_editor_enabled() else 'LEGACY_V04_1',
+            "editorRevision": 'PLANNER_GALLERY_V02' if _planner_gallery_enabled() else 'DIRECT_VLM_V01' if _direct_vlm_enabled() else product_editor.EDITOR_REVISION if _product_editor_enabled() else None,
+            "experiment": "PLANNER_GALLERY_PHYSICAL_SCOPE_V02" if _planner_gallery_enabled() else "DIRECT_FULL_DAY_JPEG_VLM" if _direct_vlm_enabled() else X02_EXPERIMENT,
             "experimental": True,
             "leaderboardEligible": False,
             "productionReady": bool(
-                not _direct_vlm_enabled() and not _product_editor_enabled() and self.stage_gateway.ready
+                not _planner_gallery_enabled() and not _direct_vlm_enabled() and not _product_editor_enabled() and self.stage_gateway.ready
                 and (
                     "alibaba" in str(self.stage_gateway.provider or "").lower()
                     or "qwen" in str(self.stage_gateway.model or "").lower()
@@ -839,7 +853,7 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             "fieldDegradationContractSHA256": X02_FIELD_DEGRADATION_SHA256,
             "writerSurfacePolicyVersion": product_editor.POLICY_VERSION if _product_editor_enabled() else X02_WRITER_SURFACE_POLICY_VERSION,
             "chapterMediaPolicyVersion": product_editor.POLICY_VERSION if _product_editor_enabled() else CHAPTER_MEDIA_POLICY_VERSION,
-            "runtimePolicies": ({"direct_vlm": DIRECT_VLM_PIPELINE_VERSION, "max_images_per_call": 250, "max_model_calls": 2} if _direct_vlm_enabled() else {"product_editor": product_editor.POLICY_VERSION} if _product_editor_enabled() else x02_runtime_policies()),
+            "runtimePolicies": ({"planner_gallery": PLANNER_GALLERY_PIPELINE_VERSION, "max_images_per_call": 250, "max_model_calls": PLANNER_GALLERY_MAX_CALLS, "scope": "PER_CHAPTER_JPEG"} if _planner_gallery_enabled() else {"direct_vlm": DIRECT_VLM_PIPELINE_VERSION, "max_images_per_call": 250, "max_model_calls": 2} if _direct_vlm_enabled() else {"product_editor": product_editor.POLICY_VERSION} if _product_editor_enabled() else x02_runtime_policies()),
             "perceptionBatchMaxAssets": PERCEPTION_BATCH_MAX_ASSETS,
             "perceptionBatchMaxFrames": PERCEPTION_BATCH_MAX_FRAMES,
             "perceptionBatchMaxEvidenceBytes": PERCEPTION_BATCH_MAX_EVIDENCE_BYTES,
@@ -905,7 +919,7 @@ class X01RequestHandler(BaseHTTPRequestHandler):
             X02_V03_RUN_SIDECAR_PATH,
         ):
             if request_path == X02_RUN_SIDECAR_PATH:
-                expected_pipeline_version = DIRECT_VLM_PIPELINE_VERSION if _direct_vlm_enabled() else product_editor.PIPELINE_VERSION if _product_editor_enabled() else X02_PIPELINE_VERSION
+                expected_pipeline_version = PLANNER_GALLERY_PIPELINE_VERSION if _planner_gallery_enabled() else DIRECT_VLM_PIPELINE_VERSION if _direct_vlm_enabled() else product_editor.PIPELINE_VERSION if _product_editor_enabled() else X02_PIPELINE_VERSION
             elif request_path == X02_V03_RUN_SIDECAR_PATH:
                 expected_pipeline_version = X02_V03_PIPELINE_VERSION
             else:
@@ -951,7 +965,12 @@ class X01RequestHandler(BaseHTTPRequestHandler):
                 manifest = loaded_manifest
                 pipeline_started = time.monotonic()
                 if request_path == X02_PREVIEW_PATH:
-                    if _direct_vlm_enabled():
+                    if _planner_gallery_enabled():
+                        result = run_planner_gallery(
+                            manifest_path, self.stage_gateway,
+                            audit_dir=self.x02_run_audit_dir / "planner_gallery_attempts",
+                        )
+                    elif _direct_vlm_enabled():
                         result = run_direct_vlm(manifest_path, self.stage_gateway)
                     elif _product_editor_enabled():
                         result = run_x02_product(manifest_path, self.stage_gateway,
@@ -1239,7 +1258,7 @@ def make_server(
     elif adapter_name == "qwen":
         direct_model = (os.environ.get("DIARY_ONE_DIRECT_VLM_MODEL")
                         or os.environ.get("DIARY_ONE_X01_QWEN_MODEL")
-                        or "qwen3.8-flash") if _direct_vlm_enabled() else None
+                        or "qwen3.8-flash") if (_direct_vlm_enabled() or _planner_gallery_enabled()) else None
         adapter = QwenChatCompletionsAdapter(
             api_key=qwen_api_key, model=direct_model,
             timeout_seconds=900.0 if _direct_vlm_enabled() else 180.0)

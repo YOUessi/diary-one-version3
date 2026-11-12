@@ -22,7 +22,8 @@ export async function validatePreviewResult(result: X02PreviewResult, input?: Re
   }
   if (result.schema_version !== ALGORITHM_LOCK.previewSchema
     && result.schema_version !== ALGORITHM_LOCK.productPreviewSchema
-    && result.schema_version !== ALGORITHM_LOCK.directPreviewSchema) {
+    && result.schema_version !== ALGORITHM_LOCK.directPreviewSchema
+    && result.schema_version !== ALGORITHM_LOCK.plannerGalleryPreviewSchema) {
     return { ok: false, reason: `Unexpected schema_version: ${result.schema_version}` };
   }
   if (!Array.isArray(result.chapters) || !Array.isArray(result.ahas)) {

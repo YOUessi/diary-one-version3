@@ -8,6 +8,8 @@ Rules (PRD V0.1 §19–21):
 """
 from __future__ import annotations
 
+import os
+
 from typing import Any
 from pathlib import Path
 
@@ -51,7 +53,14 @@ def build_publish_envelope(
     admit = True
     fail_job = False
 
-    if is_mock and not allow_mock:
+    # Independent, default-OFF BFF publication gate. X02 execution alone
+    # cannot make this experimental editor visible in a formal consumer app.
+    if (result.get("schema_version") == "DIARY_ONE_PLANNER_GALLERY_CHAPTER_V02"
+            and os.environ.get("DIARY_ONE_ALLOW_PLANNER_GALLERY_V02_PUBLISH", "0") != "1"):
+        admit = False
+        fail_job = True
+        reason = "planner_gallery_v02_not_enabled"
+    elif is_mock and not allow_mock:
         admit = False
         fail_job = True
         reason = "mock_disallowed"

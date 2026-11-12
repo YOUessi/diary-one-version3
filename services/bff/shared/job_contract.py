@@ -3,7 +3,7 @@
 def validate_real_result(result):
     if not isinstance(result, dict) or result.get('schema_version') not in (
         'DIARY_ONE_X02_STAGED_PREVIEW_V04_1', 'DIARY_ONE_X02_PRODUCT_PREVIEW_V01',
-        'DIARY_ONE_DIRECT_VLM_CHAPTER_V01'):
+        'DIARY_ONE_DIRECT_VLM_CHAPTER_V01', 'DIARY_ONE_PLANNER_GALLERY_CHAPTER_V02'):
         raise ValueError('Unexpected X02 result schema')
     if result.get('dev_lite_fallback') or result.get('delivery_state') == 'PIPELINE_BLOCKED':
         raise ValueError('X02 did not produce a publishable real result')

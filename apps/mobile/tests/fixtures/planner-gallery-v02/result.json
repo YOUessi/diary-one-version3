@@ -1,0 +1,292 @@
+{
+  "schema_version": "DIARY_ONE_PLANNER_GALLERY_CHAPTER_V02",
+  "editor_policy": "PLANNER_GALLERY_SCOPED_EDITOR_V02",
+  "experiment": "PLANNER_GALLERY_PHYSICAL_SCOPE_V02",
+  "experimental": true,
+  "production_ready": false,
+  "leaderboard_eligible": false,
+  "session_id": "35de6556-744d-4bfa-b169-bc0dc4bb32b4",
+  "bundle_manifest_sha256": "b889be0c40d238c802a5c91b5b080f4c7a868e0507fc9ce5466e6a1929d0ee67",
+  "day_summary": "当天按顺序记录了：海港步道漫游、街区与商店参观",
+  "chapter_count_rationale": "根据实际图像时间线规划 2 个连续经历 Chapter。",
+  "excluded_non_lived_frame_ids": [],
+  "output_mode": "CHAPTER_DAY",
+  "semantic_day_state": "CHAPTER_DAY",
+  "delivery_state": "READY_PRIMARY_COPY",
+  "coverage_status": "INPUT_ALL_FRAMES_SUBMITTED",
+  "unresolved_asset_ids": [],
+  "chapters": [
+    {
+      "id": "3e23173a-3695-546e-bb42-2dad3983c73b",
+      "candidate_id": "C01",
+      "title": "海港步道漫游",
+      "story": "沿海港缓慢步行，观察码头建筑和轮渡的变化。",
+      "preview_story": "沿海港缓慢步行，观察码头建筑和轮渡的变化。",
+      "time_label": "采集顺序中的主题回顾",
+      "tags": [],
+      "hero_frame_id": "asset_01-w0-f0",
+      "hero_asset_id": "01",
+      "hero_reason": "本章原始 JPEG 中由独立 Gallery VLM 选出",
+      "selected_media": [
+        {
+          "asset_id": "01",
+          "source_asset_id": "asset_01",
+          "media_kind": "VIDEO",
+          "role": "HERO",
+          "representative_frame_id": "asset_01-w0-f0",
+          "evidence_frame_ids": [
+            "asset_01-w0-f0"
+          ],
+          "source_sequence_index": 1,
+          "selection_role": "PRIMARY",
+          "selection_reason": "VLM global editorial choice; frame identity checked against uploaded JPEG",
+          "start_ms": 0,
+          "end_ms": 10000,
+          "focus_pts_ms": 1500,
+          "range_basis": "WHOLE_SOURCE_CLIP"
+        },
+        {
+          "asset_id": "02",
+          "source_asset_id": "asset_02",
+          "media_kind": "VIDEO",
+          "role": "SUPPORT",
+          "representative_frame_id": "asset_02-w0-f0",
+          "evidence_frame_ids": [
+            "asset_02-w0-f0"
+          ],
+          "source_sequence_index": 2,
+          "selection_role": "SUPPORT",
+          "selection_reason": "VLM global editorial choice; frame identity checked against uploaded JPEG",
+          "start_ms": 0,
+          "end_ms": 10000,
+          "focus_pts_ms": 1500,
+          "range_basis": "WHOLE_SOURCE_CLIP"
+        }
+      ],
+      "experience_frame_ids": [
+        "asset_01-w0-f0",
+        "asset_01-w0-f1",
+        "asset_02-w0-f0",
+        "asset_02-w0-f1"
+      ],
+      "key_moments": [
+        {
+          "description": "海港中可见的轮渡",
+          "frame_ids": [
+            "asset_01-w0-f1"
+          ]
+        }
+      ],
+      "editorial_summary": "时间范围 1 至 2 源片段；图库只来自该区间，图片由独立 VLM 选择。",
+      "source_asset_ids": [
+        "asset_01",
+        "asset_02"
+      ],
+      "moment_ids": [],
+      "highlights": [],
+      "claims": [],
+      "publication_status": "STAGED_PREVIEW_VALIDATED",
+      "source_clip_start": 1,
+      "source_clip_end": 2
+    },
+    {
+      "id": "2e242766-4166-5708-a1dc-91ef3e925ab6",
+      "candidate_id": "C02",
+      "title": "街区与商店参观",
+      "story": "转入城市内部街道，观察店铺橱窗与周边活动。",
+      "preview_story": "转入城市内部街道，观察店铺橱窗与周边活动。",
+      "time_label": "采集顺序中的主题回顾",
+      "tags": [],
+      "hero_frame_id": "asset_03-w0-f0",
+      "hero_asset_id": "03",
+      "hero_reason": "本章原始 JPEG 中由独立 Gallery VLM 选出",
+      "selected_media": [
+        {
+          "asset_id": "03",
+          "source_asset_id": "asset_03",
+          "media_kind": "VIDEO",
+          "role": "HERO",
+          "representative_frame_id": "asset_03-w0-f0",
+          "evidence_frame_ids": [
+            "asset_03-w0-f0"
+          ],
+          "source_sequence_index": 3,
+          "selection_role": "PRIMARY",
+          "selection_reason": "VLM global editorial choice; frame identity checked against uploaded JPEG",
+          "start_ms": 0,
+          "end_ms": 10000,
+          "focus_pts_ms": 1500,
+          "range_basis": "WHOLE_SOURCE_CLIP"
+        },
+        {
+          "asset_id": "04",
+          "source_asset_id": "asset_04",
+          "media_kind": "VIDEO",
+          "role": "SUPPORT",
+          "representative_frame_id": "asset_04-w0-f1",
+          "evidence_frame_ids": [
+            "asset_04-w0-f1"
+          ],
+          "source_sequence_index": 4,
+          "selection_role": "SUPPORT",
+          "selection_reason": "VLM global editorial choice; frame identity checked against uploaded JPEG",
+          "start_ms": 0,
+          "end_ms": 10000,
+          "focus_pts_ms": 7500,
+          "range_basis": "WHOLE_SOURCE_CLIP"
+        }
+      ],
+      "experience_frame_ids": [
+        "asset_03-w0-f0",
+        "asset_03-w0-f1",
+        "asset_04-w0-f0",
+        "asset_04-w0-f1"
+      ],
+      "key_moments": [
+        {
+          "description": "商店旁边的街景",
+          "frame_ids": [
+            "asset_04-w0-f0"
+          ]
+        }
+      ],
+      "editorial_summary": "时间范围 3 至 4 源片段；图库只来自该区间，图片由独立 VLM 选择。",
+      "source_asset_ids": [
+        "asset_03",
+        "asset_04"
+      ],
+      "moment_ids": [],
+      "highlights": [],
+      "claims": [],
+      "publication_status": "STAGED_PREVIEW_VALIDATED",
+      "source_clip_start": 3,
+      "source_clip_end": 4
+    }
+  ],
+  "ahas": [],
+  "moments": [],
+  "observations": [],
+  "selected_memory_outcomes": [
+    {
+      "memory_type": "CHAPTER",
+      "memory_id": "3e23173a-3695-546e-bb42-2dad3983c73b",
+      "selection_state": "DIRECT_VLM_SELECTED",
+      "media_state": "DIRECT_VLM_MEDIA_READY",
+      "surface_state": "DIRECT_VLM_STORY",
+      "visibility_state": "VISIBLE_PREVIEW"
+    },
+    {
+      "memory_type": "CHAPTER",
+      "memory_id": "2e242766-4166-5708-a1dc-91ef3e925ab6",
+      "selection_state": "DIRECT_VLM_SELECTED",
+      "media_state": "DIRECT_VLM_MEDIA_READY",
+      "surface_state": "DIRECT_VLM_STORY",
+      "visibility_state": "VISIBLE_PREVIEW"
+    }
+  ],
+  "timeline_basis": "SYNTHETIC_SEQUENCE_ONLY",
+  "timeline_date": null,
+  "time_reliability": {
+    "capture_time_reliable": false,
+    "interval_reliable": false,
+    "timezone_reliable": false
+  },
+  "validation_scope": "STRUCTURE_LINEAGE_AND_CLIP_OWNERSHIP_ONLY",
+  "decision_trace": {
+    "trace_type": "PLANNER_GALLERY_V02",
+    "contains_hidden_reasoning": false,
+    "visual_fact_reviewed": false,
+    "semantic_copy_verified": false,
+    "no_staged_pipeline": false,
+    "chronology_model_input": "CLIP_SEQUENCE_PER_FRAME_AND_VERIFIED_TIMELINE_IF_AVAILABLE",
+    "attempt_validation_errors": [],
+    "prompt_sha256": "c2e1781516040157ee30d3e5fce493f24d7b37b6a7c39c5c715d9d951aa1783d",
+    "input_coverage": {
+      "frames_submitted": 8,
+      "clips_received": 4,
+      "image_bytes": 103333,
+      "semantic_content_coverage_certified": false
+    },
+    "clip_ownership": "EXPLICIT_CONTIGUOUS_ONE_CHAPTER_PER_CLIP",
+    "model_protocol": "PLANNER_GALLERY_PHYSICAL_SCOPE_V02",
+    "planner_prompt_sha256": "c2e1781516040157ee30d3e5fce493f24d7b37b6a7c39c5c715d9d951aa1783d",
+    "gallery_prompt_sha256": [
+      "0859d6afc8d268f1b78d62515f83cdf53ff20aa5d89b7c2e865264d282170967",
+      "b9484fe96faa9076ad0d6c87d1917de13a4aafa2507394b267b66024b0f3a281"
+    ],
+    "chapter_clip_intervals": [
+      {
+        "candidate_id": "C01",
+        "start_clip": 1,
+        "end_clip": 2
+      },
+      {
+        "candidate_id": "C02",
+        "start_clip": 3,
+        "end_clip": 4
+      }
+    ],
+    "gallery_model_input_frames": [
+      4,
+      4
+    ],
+    "semantic_content_coverage_certified": false
+  },
+  "trace": {
+    "run_id": "070666e3-35f0-4e32-845d-0ec334ff59de",
+    "pipeline_version": "X02_PLANNER_GALLERY_CHAPTER_V02",
+    "execution_mode": "GLOBAL_PLANNER_SCOPED_GALLERY_WITH_BOUNDED_RETRY",
+    "evaluation_run_mode": "FRESH_FULL_RUN",
+    "cross_run_semantic_cache_used": false,
+    "provider": "fixture",
+    "model": "fake-qwen-vlm",
+    "request_id": "req-03",
+    "request_ids": [
+      "req-01",
+      "req-02",
+      "req-03"
+    ],
+    "model_calls": 3,
+    "model_call_completed_count": 3,
+    "model_call_failed_count": 0,
+    "asset_count": 4,
+    "evidence_frame_count": 8,
+    "model_frame_count": 16,
+    "input_tokens": 1500,
+    "output_tokens": 300,
+    "estimated_cost_usd": 0.00027917,
+    "pricing_basis": "test",
+    "latency_seconds": 0.09,
+    "stage_metrics": [
+      {
+        "stage": "DIRECT_VLM_CHAPTER_PLANNER_V02",
+        "model_calls": 1,
+        "input_tokens": 500,
+        "output_tokens": 100,
+        "estimated_cost_usd": 9.306e-05,
+        "latency_seconds": 0.03,
+        "request_id": "req-01"
+      },
+      {
+        "stage": "DIRECT_VLM_CHAPTER_GALLERY_V02",
+        "model_calls": 1,
+        "input_tokens": 500,
+        "output_tokens": 100,
+        "estimated_cost_usd": 9.306e-05,
+        "latency_seconds": 0.03,
+        "request_id": "req-02"
+      },
+      {
+        "stage": "DIRECT_VLM_CHAPTER_GALLERY_V02",
+        "model_calls": 1,
+        "input_tokens": 500,
+        "output_tokens": 100,
+        "estimated_cost_usd": 9.306e-05,
+        "latency_seconds": 0.03,
+        "request_id": "req-03"
+      }
+    ],
+    "originals_uploaded": 0,
+    "s13_status": "NOT_EXECUTED_PLANNER_GALLERY"
+  }
+}
